@@ -1096,7 +1096,7 @@ function renderNav(){
   if(isAdmin())tabs.push({id:'admin',label:'Admin'})
   document.getElementById('nav-tabs').innerHTML=tabs.map(t=>`
     <button class="nav-tab${activeView===t.id?' active':''}" onclick="setView('${t.id}')" style="position:relative;color:${activeView===t.id?'var(--accent)':'var(--accent)'}">
-      ${t.label}${t.badge?`<span class="badge">${t.badge}</span>`:''}
+      ${t.label}${t.badge?`<span style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;border-radius:50%;background:#E24B4A;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center">${t.badge}</span>`:''}	
     </button>`).join('')
 }
 
