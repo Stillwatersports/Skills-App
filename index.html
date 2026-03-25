@@ -843,7 +843,6 @@ async function renderFriendsView(c){
   const myTotalRuns=mySessions.reduce((a,s)=>a+s.runs,0)
   const myTotalDist=mySessions.reduce((a,s)=>a+parseFloat(s.distance_km||0),0).toFixed(1)
   const myTotalTime=Math.floor(mySessions.reduce((a,s)=>a+parseInt(s.duration_seconds||0),0)/60)
-
   const allForLeaderboard=[{name:'You',totalRuns:myTotalRuns,totalDist:myTotalDist,totalTime:myTotalTime,isMe:true},...friendStats].sort((a,b)=>b.totalRuns-a.totalRuns)
 
   const leaderboardRows=allForLeaderboard.map((f,i)=>`
