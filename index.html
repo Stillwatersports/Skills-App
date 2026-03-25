@@ -733,7 +733,6 @@ function renderSkillsView(c){
   c.innerHTML=`<div class="sport-scroll">${sportTabs}</div>${stats}<div class="tiers-grid">${tiers}</div><div class="certs-row">${certs}</div>${platSection}${shareSection}`
 }
 
-// ── SESSIONS VIEW ─────────────────────────────────────────────────
 async function renderSessionView(c){
   if(activeSession){
     c.innerHTML=`
@@ -817,7 +816,6 @@ function renderMiniMap(route,id){
   </svg>`
 }
 
-// ── FRIENDS VIEW ──────────────────────────────────────────────────
 async function renderFriendsView(c){
   const myCode=userProfile?.friend_code||'------'
   const pendingHtml=friendRequests.length?`
@@ -890,7 +888,6 @@ async function renderFriendsView(c){
 }
 
 async function addFriend(){
-  const code=document.getElementById('friend-code-inp')?.value?.trim()
   const msg=document.getElementById('friend-msg')
   if(!code){msg.textContent='Enter a friend code';msg.style.color='#D85A30';return}
   const result=await sendFriendRequest(code)
