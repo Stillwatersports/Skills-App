@@ -241,7 +241,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
     </div>
     <div class="topbar-right">
       <div id="avatar-top" onclick="setView('profile')" style="cursor:pointer"></div>
-      <button class="btn-sm" onclick="signOut()">Sign out</button>
+      <button class="btn-sm" style="color:var(--accent);border-color:var(--accent)" onclick="signOut()">Sign out</button>
     </div>
   </div>
   <div class="main" id="main-content"></div>
@@ -1095,7 +1095,7 @@ function renderNav(){
   tabs.push({id:'leaderboard',label:'Leaderboard'},{id:'profile',label:'Profile'})
   if(isAdmin())tabs.push({id:'admin',label:'Admin'})
   document.getElementById('nav-tabs').innerHTML=tabs.map(t=>`
-    <button class="nav-tab${activeView===t.id?' active':''}" onclick="setView('${t.id}')" style="position:relative">
+    <button class="nav-tab${activeView===t.id?' active':''}" onclick="setView('${t.id}')" style="position:relative;color:${activeView===t.id?'var(--accent)':'var(--accent)'}">
       ${t.label}${t.badge?`<span class="badge">${t.badge}</span>`:''}
     </button>`).join('')
 }
