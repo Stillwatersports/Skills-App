@@ -871,7 +871,7 @@ async function loadUser(user){
     const{data:p2}=await db.from('profiles').select('*').eq('id',user.id).single()
     userProfile=p2||{id:user.id,name:user.email.split('@')[0],role:'rider'}
   } else{userProfile=p}
-  await Promise.all([loadDbSkills(),loadApprovals(),loadSkillNotes(),loadQuizResults(),loadDrylandApprovals()])
+  await Promise.all([loadDbSkills(),loadApprovals(),loadSkillNotes(),loadQuizResults(),loadDrylandApprovals(),loadCoachQueue()])
 
   // Admin bypass — skip dryland entirely
   if(isAdmin()&&!quizResults['dryland']){
