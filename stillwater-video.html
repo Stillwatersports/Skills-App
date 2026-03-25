@@ -170,6 +170,7 @@ html,body{height:100%;overflow:hidden;background:#000;font-family:-apple-system,
 .loader{width:36px;height:36px;border:3px solid rgba(0,200,212,0.2);border-top-color:var(--brand);border-radius:50%;animation:spin .8s linear infinite}
 .loading-label{font-size:13px;color:rgba(255,255,255,0.6)}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
@@ -403,6 +404,12 @@ html,body{height:100%;overflow:hidden;background:#000;font-family:-apple-system,
 </div>
 
 <script>
+// ── SUPABASE ─────────────────────────────────────────────────────
+const SUPABASE_URL='https://jjnhsbgmcjqwlmeihwuy.supabase.co'
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqbmhzYmdtY2pxd2xtZWlod3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyODkwNDEsImV4cCI6MjA4OTg2NTA0MX0.MOTbufdBqUhB36P1YBL-zo-KKlvJ-LBHwPS70D7DoWU'
+const {createClient}=supabase
+const db=createClient(SUPABASE_URL,SUPABASE_KEY)
+
 // ── STATE ─────────────────────────────────────────────────────────
 let currentScreen = 'home-screen'
 let mediaStream = null
@@ -1031,20 +1038,35 @@ function saveToDevice() {
 
 async function saveToCloud() {
   if (!videoBlob) return
-  // Try to communicate with parent app via postMessage
-  if (window.opener) {
-    const reader = new FileReader()
-    reader.onload = () => {
-      window.opener.postMessage({ type: 'stillwater-video', blob: reader.result, mimeType: videoBlob.type }, '*')
-    }
-    reader.readAsDataURL(videoBlob)
-    showSaveProgress('Sending to app…', 100)
-    setTimeout(() => { hideSaveModal(); alert('Video sent to app — check your media library') }, 1000)
-  } else {
-    // Direct upload if we have Supabase available
-    showSaveProgress('Uploading…', 0)
-    saveToDevice()
+  // Check if user is logged in
+  const {data:{session}} = await db.auth.getSession()
+  if (!session) {
+    alert('Please sign in to the app first, then try again.')
+    return
   }
+  const userId = session.user.id
+  const ext = videoBlob.type.includes('mp4') ? 'mp4' : 'webm'
+  const path = `${userId}/video_${Date.now()}.${ext}`
+  showSaveProgress('Uploading…', 10)
+  document.getElementById('save-progress').style.display = 'block'
+  
+  const {error:uploadError} = await db.storage.from('skill-videos').upload(path, videoBlob, {upsert:true})
+  if (uploadError) { alert('Upload failed: ' + uploadError.message); return }
+  
+  showSaveProgress('Saving…', 80)
+  const {data:{publicUrl}} = db.storage.from('skill-videos').getPublicUrl(path)
+  
+  const {error:mediaError} = await db.from('media').insert({
+    user_id: userId,
+    url: publicUrl,
+    type: 'video',
+    is_instructional: false,
+    created_at: new Date().toISOString()
+  })
+  if (mediaError) { alert('Save failed: ' + mediaError.message); return }
+  
+  showSaveProgress('Saved!', 100)
+  setTimeout(() => { hideSaveModal(); alert('Video saved to your Stillwater media library!') }, 800)
 }
 
 function showSaveProgress(label, pct) {
