@@ -3,7 +3,13 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="google-site-verification" content="jZJF_PSlXvRpWgOyPoRULvIevvxrIJ1vXU6LXuRQSwA"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Stillwater"/>
+<meta name="theme-color" content="#00C8D4"/>
+<link rel="manifest" id="pwa-manifest"/>
 <title>Stillwater Sports Ottawa</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -17,69 +23,105 @@
   --silver-bg:#C8C6BC;--silver-t:#222220;--silver-bar:#5F5E5A;--silver-bd:#3a3a38;--silver-m:#A0A09A;
   --gold-bg:#F5D87A;--gold-t:#3a2000;--gold-bar:#9A5E08;--gold-bd:#6a3e04;--gold-m:#E8B020;
   --plat-bg:#e8e8f8;--plat-t:#1a0a3a;--plat-bar:#7B68EE;--plat-bd:#5040CC;--plat-m:#b8b0f0;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+html{height:100%;overflow-x:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text);min-height:100%;min-height:100dvh;overflow-x:hidden;-webkit-text-size-adjust:100%}
 @keyframes plat-fade-in{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
 @keyframes unlock-scale{0%{transform:scale(0.6);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
 @keyframes star-pop{0%{transform:scale(0) rotate(0deg);opacity:0}60%{transform:scale(1.3) rotate(180deg);opacity:1}100%{transform:scale(1) rotate(360deg);opacity:1}}
 @keyframes slide-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes slide-down{from{opacity:0;transform:translateY(-20px)}to{opacity:1;transform:translateY(0)}}
 
-#auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem}
+/* ── AUTH ── */
+#auth-screen{display:flex;align-items:center;justify-content:center;min-height:100dvh;padding:1rem}
 .auth-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:2rem;width:100%;max-width:360px}
 .auth-tabs{display:flex;gap:4px;background:var(--bg);border-radius:var(--rsm);padding:4px;margin:1.25rem 0}
 .auth-tab{flex:1;text-align:center;padding:7px;border-radius:6px;font-size:13px;font-weight:500;cursor:pointer;color:var(--muted);border:none;background:none;transition:all .15s}
 .auth-tab.active{background:var(--card);color:var(--text);border:0.5px solid var(--border)}
 .field{margin-bottom:12px}
 .field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
-.field input,.field select,.field textarea{width:100%;padding:9px 12px;border:0.5px solid var(--border);border-radius:var(--rsm);background:var(--bg);color:var(--text);font-size:14px;outline:none;font-family:inherit}
+.field input,.field select,.field textarea{width:100%;padding:9px 12px;border:0.5px solid var(--border);border-radius:var(--rsm);background:var(--bg);color:var(--text);font-size:16px;outline:none;font-family:inherit;-webkit-appearance:none}
 .field input:focus,.field select:focus{border-color:var(--brand)}
-.field textarea{resize:vertical;min-height:60px;line-height:1.5}
-.btn-primary{width:100%;padding:10px;background:var(--brand);color:#fff;border:none;border-radius:var(--rsm);font-size:14px;font-weight:600;cursor:pointer;transition:opacity .15s}
+.field textarea{resize:vertical;min-height:60px;line-height:1.5;font-size:14px}
+.btn-primary{width:100%;padding:12px;background:var(--brand);color:#fff;border:none;border-radius:var(--rsm);font-size:15px;font-weight:600;cursor:pointer;transition:opacity .15s;-webkit-tap-highlight-color:transparent}
 .btn-primary:hover{opacity:.85}
 .btn-primary:disabled{opacity:.45;cursor:default}
 .auth-msg{font-size:12px;margin-top:10px;text-align:center;min-height:18px}
 .auth-msg.err{color:#D85A30}.auth-msg.ok{color:#1D9E75}
 
-#app-screen{display:none}
-.topbar{display:flex;align-items:center;justify-content:space-between;padding:8px 16px;background:var(--brand);border-bottom:2px solid var(--accent);position:sticky;top:0;z-index:20}
-.topbar-left{display:flex;align-items:center;gap:10px}
-.topbar-logo{height:38px;width:auto;background:#FFFeb4;border-radius:6px;padding:2px 8px;object-fit:contain;display:block}
-.nav-tabs{display:flex;gap:4px;flex-wrap:wrap}
-.nav-tab{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:600;border:none;cursor:pointer;background:none;transition:all .15s;position:relative}
-.nav-tab.active{background:var(--accent);color:#fff}
-.badge{position:absolute;top:-4px;right:-4px;width:16px;height:16px;border-radius:50%;background:#E24B4A;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center}
-.topbar-right{display:flex;align-items:center;gap:8px}
-.btn-sm{font-size:12px;color:var(--accent);background:#FFFeb4;border:0.5px solid var(--accent);border-radius:6px;padding:5px 10px;cursor:pointer;font-weight:600}
-.saving-dot{width:6px;height:6px;border-radius:50%;background:#FFFeb4;display:inline-block;margin-left:2px;opacity:0;transition:opacity .2s;vertical-align:middle}
-.saving-dot.show{opacity:1}
-.main{max-width:860px;margin:0 auto;padding:1rem}
+/* ── APP SHELL ── */
+#app-screen{display:none;min-height:100dvh;padding-bottom:var(--safe-bottom)}
 
-.sport-scroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:1rem;scrollbar-width:none}
+/* ── TOPBAR ── */
+.topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 12px;padding-top:calc(8px + var(--safe-top));
+  background:var(--brand);border-bottom:2px solid var(--accent);
+  position:sticky;top:0;z-index:20;gap:8px
+}
+.topbar-left{display:flex;align-items:center;gap:8px;min-width:0;flex:1}
+.topbar-logo{height:34px;width:auto;background:#FFFeb4;border-radius:6px;padding:2px 6px;object-fit:contain;display:block;flex-shrink:0}
+.saving-dot{width:6px;height:6px;border-radius:50%;background:#FFFeb4;display:inline-block;opacity:0;transition:opacity .2s;vertical-align:middle;flex-shrink:0}
+.saving-dot.show{opacity:1}
+.topbar-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.btn-sm{font-size:12px;color:var(--accent);background:#FFFeb4;border:0.5px solid var(--accent);border-radius:6px;padding:5px 10px;cursor:pointer;font-weight:600;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:20;
+  background:var(--brand);border-top:2px solid var(--accent);
+  display:flex;align-items:stretch;
+  padding-bottom:var(--safe-bottom);
+}
+.bottom-nav-item{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:8px 2px 6px;cursor:pointer;position:relative;
+  border:none;background:none;color:rgba(255,255,255,0.6);
+  font-size:9px;font-weight:600;letter-spacing:.02em;gap:3px;
+  -webkit-tap-highlight-color:transparent;min-width:0;
+}
+.bottom-nav-item.active{color:#fff}
+.bottom-nav-item svg{flex-shrink:0}
+.bottom-nav-badge{position:absolute;top:4px;right:calc(50% - 18px);width:15px;height:15px;border-radius:50%;background:#E24B4A;color:#fff;font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.nav-label{font-size:9px;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+
+/* ── MAIN CONTENT ── */
+.main{
+  max-width:860px;margin:0 auto;
+  padding:12px 12px calc(70px + var(--safe-bottom));
+}
+
+/* ── SPORT SCROLL ── */
+.sport-scroll{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:1rem;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .sport-scroll::-webkit-scrollbar{display:none}
-.sport-pill{padding:7px 16px;border-radius:20px;font-size:13px;font-weight:500;border:0.5px solid var(--border);cursor:pointer;background:var(--card);color:var(--muted);white-space:nowrap;transition:all .15s}
+.sport-pill{padding:7px 14px;border-radius:20px;font-size:13px;font-weight:500;border:0.5px solid var(--border);cursor:pointer;background:var(--card);color:var(--muted);white-space:nowrap;transition:all .15s;-webkit-tap-highlight-color:transparent}
 .sport-pill:hover{border-color:var(--brand);color:var(--brand)}
 .sport-pill.active{background:var(--brand);color:#fff;border-color:transparent}
 .sport-pill.locked-sport{opacity:.5}
 
+/* ── STATS ── */
 .stats-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:1rem}
-.stat{background:var(--card);border:0.5px solid var(--border);border-radius:var(--rsm);padding:10px 12px}
-.stat-label{font-size:11px;color:var(--muted);margin-bottom:3px}
-.stat-val{font-size:20px;font-weight:600;color:var(--brand)}
+.stat{background:var(--card);border:0.5px solid var(--border);border-radius:var(--rsm);padding:10px 10px}
+.stat-label{font-size:10px;color:var(--muted);margin-bottom:3px}
+.stat-val{font-size:18px;font-weight:600;color:var(--brand)}
 
+/* ── TIERS ── */
 .tiers-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-@media(max-width:520px){.tiers-grid{grid-template-columns:1fr}}
+@media(max-width:600px){.tiers-grid{grid-template-columns:1fr}}
 .tier-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden}
 .tier-head{padding:12px 14px 10px}
 .tier-bar-track{height:4px;border-radius:2px;background:rgba(0,0,0,0.08);margin-top:8px}
 .tier-bar-fill{height:100%;border-radius:2px;transition:width .4s}
 .skill-list{border-top:0.5px solid var(--border)}
-.skill-row{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;cursor:pointer;transition:background .1s;border-bottom:0.5px solid var(--border)}
+.skill-row{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;cursor:pointer;transition:background .1s;border-bottom:0.5px solid var(--border);-webkit-tap-highlight-color:transparent}
 .skill-row:last-child{border-bottom:none}
 .skill-row:hover:not(.locked){background:var(--bg)}
 .skill-row.locked{opacity:.4;cursor:default}
-.skill-cb{width:18px;height:18px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.skill-cb{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--border);flex-shrink:0;margin-top:1px;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .skill-cb.done{border-color:transparent}
 .skill-cb.pending-cb{border-color:var(--accent);background:rgba(224,64,160,0.1)}
 .skill-info{flex:1;min-width:0}
@@ -93,21 +135,23 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .coaching-key-bubble{margin-top:6px;padding:6px 10px;background:rgba(224,64,160,0.06);border-left:2px solid var(--accent);border-radius:0 6px 6px 0;font-size:11px;color:var(--muted);line-height:1.5}
 .coaching-key-bubble strong{color:var(--accent);font-weight:600}
 
+/* ── CERTS ── */
 .certs-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:1rem}
-.cert{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;text-align:center}
+.cert{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:12px;text-align:center}
 .cert.earned{border-width:1.5px}
-.cert-label{font-size:12px;font-weight:600;margin-bottom:3px}
-.cert-status{font-size:11px;color:var(--muted)}
+.cert-label{font-size:11px;font-weight:600;margin-bottom:3px}
+.cert-status{font-size:10px;color:var(--muted)}
 .cert.locked-cert{opacity:.4}
 .plat-card{background:linear-gradient(135deg,#e8e8f8,#f0e8ff);border:1.5px solid var(--plat-bd);border-radius:var(--radius);overflow:hidden;animation:plat-fade-in .8s ease forwards}
 .plat-badge{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:10px;font-size:10px;font-weight:700;background:var(--plat-m);color:var(--plat-t);letter-spacing:.04em}
 
-.quiz-wrap{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;animation:slide-up .4s ease}
+/* ── QUIZ ── */
+.quiz-wrap{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;animation:slide-up .4s ease}
 .quiz-progress{height:4px;background:var(--border);border-radius:2px;margin-bottom:1.5rem;overflow:hidden}
 .quiz-progress-fill{height:100%;border-radius:2px;background:var(--brand);transition:width .4s}
 .quiz-q{font-size:15px;font-weight:600;margin-bottom:1rem;line-height:1.4}
 .quiz-options{display:grid;gap:8px;margin-bottom:1.25rem}
-.quiz-opt{padding:10px 14px;border-radius:var(--rsm);border:0.5px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;cursor:pointer;text-align:left;transition:all .15s;line-height:1.4}
+.quiz-opt{padding:12px 14px;border-radius:var(--rsm);border:0.5px solid var(--border);background:var(--bg);color:var(--text);font-size:13px;cursor:pointer;text-align:left;transition:all .15s;line-height:1.4;-webkit-tap-highlight-color:transparent}
 .quiz-opt:hover{border-color:var(--brand);color:var(--brand)}
 .quiz-opt.correct{border-color:#1D9E75;background:rgba(29,158,117,0.1);color:#085041}
 .quiz-opt.wrong{border-color:#D85A30;background:rgba(216,90,48,0.1);color:#712B13;animation:shake .3s ease}
@@ -116,8 +160,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .quiz-score-big.pass{color:#1D9E75}
 .quiz-score-big.fail{color:#D85A30}
 
-.training-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
-.training-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;cursor:pointer;transition:all .15s}
+/* ── TRAINING ── */
+.training-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px}
+.training-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;cursor:pointer;transition:all .15s;-webkit-tap-highlight-color:transparent}
 .training-card:hover{border-color:var(--brand)}
 .training-card.completed{border-color:#1D9E75;background:rgba(29,158,117,0.04)}
 .training-icon{font-size:28px;margin-bottom:10px}
@@ -127,30 +172,35 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .training-status.pass{background:rgba(29,158,117,0.12);color:#085041}
 .training-status.pending-s{background:rgba(0,200,212,0.12);color:var(--brand)}
 
+/* ── SHARE ── */
 .share-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-top:1rem}
 .share-preview{background:linear-gradient(135deg,#FFFeb4,#fffff0);border:1.5px solid var(--brand);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
-.btn-share{flex:1;padding:9px;border-radius:var(--rsm);font-size:13px;font-weight:600;border:none;cursor:pointer;min-width:120px}
+.btn-share{flex:1;padding:10px;border-radius:var(--rsm);font-size:13px;font-weight:600;border:none;cursor:pointer;min-width:100px}
 
+/* ── COACH ── */
 .section-head{font-size:13px;font-weight:600;margin-bottom:.75rem;color:var(--text)}
 .approval-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:8px}
-.note-input{width:100%;padding:7px 10px;border:0.5px solid var(--border);border-radius:var(--rsm);background:var(--bg);color:var(--text);font-size:12px;outline:none;margin-top:6px;font-family:inherit}
+.note-input{width:100%;padding:8px 10px;border:0.5px solid var(--border);border-radius:var(--rsm);background:var(--bg);color:var(--text);font-size:14px;outline:none;margin-top:6px;font-family:inherit}
 .empty-state{text-align:center;padding:2rem;color:var(--muted);font-size:13px}
-.btn-approve{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:500;border:none;cursor:pointer;background:#E1F5EE;color:#085041}
-.btn-reject{padding:6px 14px;border-radius:6px;font-size:12px;font-weight:500;border:none;cursor:pointer;background:#FAECE7;color:#712B13}
+.btn-approve{padding:8px 16px;border-radius:6px;font-size:13px;font-weight:500;border:none;cursor:pointer;background:#E1F5EE;color:#085041}
+.btn-reject{padding:8px 16px;border-radius:6px;font-size:13px;font-weight:500;border:none;cursor:pointer;background:#FAECE7;color:#712B13}
 
+/* ── LEADERBOARD ── */
 .lb-filters{display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap}
-.lb-pill{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500;border:0.5px solid var(--border);cursor:pointer;background:var(--card);color:var(--muted);transition:all .15s}
+.lb-pill{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:500;border:0.5px solid var(--border);cursor:pointer;background:var(--card);color:var(--muted);transition:all .15s;-webkit-tap-highlight-color:transparent}
 .lb-pill.active{background:var(--brand);color:#fff;border-color:transparent}
 .lb-table{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden}
-.lb-row{display:grid;grid-template-columns:36px 1fr auto auto;align-items:center;gap:10px;padding:10px 14px;border-bottom:0.5px solid var(--border)}
+.lb-row{display:grid;grid-template-columns:32px 1fr auto auto;align-items:center;gap:8px;padding:10px 12px;border-bottom:0.5px solid var(--border)}
 .lb-row:last-child{border-bottom:none}
 .lb-row.header{background:var(--bg);font-size:11px;font-weight:600;color:var(--muted)}
 .lb-rank{font-size:13px;font-weight:700;color:var(--muted);text-align:center}
 .lb-rank.top{color:var(--brand)}
-.lb-name{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500}
-.lb-tier-badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
-.lb-score{font-size:13px;font-weight:600;color:var(--muted);text-align:right}
+.lb-name{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500;min-width:0}
+.lb-name span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lb-tier-badge{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600;white-space:nowrap}
+.lb-score{font-size:13px;font-weight:600;color:var(--muted);text-align:right;white-space:nowrap}
 
+/* ── PROFILE ── */
 .profile-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem}
 .profile-avatar-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:1.25rem}
 .profile-avatar{width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--brand);margin-bottom:10px}
@@ -159,41 +209,101 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .profile-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:0.5px solid var(--border)}
 .profile-row:last-child{border-bottom:none}
 .profile-key{font-size:12px;color:var(--muted)}
-.profile-val{font-size:13px;font-weight:500}
+.profile-val{font-size:13px;font-weight:500;text-align:right;max-width:60%}
 .club-section{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1rem}
 .club-join-row{display:flex;gap:8px;margin-top:10px}
-.club-join-row input{flex:1;padding:8px 12px;border:0.5px solid var(--border);border-radius:var(--rsm);background:var(--bg);color:var(--text);font-size:13px;outline:none;text-transform:uppercase}
-.btn-join{padding:8px 16px;border-radius:var(--rsm);font-size:13px;font-weight:600;background:var(--brand);color:#fff;border:none;cursor:pointer}
+.club-join-row input{flex:1;padding:10px 12px;border:0.5px solid var(--border);border-radius:var(--rsm);background:var(--bg);color:var(--text);font-size:16px;outline:none;text-transform:uppercase;-webkit-appearance:none}
+.btn-join{padding:10px 16px;border-radius:var(--rsm);font-size:13px;font-weight:600;background:var(--brand);color:#fff;border:none;cursor:pointer;white-space:nowrap}
 
+/* ── ADMIN ── */
 .admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:1rem}
-@media(max-width:480px){.admin-grid{grid-template-columns:1fr}}
 .admin-stat{background:var(--card);border:0.5px solid var(--border);border-radius:var(--rsm);padding:14px}
 .admin-stat-label{font-size:11px;color:var(--muted);margin-bottom:4px}
 .admin-stat-val{font-size:24px;font-weight:600;color:var(--brand)}
 .user-table{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden}
-.user-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:10px;padding:10px 14px;border-bottom:0.5px solid var(--border);font-size:13px}
+.user-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;padding:10px 12px;border-bottom:0.5px solid var(--border);font-size:13px}
 .user-row:last-child{border-bottom:none}
 .user-row.header{background:var(--bg);font-size:11px;font-weight:600;color:var(--muted)}
-.role-select{font-size:12px;padding:3px 8px;border-radius:6px;border:0.5px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer}
-.btn-reset{font-size:11px;padding:3px 8px;border-radius:6px;border:0.5px solid var(--border);background:none;color:var(--muted);cursor:pointer}
+.role-select{font-size:12px;padding:4px 8px;border-radius:6px;border:0.5px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer}
+.btn-reset{font-size:11px;padding:4px 8px;border-radius:6px;border:0.5px solid var(--border);background:none;color:var(--muted);cursor:pointer}
 .btn-reset:hover{color:#D85A30;border-color:#D85A30}
 .invite-box{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.25rem}
 .invite-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.invite-row input,.invite-row select{padding:8px 12px;border:0.5px solid var(--border);border-radius:var(--rsm);background:var(--bg);color:var(--text);font-size:13px;outline:none}
-.invite-row input{flex:1;min-width:160px}
+.invite-row input,.invite-row select{padding:8px 12px;border:0.5px solid var(--border);border-radius:var(--rsm);background:var(--bg);color:var(--text);font-size:14px;outline:none}
+.invite-row input{flex:1;min-width:140px}
 .skills-editor-table{width:100%;border-collapse:collapse;font-size:12px}
 .skills-editor-table th{background:var(--bg);padding:8px 10px;text-align:left;font-weight:600;color:var(--muted);border-bottom:0.5px solid var(--border)}
 .skills-editor-table td{padding:6px 8px;border-bottom:0.5px solid var(--border);vertical-align:top}
 .edit-input{width:100%;padding:4px 8px;border:0.5px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text);font-size:12px;outline:none;font-family:inherit}
 .edit-textarea{width:100%;padding:4px 8px;border:0.5px solid var(--border);border-radius:4px;background:var(--bg);color:var(--text);font-size:12px;outline:none;resize:vertical;min-height:40px;font-family:inherit;line-height:1.4}
-.btn-save-skill{font-size:11px;padding:3px 10px;border-radius:6px;border:none;background:var(--brand);color:#fff;cursor:pointer}
+.btn-save-skill{font-size:11px;padding:4px 10px;border-radius:6px;border:none;background:var(--brand);color:#fff;cursor:pointer}
 .btn-save-skill:disabled{opacity:.45;cursor:default}
 .saved-flash{font-size:10px;color:#1D9E75;margin-left:4px}
-#share-screen{display:none;min-height:100vh;padding:1rem;max-width:480px;margin:0 auto}
+
+/* ── SHARE SCREEN ── */
+#share-screen{display:none;min-height:100dvh;padding:1rem;max-width:480px;margin:0 auto}
 .share-page-card{background:var(--card);border:1.5px solid var(--brand);border-radius:var(--radius);padding:1.5rem;animation:slide-up .5s ease}
+
+/* ── PWA INSTALL BANNER ── */
+#pwa-banner{
+  display:none;position:fixed;top:0;left:0;right:0;z-index:1000;
+  background:var(--card);border-bottom:2px solid var(--brand);
+  padding:12px 16px;padding-top:calc(12px + var(--safe-top));
+  animation:slide-down .4s ease;
+  box-shadow:0 4px 20px rgba(0,0,0,0.15);
+}
+.pwa-banner-inner{display:flex;align-items:center;gap:12px;max-width:500px;margin:0 auto}
+.pwa-banner-icon{width:44px;height:44px;border-radius:10px;background:#FFFeb4;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.pwa-banner-icon img{width:100%;height:100%;object-fit:contain;padding:4px}
+.pwa-banner-text{flex:1;min-width:0}
+.pwa-banner-title{font-size:13px;font-weight:700;color:var(--text)}
+.pwa-banner-sub{font-size:11px;color:var(--muted);margin-top:1px;line-height:1.4}
+.pwa-banner-actions{display:flex;gap:6px;flex-shrink:0}
+.pwa-install-btn{padding:7px 14px;border-radius:20px;background:var(--brand);color:#fff;border:none;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap}
+.pwa-dismiss-btn{padding:7px 10px;border-radius:20px;background:none;color:var(--muted);border:0.5px solid var(--border);font-size:12px;cursor:pointer}
+
+/* ── iOS INSTALL TIP ── */
+#ios-tip{
+  display:none;position:fixed;bottom:calc(70px + var(--safe-bottom) + 8px);left:12px;right:12px;z-index:1000;
+  background:#1a2a2a;border-radius:var(--radius);padding:14px 16px;
+  box-shadow:0 4px 24px rgba(0,0,0,0.3);animation:slide-up .4s ease;
+  max-width:400px;margin:0 auto;
+}
+.ios-tip-inner{display:flex;align-items:flex-start;gap:10px}
+.ios-tip-text{flex:1;font-size:13px;color:#fff;line-height:1.5}
+.ios-tip-text strong{color:var(--brand)}
+.ios-tip-close{background:none;border:none;color:rgba(255,255,255,0.5);font-size:18px;cursor:pointer;line-height:1;padding:0;flex-shrink:0}
+#ios-tip::after{content:'';position:absolute;bottom:-8px;left:50%;transform:translateX(-50%);border:8px solid transparent;border-top-color:#1a2a2a;border-bottom:none}
 </style>
 </head>
 <body>
+
+<!-- PWA INSTALL BANNER (Android/Desktop) -->
+<div id="pwa-banner">
+  <div class="pwa-banner-inner">
+    <div class="pwa-banner-icon">
+      <img src="https://raw.githubusercontent.com/Stillwatersports/Skills-App/main/Logo.png"/>
+    </div>
+    <div class="pwa-banner-text">
+      <div class="pwa-banner-title">Add Stillwater to your home screen</div>
+      <div class="pwa-banner-sub">Get the full app experience — works offline too</div>
+    </div>
+    <div class="pwa-banner-actions">
+      <button class="pwa-install-btn" onclick="triggerInstall()">Install</button>
+      <button class="pwa-dismiss-btn" onclick="dismissBanner()">✕</button>
+    </div>
+  </div>
+</div>
+
+<!-- iOS INSTALL TIP -->
+<div id="ios-tip">
+  <div class="ios-tip-inner">
+    <div class="ios-tip-text">
+      Tap <strong>Share ↑</strong> then <strong>"Add to Home Screen"</strong> to install the Stillwater app on your iPhone
+    </div>
+    <button class="ios-tip-close" onclick="dismissIosTip()">✕</button>
+  </div>
+</div>
 
 <div id="auth-screen">
   <div class="auth-card">
@@ -228,7 +338,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
     <div class="topbar-left">
       <img class="topbar-logo" src="https://raw.githubusercontent.com/Stillwatersports/Skills-App/main/Logo.png"/>
       <span class="saving-dot" id="saving-dot"></span>
-      <div class="nav-tabs" id="nav-tabs"></div>
     </div>
     <div class="topbar-right">
       <div id="avatar-top" onclick="setView('profile')" style="cursor:pointer"></div>
@@ -236,9 +345,84 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
     </div>
   </div>
   <div class="main" id="main-content"></div>
+  <!-- Bottom nav rendered by JS -->
+  <nav class="bottom-nav" id="bottom-nav"></nav>
 </div>
 
 <script>
+// ── PWA MANIFEST (injected dynamically) ───────────────────────────
+const manifestData = {
+  name: 'Stillwater Sports Ottawa',
+  short_name: 'Stillwater',
+  description: 'Progressive watersports skills & rewards program',
+  start_url: '/',
+  display: 'standalone',
+  background_color: '#FFFeb4',
+  theme_color: '#00C8D4',
+  orientation: 'portrait',
+  icons: [
+    { src: 'https://raw.githubusercontent.com/Stillwatersports/Skills-App/main/Logo.png', sizes: '192x192', type: 'image/png' },
+    { src: 'https://raw.githubusercontent.com/Stillwatersports/Skills-App/main/Logo.png', sizes: '512x512', type: 'image/png', purpose: 'any maskable' }
+  ]
+}
+const manifestBlob = new Blob([JSON.stringify(manifestData)], {type:'application/json'})
+document.getElementById('pwa-manifest').href = URL.createObjectURL(manifestBlob)
+
+// ── PWA INSTALL LOGIC ─────────────────────────────────────────────
+let deferredInstallPrompt = null
+
+function isIos() {
+  return /iphone|ipad|ipod/i.test(navigator.userAgent)
+}
+function isInStandaloneMode() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true
+}
+function isDismissed(key) {
+  return localStorage.getItem(key) === 'true'
+}
+
+// Android/Chrome: capture the beforeinstallprompt event
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault()
+  deferredInstallPrompt = e
+  if (!isDismissed('pwa-banner-dismissed')) {
+    setTimeout(() => { document.getElementById('pwa-banner').style.display = 'block' }, 2000)
+  }
+})
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('pwa-banner').style.display = 'none'
+  deferredInstallPrompt = null
+})
+
+async function triggerInstall() {
+  if (!deferredInstallPrompt) return
+  deferredInstallPrompt.prompt()
+  const { outcome } = await deferredInstallPrompt.userChoice
+  if (outcome === 'accepted') { document.getElementById('pwa-banner').style.display = 'none' }
+  deferredInstallPrompt = null
+}
+
+function dismissBanner() {
+  document.getElementById('pwa-banner').style.display = 'none'
+  localStorage.setItem('pwa-banner-dismissed', 'true')
+}
+
+// iOS: show tip after login if not in standalone and not dismissed
+function maybeShowIosTip() {
+  if (!isIos() || isInStandaloneMode() || isDismissed('ios-tip-dismissed')) return
+  setTimeout(() => {
+    document.getElementById('ios-tip').style.display = 'block'
+    setTimeout(() => dismissIosTip(), 12000)
+  }, 3000)
+}
+
+function dismissIosTip() {
+  document.getElementById('ios-tip').style.display = 'none'
+  localStorage.setItem('ios-tip-dismissed', 'true')
+}
+
+// ── SUPABASE ──────────────────────────────────────────────────────
 const SUPABASE_URL = 'https://jjnhsbgmcjqwlmeihwuy.supabase.co'
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqbmhzYmdtY2pxd2xtZWlod3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyODkwNDEsImV4cCI6MjA4OTg2NTA0MX0.MOTbufdBqUhB36P1YBL-zo-KKlvJ-LBHwPS70D7DoWU'
 const { createClient } = supabase
@@ -476,6 +660,7 @@ async function loadUser(user) {
   document.getElementById('app-screen').style.display = 'block'
   renderNav()
   renderAvatarTop()
+  maybeShowIosTip()
   if (!userProfile?.onboarding_done) {
     onboardingData.name = userProfile?.name || ''
     onboardingData.sports = userProfile?.sports_interest || []
@@ -719,8 +904,8 @@ async function finishOnboarding() {
 
 function showSkipNotice(exp) {
   const banner = document.createElement('div')
-  banner.style.cssText = 'position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);background:#1a0a3a;color:#fff;padding:12px 20px;border-radius:var(--radius);font-size:13px;z-index:100;max-width:360px;text-align:center'
-  banner.textContent = `Welcome back! As an ${exp==='advanced'?'advanced rider':'experienced rider'} your safety quiz is pre-cleared. Complete the dryland checklist with your coach to unlock water skills.`
+  banner.style.cssText = 'position:fixed;bottom:calc(70px + var(--safe-bottom) + 8px);left:50%;transform:translateX(-50%);background:#1a0a3a;color:#fff;padding:12px 20px;border-radius:var(--radius);font-size:13px;z-index:100;max-width:360px;text-align:center;width:calc(100% - 32px)'
+  banner.textContent = `Welcome back! As an ${exp==='advanced'?'advanced rider':'experienced rider'} your safety quiz is pre-cleared.`
   document.body.appendChild(banner)
   setTimeout(() => { banner.style.transition = 'opacity .5s'; banner.style.opacity = '0'; setTimeout(() => banner.remove(), 500) }, 5000)
 }
@@ -742,7 +927,7 @@ function renderQuizQuestion() {
   const q = activeQuiz.questions[quizCurrent]
   const total = activeQuiz.questions.length
   const pct = Math.round(quizCurrent / total * 100)
-  c.innerHTML = `<div style="max-width:560px;margin:0 auto"><div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;cursor:pointer" onclick="setView('training')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="var(--brand)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:13px;color:var(--brand)">Back to training</span></div><div class="quiz-wrap"><div style="font-size:12px;color:var(--muted);margin-bottom:6px">${activeQuiz.title} — Question ${quizCurrent+1} of ${total}</div><div class="quiz-progress"><div class="quiz-progress-fill" style="width:${pct}%"></div></div><div class="quiz-q">${q.q}</div><div class="quiz-options">${q.opts.map((o,i)=>`<button class="quiz-opt" id="qopt-${i}" onclick="selectAnswer(${i})">${o}</button>`).join('')}</div><button id="quiz-next-btn" onclick="nextQuestion()" disabled style="width:100%;padding:10px;border-radius:var(--rsm);border:none;background:var(--brand);color:#fff;font-weight:600;cursor:pointer;font-size:13px;opacity:.45">Next</button></div></div>`
+  c.innerHTML = `<div style="max-width:560px;margin:0 auto"><div style="display:flex;align-items:center;gap:10px;margin-bottom:1rem;cursor:pointer" onclick="setView('training')"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="var(--brand)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><span style="font-size:13px;color:var(--brand)">Back to training</span></div><div class="quiz-wrap"><div style="font-size:12px;color:var(--muted);margin-bottom:6px">${activeQuiz.title} — Question ${quizCurrent+1} of ${total}</div><div class="quiz-progress"><div class="quiz-progress-fill" style="width:${pct}%"></div></div><div class="quiz-q">${q.q}</div><div class="quiz-options">${q.opts.map((o,i)=>`<button class="quiz-opt" id="qopt-${i}" onclick="selectAnswer(${i})">${o}</button>`).join('')}</div><button id="quiz-next-btn" onclick="nextQuestion()" disabled style="width:100%;padding:12px;border-radius:var(--rsm);border:none;background:var(--brand);color:#fff;font-weight:600;cursor:pointer;font-size:14px;opacity:.45">Next</button></div></div>`
 }
 
 function selectAnswer(i) {
@@ -803,14 +988,40 @@ function flashSave() {
   saveTimer = setTimeout(() => dot.classList.remove('show'), 1200)
 }
 
-// ── NAV ───────────────────────────────────────────────────────────
+// ── NAV (bottom tabs) ─────────────────────────────────────────────
+const NAV_ICONS = {
+  skills: `<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 11l4 4L18 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+  training: `<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.8"/><path d="M11 7v4l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  sessions: `<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M3 17c2-4 4-6 8-6s6 2 8 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="11" cy="8" r="3" stroke="currentColor" stroke-width="1.8"/></svg>`,
+  coach: `<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="3" y="5" width="16" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M8 10h6M8 13h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  leaderboard: `<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="9" y="3" width="4" height="16" rx="1" stroke="currentColor" stroke-width="1.8"/><rect x="3" y="9" width="4" height="10" rx="1" stroke="currentColor" stroke-width="1.8"/><rect x="15" y="6" width="4" height="13" rx="1" stroke="currentColor" stroke-width="1.8"/></svg>`,
+  friends: `<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="8" cy="8" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M2 18c0-3.3 2.7-6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="16" cy="8" r="3" stroke="currentColor" stroke-width="1.8"/><path d="M20 18c0-3.3-2.7-6-6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  profile: `<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="8" r="4" stroke="currentColor" stroke-width="1.8"/><path d="M3 19c0-4.4 3.6-8 8-8s8 3.6 8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>`,
+  admin: `<svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M11 3l2 4h4l-3 3 1 5-4-3-4 3 1-5-3-3h4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>`
+}
+
 function renderNav() {
   const pending = pendingCoach.length
-  const tabs = [{id:'skills',label:'Skills'},{id:'training',label:'Training'},{id:'sessions',label:'Sessions'}]
+  const tabs = [
+    {id:'skills',label:'Skills'},
+    {id:'training',label:'Training'},
+    {id:'sessions',label:'Sessions'}
+  ]
   if (isCoach()) tabs.push({id:'coach',label:'Approvals',badge:pending})
-  tabs.push({id:'leaderboard',label:'Leaderboard'},{id:'friends',label:'Friends'},{id:'profile',label:'Profile'})
+  tabs.push(
+    {id:'leaderboard',label:'Board'},
+    {id:'friends',label:'Friends'},
+    {id:'profile',label:'Profile'}
+  )
   if (isAdmin()) tabs.push({id:'admin',label:'Admin'})
-  document.getElementById('nav-tabs').innerHTML = tabs.map(t => `<button class="nav-tab${activeView===t.id?' active':''}" onclick="setView('${t.id}')" style="position:relative;color:${activeView===t.id?'#fff':'var(--accent)'}">${t.label}${t.badge?`<span style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;border-radius:50%;background:#E24B4A;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center">${t.badge}</span>`:''}</button>`).join('')
+
+  document.getElementById('bottom-nav').innerHTML = tabs.map(t =>
+    `<button class="bottom-nav-item${activeView===t.id?' active':''}" onclick="setView('${t.id}')">
+      ${NAV_ICONS[t.id]||''}
+      ${t.badge?`<span class="bottom-nav-badge">${t.badge}</span>`:''}
+      <span class="nav-label">${t.label}</span>
+    </button>`
+  ).join('')
 }
 
 function renderAvatarTop() { document.getElementById('avatar-top').innerHTML = avatarHtml(userProfile?.avatar_url, userProfile?.name, 28) }
@@ -831,6 +1042,8 @@ async function setView(v) {
   else if (v === 'friends') renderFriendsView(c)
   else if (v === 'profile') renderProfileView(c)
   else if (v === 'admin') renderAdminView(c)
+  // scroll to top on view change
+  window.scrollTo({top:0, behavior:'smooth'})
 }
 
 // ── TRAINING VIEW ─────────────────────────────────────────────────
@@ -853,7 +1066,7 @@ function renderTrainingView(c) {
     const q = QUIZZES[qid], passed = hasPassed(qid), result = quizResults[qid]
     return `<div class="training-card${passed?' completed':''}" onclick="startQuiz('${qid}')"><div class="training-icon">${q.icon}</div><div class="training-title">${q.title}</div><div class="training-desc">${q.desc}</div><span class="training-status ${passed?'pass':'pending-s'}">${passed?`Passed ${result?.score}%`:'Take quiz'}</span></div>`
   }).join('')
-  c.innerHTML = `<div style="margin-bottom:1.5rem"><div class="section-head">Dryland safety — required before water skills</div><div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:10px"><div style="padding:12px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:13px;font-weight:600">Step 1 — Safety quiz</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Pass the quiz to unlock the skills checklist</div></div>${drylandQuizPassed?`<span style="font-size:11px;font-weight:600;color:#1D9E75;background:rgba(29,158,117,0.1);padding:3px 10px;border-radius:10px">Passed ${quizResults['dryland']?.score}%</span>`:`<button onclick="startQuiz('dryland')" style="padding:6px 14px;border-radius:var(--rsm);border:none;background:var(--brand);color:#fff;font-weight:600;cursor:pointer;font-size:12px">Take quiz</button>`}</div><div style="padding:12px 14px;border-bottom:0.5px solid var(--border)"><div style="font-size:13px;font-weight:600;margin-bottom:4px">Step 2 — Skills checklist</div><div style="font-size:11px;color:var(--muted)">${!drylandQuizPassed?'Complete the quiz first to unlock':'Tap each skill to submit for coach approval'}</div></div><div class="skill-list">${drylandSkillRows||'<div class="empty-state">Loading…</div>'}</div></div>${drylandComplete?`<div style="padding:10px 14px;background:rgba(29,158,117,0.1);border:0.5px solid #1D9E75;border-radius:var(--rsm);font-size:13px;color:#085041;font-weight:500">✓ Dryland complete — water skills unlocked!</div>`:''}</div><div><div class="section-head">Boat driver certification</div><div class="training-grid">${driverCards}</div></div>`
+  c.innerHTML = `<div style="margin-bottom:1.5rem"><div class="section-head">Dryland safety — required before water skills</div><div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:10px"><div style="padding:12px 14px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:10px"><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600">Step 1 — Safety quiz</div><div style="font-size:11px;color:var(--muted);margin-top:2px">Pass the quiz to unlock the skills checklist</div></div>${drylandQuizPassed?`<span style="font-size:11px;font-weight:600;color:#1D9E75;background:rgba(29,158,117,0.1);padding:3px 10px;border-radius:10px;white-space:nowrap">Passed ${quizResults['dryland']?.score}%</span>`:`<button onclick="startQuiz('dryland')" style="padding:7px 14px;border-radius:var(--rsm);border:none;background:var(--brand);color:#fff;font-weight:600;cursor:pointer;font-size:12px;flex-shrink:0">Take quiz</button>`}</div><div style="padding:12px 14px;border-bottom:0.5px solid var(--border)"><div style="font-size:13px;font-weight:600;margin-bottom:4px">Step 2 — Skills checklist</div><div style="font-size:11px;color:var(--muted)">${!drylandQuizPassed?'Complete the quiz first to unlock':'Tap each skill to submit for coach approval'}</div></div><div class="skill-list">${drylandSkillRows||'<div class="empty-state">Loading…</div>'}</div></div>${drylandComplete?`<div style="padding:10px 14px;background:rgba(29,158,117,0.1);border:0.5px solid #1D9E75;border-radius:var(--rsm);font-size:13px;color:#085041;font-weight:500">✓ Dryland complete — water skills unlocked!</div>`:''}</div><div><div class="section-head">Boat driver certification</div><div class="training-grid">${driverCards}</div></div>`
 }
 
 async function submitDryland(idx) {
@@ -875,7 +1088,7 @@ async function submitDryland(idx) {
 // ── SKILLS VIEW ───────────────────────────────────────────────────
 function renderSkillsView(c) {
   if (!drylandPassed()) {
-    c.innerHTML = `<div style="text-align:center;padding:3rem 1rem"><div style="font-size:40px;margin-bottom:1rem">🛡️</div><div style="font-size:16px;font-weight:600;margin-bottom:8px">Complete dryland safety first</div><div style="font-size:13px;color:var(--muted);margin-bottom:1.5rem">Pass the safety quiz and complete the dryland checklist before water skills unlock.</div><button onclick="setView('training')" style="padding:10px 24px;border-radius:var(--rsm);border:none;background:var(--brand);color:#fff;font-weight:600;cursor:pointer;font-size:14px">Go to Training</button></div>`
+    c.innerHTML = `<div style="text-align:center;padding:3rem 1rem"><div style="font-size:40px;margin-bottom:1rem">🛡️</div><div style="font-size:16px;font-weight:600;margin-bottom:8px">Complete dryland safety first</div><div style="font-size:13px;color:var(--muted);margin-bottom:1.5rem">Pass the safety quiz and complete the dryland checklist before water skills unlock.</div><button onclick="setView('training')" style="padding:12px 24px;border-radius:var(--rsm);border:none;background:var(--brand);color:#fff;font-weight:600;cursor:pointer;font-size:14px">Go to Training</button></div>`
     return
   }
   const sp = activeSport, sportData = DEFAULT_SKILLS[sp], locked = !sportUnlocked(sp)
@@ -890,7 +1103,7 @@ function renderSkillsView(c) {
     c.innerHTML = `<div class="sport-scroll">${sportTabs}</div><div style="text-align:center;padding:3rem 1rem"><div style="font-size:40px;margin-bottom:1rem">🔒</div><div style="font-size:16px;font-weight:600;margin-bottom:8px">${sportData.name} is locked</div><div style="font-size:13px;color:var(--muted)">${sp==='slalom'?'Complete Water Ski Silver to unlock Slalom':sp==='barefoot'?'Complete Slalom Silver or Wakeboard Silver to unlock Barefoot':'Locked'}</div></div>`
     return
   }
-  const stats = `<div class="stats-row"><div class="stat"><div class="stat-label">Approved skills</div><div class="stat-val">${done}/${total}</div></div><div class="stat"><div class="stat-label">Progress</div><div class="stat-val">${pct}%</div></div><div class="stat"><div class="stat-label">Tiers earned</div><div class="stat-val">${earned}/3</div></div></div>`
+  const stats = `<div class="stats-row"><div class="stat"><div class="stat-label">Approved</div><div class="stat-val">${done}/${total}</div></div><div class="stat"><div class="stat-label">Progress</div><div class="stat-val">${pct}%</div></div><div class="stat"><div class="stat-label">Tiers</div><div class="stat-val">${earned}/3</div></div></div>`
   const tiers = TIERS.map(tier => {
     const m = TM[tier], skills = getSkills(sp,tier), cnt = countApproved(sp,tier), tot = skills.length
     const unlocked = tierUnlocked(sp,tier), pct = tot ? Math.round(cnt/tot*100) : 0
@@ -899,7 +1112,7 @@ function renderSkillsView(c) {
       const notes = skillNotes[`${sp}|${tier}|${i}`] || []
       let cbHtml = '', statusHtml = ''
       if (approved) { cbHtml = `<div class="skill-cb done" style="background:${m.bar}">${chkSVG('#fff')}</div>` }
-      else if (pending) { cbHtml = `<div class="skill-cb pending-cb">${clockSVG()}</div>`; statusHtml = `<div class="skill-status pending">Awaiting coach approval — tap to cancel</div>` }
+      else if (pending) { cbHtml = `<div class="skill-cb pending-cb">${clockSVG()}</div>`; statusHtml = `<div class="skill-status pending">Awaiting approval — tap to cancel</div>` }
       else if (rejected) { const r=getA(sp,tier,i); cbHtml = `<div class="skill-cb">${lockSVG()}</div>`; statusHtml = `<div class="skill-status rejected">Rejected${r?.note?': '+r.note:''} — tap to resubmit</div>` }
       else if (lk) { cbHtml = `<div class="skill-cb">${lockSVG()}</div>` }
       else { cbHtml = `<div class="skill-cb"></div>` }
@@ -909,14 +1122,14 @@ function renderSkillsView(c) {
     }).join('')
     return `<div class="tier-card"><div class="tier-head" style="background:${m.bg}"><div style="width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;margin-bottom:6px;background:${m.m};color:${m.t}">${m.label[0]}</div><div style="font-size:14px;font-weight:600;margin-bottom:2px;color:${m.t}">${m.label}</div><div style="font-size:11px;opacity:.75;color:${m.t}">${cnt} of ${tot} approved</div><div class="tier-bar-track"><div class="tier-bar-fill" style="width:${pct}%;background:${m.bar}"></div></div></div><div class="skill-list">${rows||`<div class="empty-state" style="font-size:12px">No skills yet</div>`}</div></div>`
   }).join('')
-  const certs = TIERS.map(tier => { const m=TM[tier], earnd=allApproved(sp,tier), unlkd=tierUnlocked(sp,tier); return `<div class="${earnd?'cert earned':unlkd?'cert':'cert locked-cert'}" style="${earnd?`border-color:${m.bd};background:${m.bg};`:''}"><div style="font-size:22px;margin-bottom:6px;color:${m.bar}">◆</div><div class="cert-label" style="${earnd?`color:${m.t}`:''}">${m.label} certificate</div><div class="cert-status">${earnd?`<span style="color:${m.t};font-weight:600">Certified!</span>`:unlkd?`Complete all ${m.label} skills`:'Locked'}</div></div>` }).join('')
+  const certs = TIERS.map(tier => { const m=TM[tier], earnd=allApproved(sp,tier), unlkd=tierUnlocked(sp,tier); return `<div class="${earnd?'cert earned':unlkd?'cert':'cert locked-cert'}" style="${earnd?`border-color:${m.bd};background:${m.bg};`:''}"><div style="font-size:22px;margin-bottom:6px;color:${m.bar}">◆</div><div class="cert-label" style="${earnd?`color:${m.t}`:''}">${m.label}</div><div class="cert-status">${earnd?`<span style="color:${m.t};font-weight:600">Certified!</span>`:unlkd?`Complete all ${m.label}`:'Locked'}</div></div>` }).join('')
   const platSkills = getSkills(sp, 'platinum'), platDone = platSkills.filter((_,i)=>isApproved(sp,'platinum',i)).length, platPct = platSkills.length ? Math.round(platDone/platSkills.length*100) : 0
   const platRows = platSkills.map((sk, i) => {
     const approved=isApproved(sp,'platinum',i), pending=isPending(sp,'platinum',i), rejected=isRejected(sp,'platinum',i)
     const notes = skillNotes[`${sp}|platinum|${i}`] || []
     let cbHtml = '', statusHtml = ''
     if (approved) { cbHtml = `<div class="skill-cb done" style="background:var(--plat-bar)">${chkSVG('#fff')}</div>` }
-    else if (pending) { cbHtml = `<div class="skill-cb pending-cb">${clockSVG()}</div>`; statusHtml = `<div class="skill-status pending">Awaiting coach approval — tap to cancel</div>` }
+    else if (pending) { cbHtml = `<div class="skill-cb pending-cb">${clockSVG()}</div>`; statusHtml = `<div class="skill-status pending">Awaiting approval — tap to cancel</div>` }
     else if (rejected) { const r=getA(sp,'platinum',i); cbHtml = `<div class="skill-cb">${lockSVG()}</div>`; statusHtml = `<div class="skill-status rejected">Rejected${r?.note?': '+r.note:''} — tap to resubmit</div>` }
     else { cbHtml = `<div class="skill-cb" style="border-color:var(--plat-bd)"></div>` }
     const noteHtml = notes.map(n => `<div class="coach-note-bubble"><strong>Coach note:</strong> ${n.note}</div>`).join('')
@@ -936,7 +1149,7 @@ function screenshotCard() { const m=document.getElementById('share-msg'); if (m)
 // ── SESSIONS VIEW ─────────────────────────────────────────────────
 async function renderSessionView(c) {
   if (activeSession) {
-    c.innerHTML = `<div style="max-width:480px;margin:0 auto"><div style="background:var(--card);border:2px solid #1D9E75;border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem"><div style="display:flex;align-items:center;gap:8px;margin-bottom:1.25rem"><div style="width:10px;height:10px;border-radius:50%;background:#1D9E75;animation:pulse 1s infinite"></div><div style="font-size:15px;font-weight:600">Session active</div><div id="sess-status" style="margin-left:auto;font-size:12px">⚪ Idle</div></div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:1.25rem"><div style="background:var(--bg);border-radius:var(--rsm);padding:12px;text-align:center"><div style="font-size:11px;color:var(--muted);margin-bottom:4px">Time</div><div id="sess-time" style="font-size:22px;font-weight:700;color:var(--brand)">00:00</div></div><div style="background:var(--bg);border-radius:var(--rsm);padding:12px;text-align:center"><div style="font-size:11px;color:var(--muted);margin-bottom:4px">Runs</div><div id="sess-runs" style="font-size:22px;font-weight:700;color:var(--accent)">0</div></div><div style="background:var(--bg);border-radius:var(--rsm);padding:12px;text-align:center"><div style="font-size:11px;color:var(--muted);margin-bottom:4px">Distance</div><div id="sess-dist" style="font-size:22px;font-weight:700;color:var(--brand)">0.00 km</div></div><div style="background:var(--bg);border-radius:var(--rsm);padding:12px;text-align:center"><div style="font-size:11px;color:var(--muted);margin-bottom:4px">Speed</div><div id="sess-speed" style="font-size:22px;font-weight:700;color:var(--muted)">0 km/h</div></div></div><button onclick="endSession()" style="width:100%;padding:12px;border-radius:var(--rsm);border:none;background:#D85A30;color:#fff;font-weight:700;font-size:15px;cursor:pointer">End Session</button></div></div>`
+    c.innerHTML = `<div style="max-width:480px;margin:0 auto"><div style="background:var(--card);border:2px solid #1D9E75;border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem"><div style="display:flex;align-items:center;gap:8px;margin-bottom:1.25rem"><div style="width:10px;height:10px;border-radius:50%;background:#1D9E75;animation:pulse 1s infinite"></div><div style="font-size:15px;font-weight:600">Session active</div><div id="sess-status" style="margin-left:auto;font-size:12px">⚪ Idle</div></div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:1.25rem"><div style="background:var(--bg);border-radius:var(--rsm);padding:12px;text-align:center"><div style="font-size:11px;color:var(--muted);margin-bottom:4px">Time</div><div id="sess-time" style="font-size:22px;font-weight:700;color:var(--brand)">00:00</div></div><div style="background:var(--bg);border-radius:var(--rsm);padding:12px;text-align:center"><div style="font-size:11px;color:var(--muted);margin-bottom:4px">Runs</div><div id="sess-runs" style="font-size:22px;font-weight:700;color:var(--accent)">0</div></div><div style="background:var(--bg);border-radius:var(--rsm);padding:12px;text-align:center"><div style="font-size:11px;color:var(--muted);margin-bottom:4px">Distance</div><div id="sess-dist" style="font-size:22px;font-weight:700;color:var(--brand)">0.00 km</div></div><div style="background:var(--bg);border-radius:var(--rsm);padding:12px;text-align:center"><div style="font-size:11px;color:var(--muted);margin-bottom:4px">Speed</div><div id="sess-speed" style="font-size:22px;font-weight:700;color:var(--muted)">0 km/h</div></div></div><button onclick="endSession()" style="width:100%;padding:14px;border-radius:var(--rsm);border:none;background:#D85A30;color:#fff;font-weight:700;font-size:15px;cursor:pointer">End Session</button></div></div>`
     return
   }
   const sessions = await loadSessions()
@@ -964,7 +1177,7 @@ function renderMiniMap(route) {
 // ── FRIENDS VIEW ──────────────────────────────────────────────────
 async function renderFriendsView(c) {
   const myCode = userProfile?.friend_code || '------'
-  const pendingHtml = friendRequests.length ? `<div style="margin-bottom:1.25rem"><div class="section-head">Friend requests (${friendRequests.length})</div>${friendRequests.map(r=>`<div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--rsm);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><div style="font-size:13px;font-weight:500">Someone wants to be friends</div><div style="display:flex;gap:6px"><button onclick="respondFriendRequest('${r.id}',true)" style="padding:5px 12px;border-radius:6px;border:none;background:#E1F5EE;color:#085041;font-size:12px;font-weight:500;cursor:pointer">Accept</button><button onclick="respondFriendRequest('${r.id}',false)" style="padding:5px 12px;border-radius:6px;border:none;background:#FAECE7;color:#712B13;font-size:12px;font-weight:500;cursor:pointer">Decline</button></div></div>`).join('')}</div>` : ''
+  const pendingHtml = friendRequests.length ? `<div style="margin-bottom:1.25rem"><div class="section-head">Friend requests (${friendRequests.length})</div>${friendRequests.map(r=>`<div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--rsm);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;gap:8px"><div style="font-size:13px;font-weight:500;flex:1;min-width:0">Friend request</div><div style="display:flex;gap:6px;flex-shrink:0"><button onclick="respondFriendRequest('${r.id}',true)" style="padding:7px 12px;border-radius:6px;border:none;background:#E1F5EE;color:#085041;font-size:12px;font-weight:500;cursor:pointer">Accept</button><button onclick="respondFriendRequest('${r.id}',false)" style="padding:7px 12px;border-radius:6px;border:none;background:#FAECE7;color:#712B13;font-size:12px;font-weight:500;cursor:pointer">Decline</button></div></div>`).join('')}</div>` : ''
   const friendStats = await Promise.all(friends.map(async f => {
     const sessions = await loadSessions(f.id)
     const totalRuns = sessions.reduce((a,s) => a + s.runs, 0)
@@ -977,9 +1190,9 @@ async function renderFriendsView(c) {
   const myTotalDist = mySessions.reduce((a,s) => a + parseFloat(s.distance_km||0), 0).toFixed(1)
   const myTotalTime = Math.floor(mySessions.reduce((a,s) => a + parseInt(s.duration_seconds||0), 0) / 60)
   const allForLeaderboard = [{name:'You', totalRuns:myTotalRuns, totalDist:myTotalDist, totalTime:myTotalTime, isMe:true}, ...friendStats].sort((a,b) => b.totalRuns - a.totalRuns)
-  const leaderboardRows = allForLeaderboard.map((f,i) => `<div style="display:grid;grid-template-columns:28px 1fr repeat(3,auto);align-items:center;gap:8px;padding:10px 14px;border-bottom:0.5px solid var(--border);${f.isMe?'background:rgba(0,200,212,0.06)':''}"><div style="font-size:13px;font-weight:700;color:${i<3?'var(--brand)':'var(--muted)'};text-align:center">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div><div style="font-size:13px;font-weight:${f.isMe?'700':'500'}">${f.isMe?'You ⭐':f.name}</div><div style="text-align:right"><div style="font-size:10px;color:var(--muted)">Runs</div><div style="font-size:13px;font-weight:600;color:var(--accent)">${f.totalRuns}</div></div><div style="text-align:right"><div style="font-size:10px;color:var(--muted)">km</div><div style="font-size:13px;font-weight:600;color:var(--brand)">${f.totalDist}</div></div><div style="text-align:right"><div style="font-size:10px;color:var(--muted)">min</div><div style="font-size:13px;font-weight:600">${f.totalTime}</div></div></div>`).join('')
+  const leaderboardRows = allForLeaderboard.map((f,i) => `<div style="display:grid;grid-template-columns:28px 1fr repeat(3,auto);align-items:center;gap:6px;padding:10px 12px;border-bottom:0.5px solid var(--border);${f.isMe?'background:rgba(0,200,212,0.06)':''}"><div style="font-size:13px;font-weight:700;color:${i<3?'var(--brand)':'var(--muted)'};text-align:center">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div><div style="font-size:13px;font-weight:${f.isMe?'700':'500'};overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.isMe?'You ⭐':f.name}</div><div style="text-align:right"><div style="font-size:9px;color:var(--muted)">Runs</div><div style="font-size:13px;font-weight:600;color:var(--accent)">${f.totalRuns}</div></div><div style="text-align:right"><div style="font-size:9px;color:var(--muted)">km</div><div style="font-size:13px;font-weight:600;color:var(--brand)">${f.totalDist}</div></div><div style="text-align:right"><div style="font-size:9px;color:var(--muted)">min</div><div style="font-size:13px;font-weight:600">${f.totalTime}</div></div></div>`).join('')
   const friendCards = friends.map(f => `<div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;display:flex;align-items:center;gap:12px">${avatarHtml(f.avatar_url,f.name,36)}<div><div style="font-size:13px;font-weight:600">${f.name}</div><div style="font-size:11px;color:var(--muted)">${f.experience_level||'rider'}</div></div></div>`).join('')
-  c.innerHTML = `${pendingHtml}<div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.25rem"><div class="section-head">Your friend code</div><div style="font-size:28px;font-weight:800;letter-spacing:.2em;color:var(--brand);text-align:center;padding:1rem 0">${myCode}</div><div style="font-size:12px;color:var(--muted);text-align:center">Share this with friends so they can add you</div></div><div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.25rem"><div class="section-head">Add a friend</div><div style="display:flex;gap:8px"><input id="friend-code-inp" placeholder="Enter friend code" maxlength="6" style="flex:1;padding:8px 12px;border:0.5px solid var(--border);border-radius:var(--rsm);background:var(--bg);color:var(--text);font-size:13px;outline:none;text-transform:uppercase"/><button class="btn-join" onclick="addFriend()">Add</button></div><div id="friend-msg" style="font-size:12px;margin-top:8px;min-height:16px"></div></div>${allForLeaderboard.length>1?`<div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1.25rem"><div style="padding:12px 14px;border-bottom:0.5px solid var(--border);font-size:13px;font-weight:600">Friends leaderboard</div><div style="background:var(--bg);display:grid;grid-template-columns:28px 1fr repeat(3,auto);gap:8px;padding:8px 14px;font-size:10px;font-weight:600;color:var(--muted)"><div>#</div><div>Rider</div><div>Runs</div><div>km</div><div>min</div></div>${leaderboardRows}</div>`:''} ${friends.length?`<div class="section-head">Friends (${friends.length})</div><div style="display:grid;gap:8px">${friendCards}</div>`:`<div class="empty-state">No friends yet — share your code!</div>`}`
+  c.innerHTML = `${pendingHtml}<div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.25rem"><div class="section-head">Your friend code</div><div style="font-size:28px;font-weight:800;letter-spacing:.2em;color:var(--brand);text-align:center;padding:1rem 0">${myCode}</div><div style="font-size:12px;color:var(--muted);text-align:center">Share this with friends so they can add you</div></div><div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.25rem"><div class="section-head">Add a friend</div><div style="display:flex;gap:8px"><input id="friend-code-inp" placeholder="Enter friend code" maxlength="6" style="flex:1;padding:10px 12px;border:0.5px solid var(--border);border-radius:var(--rsm);background:var(--bg);color:var(--text);font-size:16px;outline:none;text-transform:uppercase;-webkit-appearance:none"/><button class="btn-join" onclick="addFriend()">Add</button></div><div id="friend-msg" style="font-size:12px;margin-top:8px;min-height:16px"></div></div>${allForLeaderboard.length>1?`<div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1.25rem"><div style="padding:12px 14px;border-bottom:0.5px solid var(--border);font-size:13px;font-weight:600">Friends leaderboard</div><div style="background:var(--bg);display:grid;grid-template-columns:28px 1fr repeat(3,auto);gap:6px;padding:8px 12px;font-size:10px;font-weight:600;color:var(--muted)"><div>#</div><div>Rider</div><div>Runs</div><div>km</div><div>min</div></div>${leaderboardRows}</div>`:''} ${friends.length?`<div class="section-head">Friends (${friends.length})</div><div style="display:grid;gap:8px">${friendCards}</div>`:`<div class="empty-state">No friends yet — share your code!</div>`}`
 }
 
 async function addFriend() {
@@ -998,7 +1211,7 @@ function renderLeaderboardView(c) {
   const filtered = lbFilter === 'friends' ? globalData.filter(r => r.user_id===currentUser.id || friendIds.has(r.user_id)) : globalData
   const pills = Object.keys(DEFAULT_SKILLS).map(id => `<button class="lb-pill${id===lbSport?' active':''}" onclick="setLbSport('${id}')">${DEFAULT_SKILLS[id].name}</button>`).join('')
   const filterToggle = `<div style="display:flex;gap:6px;margin-bottom:1rem"><button class="lb-pill${lbFilter==='global'?' active':''}" onclick="setLbFilter('global')">Global</button><button class="lb-pill${lbFilter==='friends'?' active':''}" onclick="setLbFilter('friends')">Friends</button></div>`
-  const rows = filtered.map((r,i) => `<div class="lb-row" style="${r.user_id===currentUser.id?'background:rgba(0,200,212,0.06)':''}"><div class="lb-rank${i<3?' top':''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div><div class="lb-name">${avatarHtml(r.avatar_url,r.name,24)} ${r.user_id===currentUser.id?'You ⭐':r.name}</div><div>${tierBadge(r.highest_tier)}</div><div class="lb-score">${r.skills_done} skills</div></div>`).join('')
+  const rows = filtered.map((r,i) => `<div class="lb-row" style="${r.user_id===currentUser.id?'background:rgba(0,200,212,0.06)':''}"><div class="lb-rank${i<3?' top':''}">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div><div class="lb-name">${avatarHtml(r.avatar_url,r.name,24)} <span>${r.user_id===currentUser.id?'You ⭐':r.name}</span></div><div>${tierBadge(r.highest_tier)}</div><div class="lb-score">${r.skills_done}</div></div>`).join('')
   c.innerHTML = `${filterToggle}<div class="lb-filters">${pills}</div><div class="lb-table"><div class="lb-row header"><div>#</div><div>Rider</div><div>Tier</div><div style="text-align:right">Skills</div></div>${filtered.length?rows:`<div class="empty-state">No riders on the board yet.</div>`}</div>`
 }
 function setLbSport(id) { lbSport = id; renderLeaderboardView(document.getElementById('main-content')) }
@@ -1020,8 +1233,8 @@ function showVideoModal(sport, tier, idx) {
   if (!sk) return
   const modal = document.createElement('div')
   modal.id = 'video-modal'
-  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem'
-  modal.innerHTML = `<div style="background:var(--card);border-radius:var(--radius);padding:1.5rem;width:100%;max-width:380px"><div style="font-size:15px;font-weight:600;margin-bottom:4px">${sk.skill_name}</div>${sk.description?`<div style="font-size:12px;color:var(--muted);margin-bottom:1.25rem">${sk.description}</div>`:'<div style="margin-bottom:1.25rem"></div>'}<div style="font-size:13px;font-weight:500;margin-bottom:10px">Attach a video (optional)</div><label style="display:flex;align-items:center;gap:10px;padding:12px;border:0.5px dashed var(--brand);border-radius:var(--rsm);cursor:pointer;margin-bottom:1rem"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="1" y="4" width="18" height="12" rx="2" stroke="var(--brand)" stroke-width="1.2"/><path d="M13 10l-5 3V7l5 3z" fill="var(--brand)"/></svg><div><div style="font-size:13px;color:var(--brand);font-weight:500">Choose video</div><div style="font-size:11px;color:var(--muted)" id="video-filename">MP4, MOV up to 50MB</div></div><input type="file" accept="video/*" id="video-file-input" style="display:none" onchange="previewVideo(this)"/></label><div id="video-preview-wrap" style="display:none;margin-bottom:1rem"><video id="video-preview" controls style="width:100%;border-radius:var(--rsm);max-height:180px"></video></div><div id="video-upload-progress" style="display:none;margin-bottom:1rem"><div style="font-size:12px;color:var(--muted);margin-bottom:4px" id="upload-status-text">Uploading…</div><div style="height:4px;background:var(--border);border-radius:2px"><div id="upload-bar" style="height:100%;border-radius:2px;background:var(--brand);width:0%;transition:width .3s"></div></div></div><div style="display:flex;gap:8px"><button onclick="closeVideoModal()" style="flex:1;padding:10px;border-radius:var(--rsm);border:0.5px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:13px">Cancel</button><button onclick="submitWithVideo('${sport}','${tier}',${idx})" id="submit-skill-btn" style="flex:2;padding:10px;border-radius:var(--rsm);border:none;background:var(--brand);color:#fff;font-weight:600;cursor:pointer;font-size:13px">Submit for approval</button></div></div>`
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:flex-end;justify-content:center;z-index:100;padding:0'
+  modal.innerHTML = `<div style="background:var(--card);border-radius:var(--radius) var(--radius) 0 0;padding:1.5rem;padding-bottom:calc(1.5rem + var(--safe-bottom));width:100%;max-width:480px"><div style="width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 1.25rem"></div><div style="font-size:15px;font-weight:600;margin-bottom:4px">${sk.skill_name}</div>${sk.description?`<div style="font-size:12px;color:var(--muted);margin-bottom:1.25rem">${sk.description}</div>`:'<div style="margin-bottom:1.25rem"></div>'}<div style="font-size:13px;font-weight:500;margin-bottom:10px">Attach a video (optional)</div><label style="display:flex;align-items:center;gap:10px;padding:12px;border:0.5px dashed var(--brand);border-radius:var(--rsm);cursor:pointer;margin-bottom:1rem"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="1" y="4" width="18" height="12" rx="2" stroke="var(--brand)" stroke-width="1.2"/><path d="M13 10l-5 3V7l5 3z" fill="var(--brand)"/></svg><div><div style="font-size:13px;color:var(--brand);font-weight:500">Choose video</div><div style="font-size:11px;color:var(--muted)" id="video-filename">MP4, MOV up to 50MB</div></div><input type="file" accept="video/*" id="video-file-input" style="display:none" onchange="previewVideo(this)"/></label><div id="video-preview-wrap" style="display:none;margin-bottom:1rem"><video id="video-preview" controls style="width:100%;border-radius:var(--rsm);max-height:180px"></video></div><div id="video-upload-progress" style="display:none;margin-bottom:1rem"><div style="font-size:12px;color:var(--muted);margin-bottom:4px" id="upload-status-text">Uploading…</div><div style="height:4px;background:var(--border);border-radius:2px"><div id="upload-bar" style="height:100%;border-radius:2px;background:var(--brand);width:0%;transition:width .3s"></div></div></div><div style="display:flex;gap:8px"><button onclick="closeVideoModal()" style="flex:1;padding:12px;border-radius:var(--rsm);border:0.5px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:13px">Cancel</button><button onclick="submitWithVideo('${sport}','${tier}',${idx})" id="submit-skill-btn" style="flex:2;padding:12px;border-radius:var(--rsm);border:none;background:var(--brand);color:#fff;font-weight:600;cursor:pointer;font-size:13px">Submit for approval</button></div></div>`
   document.body.appendChild(modal)
 }
 
@@ -1053,8 +1266,8 @@ async function submitWithVideo(sport, tier, idx) {
 function showMediaUpload(riderId, riderName, sport, tier, skillIdx) {
   const modal = document.createElement('div')
   modal.id = 'media-modal'
-  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:center;justify-content:center;z-index:100;padding:1rem'
-  modal.innerHTML = `<div style="background:var(--card);border-radius:var(--radius);padding:1.5rem;width:100%;max-width:380px"><div style="font-size:15px;font-weight:600;margin-bottom:4px">Upload media for ${riderName}</div><div style="font-size:12px;color:var(--muted);margin-bottom:1.25rem">${DEFAULT_SKILLS[sport]?.name||sport}</div><div class="field"><label>Caption (optional)</label><input type="text" id="media-caption" placeholder="e.g. Great edge load here!"/></div><label style="display:flex;align-items:center;gap:10px;padding:12px;border:0.5px dashed var(--brand);border-radius:var(--rsm);cursor:pointer;margin-bottom:1rem"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="1" y="4" width="18" height="12" rx="2" stroke="var(--brand)" stroke-width="1.2"/><path d="M13 10l-5 3V7l5 3z" fill="var(--brand)"/></svg><div><div style="font-size:13px;color:var(--brand);font-weight:500">Choose photo or video</div><div style="font-size:11px;color:var(--muted)" id="media-filename">JPG, PNG, MP4, MOV</div></div><input type="file" accept="image/*,video/*" id="media-file-input" style="display:none" onchange="previewMedia(this)"/></label><div id="media-preview-wrap" style="display:none;margin-bottom:1rem"></div><div id="media-progress" style="display:none;margin-bottom:1rem"><div style="font-size:12px;color:var(--muted);margin-bottom:4px" id="media-status">Uploading…</div><div style="height:4px;background:var(--border);border-radius:2px"><div id="media-bar" style="height:100%;border-radius:2px;background:var(--brand);width:0%;transition:width .3s"></div></div></div><div style="display:flex;gap:8px"><button onclick="closeMediaModal()" style="flex:1;padding:10px;border-radius:var(--rsm);border:0.5px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:13px">Cancel</button><button onclick="uploadMedia('${riderId}','${sport}','${tier}',${skillIdx})" id="media-upload-btn" style="flex:2;padding:10px;border-radius:var(--rsm);border:none;background:var(--brand);color:#fff;font-weight:600;cursor:pointer;font-size:13px">Upload</button></div></div>`
+  modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:flex-end;justify-content:center;z-index:100'
+  modal.innerHTML = `<div style="background:var(--card);border-radius:var(--radius) var(--radius) 0 0;padding:1.5rem;padding-bottom:calc(1.5rem + var(--safe-bottom));width:100%;max-width:480px"><div style="width:40px;height:4px;border-radius:2px;background:var(--border);margin:0 auto 1.25rem"></div><div style="font-size:15px;font-weight:600;margin-bottom:4px">Upload media for ${riderName}</div><div style="font-size:12px;color:var(--muted);margin-bottom:1.25rem">${DEFAULT_SKILLS[sport]?.name||sport}</div><div class="field"><label>Caption (optional)</label><input type="text" id="media-caption" placeholder="e.g. Great edge load here!"/></div><label style="display:flex;align-items:center;gap:10px;padding:12px;border:0.5px dashed var(--brand);border-radius:var(--rsm);cursor:pointer;margin-bottom:1rem"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="1" y="4" width="18" height="12" rx="2" stroke="var(--brand)" stroke-width="1.2"/><path d="M13 10l-5 3V7l5 3z" fill="var(--brand)"/></svg><div><div style="font-size:13px;color:var(--brand);font-weight:500">Choose photo or video</div><div style="font-size:11px;color:var(--muted)" id="media-filename">JPG, PNG, MP4, MOV</div></div><input type="file" accept="image/*,video/*" id="media-file-input" style="display:none" onchange="previewMedia(this)"/></label><div id="media-preview-wrap" style="display:none;margin-bottom:1rem"></div><div id="media-progress" style="display:none;margin-bottom:1rem"><div style="font-size:12px;color:var(--muted);margin-bottom:4px" id="media-status">Uploading…</div><div style="height:4px;background:var(--border);border-radius:2px"><div id="media-bar" style="height:100%;border-radius:2px;background:var(--brand);width:0%;transition:width .3s"></div></div></div><div style="display:flex;gap:8px"><button onclick="closeMediaModal()" style="flex:1;padding:12px;border-radius:var(--rsm);border:0.5px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:13px">Cancel</button><button onclick="uploadMedia('${riderId}','${sport}','${tier}',${skillIdx})" id="media-upload-btn" style="flex:2;padding:12px;border-radius:var(--rsm);border:none;background:var(--brand);color:#fff;font-weight:600;cursor:pointer;font-size:13px">Upload</button></div></div>`
   document.body.appendChild(modal)
 }
 
@@ -1089,7 +1302,7 @@ async function showMediaLibrary() {
   const grouped = {}
   if (media) media.forEach(m => { const k=`${m.sport}|${m.tier}`; if (!grouped[k]) grouped[k]=[]; grouped[k].push(m) })
   const sections = Object.entries(grouped).map(([key,items]) => { const [sport,tier]=key.split('|'); const cards=items.map(m=>`<div style="background:var(--bg);border-radius:var(--rsm);overflow:hidden;border:0.5px solid var(--border)">${m.type==='video'?`<video src="${m.url}" controls style="width:100%;max-height:160px;display:block"></video>`:`<img src="${m.url}" style="width:100%;max-height:160px;object-fit:cover;display:block">`}${m.caption?`<div style="font-size:11px;color:var(--muted);padding:6px 8px">${m.caption}</div>`:''}</div>`).join(''); return `<div style="margin-bottom:1.25rem"><div style="font-size:12px;font-weight:600;color:var(--brand);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em">${DEFAULT_SKILLS[sport]?.name||sport} — ${tier}</div><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">${cards}</div></div>` }).join('')
-  modal.innerHTML = `<div style="background:var(--card);border-radius:var(--radius);padding:1.5rem;width:100%;max-width:480px;margin:auto"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem"><div style="font-size:15px;font-weight:600">My media library</div><button onclick="document.getElementById('library-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--muted)">×</button></div>${media?.length?sections:`<div class="empty-state">No media uploaded yet.</div>`}</div>`
+  modal.innerHTML = `<div style="background:var(--card);border-radius:var(--radius);padding:1.5rem;width:100%;max-width:480px;margin:auto"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem"><div style="font-size:15px;font-weight:600">My media library</div><button onclick="document.getElementById('library-modal').remove()" style="background:none;border:none;cursor:pointer;font-size:20px;color:var(--muted);padding:4px">×</button></div>${media?.length?sections:`<div class="empty-state">No media uploaded yet.</div>`}</div>`
   document.body.appendChild(modal)
 }
 
@@ -1102,7 +1315,7 @@ function renderCoachView(c) {
     if (isDryland) { const sk=getDrylandSkills()[a.skill_index]; skillName=sk?.skill_name||'Dryland skill'; skillDesc=sk?.description||'' }
     else { const sk=getSkills(a.sport,a.tier)[a.skill_index]; skillName=sk?.skill_name||'Unknown skill'; skillDesc=sk?.description||'' }
     const tier = TM[a.tier] || {label:a.tier==='platinum'?'Platinum':a.tier==='required'?'Required':'', bg:'var(--plat-bg)', t:'var(--plat-t)'}
-    return `<div class="approval-card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">${avatarHtml(a.profiles?.avatar_url,a.profiles?.name,24)}<div><div style="font-size:13px;font-weight:600">${a.profiles?.name||'Unknown rider'}</div><div style="font-size:11px;color:var(--muted);margin-top:2px"><span style="background:${tier.bg||'var(--bg)'};color:${tier.t||'var(--muted)'};padding:1px 8px;border-radius:10px;font-size:10px;font-weight:600">${tier.label||a.tier}</span>&nbsp;${isDryland?'Dryland':(DEFAULT_SKILLS[a.sport]?.name||a.sport)} — ${skillName}</div></div></div><div style="font-size:11px;color:var(--hint);margin-bottom:8px">${skillDesc}</div>${a.video_url?`<a href="${a.video_url}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-bottom:8px;padding:5px 12px;background:rgba(0,200,212,0.12);border:0.5px solid var(--brand);border-radius:6px;font-size:12px;font-weight:500;color:var(--brand);text-decoration:none"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><rect x="1" y="4" width="18" height="12" rx="2" stroke="var(--brand)" stroke-width="1.2"/><path d="M13 10l-5 3V7l5 3z" fill="var(--brand)"/></svg>Watch video</a>`:'<div style="font-size:11px;color:var(--hint);margin-bottom:8px">No video attached</div>'}${!isDryland?`<button onclick="showMediaUpload('${a.rider_id}','${a.profiles?.name||'Rider'}','${a.sport}','${a.tier}',${a.skill_index})" style="display:inline-flex;align-items:center;gap:6px;margin-bottom:8px;padding:5px 12px;background:rgba(224,64,160,0.08);border:0.5px solid var(--accent);border-radius:6px;font-size:12px;font-weight:500;color:var(--accent);cursor:pointer"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M10 3v10M5 8l5-5 5 5" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="15" width="14" height="2" rx="1" fill="var(--accent)"/></svg>Upload media for rider</button>`:''}<input class="note-input" id="note-${a.id}" placeholder="Add technique note for rider (optional)…"/><div style="display:flex;gap:6px;margin-top:8px"><button class="btn-approve" onclick="reviewSkill('${a.id}','approved','${a.rider_id}','${a.sport}','${a.tier}',${a.skill_index})">Approve</button><button class="btn-reject" onclick="reviewSkill('${a.id}','rejected','${a.rider_id}','${a.sport}','${a.tier}',${a.skill_index})">Reject</button></div></div>`
+    return `<div class="approval-card"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">${avatarHtml(a.profiles?.avatar_url,a.profiles?.name,24)}<div><div style="font-size:13px;font-weight:600">${a.profiles?.name||'Unknown rider'}</div><div style="font-size:11px;color:var(--muted);margin-top:2px"><span style="background:${tier.bg||'var(--bg)'};color:${tier.t||'var(--muted)'};padding:1px 8px;border-radius:10px;font-size:10px;font-weight:600">${tier.label||a.tier}</span>&nbsp;${isDryland?'Dryland':(DEFAULT_SKILLS[a.sport]?.name||a.sport)} — ${skillName}</div></div></div><div style="font-size:11px;color:var(--hint);margin-bottom:8px">${skillDesc}</div>${a.video_url?`<a href="${a.video_url}" target="_blank" style="display:inline-flex;align-items:center;gap:6px;margin-bottom:8px;padding:6px 12px;background:rgba(0,200,212,0.12);border:0.5px solid var(--brand);border-radius:6px;font-size:12px;font-weight:500;color:var(--brand);text-decoration:none"><svg width="14" height="14" viewBox="0 0 20 20" fill="none"><rect x="1" y="4" width="18" height="12" rx="2" stroke="var(--brand)" stroke-width="1.2"/><path d="M13 10l-5 3V7l5 3z" fill="var(--brand)"/></svg>Watch video</a>`:'<div style="font-size:11px;color:var(--hint);margin-bottom:8px">No video attached</div>'}${!isDryland?`<button onclick="showMediaUpload('${a.rider_id}','${a.profiles?.name||'Rider'}','${a.sport}','${a.tier}',${a.skill_index})" style="display:inline-flex;align-items:center;gap:6px;margin-bottom:8px;padding:6px 12px;background:rgba(224,64,160,0.08);border:0.5px solid var(--accent);border-radius:6px;font-size:12px;font-weight:500;color:var(--accent);cursor:pointer"><svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M10 3v10M5 8l5-5 5 5" stroke="var(--accent)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="3" y="15" width="14" height="2" rx="1" fill="var(--accent)"/></svg>Upload media for rider</button>`:''}<input class="note-input" id="note-${a.id}" placeholder="Add technique note for rider (optional)…"/><div style="display:flex;gap:6px;margin-top:8px"><button class="btn-approve" onclick="reviewSkill('${a.id}','approved','${a.rider_id}','${a.sport}','${a.tier}',${a.skill_index})">Approve</button><button class="btn-reject" onclick="reviewSkill('${a.id}','rejected','${a.rider_id}','${a.sport}','${a.tier}',${a.skill_index})">Reject</button></div></div>`
   }).join('')
   c.innerHTML = `<div style="margin-bottom:1.5rem"><div class="section-head">Pending approvals (${pendingCoach.length})</div>${pendingCoach.length?cards:`<div class="empty-state">No pending approvals — all caught up!</div>`}</div>`
 }
@@ -1125,7 +1338,7 @@ function renderProfileView(c) {
   const p = userProfile, pushGranted = 'Notification' in window && Notification.permission === 'granted'
   const certList = Object.keys(DEFAULT_SKILLS).map(id => { const earned=TIERS.filter(t=>allApproved(id,t)); const highest=earned[earned.length-1]; if (!highest) return ''; return `<div class="profile-row"><span class="profile-key">${DEFAULT_SKILLS[id].name}</span>${tierBadge(highest)}</div>` }).filter(Boolean).join('')
   const driverCerts = Object.values(QUIZZES).filter(q => q.id!=='dryland' && hasPassed(q.id)).map(q => `<div class="profile-row"><span class="profile-key">${q.title}</span><span style="font-size:11px;font-weight:600;color:#1D9E75">Certified ${quizResults[q.id]?.score}%</span></div>`).join('')
-  c.innerHTML = `<div class="profile-card"><div class="profile-avatar-wrap">${p?.avatar_url?`<img src="${p.avatar_url}" class="profile-avatar"/>`:`<div class="profile-avatar-ph">${(p?.name||'?')[0].toUpperCase()}</div>`}<label class="btn-upload" style="cursor:pointer">Change photo<input type="file" accept="image/*" style="display:none" onchange="uploadAvatar(this)"/></label></div><div class="profile-row"><span class="profile-key">Name</span><span class="profile-val">${p?.name||'—'}</span></div><div class="profile-row"><span class="profile-key">Email</span><span class="profile-val">${currentUser?.email||'—'}</span></div><div class="profile-row"><span class="profile-key">Role</span><span class="profile-val" style="text-transform:capitalize;color:var(--brand)">${p?.role||'rider'}</span></div><div class="profile-row"><span class="profile-key">Friend code</span><span class="profile-val" style="color:var(--brand);font-weight:700;letter-spacing:.1em">${p?.friend_code||'—'}</span></div><div class="profile-row"><span class="profile-key">Club</span><span class="profile-val" id="club-name-display">Loading…</span></div><div class="profile-row"><span class="profile-key">Safety quiz</span><span class="profile-val" style="color:${hasPassed('dryland')?'#1D9E75':'#D85A30'}">${hasPassed('dryland')?`Passed ${quizResults['dryland']?.score}%`:'Not completed'}</span></div><div class="profile-row"><span class="profile-key">Notifications</span><span class="profile-val" style="color:${pushGranted?'var(--brand)':'var(--muted)'}">${pushGranted?'On':'Off'}</span></div><div class="profile-row" style="cursor:pointer" onclick="showMediaLibrary()"><span class="profile-key">My media library</span><span style="font-size:13px;font-weight:500;color:var(--brand);display:flex;align-items:center;gap:4px">View<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="var(--brand)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div></div>${certList||driverCerts?`<div class="profile-card"><div style="font-size:13px;font-weight:600;margin-bottom:.5rem">Achievements</div>${certList}${driverCerts}</div>`:''}<div class="club-section"><div class="section-head">Join a club</div><div style="font-size:13px;color:var(--muted)">Enter an invite code from your coach.</div><div class="club-join-row"><input id="club-code-inp" placeholder="ABC123" maxlength="6"/><button class="btn-join" onclick="joinClub()">Join</button></div><div id="club-msg" style="font-size:12px;margin-top:8px;min-height:16px"></div></div>`
+  c.innerHTML = `<div class="profile-card"><div class="profile-avatar-wrap">${p?.avatar_url?`<img src="${p.avatar_url}" class="profile-avatar"/>`:`<div class="profile-avatar-ph">${(p?.name||'?')[0].toUpperCase()}</div>`}<label class="btn-upload" style="cursor:pointer">Change photo<input type="file" accept="image/*" style="display:none" onchange="uploadAvatar(this)"/></label></div><div class="profile-row"><span class="profile-key">Name</span><span class="profile-val">${p?.name||'—'}</span></div><div class="profile-row"><span class="profile-key">Email</span><span class="profile-val" style="font-size:12px;word-break:break-all">${currentUser?.email||'—'}</span></div><div class="profile-row"><span class="profile-key">Role</span><span class="profile-val" style="text-transform:capitalize;color:var(--brand)">${p?.role||'rider'}</span></div><div class="profile-row"><span class="profile-key">Friend code</span><span class="profile-val" style="color:var(--brand);font-weight:700;letter-spacing:.1em">${p?.friend_code||'—'}</span></div><div class="profile-row"><span class="profile-key">Club</span><span class="profile-val" id="club-name-display">Loading…</span></div><div class="profile-row"><span class="profile-key">Safety quiz</span><span class="profile-val" style="color:${hasPassed('dryland')?'#1D9E75':'#D85A30'}">${hasPassed('dryland')?`Passed ${quizResults['dryland']?.score}%`:'Not completed'}</span></div><div class="profile-row"><span class="profile-key">Notifications</span><span class="profile-val" style="color:${pushGranted?'var(--brand)':'var(--muted)'}">${pushGranted?'On':'Off'}</span></div><div class="profile-row" style="cursor:pointer" onclick="showMediaLibrary()"><span class="profile-key">My media library</span><span style="font-size:13px;font-weight:500;color:var(--brand);display:flex;align-items:center;gap:4px">View<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4 2l4 4-4 4" stroke="var(--brand)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span></div></div>${certList||driverCerts?`<div class="profile-card"><div style="font-size:13px;font-weight:600;margin-bottom:.5rem">Achievements</div>${certList}${driverCerts}</div>`:''}<div class="club-section"><div class="section-head">Join a club</div><div style="font-size:13px;color:var(--muted)">Enter an invite code from your coach.</div><div class="club-join-row"><input id="club-code-inp" placeholder="ABC123" maxlength="6"/><button class="btn-join" onclick="joinClub()">Join</button></div><div id="club-msg" style="font-size:12px;margin-top:8px;min-height:16px"></div></div>`
   loadClubName()
 }
 
@@ -1141,8 +1354,8 @@ function renderAdminView(c) {
   const riders=allUsers.filter(u=>u.role==='rider').length, coaches=allUsers.filter(u=>u.role==='coach').length
   const subTabs = ['users','skills'].map(t => `<button class="sport-pill${adminSubView===t?' active':''}" onclick="setAdminSub('${t}')" style="margin-bottom:1rem">${t.charAt(0).toUpperCase()+t.slice(1)}</button>`).join('')
   if (adminSubView === 'users') {
-    const rows = allUsers.map(u => `<div class="user-row"><div style="display:flex;align-items:center;gap:8px">${avatarHtml(u.avatar_url,u.name,22)} ${u.name||u.id.slice(0,8)}</div><select class="role-select" onchange="updateRole('${u.id}',this.value)"><option value="rider" ${u.role==='rider'?'selected':''}>Rider</option><option value="coach" ${u.role==='coach'?'selected':''}>Coach</option><option value="admin" ${u.role==='admin'?'selected':''}>Admin</option></select><button class="btn-reset" onclick="resetProgress('${u.id}')">Reset</button></div>`).join('')
-    c.innerHTML = `<div class="admin-grid"><div class="admin-stat"><div class="admin-stat-label">Total users</div><div class="admin-stat-val">${allUsers.length}</div></div><div class="admin-stat"><div class="admin-stat-label">Riders</div><div class="admin-stat-val">${riders}</div></div><div class="admin-stat"><div class="admin-stat-label">Coaches</div><div class="admin-stat-val">${coaches}</div></div><div class="admin-stat"><div class="admin-stat-label">Pending approvals</div><div class="admin-stat-val">${pendingCoach.length}</div></div></div><div style="display:flex;gap:6px;margin-bottom:1rem">${subTabs}</div><div class="invite-box"><div class="section-head">Invite user</div><div style="font-size:13px;color:var(--muted)">Creates an account and shows a temporary password to share.</div><div class="invite-row"><input id="invite-email" type="email" placeholder="rider@example.com" onkeydown="if(event.key==='Enter')sendInvite()"/><select id="invite-role"><option value="rider">Rider</option><option value="coach">Coach</option><option value="admin">Admin</option></select><button class="btn-join" onclick="sendInvite()" id="invite-btn">Send invite</button></div><div id="invite-msg" style="font-size:12px;margin-top:8px;min-height:16px"></div></div><div class="section-head" style="margin-bottom:.75rem">Users</div><div class="user-table"><div class="user-row header"><div>Name</div><div>Role</div><div>Actions</div></div>${rows}</div>`
+    const rows = allUsers.map(u => `<div class="user-row"><div style="display:flex;align-items:center;gap:8px;min-width:0;overflow:hidden">${avatarHtml(u.avatar_url,u.name,22)} <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${u.name||u.id.slice(0,8)}</span></div><select class="role-select" onchange="updateRole('${u.id}',this.value)"><option value="rider" ${u.role==='rider'?'selected':''}>Rider</option><option value="coach" ${u.role==='coach'?'selected':''}>Coach</option><option value="admin" ${u.role==='admin'?'selected':''}>Admin</option></select><button class="btn-reset" onclick="resetProgress('${u.id}')">Reset</button></div>`).join('')
+    c.innerHTML = `<div class="admin-grid"><div class="admin-stat"><div class="admin-stat-label">Total users</div><div class="admin-stat-val">${allUsers.length}</div></div><div class="admin-stat"><div class="admin-stat-label">Riders</div><div class="admin-stat-val">${riders}</div></div><div class="admin-stat"><div class="admin-stat-label">Coaches</div><div class="admin-stat-val">${coaches}</div></div><div class="admin-stat"><div class="admin-stat-label">Pending</div><div class="admin-stat-val">${pendingCoach.length}</div></div></div><div style="display:flex;gap:6px;margin-bottom:1rem">${subTabs}</div><div class="invite-box"><div class="section-head">Invite user</div><div style="font-size:13px;color:var(--muted)">Creates an account and shows a temporary password to share.</div><div class="invite-row"><input id="invite-email" type="email" placeholder="rider@example.com" onkeydown="if(event.key==='Enter')sendInvite()"/><select id="invite-role"><option value="rider">Rider</option><option value="coach">Coach</option><option value="admin">Admin</option></select><button class="btn-join" onclick="sendInvite()" id="invite-btn">Invite</button></div><div id="invite-msg" style="font-size:12px;margin-top:8px;min-height:16px"></div></div><div class="section-head" style="margin-bottom:.75rem">Users</div><div class="user-table"><div class="user-row header"><div>Name</div><div>Role</div><div>Actions</div></div>${rows}</div>`
   } else {
     renderSkillsEditor(c, subTabs)
   }
@@ -1155,7 +1368,7 @@ function renderSkillsEditor(c, subTabs) {
   const tierPills = allTiers.map(t => `<button class="sport-pill${adminEditTier===t?' active':''}" onclick="setAdminTier('${t}')" style="font-size:12px;padding:5px 12px">${t.charAt(0).toUpperCase()+t.slice(1)}</button>`).join('')
   const skills = adminEditSport === 'dryland' ? getDrylandSkills() : getSkills(adminEditSport, adminEditTier)
   const rows = skills.map((sk, i) => `<tr id="skill-row-${i}"><td><input class="edit-input" value="${(sk.skill_name||'').replace(/"/g,'&quot;')}" id="sn-${i}" style="min-width:120px"/></td><td><textarea class="edit-textarea" id="sd-${i}" style="min-width:180px">${sk.description||''}</textarea></td><td><textarea class="edit-textarea" id="sc-${i}" style="min-width:180px">${sk.coaching_keys||''}</textarea></td><td><button class="btn-save-skill" onclick="saveSkill('${sk.id}',${i})">Save</button><span class="saved-flash" id="sf-${i}"></span></td></tr>`).join('')
-  c.innerHTML = `<div style="display:flex;gap:6px;margin-bottom:1rem">${subTabs}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.75rem">${sportPills}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem">${tierPills}</div><div style="font-size:12px;color:var(--muted);margin-bottom:.75rem">${skills.length} skills — edit inline and click Save</div><div style="overflow-x:auto"><table class="skills-editor-table"><thead><tr><th>Skill name</th><th>Description</th><th style="color:var(--accent)">Coaching keys (coach/admin only)</th><th></th></tr></thead><tbody>${rows||'<tr><td colspan="4" style="text-align:center;padding:1rem;color:var(--muted)">No skills in this tier yet</td></tr>'}</tbody></table></div>`
+  c.innerHTML = `<div style="display:flex;gap:6px;margin-bottom:1rem">${subTabs}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.75rem">${sportPills}</div><div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1rem">${tierPills}</div><div style="font-size:12px;color:var(--muted);margin-bottom:.75rem">${skills.length} skills — edit inline and click Save</div><div style="overflow-x:auto"><table class="skills-editor-table"><thead><tr><th>Skill name</th><th>Description</th><th style="color:var(--accent)">Coaching keys</th><th></th></tr></thead><tbody>${rows||'<tr><td colspan="4" style="text-align:center;padding:1rem;color:var(--muted)">No skills in this tier yet</td></tr>'}</tbody></table></div>`
 }
 
 async function saveSkill(skillId, idx) {
@@ -1184,11 +1397,11 @@ async function sendInvite() {
   btn.disabled=true; btn.textContent='Creating…'; msg.textContent=''
   const tempPass=Math.random().toString(36).slice(2)+'A1!'
   const {data,error}=await db.auth.signUp({email, password:tempPass})
-  if (error) { msg.textContent=error.message; msg.style.color='#D85A30'; btn.disabled=false; btn.textContent='Send invite'; return }
+  if (error) { msg.textContent=error.message; msg.style.color='#D85A30'; btn.disabled=false; btn.textContent='Invite'; return }
   if (data?.user?.id) await db.from('profiles').upsert({id:data.user.id, name:email.split('@')[0], role})
   msg.textContent=`Account created! Temp password: ${tempPass}`; msg.style.color='#1D9E75'
   document.getElementById('invite-email').value=''
-  btn.disabled=false; btn.textContent='Send invite'
+  btn.disabled=false; btn.textContent='Invite'
   await loadAllUsers(); renderAdminView(document.getElementById('main-content'))
 }
 
