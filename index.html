@@ -26,12 +26,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 @keyframes note-in{from{opacity:0;max-height:0}to{opacity:1;max-height:200px}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
 
-.sws-logo{display:flex;align-items:center;gap:10px}
-.sws-initials span{font-size:26px;font-weight:900;font-family:Georgia,serif}
-.sws-initials span:nth-child(1),.sws-initials span:nth-child(3){color:#fff}
-.sws-initials span:nth-child(2){color:rgba(255,255,255,0.7)}
-.sws-name{font-size:15px;font-weight:700;color:#fff;line-height:1.15}
-.sws-city{font-size:10px;font-weight:500;color:rgba(255,255,255,0.75);letter-spacing:.1em;text-transform:uppercase}
+.sws-logo-img{display:flex;flex-direction:column;align-items:center;line-height:1}
+.sws-logo-img .big{font-size:52px;font-weight:900;font-family:Georgia,serif;letter-spacing:-4px;line-height:1}
+.sws-logo-img .big span:nth-child(1){color:#00C8D4}
+.sws-logo-img .big span:nth-child(2){color:#E040A0}
+.sws-logo-img .big span:nth-child(3){color:#00C8D4}
+.sws-logo-img .small{font-size:9px;letter-spacing:.18em;color:#1a2a2a;text-transform:uppercase;font-family:Georgia,serif;margin-top:-4px}
+.sws-logo-img.inv .small{color:#fff}
+.sws-logo-sm .big{font-size:26px;letter-spacing:-2px}
+.sws-logo-sm .small{font-size:7px}
 
 #auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem}
 .auth-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:2rem;width:100%;max-width:360px}
@@ -219,7 +222,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 <div id="auth-screen">
   <div class="auth-card">
     <div style="margin-bottom:1.5rem;text-align:center">
-      <img src="https://raw.githubusercontent.com/Stillwatersports/Skills-App/main/Logo.png" style="height:100px;object-fit:contain"/>
+      <div class="sws-logo-img">
+        <div class="big"><span>S</span><span>W</span><span>S</span></div>
+        <div class="small">Stillwater Sports &nbsp; Ottawa</div>
+      </div>
     </div>
     <div class="auth-tabs">
       <button class="auth-tab active" onclick="switchTab('login')">Sign in</button>
