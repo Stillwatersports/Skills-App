@@ -24,7 +24,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 @keyframes star-pop{0%{transform:scale(0) rotate(0deg);opacity:0}60%{transform:scale(1.3) rotate(180deg);opacity:1}100%{transform:scale(1) rotate(360deg);opacity:1}}
 @keyframes slide-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes note-in{from{opacity:0;max-height:0}to{opacity:1;max-height:200px}}
-@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
 #auth-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:1rem}
 .auth-card{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:2rem;width:100%;max-width:360px}
@@ -269,12 +269,28 @@ const TIERS=['bronze','silver','gold']
 const TM={bronze:{label:'Bronze',bg:'var(--bronze-bg)',t:'var(--bronze-t)',bar:'var(--bronze-bar)',bd:'var(--bronze-bd)',m:'var(--bronze-m)'},silver:{label:'Silver',bg:'var(--silver-bg)',t:'var(--silver-t)',bar:'var(--silver-bar)',bd:'var(--silver-bd)',m:'var(--silver-m)'},gold:{label:'Gold',bg:'var(--gold-bg)',t:'var(--gold-t)',bar:'var(--gold-bar)',bd:'var(--gold-bd)',m:'var(--gold-m)'}}
 
 let currentUser=null,userProfile=null
-let activeSport='waterski',activeView='skills',lbSport='waterski'
+let activeSport='waterski',activeView='skills',lbSport='waterski',lbFilter='global'
 let approvals={},skillNotes={},quizResults={},drylandApprovals={}
-let pendingCoach=[],allUsers=[],lbData=[],dbSkills={}
+let pendingCoach=[],allUsers=[],lbData=[],dbSkills={},friends=[],friendRequests=[]
 let saveTimer=null,platUnlockSeen={}
 let activeQuiz=null,quizAnswers=[],quizCurrent=0,quizSelected=null
 let onboardingData={name:'',experience:'',sports:[],goals:''}
+
+// ── SESSION TRACKING STATE ────────────────────────────────────────
+let activeSession=null
+let sessionWatchId=null
+let sessionPositions=[]
+let sessionRuns=0
+let sessionDistance=0
+let sessionTopSpeed=0
+let sessionStartTime=null
+let lastPosition=null
+let currentSpeed=0
+let isActiveRun=false
+let runStartTime=null
+let sessionTimer=null
+const RUN_SPEED_THRESHOLD=20 // km/h — above this counts as a run
+const RUN_MIN_DURATION=5 // seconds minimum to count as a run
 
 const SPORTS_LIST=[{id:'waterski',label:'Water ski'},{id:'wakeboard',label:'Wakeboard'},{id:'wakesurf',label:'Wakesurf'},{id:'slalom',label:'Slalom'},{id:'barefoot',label:'Barefoot'},{id:'driving',label:'Boat driving'}]
 const EXPERIENCE_LEVELS=[{id:'never',label:'Never tried',desc:'First time on the water',icon:'🌊'},{id:'beginner',label:'Beginner',desc:'Some experience, still learning',icon:'🎿'},{id:'years3',label:'3+ years',desc:'Comfortable on the water',icon:'⭐'},{id:'advanced',label:'Advanced',desc:'Experienced rider or competitor',icon:'🏆'}]
@@ -379,7 +395,7 @@ async function loadUser(user){
   if(error||!p){await db.from('profiles').upsert({id:user.id,name:user.email.split('@')[0],role:'rider'});const{data:p2}=await db.from('profiles').select('*').eq('id',user.id).single();userProfile=p2||{id:user.id,name:user.email.split('@')[0],role:'rider'}}
   else{userProfile=p}
   if(isAdmin()&&!quizResults['dryland']){await db.from('quiz_results').upsert({user_id:currentUser.id,quiz_id:'dryland',score:100,passed:true},{onConflict:'user_id,quiz_id'});quizResults['dryland']={score:100,passed:true}}
-  await Promise.all([loadDbSkills(),loadApprovals(),loadSkillNotes(),loadQuizResults(),loadDrylandApprovals(),loadCoachQueue()])
+  await Promise.all([loadDbSkills(),loadApprovals(),loadSkillNotes(),loadQuizResults(),loadDrylandApprovals(),loadCoachQueue(),loadFriends()])
   document.getElementById('auth-screen').style.display='none'
   document.getElementById('app-screen').style.display='block'
   renderNav();renderAvatarTop()
@@ -392,7 +408,105 @@ async function loadApprovals(){const{data}=await db.from('approvals').select('*'
 async function loadDrylandApprovals(){const{data}=await db.from('approvals').select('*').eq('rider_id',currentUser.id).eq('sport','dryland');drylandApprovals={};if(data)data.forEach(r=>{drylandApprovals[r.skill_index]=r})}
 async function loadSkillNotes(){const{data}=await db.from('skill_notes').select('*').eq('rider_id',currentUser.id);skillNotes={};if(data)data.forEach(r=>{const k=`${r.sport}|${r.tier}|${r.skill_index}`;if(!skillNotes[k])skillNotes[k]=[];skillNotes[k].push(r)})}
 async function loadQuizResults(){const{data}=await db.from('quiz_results').select('*').eq('user_id',currentUser.id);quizResults={};if(data)data.forEach(r=>{quizResults[r.quiz_id]=r})}
-async function loadCoachQueue(){const{data}=await db.from('approvals').select('*').eq('status','pending').order('created_at',{ascending:true});if(!data){pendingCoach=[];return};const ids=[...new Set(data.map(r=>r.rider_id))];const{data:pData}=await db.from('profiles').select('id,name,avatar_url').in('id',ids);const pm={};if(pData)pData.forEach(p=>pm[p.id]=p);pendingCoach=data.map(r=>({...r,profiles:pm[r.rider_id]||null}))}
+async function loadFriends(){
+  const{data}=await db.from('friendships').select('*').or(`requester_id.eq.${currentUser.id},recipient_id.eq.${currentUser.id}`)
+  friends=[];friendRequests=[]
+  if(!data)return
+  const accepted=data.filter(f=>f.status==='accepted')
+  const pending=data.filter(f=>f.status==='pending'&&f.recipient_id===currentUser.id)
+  const friendIds=accepted.map(f=>f.requester_id===currentUser.id?f.recipient_id:f.requester_id)
+  if(friendIds.length){
+    const{data:profiles}=await db.from('profiles').select('*').in('id',friendIds)
+    friends=profiles||[]
+  }
+  friendRequests=pending
+}
+
+async function loadSessions(userId){
+  const{data}=await db.from('sessions').select('*').eq('user_id',userId||currentUser.id).order('started_at',{ascending:false}).limit(20)
+  return data||[]
+}
+
+// ── GPS SESSION ───────────────────────────────────────────────────
+function startSession(sport){
+  if(!navigator.geolocation){alert('GPS not available on this device');return}
+  activeSession={sport,id:null}
+  sessionPositions=[];sessionRuns=0;sessionDistance=0;sessionTopSpeed=0
+  sessionStartTime=Date.now();lastPosition=null;currentSpeed=0;isActiveRun=false
+  sessionWatchId=navigator.geolocation.watchPosition(onGPSUpdate,onGPSError,{enableHighAccuracy:true,maximumAge:1000,timeout:5000})
+  sessionTimer=setInterval(updateSessionUI,1000)
+  db.from('sessions').insert({user_id:currentUser.id,sport,started_at:new Date().toISOString(),runs:0,distance_km:0,duration_seconds:0,top_speed_kmh:0,route:[]}).select().single().then(({data})=>{if(data)activeSession.id=data.id})
+  renderSessionView(document.getElementById('main-content'))
+}
+
+function onGPSUpdate(pos){
+  const{latitude:lat,longitude:lng,speed}=pos.coords
+  const speedKmh=speed!=null?speed*3.6:0
+  currentSpeed=speedKmh
+  if(speedKmh>sessionTopSpeed)sessionTopSpeed=speedKmh
+  if(lastPosition){
+    const d=haversine(lastPosition.lat,lastPosition.lng,lat,lng)
+    sessionDistance+=d
+  }
+  sessionPositions.push({lat,lng,speed:speedKmh,t:Date.now()})
+  lastPosition={lat,lng}
+  if(speedKmh>=RUN_SPEED_THRESHOLD&&!isActiveRun){isActiveRun=true;runStartTime=Date.now()}
+  else if(speedKmh<RUN_SPEED_THRESHOLD&&isActiveRun){
+    const dur=(Date.now()-runStartTime)/1000
+    if(dur>=RUN_MIN_DURATION)sessionRuns++
+    isActiveRun=false;runStartTime=null
+  }
+  updateSessionUI()
+}
+
+function onGPSError(err){console.warn('GPS error',err)}
+
+function haversine(lat1,lon1,lat2,lon2){
+  const R=6371,dLat=(lat2-lat1)*Math.PI/180,dLon=(lon2-lon1)*Math.PI/180
+  const a=Math.sin(dLat/2)**2+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)**2
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))
+}
+
+function updateSessionUI(){
+  const elapsed=Math.floor((Date.now()-sessionStartTime)/1000)
+  const h=Math.floor(elapsed/3600),m=Math.floor((elapsed%3600)/60),s=elapsed%60
+  const timeStr=`${h?h+':':''}${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`
+  const el=id=>document.getElementById(id)
+  if(el('sess-time'))el('sess-time').textContent=timeStr
+  if(el('sess-runs'))el('sess-runs').textContent=sessionRuns
+  if(el('sess-dist'))el('sess-dist').textContent=sessionDistance.toFixed(2)+' km'
+  if(el('sess-speed'))el('sess-speed').textContent=Math.round(currentSpeed)+' km/h'
+  if(el('sess-status'))el('sess-status').textContent=isActiveRun?'🟢 Running':'⚪ Idle'
+}
+
+async function endSession(){
+  if(sessionWatchId!=null){navigator.geolocation.clearWatch(sessionWatchId);sessionWatchId=null}
+  if(sessionTimer){clearInterval(sessionTimer);sessionTimer=null}
+  if(isActiveRun){const dur=(Date.now()-runStartTime)/1000;if(dur>=RUN_MIN_DURATION)sessionRuns++}
+  const elapsed=Math.floor((Date.now()-sessionStartTime)/1000)
+  if(activeSession?.id){
+    await db.from('sessions').update({ended_at:new Date().toISOString(),runs:sessionRuns,distance_km:parseFloat(sessionDistance.toFixed(2)),duration_seconds:elapsed,top_speed_kmh:parseFloat(sessionTopSpeed.toFixed(1)),route:sessionPositions.slice(0,500)}).eq('id',activeSession.id)
+  }
+  activeSession=null
+  setView('sessions')
+}
+
+// ── FRIENDS ───────────────────────────────────────────────────────
+async function sendFriendRequest(code){
+  const{data:profile}=await db.from('profiles').select('id,name').eq('friend_code',code.toUpperCase()).single()
+  if(!profile)return{error:'No rider found with that code'}
+  if(profile.id===currentUser.id)return{error:'That\'s your own code!'}
+  const{error}=await db.from('friendships').insert({requester_id:currentUser.id,recipient_id:profile.id})
+  if(error)return{error:'Already sent or already friends'}
+  await loadFriends()
+  return{success:`Friend request sent to ${profile.name}!`}
+}
+
+async function respondFriendRequest(friendshipId,accept){
+  await db.from('friendships').update({status:accept?'accepted':'declined'}).eq('id',friendshipId)
+  await loadFriends()
+  renderFriendsView(document.getElementById('main-content'))
+}const{data}=await db.from('approvals').select('*').eq('status','pending').order('created_at',{ascending:true});if(!data){pendingCoach=[];return};const ids=[...new Set(data.map(r=>r.rider_id))];const{data:pData}=await db.from('profiles').select('id,name,avatar_url').in('id',ids);const pm={};if(pData)pData.forEach(p=>pm[p.id]=p);pendingCoach=data.map(r=>({...r,profiles:pm[r.rider_id]||null}))}
 async function loadLeaderboard(){const{data}=await db.from('leaderboard').select('*').order('skills_done',{ascending:false});lbData=data||[]}
 async function loadAllUsers(){const{data}=await db.from('profiles').select('*').order('name');allUsers=data||[]}
 
@@ -514,9 +628,9 @@ function showPlatUnlock(sport){
 
 function renderNav(){
   const pending=pendingCoach.length
-  const tabs=[{id:'skills',label:'Skills'},{id:'training',label:'Training'}]
+  const tabs=[{id:'skills',label:'Skills'},{id:'training',label:'Training'},{id:'sessions',label:'Sessions'}]
   if(isCoach())tabs.push({id:'coach',label:'Approvals',badge:pending})
-  tabs.push({id:'leaderboard',label:'Leaderboard'},{id:'profile',label:'Profile'})
+  tabs.push({id:'leaderboard',label:'Leaderboard'},{id:'friends',label:'Friends'},{id:'profile',label:'Profile'})
   if(isAdmin())tabs.push({id:'admin',label:'Admin'})
   document.getElementById('nav-tabs').innerHTML=tabs.map(t=>`<button class="nav-tab${activeView===t.id?' active':''}" onclick="setView('${t.id}')" style="position:relative;color:${activeView===t.id?'#fff':'var(--accent)'}">${t.label}${t.badge?`<span style="position:absolute;top:-4px;right:-4px;width:16px;height:16px;border-radius:50%;background:#E24B4A;color:#fff;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center">${t.badge}</span>`:''}</button>`).join('')
 }
@@ -528,12 +642,15 @@ async function setView(v){
   if(v==='coach')await loadCoachQueue()
   if(v==='leaderboard')await loadLeaderboard()
   if(v==='admin')await loadAllUsers()
+  if(v==='friends')await loadFriends()
   renderNav()
   const c=document.getElementById('main-content')
   if(v==='skills')renderSkillsView(c)
   else if(v==='training')renderTrainingView(c)
+  else if(v==='sessions')renderSessionView(c)
   else if(v==='coach')renderCoachView(c)
   else if(v==='leaderboard')renderLeaderboardView(c)
+  else if(v==='friends')renderFriendsView(c)
   else if(v==='profile')renderProfileView(c)
   else if(v==='admin')renderAdminView(c)
 }
@@ -616,7 +733,170 @@ function renderSkillsView(c){
   c.innerHTML=`<div class="sport-scroll">${sportTabs}</div>${stats}<div class="tiers-grid">${tiers}</div><div class="certs-row">${certs}</div>${platSection}${shareSection}`
 }
 
-function renderSkills(){if(activeView==='skills')renderSkillsView(document.getElementById('main-content'))}
+// ── SESSIONS VIEW ─────────────────────────────────────────────────
+async function renderSessionView(c){
+  if(activeSession){
+    c.innerHTML=`
+      <div style="max-width:480px;margin:0 auto">
+        <div style="background:var(--card);border:2px solid #1D9E75;border-radius:var(--radius);padding:1.5rem;margin-bottom:1rem">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:1.25rem">
+            <div style="width:10px;height:10px;border-radius:50%;background:#1D9E75;animation:pulse 1s infinite"></div>
+            <div style="font-size:15px;font-weight:600">Session active</div>
+            <div id="sess-status" style="margin-left:auto;font-size:12px">⚪ Idle</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:1.25rem">
+            <div style="background:var(--bg);border-radius:var(--rsm);padding:12px;text-align:center">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Time</div>
+              <div id="sess-time" style="font-size:22px;font-weight:700;color:var(--brand)">00:00</div>
+            </div>
+            <div style="background:var(--bg);border-radius:var(--rsm);padding:12px;text-align:center">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Runs</div>
+              <div id="sess-runs" style="font-size:22px;font-weight:700;color:var(--accent)">0</div>
+            </div>
+            <div style="background:var(--bg);border-radius:var(--rsm);padding:12px;text-align:center">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Distance</div>
+              <div id="sess-dist" style="font-size:22px;font-weight:700;color:var(--brand)">0.00 km</div>
+            </div>
+            <div style="background:var(--bg);border-radius:var(--rsm);padding:12px;text-align:center">
+              <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Speed</div>
+              <div id="sess-speed" style="font-size:22px;font-weight:700;color:var(--muted)">0 km/h</div>
+            </div>
+          </div>
+          <button onclick="endSession()" style="width:100%;padding:12px;border-radius:var(--rsm);border:none;background:#D85A30;color:#fff;font-weight:700;font-size:15px;cursor:pointer">End Session</button>
+        </div>
+        <div id="session-map" style="height:200px;background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px">Map will show after session ends</div>
+      </div>`
+    return
+  }
+
+  const sessions=await loadSessions()
+  const sportPills=Object.keys(DEFAULT_SKILLS).map(id=>`<button class="sport-pill" onclick="startSession('${id}')" style="background:var(--brand);color:#fff;border-color:transparent">${DEFAULT_SKILLS[id].name}</button>`).join('')
+
+  const sessionCards=sessions.map(s=>{
+    const start=new Date(s.started_at)
+    const dateStr=start.toLocaleDateString('en-CA',{month:'short',day:'numeric',year:'numeric'})
+    const dur=s.duration_seconds?`${Math.floor(s.duration_seconds/60)}m`:'—'
+    return`<div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;margin-bottom:8px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+        <div><div style="font-size:13px;font-weight:600">${DEFAULT_SKILLS[s.sport]?.name||s.sport||'Session'}</div><div style="font-size:11px;color:var(--muted)">${dateStr} · ${dur}</div></div>
+        <div style="font-size:11px;font-weight:600;color:var(--brand);background:rgba(0,200,212,0.1);padding:3px 10px;border-radius:10px">${s.runs} runs</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        <div style="text-align:center"><div style="font-size:10px;color:var(--muted)">Distance</div><div style="font-size:14px;font-weight:600">${s.distance_km||0} km</div></div>
+        <div style="text-align:center"><div style="font-size:10px;color:var(--muted)">Time</div><div style="font-size:14px;font-weight:600">${dur}</div></div>
+        <div style="text-align:center"><div style="font-size:10px;color:var(--muted)">Top speed</div><div style="font-size:14px;font-weight:600">${s.top_speed_kmh||0} km/h</div></div>
+      </div>
+      ${s.route&&s.route.length>2?`<div style="margin-top:10px;height:120px;border-radius:var(--rsm);overflow:hidden">${renderMiniMap(s.route,s.id)}</div>`:''}
+    </div>`
+  }).join('')
+
+  c.innerHTML=`
+    <div style="margin-bottom:1.25rem">
+      <div class="section-head">Start a new session</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:.75rem">Choose your sport to begin GPS tracking</div>
+      <div class="sport-scroll">${sportPills}</div>
+    </div>
+    <div>
+      <div class="section-head">Session history</div>
+      ${sessions.length?sessionCards:`<div class="empty-state">No sessions yet — hit the water!</div>`}
+    </div>`
+}
+
+function renderMiniMap(route,id){
+  if(!route||route.length<2)return''
+  const lats=route.map(p=>p.lat),lngs=route.map(p=>p.lng)
+  const minLat=Math.min(...lats),maxLat=Math.max(...lats),minLng=Math.min(...lngs),maxLng=Math.max(...lngs)
+  const w=280,h=120,pad=10
+  const scaleX=lng=>(lng-minLng)/(maxLng-minLng||0.0001)*(w-pad*2)+pad
+  const scaleY=lat=>(1-(lat-minLat)/(maxLat-minLat||0.0001))*(h-pad*2)+pad
+  const points=route.map(p=>`${scaleX(p.lng).toFixed(1)},${scaleY(p.lat).toFixed(1)}`).join(' ')
+  return`<svg width="100%" viewBox="0 0 ${w} ${h}" style="background:rgba(0,200,212,0.05);border-radius:var(--rsm)">
+    <polyline points="${points}" fill="none" stroke="var(--brand)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${scaleX(route[0].lng)}" cy="${scaleY(route[0].lat)}" r="4" fill="#1D9E75"/>
+    <circle cx="${scaleX(route[route.length-1].lng)}" cy="${scaleY(route[route.length-1].lat)}" r="4" fill="#D85A30"/>
+  </svg>`
+}
+
+// ── FRIENDS VIEW ──────────────────────────────────────────────────
+async function renderFriendsView(c){
+  const myCode=userProfile?.friend_code||'------'
+  const pendingHtml=friendRequests.length?`
+    <div style="margin-bottom:1.25rem">
+      <div class="section-head">Friend requests (${friendRequests.length})</div>
+      ${friendRequests.map(r=>`
+        <div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--rsm);padding:12px 14px;display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+          <div style="font-size:13px;font-weight:500">Someone wants to be friends</div>
+          <div style="display:flex;gap:6px">
+            <button onclick="respondFriendRequest('${r.id}',true)" style="padding:5px 12px;border-radius:6px;border:none;background:#E1F5EE;color:#085041;font-size:12px;font-weight:500;cursor:pointer">Accept</button>
+            <button onclick="respondFriendRequest('${r.id}',false)" style="padding:5px 12px;border-radius:6px;border:none;background:#FAECE7;color:#712B13;font-size:12px;font-weight:500;cursor:pointer">Decline</button>
+          </div>
+        </div>`).join('')}
+    </div>`:''
+
+  const friendStats=await Promise.all(friends.map(async f=>{
+    const sessions=await loadSessions(f.id)
+    const totalRuns=sessions.reduce((a,s)=>a+s.runs,0)
+    const totalDist=sessions.reduce((a,s)=>a+parseFloat(s.distance_km||0),0)
+    const totalTime=sessions.reduce((a,s)=>a+parseInt(s.duration_seconds||0),0)
+    return{...f,totalRuns,totalDist:totalDist.toFixed(1),totalTime:Math.floor(totalTime/60),sessions:sessions.length}
+  }))
+
+  const mySessions=await loadSessions()
+  const myTotalRuns=mySessions.reduce((a,s)=>a+s.runs,0)
+  const myTotalDist=mySessions.reduce((a,s)=>a+parseFloat(s.distance_km||0),0).toFixed(1)
+  const myTotalTime=Math.floor(mySessions.reduce((a,s)=>a+parseInt(s.duration_seconds||0),0)/60)
+
+  const allForLeaderboard=[{name:'You',totalRuns:myTotalRuns,totalDist:myTotalDist,totalTime:myTotalTime,isMe:true},...friendStats].sort((a,b)=>b.totalRuns-a.totalRuns)
+
+  const leaderboardRows=allForLeaderboard.map((f,i)=>`
+    <div style="display:grid;grid-template-columns:28px 1fr repeat(3,auto);align-items:center;gap:8px;padding:10px 14px;border-bottom:0.5px solid var(--border);${f.isMe?'background:rgba(0,200,212,0.06)':''}">
+      <div style="font-size:13px;font-weight:700;color:${i<3?'var(--brand)':'var(--muted)'};text-align:center">${i===0?'🥇':i===1?'🥈':i===2?'🥉':i+1}</div>
+      <div style="font-size:13px;font-weight:${f.isMe?'700':'500'}">${f.isMe?'You ⭐':f.name}</div>
+      <div style="text-align:right"><div style="font-size:10px;color:var(--muted)">Runs</div><div style="font-size:13px;font-weight:600;color:var(--accent)">${f.totalRuns}</div></div>
+      <div style="text-align:right"><div style="font-size:10px;color:var(--muted)">km</div><div style="font-size:13px;font-weight:600;color:var(--brand)">${f.totalDist}</div></div>
+      <div style="text-align:right"><div style="font-size:10px;color:var(--muted)">min</div><div style="font-size:13px;font-weight:600">${f.totalTime}</div></div>
+    </div>`).join('')
+
+  const friendCards=friends.map(f=>`
+    <div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:14px;display:flex;align-items:center;gap:12px">
+      ${avatarHtml(f.avatar_url,f.name,36)}
+      <div><div style="font-size:13px;font-weight:600">${f.name}</div><div style="font-size:11px;color:var(--muted)">${f.experience_level||'rider'}</div></div>
+    </div>`).join('')
+
+  c.innerHTML=`
+    ${pendingHtml}
+    <div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.25rem">
+      <div class="section-head">Your friend code</div>
+      <div style="font-size:28px;font-weight:800;letter-spacing:.2em;color:var(--brand);text-align:center;padding:1rem 0">${myCode}</div>
+      <div style="font-size:12px;color:var(--muted);text-align:center">Share this with friends so they can add you</div>
+    </div>
+    <div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.25rem">
+      <div class="section-head">Add a friend</div>
+      <div style="display:flex;gap:8px">
+        <input id="friend-code-inp" placeholder="Enter friend code" maxlength="6" style="flex:1;padding:8px 12px;border:0.5px solid var(--border);border-radius:var(--rsm);background:var(--bg);color:var(--text);font-size:13px;outline:none;text-transform:uppercase"/>
+        <button class="btn-join" onclick="addFriend()">Add</button>
+      </div>
+      <div id="friend-msg" style="font-size:12px;margin-top:8px;min-height:16px"></div>
+    </div>
+    ${friends.length||allForLeaderboard.length>1?`
+    <div style="background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:1.25rem">
+      <div style="padding:12px 14px;border-bottom:0.5px solid var(--border);font-size:13px;font-weight:600">Friends leaderboard</div>
+      <div style="background:var(--bg);display:grid;grid-template-columns:28px 1fr repeat(3,auto);gap:8px;padding:8px 14px;font-size:10px;font-weight:600;color:var(--muted)">
+        <div>#</div><div>Rider</div><div>Runs</div><div>km</div><div>min</div>
+      </div>
+      ${leaderboardRows}
+    </div>`:''} 
+    ${friends.length?`<div class="section-head">Friends (${friends.length})</div><div style="display:grid;gap:8px">${friendCards}</div>`:`<div class="empty-state">No friends yet — share your code!</div>`}`
+}
+
+async function addFriend(){
+  const code=document.getElementById('friend-code-inp')?.value?.trim()
+  const msg=document.getElementById('friend-msg')
+  if(!code){msg.textContent='Enter a friend code';msg.style.color='#D85A30';return}
+  const result=await sendFriendRequest(code)
+  if(result.error){msg.textContent=result.error;msg.style.color='#D85A30'}
+  else{msg.textContent=result.success;msg.style.color='#1D9E75';document.getElementById('friend-code-inp').value=''}
+}
 function setSport(id){activeSport=id;renderSkills()}
 function copyShareLink(){navigator.clipboard.writeText(`https://learnwatersports.ca?share=${currentUser.id}`).then(()=>{const m=document.getElementById('share-msg');if(m){m.textContent='Link copied!';setTimeout(()=>m.textContent='',3000)}})}
 function screenshotCard(){const m=document.getElementById('share-msg');if(m){m.textContent='Take a screenshot of the card above!';setTimeout(()=>m.textContent='',3000)}}
