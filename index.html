@@ -2089,7 +2089,10 @@ function renderAdminSettings(c,subTabs){
 }
 
 function toggleSetting(key,val){
+  console.log('toggleSetting called:', key, val)
   saveAppSetting(key,val)
+  const verify=getAppSettings()
+  console.log('saved settings:', JSON.stringify(verify))
   showToast((val?'✓ Enabled: ':'✗ Disabled: ')+key.replace(/_/g,' '))
 }
 
