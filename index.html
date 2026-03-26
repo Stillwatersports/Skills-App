@@ -2456,6 +2456,8 @@ async function renderAdminView(c){
     c.innerHTML=`<div class="page-title">Admin</div><div class="page-sub">Manage users, roles and content</div><div class="admin-grid"><div class="admin-stat"><div class="admin-stat-label">Total users</div><div class="admin-stat-val">${allUsers.length}</div></div><div class="admin-stat"><div class="admin-stat-label">Riders</div><div class="admin-stat-val">${riders}</div></div><div class="admin-stat"><div class="admin-stat-label">Coaches</div><div class="admin-stat-val">${coaches}</div></div><div class="admin-stat"><div class="admin-stat-label">Drivers</div><div class="admin-stat-val">${drivers}</div></div></div><div style="display:flex;gap:6px;margin-bottom:1rem">${subTabs}</div><div class="invite-box"><div class="section-head">Invite user</div><div class="invite-row"><input id="invite-email" type="email" placeholder="rider@example.com"/><select id="invite-role"><option value="rider">Rider</option><option value="coach">Coach</option><option value="driver">Driver</option><option value="admin">Admin</option></select><button class="btn-add" onclick="sendInvite()" id="invite-btn">Invite</button></div><div id="invite-msg" style="font-size:12px;margin-top:8px;min-height:16px"></div></div><div class="section-head" style="margin-bottom:.75rem">Users</div><div class="user-table"><div class="user-row header"><div>Name</div><div>Role</div><div>Actions</div></div>${rows}</div>`
   }else if(adminSubView==='clubs'){
     await renderAdminClubs(c,subTabs)
+  }else if(adminSubView==='settings'){
+    renderAdminSettings(c,subTabs)
   }else{
     renderSkillsEditor(c,subTabs)
   }
@@ -2568,6 +2570,45 @@ async function saveSkill(skillId,idx){
   if(flash){flash.textContent='Saved!';setTimeout(()=>flash.textContent='',2000)}
   if(btn)btn.disabled=false
 }
+
+function renderAdminSettings(c,subTabs){
+  const s=getAppSettings()
+  const tog=(key,label,desc,def=true)=>{
+    const on=s[key]===undefined?def:s[key]
+    return`<div style="display:flex;align-items:center;gap:14px;padding:14px 0;border-bottom:0.5px solid var(--border)">
+      <div style="flex:1">
+        <div style="font-size:14px;font-weight:600">${label}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">${desc}</div>
+      </div>
+      <label class="sw-toggle">
+        <input type="checkbox" ${on?'checked':''} onchange="toggleSetting('${key}',this.checked)"/>
+        <span class="sw-toggle-track"></span>
+      </label>
+    </div>`
+  }
+  c.innerHTML=`<div class="page-title">Admin</div><div class="page-sub">Manage users, roles and content</div>
+  <div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap">${subTabs}</div>
+  <div class="club-card">
+    <div class="section-head">Certifications &amp; Quizzes</div>
+    ${tog('require_dryland','Require First Timer certification','Students must complete safety quiz + dryland checklist before water skills unlock')}
+    ${tog('require_driver_beginner','Require Beginner Driver quiz','Drivers must pass beginner quiz before accessing driver features')}
+    ${tog('require_driver_advanced','Require Advanced Driver quiz','Drivers must pass advanced quiz')}
+    ${tog('require_driver_tournament','Require Tournament Driver quiz','Drivers must pass tournament quiz')}
+    ${tog('require_safety_advanced','Require Advanced Safety quiz','All riders must pass advanced safety quiz')}
+  </div>
+  <div class="club-card" style="margin-top:12px">
+    <div class="section-head">Skill Progression</div>
+    ${tog('require_video_submission','Require video for skill submission','Riders must attach a video when submitting a skill for approval',false)}
+    ${tog('coach_can_approve_without_video','Coaches can approve without video','Allow coaches to approve skills that have no video attached')}
+    ${tog('show_platinum','Show Platinum tier','Display platinum skills to students (always visible to coaches)')}
+  </div>`
+}
+
+function toggleSetting(key,val){
+  saveAppSetting(key,val)
+  showToast((val?'✓ Enabled: ':'✗ Disabled: ')+key.replace(/_/g,' '))
+}
+
 function setAdminSub(v){adminSubView=v;renderAdminView(document.getElementById('main-content'))}
 function setAdminSport(id){adminEditSport=id;adminEditTier=id==='dryland'?'required':'bronze';renderAdminView(document.getElementById('main-content'))}
 function setAdminTier(t){adminEditTier=t;renderAdminView(document.getElementById('main-content'))}
