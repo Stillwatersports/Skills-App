@@ -8,6 +8,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="./styles.css"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -81,19 +82,20 @@ nav{
 /* Simulated water photo using CSS */
 .hero-bg::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.15),rgba(0,0,0,0.05));}
 .hero-coords{
-  position:absolute;top:80px;right:32px;z-index:2;
-  text-align:right;
+  position:absolute;top:80px;left:32px;z-index:2;
+  text-align:left;
   font-size:11px;font-weight:600;letter-spacing:.08em;
   color:rgba(255,255,231,0.5);
   line-height:1.6;
 }
-.hero-content{position:relative;z-index:2;padding:0 48px}
+.hero-content{position:relative;z-index:2;padding:0 48px;text-align:right;display:flex;flex-direction:column;align-items:flex-end;}
 .hero-badge{
   display:inline-flex;align-items:center;gap:8px;
-  border:1px solid rgba(255,255,231,0.35);
+  background:var(--pink);
+  border:1px solid var(--pink);
   border-radius:20px;padding:6px 16px;
   font-size:12px;font-weight:600;letter-spacing:.06em;
-  color:rgba(255,255,231,0.8);margin-bottom:28px;
+  color:#fff;margin-bottom:28px;
   text-transform:uppercase;
 }
 .hero-badge::before{content:'●';font-size:7px;color:var(--pink);animation:pulse 2s infinite}
@@ -110,10 +112,10 @@ nav{
 .hero-sub{
   font-size:16px;font-weight:400;
   color:rgba(255,255,231,0.75);
-  line-height:1.65;max-width:420px;margin-bottom:36px;
+  line-height:1.65;max-width:420px;margin-bottom:36px;text-align:right;
 }
 .hero-sub strong{color:var(--yellow);font-weight:600}
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:56px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:56px;justify-content:flex-end}
 .btn-pink{
   background:var(--pink);color:var(--white);
   padding:14px 28px;border-radius:50px;
@@ -132,7 +134,7 @@ nav{
   transition:all .15s;
 }
 .btn-ghost:hover{background:rgba(255,255,231,0.22)}
-.hero-chips{display:flex;gap:8px;flex-wrap:wrap}
+.hero-chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
 .hero-chip{
   background:rgba(255,255,255,0.0);
   border:1px solid rgba(255,255,231,0.3);
@@ -159,8 +161,9 @@ nav{
 .hero-stat-mini-lbl{font-size:10px;font-weight:600;color:rgba(255,255,231,0.5);letter-spacing:.06em;text-transform:uppercase}
 .hero-contact-link{
   font-size:12px;font-weight:600;letter-spacing:.06em;
-  color:var(--pink);text-decoration:none;text-transform:uppercase;
-  border-bottom:1px solid var(--pink);padding-bottom:1px;
+  color:var(--cyan);text-decoration:none;text-transform:uppercase;
+  border-bottom:1px solid var(--cyan);padding-bottom:1px;
+  margin-left:auto;
 }
 
 /* ── STATS BAND ── */
@@ -202,10 +205,10 @@ nav{
   padding:0 48px;
 }
 .sports-cards{
-  display:grid;
-  grid-template-columns:repeat(6,1fr);
+  display:flex;
   gap:0;
   padding:16px 0 32px;
+  align-items:flex-end;
 }
 .sport-card{
   position:relative;
@@ -213,13 +216,16 @@ nav{
   border-radius:20px;
   overflow:hidden;
   cursor:pointer;
-  transition:transform .3s ease, box-shadow .3s ease;
+  flex:1;
+  transition:flex .35s ease, transform .35s ease, box-shadow .35s ease;
   z-index:1;
   margin-right:-18px;
   box-shadow:8px 0 28px rgba(0,0,0,0.28);
+  min-width:0;
 }
 .sport-card:hover{
-  transform:translateY(-16px) scale(1.04);
+  flex:2;
+  transform:translateY(-16px);
   z-index:10;
   box-shadow:0 24px 48px rgba(0,0,0,0.35);
 }
@@ -572,11 +578,7 @@ footer{
 <!-- NAV -->
 <nav>
   <a href="/" class="nav-brand">
-    <div class="nav-icon">≋</div>
-    <div class="nav-name">
-      <span class="nav-name-top">Stillwater</span>
-      <span class="nav-name-sub">Sports</span>
-    </div>
+    <img src="./Logo4.png" alt="Stillwater Sports" style="height:46px;width:auto;object-fit:contain;filter:brightness(0) invert(1);"/>
   </a>
   <div class="nav-links">
     <a href="#sports">Sports</a>
@@ -590,11 +592,12 @@ footer{
 </nav>
 
 <div class="mobile-menu" id="mobileMenu">
-  <a href="#sports" onclick="toggleMenu()">Sports</a>
+  <a href="/sports" onclick="toggleMenu()">Sports</a>
   <a href="#lessons" onclick="toggleMenu()">Lessons</a>
-  <a href="#how" onclick="toggleMenu()">How It Works</a>
-  <a href="#areas" onclick="toggleMenu()">Areas</a>
-  <a href="#app" onclick="toggleMenu()">Skills App</a>
+  <a href="/pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="/about" onclick="toggleMenu()">About</a>
+  <a href="/equipment" onclick="toggleMenu()">Equipment</a>
+  <a href="/app" onclick="toggleMenu()">Skills App</a>
   <a href="#book" onclick="toggleMenu()">Book Now</a>
 </div>
 
@@ -607,7 +610,7 @@ footer{
     <h1>
       <span class="l1">Your lake.</span>
       <span class="l2">Your lesson.</span>
-      <span class="l3">Your ride.</span>
+      <span class="l3">Our ride.</span>
     </h1>
     <p class="hero-sub">Private waterski, wakeboard &amp; wakesurf instruction across <strong>Ottawa's cottage country</strong>. Boat and all equipment included. Beginner to advanced.</p>
     <div class="hero-actions">
@@ -630,7 +633,7 @@ footer{
       <div class="hero-stat-mini"><div class="hero-stat-mini-num">5 SPORTS</div><div class="hero-stat-mini-lbl">Disciplines</div></div>
       <div class="hero-stat-mini"><div class="hero-stat-mini-num">100% GEAR</div><div class="hero-stat-mini-lbl">Included</div></div>
     </div>
-    <a href="mailto:christian@learnwatersports.ca" class="hero-contact-link">Christian Richards · Instructor</a>
+    <a href="mailto:christian@learnwatersports.ca" class="hero-contact-link">Christian Richards · Coach</a>
   </div>
 </section>
 
@@ -672,7 +675,7 @@ footer{
         <div class="eyebrow">01 · Sport Matrix</div>
         <h2 class="big-title">Pick your <em>discipline.</em><br>Every lesson, private.</h2>
       </div>
-      <p class="section-desc">Six disciplines. Structured progression. Boat, instructor &amp; all equipment included.</p>
+      <p class="section-desc">Six disciplines. Structured progression. Boat, coach &amp; all equipment included.</p>
     </div>
     <div class="sports-cards-wrap fade-up">
     <div class="sports-cards">
@@ -686,7 +689,6 @@ footer{
         <div class="sport-card-bg"></div>
         <div class="sport-card-overlay"></div>
         <span class="sport-card-num">02</span>
-        <div class="sport-card-eyebrow">Beginner → Advanced</div>
         <span class="sport-card-name">Wakeboard</span>
       </div>
       <div class="sport-card">
@@ -914,7 +916,7 @@ footer{
         </div>
         <div class="book-info-item">
           <div class="book-info-icon">🚤</div>
-          <div><div class="book-info-key">Everything Included</div><div class="book-info-val">Boat, fuel, all equipment, life jackets, wetsuits, and instructor time. Just show up.</div></div>
+          <div><div class="book-info-key">Everything Included</div><div class="book-info-val">Boat, fuel, all equipment, life jackets, wetsuits, and coach time. Just show up.</div></div>
         </div>
         <div class="book-info-item">
           <div class="book-info-icon">📍</div>
@@ -970,15 +972,9 @@ footer{
   <div class="footer-watermark">LEARNWATERSPORTS</div>
   <div class="footer-inner">
     <div class="footer-top">
-      <div class="footer-brand">
-        <div class="footer-brand-row">
-          <div class="footer-icon">≋</div>
-          <div>
-            <div class="footer-name-top">Stillwater Sports</div>
-            <div class="footer-name-sub">Ottawa Cottage Country</div>
-          </div>
-        </div>
-        <p class="footer-desc">Private waterski, wakeboard &amp; wakesurf instruction. Boat and all equipment included. Beginner to advanced — we come to your lake.</p>
+      <div>
+        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.png" alt="Stillwater Sports"/></div>
+        <p class="footer-desc">Private waterski, wakeboard &amp; wakesurf coaching. Boat and all equipment included. Beginner to advanced — we come to your lake.</p>
         <div class="footer-social">
           <a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a>
           <a href="#" class="footer-social-btn">⊙</a>
@@ -986,19 +982,23 @@ footer{
       </div>
       <div class="footer-col">
         <h4>Explore</h4>
-        <a href="#sports">Sports</a>
+        <a href="/sports">Sports</a>
         <a href="#lessons">Lessons</a>
-        <a href="#how">How It Works</a>
-        <a href="#areas">Service Areas</a>
-        <a href="#app">Skills App</a>
-        <a href="#book">Book Now</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/about">About</a>
+        <a href="/equipment">Equipment</a>
       </div>
       <div class="footer-col">
         <h4>Stillwater Skills</h4>
         <a href="/stillwaterapp">Open the App</a>
-        <a href="/stillwaterapp">For Clubs &amp; Schools</a>
-        <div class="footer-col-sub">Christian Richards</div>
-        <a href="#" style="color:rgba(255,255,231,0.6);font-size:13px">Lead Instructor · Stillwater Sports</a>
+        <a href="/app">For Clubs &amp; Schools</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="/policies">Privacy Policy</a>
+        <a href="/policies#terms">Terms of Service</a>
+        <a href="/policies#waiver">Waiver</a>
+        <a href="/policies#refunds">Refund Policy</a>
       </div>
     </div>
     <div class="footer-bottom">

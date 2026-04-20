@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Stillwater Skills — progressive skill tracking app for waterski, wakeboard and water sports clubs. Bronze to Platinum certifications, coach approvals, GPS sessions."/>
+<title>Stillwater Skills App — Stillwater Sports</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="./styles.css"/>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports"/></a>
+  <div class="nav-links">
+    <a href="/sports">Sports</a>
+    <a href="/#lessons">Lessons</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/about">About</a>
+    <a href="/equipment">Equipment</a>
+    <a href="/app" class="active">Skills App</a>
+  </div>
+  <a href="/stillwaterapp" class="nav-book">Open App</a>
+  <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/sports" onclick="toggleMenu()">Sports</a>
+  <a href="/#lessons" onclick="toggleMenu()">Lessons</a>
+  <a href="/pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="/about" onclick="toggleMenu()">About</a>
+  <a href="/equipment" onclick="toggleMenu()">Equipment</a>
+  <a href="/app" onclick="toggleMenu()">Skills App</a>
+  <a href="/stillwaterapp" onclick="toggleMenu()">Open the App</a>
+</div>
+
+<section class="hero hero-short">
+  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,60,80,0.7) 0%,rgba(0,40,60,0.6) 100%);background-color:var(--cyan)"></div>
+  <div class="hero-coords">N 45°<br>OTTAWA</div>
+  <div class="hero-content">
+    <div class="hero-badge">Free for Students · Plans for Clubs</div>
+    <h1>
+      <span class="l1">Track every skill.</span>
+      <span class="l3">Earn every badge.</span>
+    </h1>
+    <p class="hero-sub">Bronze through Platinum certifications. Coach-approved skill sign-offs. GPS session tracking. Built for water sports clubs, coaches, and athletes.</p>
+    <div class="hero-actions">
+      <a href="/stillwaterapp" class="btn-pink">Open the App →</a>
+      <a href="#clubs" class="btn-ghost">For Clubs &amp; Schools</a>
+    </div>
+  </div>
+  <div class="hero-bottom">
+    <div class="hero-scroll">How It Works</div>
+    <a href="/stillwaterapp" class="hero-contact-link">learnwatersports.ca/stillwaterapp</a>
+  </div>
+</section>
+
+<!-- APP PROMO -->
+<section class="app-section" style="padding-top:80px;padding-bottom:80px">
+  <div class="app-inner">
+    <div class="app-card fade-up">
+      <div class="app-card-header">
+        <div class="app-card-logo">
+          <div class="app-card-icon">≋</div>
+          <span class="app-card-title">Stillwater Skills</span>
+        </div>
+        <div class="app-tiers">
+          <span class="t-bronze">BRONZE ✓</span>
+          <span class="t-silver">SILVER ✓</span>
+          <span class="t-gold">GOLD →</span>
+        </div>
+      </div>
+      <div class="app-sport-label">Gold Skills · Waterski</div>
+      <div class="app-skill-row done"><div class="app-skill-cb">✓</div><span class="app-skill-name">Deep water start — both skis</span></div>
+      <div class="app-skill-row done"><div class="app-skill-cb">✓</div><span class="app-skill-name">One-ski drop at speed</span></div>
+      <div class="app-skill-row done"><div class="app-skill-cb">✓</div><span class="app-skill-name">Jump wake — both directions</span></div>
+      <div class="app-skill-row"><div class="app-skill-cb"></div><span class="app-skill-name">Crossing all 6 wakes cleanly</span></div>
+      <div class="app-skill-row"><div class="app-skill-cb"></div><span class="app-skill-name">Slalom course introduction</span></div>
+      <div class="app-progress" style="margin-top:16px">
+        <div class="app-prog-bar"><div class="app-prog-fill"></div></div>
+        <div class="app-prog-meta"><span>3 of 5 Gold skills completed</span><span>60%</span></div>
+      </div>
+    </div>
+    <div class="app-text">
+      <div class="eyebrow">Stillwater Skills</div>
+      <h2>The progression<br><em>platform for water sports.</em></h2>
+      <p>Built from the ground up for waterski, wakeboard, wakesurf, slalom, and barefoot — Stillwater Skills gives athletes a structured path from beginner to expert, with coach sign-offs at every stage.</p>
+      <div class="tier-dots-row">
+        <div style="display:flex;align-items:center;gap:6px"><div class="tier-dot" style="background:#F5C4B3"></div><span class="tier-dot-label">Bronze</span></div>
+        <div style="display:flex;align-items:center;gap:6px"><div class="tier-dot" style="background:#C8C6BC"></div><span class="tier-dot-label">Silver</span></div>
+        <div style="display:flex;align-items:center;gap:6px"><div class="tier-dot" style="background:#F5D87A"></div><span class="tier-dot-label">Gold</span></div>
+        <div style="display:flex;align-items:center;gap:6px"><div class="tier-dot" style="background:#b8b0f0;opacity:.6"></div><span class="tier-dot-label" style="opacity:.6">Platinum</span></div>
+      </div>
+      <a href="/stillwaterapp" class="btn-yellow">Open the App →</a>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section style="background:var(--yellow)">
+  <div class="s">
+    <div class="eyebrow">Features</div>
+    <h2 class="big-title" style="margin-bottom:48px">Everything a coach<br><em>and athlete needs.</em></h2>
+    <div class="content-grid-3">
+      <div class="content-card"><span class="card-icon">🏅</span><h3>Bronze → Platinum Progression</h3><p>Structured skill tiers that lock until you complete the level below. Real learning paths — not cherry-picked tricks.</p></div>
+      <div class="content-card"><span class="card-icon">✅</span><h3>Coach Approval Queue</h3><p>Athletes submit skills for approval. Coaches review, approve or reject with notes — all from the app. No paper needed.</p></div>
+      <div class="content-card"><span class="card-icon">🎬</span><h3>Video Submission</h3><p>Athletes attach a video when submitting a skill. Coaches review footage before approving. Evidence-based progression.</p></div>
+      <div class="content-card"><span class="card-icon">📍</span><h3>GPS Session Tracking</h3><p>Track runs, distance, and top speed every session. Build a full history of time on the water over the season.</p></div>
+      <div class="content-card"><span class="card-icon">🏆</span><h3>Leaderboard &amp; Social</h3><p>Club leaderboards, friend connections, and shareable skill profiles. Friendly competition drives motivation.</p></div>
+      <div class="content-card"><span class="card-icon">🛡️</span><h3>Safety Certifications</h3><p>Built-in dryland safety quiz, driver certification, and advanced safety modules. Unlock water skills only after safety is confirmed.</p></div>
+      <div class="content-card"><span class="card-icon">👥</span><h3>Club &amp; Class Management</h3><p>Admins manage rosters, coaches manage classes, athletes track their own progress. Scales from a single coach to a full club.</p></div>
+      <div class="content-card"><span class="card-icon">📋</span><h3>Printable Checklists</h3><p>Generate a printable dock checklist for paper-based sessions. Perfect for coaching without phones on the water.</p></div>
+      <div class="content-card"><span class="card-icon">📱</span><h3>No App Store Required</h3><p>Works on any phone as a Progressive Web App. Add to your home screen — no download, no App Store, no updates to manage.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- CLUBS -->
+<div class="highlight-band" id="clubs">
+  <div class="highlight-band-inner">
+    <div>
+      <div class="eyebrow" style="color:rgba(255,255,231,0.6)">For Clubs &amp; Schools</div>
+      <h2>The digital backbone<br><em>your club is missing.</em></h2>
+    </div>
+    <div>
+      <p>Stillwater Skills is available as a standalone SaaS platform for water sports clubs, schools, and coaching programs across Canada. Free tier available — paid plans unlock video, GPS, and full club management.</p>
+      <div class="tag-list">
+        <span class="tag">Free Tier Available</span>
+        <span class="tag">Club Plan — $49/mo</span>
+        <span class="tag">Pro Plan — $99/mo</span>
+        <span class="tag">Up to 60 Athletes</span>
+        <span class="tag">Unlimited on Pro</span>
+      </div>
+      <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap">
+        <a href="/stillwaterapp" class="btn-pink">Try Free →</a>
+        <a href="mailto:christian@learnwatersports.ca?subject=Club Enquiry — Stillwater Skills" class="btn-outline" style="border-color:var(--yellow);color:var(--yellow)">Contact for Demo →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-watermark">LEARNWATERSPORTS</div>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.png" alt="Stillwater Sports"/></div>
+        <p class="footer-desc">Private waterski, wakeboard &amp; wakesurf coaching. Boat and all equipment included. Beginner to advanced — we come to your lake.</p>
+        <div class="footer-social"><a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a><a href="#" class="footer-social-btn">⊙</a></div>
+      </div>
+      <div class="footer-col"><h4>Explore</h4><a href="/sports">Sports</a><a href="/#lessons">Lessons</a><a href="/pricing">Pricing</a><a href="/about">About</a><a href="/equipment">Equipment</a></div>
+      <div class="footer-col"><h4>Stillwater Skills</h4><a href="/stillwaterapp">Open the App</a><a href="/app">For Clubs &amp; Schools</a></div>
+      <div class="footer-col"><h4>Legal</h4><a href="/policies">Privacy Policy</a><a href="/policies#terms">Terms of Service</a><a href="/policies#waiver">Waiver</a><a href="/policies#refunds">Refund Policy</a></div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 Christian Richards · Stillwater Sports · All rights reserved</span>
+      <span class="footer-dot">Ottawa's Cottage Country · learnwatersports.ca</span>
+    </div>
+  </div>
+</footer>
+<div id="toast"></div>
+<script>
+function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
+document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
+</script>
+</body>
+</html>

@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Meet Christian Richards — Ottawa's top-ranked barefoot water sports coach. 20+ years on the water, WSWC certified, top 100 worldwide in barefoot."/>
+<title>About Christian Richards — Stillwater Sports</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="./styles.css"/>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports"/></a>
+  <div class="nav-links">
+    <a href="/sports">Sports</a>
+    <a href="/#lessons">Lessons</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/about" class="active">About</a>
+    <a href="/equipment">Equipment</a>
+    <a href="/app">Skills App</a>
+  </div>
+  <a href="/#book" class="nav-book">Book Now</a>
+  <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/sports" onclick="toggleMenu()">Sports</a>
+  <a href="/#lessons" onclick="toggleMenu()">Lessons</a>
+  <a href="/pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="/about" onclick="toggleMenu()">About</a>
+  <a href="/equipment" onclick="toggleMenu()">Equipment</a>
+  <a href="/app" onclick="toggleMenu()">Skills App</a>
+  <a href="/#book" onclick="toggleMenu()">Book Now</a>
+</div>
+
+<section class="hero hero-mid">
+  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,80,100,0.6) 0%,rgba(0,50,70,0.5) 100%),url('./about-hero.jpg') center/cover no-repeat;background-color:var(--cyan)"></div>
+  <div class="hero-coords">N 45°<br>OTTAWA</div>
+  <div class="hero-content">
+    <div class="hero-badge">Coach · Competitor · Ottawa</div>
+    <h1>
+      <span class="l1">Hooked at six.</span>
+      <span class="l3">Still riding.</span>
+    </h1>
+    <p class="hero-sub">Over 20 years on the water. Top 100 worldwide in barefoot. Coach, competitor, and lifelong student of the sport.</p>
+  </div>
+  <div class="hero-bottom">
+    <div class="hero-scroll">The Story</div>
+    <div class="hero-stats-mini">
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num">20+</div><div class="hero-stat-mini-lbl">Years on Water</div></div>
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num">Top 100</div><div class="hero-stat-mini-lbl">Worldwide Barefoot</div></div>
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num">10+</div><div class="hero-stat-mini-lbl">Years Coaching</div></div>
+    </div>
+    <a href="mailto:christian@learnwatersports.ca" class="hero-contact-link">Christian Richards · Coach</a>
+  </div>
+</section>
+
+<!-- THE STORY -->
+<section>
+  <div class="s">
+    <div class="content-grid-2" style="gap:80px;align-items:start">
+      <div>
+        <div class="eyebrow">The Story</div>
+        <h2 class="big-title" style="margin-bottom:32px">Born on<br><em>the water.</em></h2>
+        <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:24px">It started at Hockey Opportunity Camp in South River, Ontario. Christian was six years old on day one — and the moment he watched the ski show from the dock, he was done. Completely hooked.</p>
+        <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:24px">Over the next decade and a half he would return to HOC for 52 weeks as a camper, work his way through Leader in Training and Counsellor in Training programs, and eventually spend three seasons as a waterski coach — passing on to hundreds of kids the same feeling he had on that first day.</p>
+        <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:32px">Today Christian competes and coaches out of Ottawa, specialising in all three barefoot disciplines — slalom, trick, and jump. He trains year-round and holds a top 100 worldwide barefoot ranking, bringing genuine competitive knowledge to every coaching session.</p>
+        <div class="tag-list">
+          <span class="tag cyan">Barefoot Slalom</span>
+          <span class="tag cyan">Barefoot Trick</span>
+          <span class="tag cyan">Barefoot Jump</span>
+          <span class="tag">Waterski</span>
+          <span class="tag">Wakeboard</span>
+          <span class="tag">Wakesurf</span>
+          <span class="tag">Slalom Course</span>
+        </div>
+      </div>
+      <div>
+        <!-- Photo placeholder -->
+        <div style="background:linear-gradient(160deg,var(--cyan),#007080);border-radius:var(--radius);aspect-ratio:3/4;display:flex;align-items:center;justify-content:center;margin-bottom:16px">
+          <div style="text-align:center;color:rgba(255,255,231,0.5)">
+            <div style="font-size:48px;margin-bottom:8px">📷</div>
+            <div style="font-size:12px;font-weight:600;letter-spacing:.06em">ADD PHOTO<br>christian-photo.jpg</div>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div style="background:rgba(0,200,212,0.08);border-radius:var(--rsm);padding:16px;text-align:center">
+            <div style="font-size:28px;font-weight:800;color:var(--cyan)">52</div>
+            <div style="font-size:11px;color:var(--muted);font-weight:600">Weeks at HOC</div>
+          </div>
+          <div style="background:rgba(224,64,160,0.08);border-radius:var(--rsm);padding:16px;text-align:center">
+            <div style="font-size:28px;font-weight:800;color:var(--pink)">Top 100</div>
+            <div style="font-size:11px;color:var(--muted);font-weight:600">Worldwide Barefoot</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider-line" style="margin:0 48px"></div>
+
+<!-- CREDENTIALS -->
+<section style="background:linear-gradient(160deg,var(--yellow),#f8ffe0)">
+  <div class="s">
+    <div class="eyebrow">Credentials</div>
+    <h2 class="big-title" style="margin-bottom:48px">Certified.<br><em>Experienced. Safe.</em></h2>
+    <div class="content-grid-3">
+      <div class="content-card">
+        <span class="card-icon">🏅</span>
+        <h3>WSWC Certified Coach</h3>
+        <p>Certified through Water Ski & Wakeboard Canada — the national governing body for the sport. Trained in structured progression, safety standards, and athlete development.</p>
+      </div>
+      <div class="content-card">
+        <span class="card-icon">🛡️</span>
+        <h3>Certified Lifeguard</h3>
+        <p>National Lifeguard certification with CPR-C and Standard First Aid. Every session on the water is run with full emergency preparedness.</p>
+      </div>
+      <div class="content-card">
+        <span class="card-icon">🎓</span>
+        <h3>CWSIC Certified</h3>
+        <p>Completed the Canadian Water Ski Instructors Course — the foundational coaching certification covering technique, teaching methodology, and on-water safety protocols.</p>
+      </div>
+      <div class="content-card">
+        <span class="card-icon">🏆</span>
+        <h3>Competitive Barefoot</h3>
+        <p>Actively competes in all three barefoot disciplines: slalom, trick, and jump. Currently ranked inside the top 100 worldwide — bringing real competitive insight to every coaching session.</p>
+      </div>
+      <div class="content-card">
+        <span class="card-icon">🤝</span>
+        <h3>Board Member — WSWC</h3>
+        <p>Volunteer board member for Water Ski & Wakeboard Canada and formerly for the Ottawa Water Ski Club. Invested in growing the sport at a national level.</p>
+      </div>
+      <div class="content-card">
+        <span class="card-icon">🌊</span>
+        <h3>Hockey Opportunity Camp</h3>
+        <p>52 weeks as a camper, LIT, CIT, and three seasons as a full waterski coach at HOC in South River, ON — one of Canada's most respected waterski programs.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPETITIVE RESUME -->
+<div class="highlight-band">
+  <div class="highlight-band-inner">
+    <div>
+      <div class="eyebrow" style="color:rgba(255,255,231,0.6)">Competitive Resume</div>
+      <h2>Competing at the<br><em>highest level.</em></h2>
+    </div>
+    <div>
+      <p>Christian competes in all three barefoot water skiing disciplines — slalom, trick, and jump. He trains year-round and holds a top 100 worldwide ranking, representing Canada in a sport that demands elite athleticism, precision, and deep technical knowledge.</p>
+      <div class="tag-list">
+        <span class="tag">Barefoot Slalom</span>
+        <span class="tag">Barefoot Trick</span>
+        <span class="tag">Barefoot Jump</span>
+        <span class="tag">Ottawa Water Ski Club</span>
+        <span class="tag">WSWC Member</span>
+        <span class="tag">Top 100 Worldwide</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<section style="background:var(--yellow);text-align:center">
+  <div class="s" style="padding:80px 48px">
+    <div class="eyebrow" style="text-align:center">Ready to Ride?</div>
+    <h2 class="big-title" style="margin-bottom:16px;text-align:center">Book a session with<br><em>Christian.</em></h2>
+    <p style="font-size:16px;color:var(--muted);margin:0 auto 36px;max-width:480px;text-align:center;line-height:1.7">20+ years of experience. Top 100 worldwide. Your lake, your pace — boat and all equipment included.</p>
+    <a href="/#book" class="btn-pink" style="margin:0 auto">Book a Lesson →</a>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-watermark">LEARNWATERSPORTS</div>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.png" alt="Stillwater Sports"/></div>
+        <p class="footer-desc">Private waterski, wakeboard &amp; wakesurf coaching. Boat and all equipment included. Beginner to advanced — we come to your lake.</p>
+        <div class="footer-social">
+          <a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a>
+          <a href="#" class="footer-social-btn">⊙</a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <a href="/sports">Sports</a>
+        <a href="/#lessons">Lessons</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/about">About</a>
+        <a href="/equipment">Equipment</a>
+      </div>
+      <div class="footer-col">
+        <h4>Stillwater Skills</h4>
+        <a href="/stillwaterapp">Open the App</a>
+        <a href="/app">For Clubs &amp; Schools</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="/policies">Privacy Policy</a>
+        <a href="/policies#terms">Terms of Service</a>
+        <a href="/policies#waiver">Waiver</a>
+        <a href="/policies#refunds">Refund Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 Christian Richards · Stillwater Sports · All rights reserved</span>
+      <span class="footer-dot">Ottawa's Cottage Country · learnwatersports.ca</span>
+    </div>
+  </div>
+</footer>
+
+<div id="toast"></div>
+<script>
+function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
+document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+</script>
+</body>
+</html>
