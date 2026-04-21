@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="Waterski &amp; Wakeboard Instruction. Boat and all equipment included. <strong>Beginner to Advanced.</strong> For the Whole Familyquipment included. Book with Christian Richards — certified instructor serving Calabogie, Perth, Rideau Lakes, Buckhorn, White Lake and the Ottawa Valley."/>
+<meta name="description" content="Private waterski, wakeboard and wakesurf coaching across Ottawa's cottage country. Boat and all equipment included. Stillwater Sports."/>
 <title>Stillwater Sports — Ottawa Cottage Country</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -13,7 +13,7 @@
 <body>
 
 <nav>
-  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:46px;width:auto;object-fit:contain;border-radius:6px;"/></a>
+  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:46px;width:auto;object-fit:contain;border-radius:6px"/></a>
   <div class="nav-links">
     <div class="nav-dropdown">
       <a href="/about" class="nav-link-top">About ▾</a>
@@ -44,388 +44,324 @@
 </div>
 
 <!-- HERO -->
-<section class="hero" id="home">
+<section class="hero">
   <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,100,120,0.55) 0%,rgba(0,80,100,0.35) 40%,rgba(0,50,70,0.45) 100%),url('./hero.jpg') center 40%/cover no-repeat;background-color:var(--cyan)"></div>
-  <div class="hero-water"></div>
+  <div class="hero-coords">N 45°<br>OTTAWA</div>
   <div class="hero-content">
-    <div class="hero-badge">Now booking Summer 2026</div>
-    <h1 class="hero-h1">
-      Private lessons.<br>
-      <span class="line2">Your lake.</span><br>
-      <span class="line3">Your pace.</span>
+    <div class="hero-badge">Now Booking · Summer 2026</div>
+    <h1>
+      <span class="l1">Your lake.</span>
+      <span class="l2">Your lesson.</span>
+      <span class="l3">Our ride.</span>
     </h1>
-    <p class="hero-sub" style="text-align:right;max-width:480px">Waterski &amp; Wakeboard Instruction. Boat and all equipment included. <strong>Beginner to Advanced.</strong> For the Whole Family</p>
+    <p class="hero-sub">Waterski &amp; Wakeboard Instruction. Boat and all equipment included. <strong>Beginner to Advanced.</strong> For the Whole Family.</p>
     <div class="hero-actions">
-      <a href="#book" class="btn-primary">Book Your Lesson →</a>
-      <a href="#lessons" class="btn-secondary">See What's Offered</a>
+      <a href="/booking" class="btn-pink">Book a Session →</a>
+      <a href="/sports" class="btn-ghost">Explore Sports</a>
     </div>
-    <div class="hero-trust">
-      <span class="hero-trust-text">TRUSTED BY FAMILIES ACROSS</span>
-      <div class="hero-trust-badges">
-        <span class="trust-badge">Ottawa Valley</span>
-        <span class="trust-badge">Rideau Lakes</span>
-        <span class="trust-badge">Calabogie</span>
-        <span class="trust-badge">Perth</span>
+    <div class="hero-chips">
+      <span class="hero-chip">Calabogie</span>
+      <span class="hero-chip">Perth</span>
+      <span class="hero-chip">Rideau Lakes</span>
+      <span class="hero-chip">White Lake</span>
+      <span class="hero-chip">Ottawa Valley</span>
+      <span class="hero-chip">+ More</span>
+    </div>
+  </div>
+  <div class="hero-bottom">
+    <div class="hero-scroll">Follow the Current</div>
+    <div class="hero-stats-mini">
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num">15+ YRS</div><div class="hero-stat-mini-lbl">Experience</div></div>
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num">6 SPORTS</div><div class="hero-stat-mini-lbl">Disciplines</div></div>
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num">100% GEAR</div><div class="hero-stat-mini-lbl">Included</div></div>
+    </div>
+    <a href="mailto:christian@learnwatersports.ca" class="hero-contact-link">Christian Richards · Coach</a>
+  </div>
+</section>
+
+<!-- 01 WHAT'S OFFERED -->
+<section class="offers-section" id="lessons">
+  <div class="s">
+    <div class="section-header fade-up">
+      <div>
+        <div class="eyebrow">01 · What's Offered</div>
+        <h2 class="big-title">Everything you need<br><em>to get up and ride.</em></h2>
+      </div>
+      <p class="section-desc">Every lesson is private for your group, fully equipped, and tailored to suit your needs. We come to your cottage/lake — no experience necessary. Our progressive system guarantees everyone gets up the first run!</p>
+    </div>
+    <div class="offers-grid fade-up">
+      <div class="offer-card">
+        <span class="offer-card-num">· 01</span>
+        <div class="offer-icon-box cyan" style="font-size:22px;display:flex;align-items:center;justify-content:center">🚤</div>
+        <h3>Boat &amp; Equipment Included</h3>
+        <p>Professional ski boat, wakeboards, waterskis, tubes, ropes and life jackets — all provided. Just be ready to ride!</p>
+        <div class="offer-divider"></div>
+        <div class="offer-tag cyan">Everything Provided</div>
+      </div>
+      <div class="offer-card">
+        <span class="offer-card-num">· 02</span>
+        <div class="offer-icon-box cyan" style="font-size:22px;display:flex;align-items:center;justify-content:center">≋</div>
+        <h3>Beginner to Advanced</h3>
+        <p>First time on the water to Barefoot skiing and Wakeboard Backflips — every lesson is built around where you are right now.</p>
+        <div class="offer-divider"></div>
+        <div class="offer-tag pink">All Skill Levels</div>
+      </div>
+      <div class="offer-card">
+        <span class="offer-card-num">· 03</span>
+        <div class="offer-icon-box pink" style="font-size:22px;display:flex;align-items:center;justify-content:center">👨‍👩‍👧</div>
+        <h3>Family &amp; Group Sessions</h3>
+        <p>Half-day and full-day options for the whole family at the cottage. Kids welcome. Safe, structured, and a lot of fun.</p>
+        <div class="offer-divider"></div>
+        <div class="offer-tag pink">Families Welcome</div>
+      </div>
+      <div class="offer-card">
+        <span class="offer-card-num">· 04</span>
+        <div class="offer-icon-box cyan" style="font-size:22px;display:flex;align-items:center;justify-content:center">🎯</div>
+        <h3>Private Coaching</h3>
+        <p>Focused one-on-one sessions for slalom, trick skiing, wakeboard and wakesurf with structured progression and video analysis.</p>
+        <div class="offer-divider"></div>
+        <div class="offer-tag cyan">Competitive Focus</div>
+      </div>
+      <div class="offer-card">
+        <span class="offer-card-num">· 05</span>
+        <div class="offer-icon-box pink" style="font-size:22px;display:flex;align-items:center;justify-content:center">📍</div>
+        <h3>We Come to Your Lake</h3>
+        <p>Pick your spot anywhere across the Ottawa Valley and cottage country. If the water is good, we'll make it work.</p>
+        <div class="offer-divider"></div>
+        <div class="offer-tag pink">Mobile Coaching</div>
+      </div>
+      <div class="offer-card">
+        <span class="offer-card-num">· 06</span>
+        <div class="offer-icon-box cyan" style="font-size:22px;display:flex;align-items:center;justify-content:center">🏆</div>
+        <h3>Skills Tracking Included</h3>
+        <p>All students get access to the Stillwater Skills app — earn Bronze to Platinum badges and track progress all season long.</p>
+        <div class="offer-divider"></div>
+        <div class="offer-tag cyan">Powered by Stillwater</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- LOCATIONS RIBBON -->
-<div class="locations-ribbon">
-  <div class="locations-scroll">
-    <!-- duplicated for seamless loop -->
-    <div class="loc-item"><span class="loc-icon">??</span>Calabogie</div>
-    <div class="loc-item"><span class="loc-icon">??</span>Perth</div>
-    <div class="loc-item"><span class="loc-icon">??</span>Rideau Lakes</div>
-    <div class="loc-item"><span class="loc-icon">??</span>Buckhorn</div>
-    <div class="loc-item"><span class="loc-icon">??</span>White Lake</div>
-    <div class="loc-item"><span class="loc-icon">??</span>Ottawa Valley</div>
-    <div class="loc-item"><span class="loc-icon">??</span>Arnprior</div>
-    <div class="loc-item"><span class="loc-icon">??</span>Carleton Place</div>
-    <div class="loc-item"><span class="loc-icon">??</span>Smiths Falls</div>
-    <div class="loc-item"><span class="loc-icon">??</span>Kemptville</div>
-    <div class="loc-item"><span class="loc-icon">??</span>Calabogie</div>
-    <div class="loc-item"><span class="loc-icon">??</span>Perth</div>
-    <div class="loc-item"><span class="loc-icon">??</span>Rideau Lakes</div>
-    <div class="loc-item"><span class="loc-icon">??</span>Buckhorn</div>
-    <div class="loc-item"><span class="loc-icon">??</span>White Lake</div>
-    <div class="loc-item"><span class="loc-icon">??</span>Ottawa Valley</div>
-    <div class="loc-item"><span class="loc-icon">??</span>Arnprior</div>
-    <div class="loc-item"><span class="loc-icon">??</span>Carleton Place</div>
-    <div class="loc-item"><span class="loc-icon">??</span>Smiths Falls</div>
-    <div class="loc-item"><span class="loc-icon">??</span>Kemptville</div>
+<!-- 02 SPORTS -->
+<section class="sports-section" id="sports">
+  <div class="s">
+    <div class="sports-header fade-up">
+      <div>
+        <div class="eyebrow">02 · Sport Matrix</div>
+        <h2 class="big-title">Riders Choice.<br><em>Try them all or master one!</em></h2>
+      </div>
+      <p class="section-desc">Structured progression. Safety 1st. Boat, coach &amp; all equipment included.</p>
+    </div>
   </div>
-</div>
-
-<!-- WHAT YOU GET -->
-<section class="offerings" id="lessons">
-  <div class="fade-up">
-    <div class="section-label">What's Included</div>
-    <h2 class="section-h2">Everything you need<br>to get up and ride.</h2>
-    <p class="section-sub">Every lesson is private, fully equipped, and tailored to your level. No experience necessary — just show up ready to have fun.</p>
-  </div>
-  <div class="offerings-grid fade-up">
-    <div class="offer-card">
-      <span class="offer-icon">??</span>
-      <div class="offer-title">Boat & Equipment Included</div>
-      <div class="offer-desc">No need to own anything. We bring a professional ski boat, wakeboards, waterskis, wetsuits, life jackets, and tow ropes — fully set up for your group.</div>
-      <span class="offer-tag">EVERYTHING PROVIDED</span>
-    </div>
-    <div class="offer-card">
-      <span class="offer-icon">??</span>
-      <div class="offer-title">Beginner to Advanced</div>
-      <div class="offer-desc">Whether it's your first time on the water or you're working on slalom passes and wakeboard tricks, lessons are structured around where you are right now.</div>
-      <span class="offer-tag">ALL SKILL LEVELS</span>
-    </div>
-    <div class="offer-card">
-      <span class="offer-icon">??‍??‍??‍??</span>
-      <div class="offer-title">Family & Group Sessions</div>
-      <div class="offer-desc">Perfect for cottage weekends. Book a half-day or full-day session and get the whole family on the water. Kids 6+ welcome. We make it fun and safe.</div>
-      <span class="offer-tag">FAMILIES WELCOME</span>
-    </div>
-    <div class="offer-card">
-      <span class="offer-icon">??</span>
-      <div class="offer-title">Private One-on-One Coaching</div>
-      <div class="offer-desc">Serious about improving? Focused one-on-one sessions for slalom, trick skiing, wakeboarding, or wakesurf. Video analysis and structured skill progression available.</div>
-      <span class="offer-tag">COMPETITIVE FOCUS</span>
-    </div>
-    <div class="offer-card">
-      <span class="offer-icon">??</span>
-      <div class="offer-title">We Come to Your Lake</div>
-      <div class="offer-desc">You choose the location. We travel to your cottage, your lake, or a nearby public access point across the Ottawa Valley and cottage country regions.</div>
-      <span class="offer-tag">MOBILE INSTRUCTION</span>
-    </div>
-    <div class="offer-card">
-      <span class="offer-icon">??</span>
-      <div class="offer-title">Skills Tracking with the App</div>
-      <div class="offer-desc">Riders can track their progress, earn Bronze to Platinum skill badges, and share achievements — powered by the Stillwater Skills app. Included for all students.</div>
-      <span class="offer-tag">POWERED BY STILLWATER</span>
+  <div class="sports-cards-wrap fade-up">
+    <div class="sports-cards">
+      <div class="sport-card"><div class="sport-card-bg" style="background:url('./waterski.jpg') center/cover no-repeat,linear-gradient(160deg,#004a60,#007080)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">01</span><span class="sport-card-name">Waterski</span></div>
+      <div class="sport-card"><div class="sport-card-bg" style="background:url('./wakeboard.jpg') center/cover no-repeat,linear-gradient(160deg,#003848,#006070)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">02</span><span class="sport-card-name">Wakeboard</span></div>
+      <div class="sport-card"><div class="sport-card-bg" style="background:url('./wakesurf.jpg') center/cover no-repeat,linear-gradient(160deg,#002838,#004858)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">03</span><span class="sport-card-name">Wakesurf</span></div>
+      <div class="sport-card"><div class="sport-card-bg" style="background:url('./slalom.jpg') center/cover no-repeat,linear-gradient(160deg,#003850,#005a70)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">04</span><span class="sport-card-name">Slalom</span></div>
+      <div class="sport-card"><div class="sport-card-bg" style="background:url('./barefoot.jpg') center/cover no-repeat,linear-gradient(160deg,#1a3020,#2a5535)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">05</span><span class="sport-card-name">Barefoot</span></div>
+      <div class="sport-card"><div class="sport-card-bg" style="background:url('./tubing.jpg') center/cover no-repeat,linear-gradient(160deg,#3a1a30,#602040)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">06</span><span class="sport-card-name">Tubing</span></div>
     </div>
   </div>
 </section>
 
 <!-- HOW IT WORKS -->
-<section class="how" id="how">
-  <div class="fade-up">
-    <div class="section-label">The Process</div>
-    <h2 class="section-h2">Simple from start<br>to splash.</h2>
+<section class="how-section" id="how">
+  <div class="s">
+    <div class="how-header fade-up">
+      <div class="eyebrow">04 · The Process</div>
+      <h2 class="big-title">Simple from booking<br><em>to splash.</em></h2>
+      <p style="font-size:16px;color:var(--muted);margin-top:12px">Four steps and you're on the water. <a href="/how-it-works" style="color:var(--cyan);font-weight:600">Learn more →</a></p>
+    </div>
+    <div class="timeline fade-up">
+      <div class="timeline-left">
+        <div>
+          <div class="step-num-big">01</div>
+          <div class="step-title">Book Online</div>
+          <div class="step-desc">Fill out the form. Tell us your location, group size, skill level, and preferred dates. We confirm within 24 hours.</div>
+        </div>
+        <div>
+          <div class="step-num-big">03</div>
+          <div class="step-title">We Come to You</div>
+          <div class="step-desc">We arrive at your lake fully set up — boat, all gear, and a structured plan ready to go. Just show up.</div>
+        </div>
+      </div>
+      <div class="timeline-line">
+        <div class="tl-dot"></div>
+        <div class="tl-dot" style="margin-top:160px"></div>
+        <div class="tl-dot" style="margin-top:160px"></div>
+        <div class="tl-dot" style="margin-top:160px"></div>
+      </div>
+      <div class="timeline-right">
+        <div>
+          <div class="step-num-big">02</div>
+          <div class="step-title">We Plan Your Session</div>
+          <div class="step-desc">Christian will reach out to discuss your goals, choose the best spot on the water, and tailor the lesson plan to your group.</div>
+        </div>
+        <div>
+          <div class="step-num-big">04</div>
+          <div class="step-title">Learn &amp; Progress</div>
+          <div class="step-desc">Hit the water, build real skills, and have a great time. Track every milestone in the Stillwater Skills app all season long.</div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="steps fade-up">
-    <div class="step">
-      <span class="step-num">01</span>
-      <div class="step-title">Book Online</div>
-      <div class="step-desc">Fill out the booking form below. Tell us your location, group size, skill level, and preferred dates. We'll confirm within 24 hours.</div>
+</section>
+
+<!-- 03 APP PROMO -->
+<section class="app-section" id="app">
+  <div class="app-inner">
+    <div class="app-card fade-up">
+      <div class="app-card-header">
+        <div class="app-card-logo">
+          <div class="app-card-icon">≋</div>
+          <span class="app-card-title">Stillwater Skills</span>
+        </div>
+        <div class="app-tiers">
+          <span class="t-bronze">BRONZE ✓</span>
+          <span class="t-silver">SILVER ✓</span>
+          <span class="t-gold">GOLD →</span>
+        </div>
+      </div>
+      <div class="app-sport-label">Gold Skills · Waterski</div>
+      <div class="app-skill-row done"><div class="app-skill-cb">✓</div><span class="app-skill-name">Deep water start — both skis</span></div>
+      <div class="app-skill-row done"><div class="app-skill-cb">✓</div><span class="app-skill-name">One-ski drop at speed</span></div>
+      <div class="app-skill-row done"><div class="app-skill-cb">✓</div><span class="app-skill-name">Jump wake — both directions</span></div>
+      <div class="app-skill-row"><div class="app-skill-cb"></div><span class="app-skill-name">Crossing all 6 wakes cleanly</span></div>
+      <div class="app-skill-row"><div class="app-skill-cb"></div><span class="app-skill-name">Slalom course introduction</span></div>
+      <div class="app-progress">
+        <div class="app-prog-bar"><div class="app-prog-fill"></div></div>
+        <div class="app-prog-meta"><span>3 of 5 Gold skills completed</span><span>60%</span></div>
+      </div>
     </div>
-    <div class="step">
-      <span class="step-num">02</span>
-      <div class="step-title">We Plan Your Session</div>
-      <div class="step-desc">Christian will reach out to discuss your goals, pick the best spot on the water, and tailor the lesson plan to your group.</div>
-    </div>
-    <div class="step">
-      <span class="step-num">03</span>
-      <div class="step-title">We Come to You</div>
-      <div class="step-desc">We arrive with everything — boat, gear, and a structured plan. All you need to bring is sunscreen and enthusiasm.</div>
-    </div>
-    <div class="step">
-      <span class="step-num">04</span>
-      <div class="step-title">Learn & Progress</div>
-      <div class="step-desc">Get on the water, build skills, and have a blast. Students get access to the Stillwater Skills app to track progress all season long.</div>
+    <div class="app-text fade-up" style="transition-delay:.1s">
+      <div class="eyebrow">03 · Stillwater Skills App</div>
+      <h2>Track every skill.<br><em>Earn every badge.</em></h2>
+      <p>All students get access to the Stillwater Skills progressive tracking app — Bronze through Gold certifications, coach-approved skill sign-offs, and GPS session tracking. Completion of Gold unlocks the hidden Platinum level. Also available for clubs and schools across Canada and the USA.</p>
+      <div class="tier-dots-row">
+        <div style="display:flex;align-items:center;gap:6px"><div class="tier-dot" style="background:#F5C4B3"></div><span class="tier-dot-label">Bronze</span></div>
+        <div style="display:flex;align-items:center;gap:6px"><div class="tier-dot" style="background:#C8C6BC"></div><span class="tier-dot-label">Silver</span></div>
+        <div style="display:flex;align-items:center;gap:6px"><div class="tier-dot" style="background:#F5D87A"></div><span class="tier-dot-label">Gold</span></div>
+        <div style="display:flex;align-items:center;gap:6px"><div class="tier-dot" style="background:#b8b0f0;opacity:.5"></div><span class="tier-dot-label" style="opacity:.5">Platinum</span></div>
+      </div>
+      <a href="/stillwaterapp" class="btn-yellow">Open the App →</a>
     </div>
   </div>
 </section>
 
-<!-- SERVICE AREAS -->
-<section class="areas" id="areas">
-  <div class="fade-up">
-    <div class="section-label">Where We Operate</div>
-    <h2 class="section-h2">Ottawa's best<br>cottage country lakes.</h2>
-    <p class="section-sub">We travel across the Ottawa Valley and surrounding regions. Don't see your area? Reach out — if the water is good, we'll make it work.</p>
-  </div>
-  <div class="areas-grid fade-up">
-    <div class="area-pill"><div class="area-name">Calabogie</div><div class="area-detail">Calabogie Lake & area</div></div>
-    <div class="area-pill"><div class="area-name">Perth</div><div class="area-detail">Tay River & Drummond</div></div>
-    <div class="area-pill"><div class="area-name">Rideau Lakes</div><div class="area-detail">Upper & Lower Rideau</div></div>
-    <div class="area-pill"><div class="area-name">Buckhorn</div><div class="area-detail">Kawartha Lakes access</div></div>
-    <div class="area-pill"><div class="area-name">White Lake</div><div class="area-detail">White Lake & Burnstown</div></div>
-    <div class="area-pill"><div class="area-name">Arnprior</div><div class="area-detail">Ottawa River corridor</div></div>
-    <div class="area-pill"><div class="area-name">Carleton Place</div><div class="area-detail">Mississippi River lakes</div></div>
-    <div class="area-pill"><div class="area-name">Smiths Falls</div><div class="area-detail">Rideau waterway</div></div>
-    <div class="area-pill"><div class="area-name">Kemptville</div><div class="area-detail">South Ottawa region</div></div>
-    <div class="area-pill"><div class="area-name">Renfrew County</div><div class="area-detail">Ottawa Valley interior</div></div>
-    <div class="area-pill"><div class="area-name">Almonte</div><div class="area-detail">Mississippi Lakes</div></div>
-    <div class="area-pill"><div class="area-name">Your Lake</div><div class="area-detail">Ask us — we travel</div></div>
-  </div>
-</section>
-
-<!-- STILLWATER APP PROMO -->
-<section class="app-promo" id="app">
-  <div class="app-promo-inner">
-    <div class="app-promo-mockup fade-up">
-      <div class="app-screen-mock">
-        <div class="mock-topbar">
-          <span class="mock-logo">Stillwater</span>
-          <div class="mock-tier">
-            <span class="mock-bronze">Bronze ✓</span>
-            <span class="mock-silver">Silver ✓</span>
-            <span class="mock-gold">Gold →</span>
+<!-- 04 BOOKING -->
+<section class="book-section" id="book">
+  <div class="book-inner">
+    <div class="book-header fade-up">
+      <div class="eyebrow">04 · Command Center</div>
+      <h2>Ready to get<br><em>on the water?</em></h2>
+      <p>Pick an open date directly from the live calendar and lock in your session!</p>
+    </div>
+    <div class="book-layout fade-up">
+      <div class="book-info">
+        <div class="book-info-label">What You Get</div>
+        <div class="book-info-rule"></div>
+        <div class="book-info-item">
+          <div class="book-info-icon">📅</div>
+          <div><div class="book-info-key">Season</div><div class="book-info-val">May through September. Weekdays and weekends available. Book early — summer fills fast.</div></div>
+        </div>
+        <div class="book-info-item">
+          <div class="book-info-icon">⏱</div>
+          <div><div class="book-info-key">Session Lengths</div><div class="book-info-val">Half-day morning or afternoon · Full-day · Multi-day Savings</div></div>
+        </div>
+        <div class="book-info-item">
+          <div class="book-info-icon">🚤</div>
+          <div><div class="book-info-key">Everything Included</div><div class="book-info-val">Boat, fuel, all equipment, life jackets, and coach time.</div></div>
+        </div>
+        <div class="book-info-item">
+          <div class="book-info-icon">📍</div>
+          <div><div class="book-info-key">We Come to You</div><div class="book-info-val">Specify your lake or cottage area and we'll handle the rest.</div></div>
+        </div>
+        <div class="book-info-item">
+          <div class="book-info-icon">💰</div>
+          <div><div class="book-info-key">Pricing</div><div class="book-info-val">See our <a href="/pricing" style="color:var(--cyan)">pricing page</a> for full details. Starting from $550.</div></div>
+        </div>
+      </div>
+      <div class="cal-card">
+        <div class="cal-header">
+          <div class="cal-live">Live Availability</div>
+          <div class="cal-legend">
+            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--cyan)"></div> Open</div>
+            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f0a030"></div> Limited</div>
+            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#ddd"></div> Unavail.</div>
           </div>
         </div>
-        <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:10px;letter-spacing:.06em">GOLD SKILLS — WATERSKI</div>
-        <div class="mock-skill"><div class="mock-check done"></div><span>Deep water start — both skis</span></div>
-        <div class="mock-skill"><div class="mock-check done"></div><span>One-ski drop at speed</span></div>
-        <div class="mock-skill"><div class="mock-check done"></div><span>Jump wake — both directions</span></div>
-        <div class="mock-skill"><div class="mock-check"></div><span style="color:rgba(255,255,255,.5)">Crossing all 6 wakes cleanly</span></div>
-        <div class="mock-skill" style="border:none"><div class="mock-check"></div><span style="color:rgba(255,255,255,.5)">Slalom course introduction</span></div>
-        <div style="margin-top:14px;height:4px;background:rgba(255,255,255,.08);border-radius:2px">
-          <div style="width:60%;height:100%;background:linear-gradient(90deg,var(--cyan),var(--pink));border-radius:2px"></div>
+        <div class="cal-title" style="margin-bottom:16px">Select a Date</div>
+        <div class="cal-regions" id="calRegions">
+          <button class="cal-region active" onclick="setRegion(this)">All Areas</button>
+          <button class="cal-region" onclick="setRegion(this)">Calabogie</button>
+          <button class="cal-region" onclick="setRegion(this)">Perth</button>
+          <button class="cal-region" onclick="setRegion(this)">Rideau Lakes</button>
+          <button class="cal-region" onclick="setRegion(this)">White Lake</button>
+          <button class="cal-region" onclick="setRegion(this)">Arnprior</button>
         </div>
-        <div style="font-size:11px;color:var(--muted);margin-top:6px">3 of 5 skills completed</div>
+        <div class="cal-nav">
+          <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+          <div class="cal-month" id="calMonth"></div>
+          <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <div id="calSelected" style="display:none;margin-top:16px">
+          <div style="background:rgba(0,200,212,0.08);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--cyan);margin-bottom:2px">Selected Date</div>
+              <div style="font-size:15px;font-weight:700;color:var(--text)" id="calSelectedDate"></div>
+            </div>
+            <button onclick="showBookingModal()" class="btn-pink" style="padding:10px 20px;font-size:13px;border:none;cursor:pointer;font-family:'Outfit',sans-serif">Request This Date →</button>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="fade-up">
-      <div class="app-promo-label">Stillwater Skills App</div>
-      <h3>Track every skill.<br>Earn every badge.</h3>
-      <p class="app-promo-desc">All students get access to the Stillwater Skills progressive tracking app — Bronze through Platinum certifications, coach-approved skill sign-offs, leaderboards, and GPS session tracking. Also available for clubs and schools.</p>
-      <a href="/stillwaterapp" class="btn-outline-cyan">Explore the App →</a>
     </div>
   </div>
 </section>
 
-<!-- BOOKING -->
-<section class="booking" id="book">
-  <div class="booking-inner">
-    <div class="booking-info fade-up">
-      <div class="section-label">Book a Lesson</div>
-      <h3>Ready to get<br>on the water?</h3>
-      <p>Fill out the form and Christian will be in touch within 24 hours to confirm your booking, discuss your goals, and plan your perfect session.</p>
-      <div class="info-item">
-        <span class="info-icon">??</span>
-        <div>
-          <div class="info-label">Season</div>
-          <div class="info-detail">May through September. Weekdays and weekends available. Book early — summer fills fast.</div>
-        </div>
-      </div>
-      <div class="info-item">
-        <span class="info-icon">⏱️</span>
-        <div>
-          <div class="info-label">Session Lengths</div>
-          <div class="info-detail">2-hour intro sessions · Half-day (4 hrs) · Full-day (6–8 hrs) for families and groups</div>
-        </div>
-      </div>
-      <div class="info-item">
-        <span class="info-icon">??</span>
-        <div>
-          <div class="info-label">Everything Included</div>
-          <div class="info-detail">Boat, fuel, all equipment, life jackets, wetsuits, and instructor time. Just show up.</div>
-        </div>
-      </div>
-      <div class="info-item">
-        <span class="info-icon">??</span>
-        <div>
-          <div class="info-label">Location</div>
-          <div class="info-detail">We come to you. Specify your lake or cottage address in the form and we'll handle the rest.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="booking-form fade-up" id="bookingForm">
-      <div class="form-row">
-        <label>YOUR NAME</label>
-        <input type="text" id="f-name" placeholder="First and last name"/>
-      </div>
-      <div class="form-grid">
-        <div class="form-row">
-          <label>EMAIL</label>
-          <input type="email" id="f-email" placeholder="you@email.com"/>
-        </div>
-        <div class="form-row">
-          <label>PHONE</label>
-          <input type="tel" id="f-phone" placeholder="613-555-0100"/>
-        </div>
-      </div>
-      <div class="form-row">
-        <label>LOCATION / LAKE</label>
-        <input type="text" id="f-location" placeholder="e.g. White Lake, Calabogie, Rideau..."/>
-      </div>
-      <div class="form-grid">
-        <div class="form-row">
-          <label>PREFERRED DATE</label>
-          <input type="date" id="f-date"/>
-        </div>
-        <div class="form-row">
-          <label>GROUP SIZE</label>
-          <select id="f-group">
-            <option value="">Select...</option>
-            <option>1 person</option>
-            <option>2 people</option>
-            <option>3–4 people</option>
-            <option>5+ people</option>
-          </select>
-        </div>
-      </div>
-      <div class="form-row">
-        <label>SKILL LEVEL</label>
-        <select id="f-level">
-          <option value="">Select...</option>
-          <option>Complete beginner — never tried it</option>
-          <option>Tried it a few times</option>
-          <option>Intermediate — up and riding</option>
-          <option>Advanced — looking to improve</option>
-          <option>Mixed group — different levels</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <label>SPORT INTEREST</label>
-        <select id="f-sport">
-          <option value="">Select...</option>
-          <option>Waterski</option>
-          <option>Wakeboard</option>
-          <option>Wakesurf</option>
-          <option>Not sure — open to anything</option>
-          <option>Multiple / all of the above</option>
-        </select>
-      </div>
-      <div class="form-row">
-        <label>ANYTHING ELSE?</label>
-        <textarea id="f-notes" placeholder="Ages of riders, specific goals, questions..."></textarea>
-      </div>
-      <button class="form-submit" onclick="submitBooking()">Send Booking Request →</button>
-      <p class="form-note">No payment required to book. Christian will confirm availability and send details within 24 hours.</p>
-    </div>
-
-    <div class="form-success" id="formSuccess">
-      <div class="form-success-icon">??</div>
-      <h3>Request Sent!</h3>
-      <p>Thanks — Christian will be in touch within 24 hours to confirm your booking and plan your session. Check your email.</p>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
 <footer>
+  <div class="footer-watermark">LEARNWATERSPORTS</div>
   <div class="footer-inner">
-    <div>
-      <div class="footer-logo">
-        <img src="https://raw.githubusercontent.com/Stillwatersports/Skills-App/main/Logo4.png" alt="Learn Water Sports"/>
-        <span class="footer-logo-name">Learn<span>Water</span>Sports</span>
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.png" alt="Stillwater Sports" style="height:44px;width:auto;object-fit:contain;border-radius:6px"/></div>
+        <p class="footer-desc">Private waterski, wakeboard &amp; wakesurf coaching. Boat and all equipment included. Beginner to advanced — we come to your lake.</p>
+        <div class="footer-social">
+          <a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a>
+          <a href="#" class="footer-social-btn">⊙</a>
+        </div>
       </div>
-      <p class="footer-desc">Private waterski and wakeboard instruction across Ottawa's cottage country. Boat and equipment included. Beginner to advanced.</p>
+      <div class="footer-col">
+        <h4>Explore</h4>
+        <a href="/about">About</a>
+        <a href="/sports">Sports</a>
+        <a href="/equipment">Equipment</a>
+        <a href="/how-it-works">How It Works</a>
+        <a href="/pricing">Pricing</a>
+        <a href="/booking">Book Now</a>
+      </div>
+      <div class="footer-col">
+        <h4>Stillwater Skills</h4>
+        <a href="/stillwaterapp">Open the App</a>
+        <a href="/app">For Clubs &amp; Schools</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="/policies">Privacy Policy</a>
+        <a href="/policies#terms">Terms of Service</a>
+        <a href="/policies#waiver">Waiver</a>
+        <a href="/policies#refunds">Refund Policy</a>
+      </div>
     </div>
-    <div class="footer-col">
-      <h4>Lessons</h4>
-      <a href="#lessons">What's Included</a>
-      <a href="#how">How It Works</a>
-      <a href="#areas">Service Areas</a>
-      <a href="#book">Book Now</a>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 Christian Richards · Stillwater Sports · All rights reserved</span>
+      <span class="footer-dot">Ottawa's Cottage Country · learnwatersports.ca</span>
     </div>
-    <div class="footer-col">
-      <h4>More</h4>
-      <a href="/stillwaterapp">Stillwater Skills App</a>
-      <a href="mailto:christian@learnwatersports.ca">Contact</a>
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <span class="footer-copy">© 2026 Christian Richards / learnwatersports.ca · All rights reserved.</span>
-    <a href="/stillwaterapp" class="footer-app-link">Stillwater Skills App →</a>
   </div>
 </footer>
 
-<script>
-// ── SCROLL ANIMATIONS ──
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible') });
-}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
-document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
-
-// ── NAV SCROLL ──
-window.addEventListener('scroll', () => {
-  document.getElementById('nav').style.background =
-    window.scrollY > 60 ? 'rgba(13,31,31,0.97)' : 'rgba(13,31,31,0.85)';
-});
-
-// ── MOBILE MENU ──
-function toggleMenu() {
-  const menu = document.getElementById('mobileMenu');
-  const open = menu.classList.toggle('open');
-  document.body.style.overflow = open ? 'hidden' : '';
-}
-
-// ── BOOKING FORM ──
-function submitBooking() {
-  const name = document.getElementById('f-name').value.trim();
-  const email = document.getElementById('f-email').value.trim();
-  const location = document.getElementById('f-location').value.trim();
-  const date = document.getElementById('f-date').value;
-  const group = document.getElementById('f-group').value;
-  const level = document.getElementById('f-level').value;
-  const sport = document.getElementById('f-sport').value;
-  const notes = document.getElementById('f-notes').value.trim();
-
-  if (!name || !email || !location) {
-    alert('Please fill in your name, email, and location to submit.');
-    return;
-  }
-
-  // Build mailto link as fallback (replace with Formspree/EmailJS in production)
-  const subject = encodeURIComponent(`Lesson Booking Request — ${name}`);
-  const body = encodeURIComponent(
-    `Name: ${name}\nEmail: ${email}\nPhone: ${document.getElementById('f-phone').value}\n\nLocation: ${location}\nDate: ${date}\nGroup Size: ${group}\nSkill Level: ${level}\nSport: ${sport}\n\nNotes:\n${notes}`
-  );
-
-  // Show success state
-  document.getElementById('bookingForm').style.display = 'none';
-  document.getElementById('formSuccess').style.display = 'block';
-
-  // Open email client as fallback
-  setTimeout(() => {
-    window.location.href = `mailto:christian@learnwatersports.ca?subject=${subject}&body=${body}`;
-  }, 800);
-}
-</script>
-
+<div id="toast"></div>
 
 <!-- BOOKING MODAL -->
 <div id="bookingModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;padding:20px">
@@ -445,9 +381,9 @@ function submitBooking() {
         <div><label style="display:block;font-size:11px;font-weight:700;color:#4a7a7a;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase">Group Size</label><select id="b-group" style="width:100%;padding:11px 14px;border:1px solid rgba(0,180,190,0.3);border-radius:10px;font-size:15px;font-family:Outfit,sans-serif;outline:none;background:#FFFeb4;-webkit-appearance:none"><option value="">Select...</option><option>1 person</option><option>2 people</option><option>3–4 people</option><option>5+ people</option></select></div>
         <div><label style="display:block;font-size:11px;font-weight:700;color:#4a7a7a;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase">Skill Level</label><select id="b-level" style="width:100%;padding:11px 14px;border:1px solid rgba(0,180,190,0.3);border-radius:10px;font-size:15px;font-family:Outfit,sans-serif;outline:none;background:#FFFeb4;-webkit-appearance:none"><option value="">Select...</option><option>Complete beginner</option><option>Tried it a few times</option><option>Intermediate</option><option>Advanced</option><option>Mixed group</option></select></div>
       </div>
-      <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:700;color:#4a7a7a;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase">Sport</label><select id="b-sport" style="width:100%;padding:11px 14px;border:1px solid rgba(0,180,190,0.3);border-radius:10px;font-size:15px;font-family:Outfit,sans-serif;outline:none;background:#FFFeb4;-webkit-appearance:none"><option value="">Select...</option><option>Waterski</option><option>Wakeboard</option><option>Wakesurf</option><option>Not sure</option><option>Multiple sports</option></select></div>
-      <div style="margin-bottom:20px"><label style="display:block;font-size:11px;font-weight:700;color:#4a7a7a;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase">Anything Else?</label><textarea id="b-notes" placeholder="Ages of riders, goals, questions..." style="width:100%;padding:11px 14px;border:1px solid rgba(0,180,190,0.3);border-radius:10px;font-size:14px;font-family:Outfit,sans-serif;outline:none;background:#FFFeb4;resize:vertical;min-height:70px;line-height:1.5"></textarea></div>
-      <button id="b-submit" onclick="submitBooking()" style="width:100%;padding:14px;background:#E040A0;color:#fff;border:none;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif;transition:opacity .15s">Request This Date →</button>
+      <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:700;color:#4a7a7a;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase">Sport</label><select id="b-sport" style="width:100%;padding:11px 14px;border:1px solid rgba(0,180,190,0.3);border-radius:10px;font-size:15px;font-family:Outfit,sans-serif;outline:none;background:#FFFeb4;-webkit-appearance:none"><option value="">Select...</option><option>Waterski</option><option>Wakeboard</option><option>Wakesurf</option><option>Slalom</option><option>Barefoot</option><option>Tubing</option><option>Multiple / Not sure</option></select></div>
+      <div style="margin-bottom:20px"><label style="display:block;font-size:11px;font-weight:700;color:#4a7a7a;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase">Anything Else?</label><textarea id="b-notes" placeholder="Ages of riders, goals, questions, AM or PM preference..." style="width:100%;padding:11px 14px;border:1px solid rgba(0,180,190,0.3);border-radius:10px;font-size:14px;font-family:Outfit,sans-serif;outline:none;background:#FFFeb4;resize:vertical;min-height:70px;line-height:1.5"></textarea></div>
+      <button id="b-submit" onclick="submitBooking()" style="width:100%;padding:14px;background:#E040A0;color:#fff;border:none;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif">Request This Date →</button>
       <p style="font-size:11px;color:#7aacac;text-align:center;margin-top:10px">No payment required. Christian will confirm within 24 hours. <strong style="color:#E040A0">Deposits are non-refundable.</strong></p>
     </div>
     <div id="modal-success" style="display:none;text-align:center;padding:20px 0">
@@ -459,5 +395,118 @@ function submitBooking() {
     </div>
   </div>
 </div>
+
+<script>
+// SUPABASE
+let db=null;
+try{
+  db=supabase.createClient('https://jjnhsbgmcjqwlmeihwuy.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqbmhzYmdtY2pxd2xtZWlod3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyODkwNDEsImV4cCI6MjA4OTg2NTA0MX0.MOTbufdBqUhB36P1YBL-zo-KKlvJ-LBHwPS70D7DoWU');
+}catch(e){console.warn('Supabase init failed',e)}
+
+// NAV
+function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
+document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
+
+// FADE
+const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('visible')})},{threshold:0.06});
+document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
+
+// CALENDAR
+let calYear=2026,calMonth=4,selectedDay=null,bookedDates={};
+const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const days=['SU','MO','TU','WE','TH','FR','SA'];
+
+function setRegion(btn){document.querySelectorAll('.cal-region').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selectedDay=null;document.getElementById('calSelected').style.display='none';renderCal();}
+
+function changeMonth(dir){calMonth+=dir;if(calMonth>11){calMonth=0;calYear++}if(calMonth<0){calMonth=11;calYear--}selectedDay=null;document.getElementById('calSelected').style.display='none';loadBookedDates();}
+
+async function loadBookedDates(){
+  const start=new Date(calYear,calMonth,1).toISOString().split('T')[0];
+  const end=new Date(calYear,calMonth+1,0).toISOString().split('T')[0];
+  if(!db){renderCal();return}
+  const{data}=await db.from('bookings').select('requested_date,status').gte('requested_date',start).lte('requested_date',end).in('status',['pending','confirmed']);
+  bookedDates={};
+  if(data)data.forEach(r=>{const d=new Date(r.requested_date).getDate();if(!bookedDates[d])bookedDates[d]=[];bookedDates[d].push(r.status)});
+  renderCal();
+}
+
+function renderCal(){
+  document.getElementById('calMonth').textContent=months[calMonth]+' '+calYear;
+  const grid=document.getElementById('calGrid');
+  grid.innerHTML='';
+  days.forEach(d=>{const h=document.createElement('div');h.className='cal-day-header';h.textContent=d;grid.appendChild(h)});
+  const first=new Date(calYear,calMonth,1).getDay();
+  const total=new Date(calYear,calMonth+1,0).getDate();
+  const today=new Date();
+  for(let i=0;i<first;i++){const e=document.createElement('div');e.className='cal-day empty';grid.appendChild(e)}
+  for(let d=1;d<=total;d++){
+    const cell=document.createElement('div');
+    const thisDate=new Date(calYear,calMonth,d);
+    const isPast=thisDate<new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    const isSun=thisDate.getDay()===0;
+    const b=bookedDates[d]||[];
+    let status='open';
+    if(isPast||isSun)status='unavailable';
+    else if(b.includes('confirmed'))status='unavailable';
+    else if(b.includes('pending'))status='limited';
+    cell.className='cal-day'+(selectedDay===d?' selected':'');
+    if(status==='unavailable')cell.style.opacity='.35';
+    const num=document.createElement('span');num.textContent=d;cell.appendChild(num);
+    if(status!=='unavailable'){
+      const dot=document.createElement('div');
+      dot.className='cal-day-dot '+(status==='limited'?'limited':'open');
+      cell.appendChild(dot);
+      cell.onclick=()=>selectDay(d);
+    }
+    grid.appendChild(cell);
+  }
+}
+
+function selectDay(d){
+  if((bookedDates[d]||[]).includes('confirmed'))return;
+  selectedDay=d;renderCal();
+  const dateStr=months[calMonth]+' '+d+', '+calYear;
+  document.getElementById('calSelectedDate').textContent=dateStr;
+  document.getElementById('calSelected').style.display='block';
+}
+
+// BOOKING MODAL
+function showBookingModal(){
+  if(!selectedDay){showToast('Please select a date first');return}
+  document.getElementById('bookingModal').style.display='flex';
+  document.body.style.overflow='hidden';
+  document.getElementById('modal-date-display').textContent=months[calMonth]+' '+selectedDay+', '+calYear;
+}
+function closeModal(){document.getElementById('bookingModal').style.display='none';document.body.style.overflow='';}
+
+async function submitBooking(){
+  const name=document.getElementById('b-name').value.trim();
+  const email=document.getElementById('b-email').value.trim();
+  const phone=document.getElementById('b-phone').value.trim();
+  const location=document.getElementById('b-location').value.trim();
+  const group=document.getElementById('b-group').value;
+  const level=document.getElementById('b-level').value;
+  const sport=document.getElementById('b-sport').value;
+  const notes=document.getElementById('b-notes').value.trim();
+  const btn=document.getElementById('b-submit');
+  if(!name||!location){showToast('Please enter your name and location');return}
+  if(!email&&!phone){showToast('Please enter an email or phone number');return}
+  btn.disabled=true;btn.textContent='Sending...';
+  const requestedDate=new Date(calYear,calMonth,selectedDay).toISOString().split('T')[0];
+  if(db){try{await db.from('bookings').insert({name,email:email||null,phone:phone||null,location,requested_date:requestedDate,group_size:group||null,skill_level:level||null,sport:sport||null,notes:notes||null,status:'pending'});}catch(e){}}
+  try{await fetch('https://formspree.io/f/mwvwzdwj',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({name,email:email||'not provided',phone:phone||'not provided',location,date:requestedDate,group_size:group||'not specified',skill_level:level||'not specified',sport:sport||'not specified',notes:notes||'none',_subject:`New Booking Request — ${name} · ${requestedDate}`})});}catch(e){}
+  document.getElementById('modal-form').style.display='none';
+  document.getElementById('modal-success').style.display='block';
+  if(!bookedDates[selectedDay])bookedDates[selectedDay]=[];
+  bookedDates[selectedDay].push('pending');
+  renderCal();
+  btn.disabled=false;btn.textContent='Request This Date →';
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+
+renderCal();
+loadBookedDates();
+</script>
 </body>
 </html>
