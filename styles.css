@@ -19,6 +19,24 @@ html{scroll-behavior:smooth}
 body{font-family:'Outfit',sans-serif;background:var(--yellow);color:var(--text);overflow-x:hidden}
 
 /* ── NAV ── */
+/* ── NAV DROPDOWN ── */
+.nav-dropdown{position:relative;display:flex;align-items:center}
+.nav-link-top{color:rgba(255,255,231,0.85);text-decoration:none;font-size:13px;font-weight:500;transition:color .15s;cursor:pointer;display:flex;align-items:center;gap:4px}
+.nav-link-top:hover,.nav-link-top.active{color:var(--yellow)}
+.nav-dropdown-menu{
+  display:none;position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%);
+  background:var(--dark);border-radius:var(--rsm);padding:8px 0;min-width:160px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.25);z-index:200;
+  border:1px solid rgba(255,255,255,0.08);
+}
+.nav-dropdown-menu::before{content:'';position:absolute;top:-6px;left:50%;transform:translateX(-50%);
+  border-left:6px solid transparent;border-right:6px solid transparent;
+  border-bottom:6px solid var(--dark);}
+.nav-dropdown:hover .nav-dropdown-menu{display:block}
+.nav-dropdown-menu a{display:block;padding:10px 18px;font-size:13px;font-weight:500;
+  color:rgba(255,255,231,0.75);text-decoration:none;transition:all .15s;white-space:nowrap}
+.nav-dropdown-menu a:hover{color:var(--yellow);background:rgba(255,255,255,0.05)}
+
 nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;align-items:center;justify-content:space-between;
