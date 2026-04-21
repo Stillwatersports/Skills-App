@@ -12,244 +12,34 @@
 <body>
 
 <nav>
-  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports"/></a>
+  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:46px;width:auto;object-fit:contain;border-radius:6px;"/></a>
   <div class="nav-links">
-    <a href="/sports">Sports</a>
-    <a href="/#lessons">Lessons</a>
+    <div class="nav-dropdown">
+      <a href="/about" class="nav-link-top ">About ▾</a>
+      <div class="nav-dropdown-menu">
+        <a href="/about">Meet the Coach</a>
+        <a href="/sports">Sports</a>
+        <a href="/equipment">Equipment</a>
+        <a href="/policies">Policies</a>
+      </div>
+    </div>
+    <a href="/how-it-works" >How It Works</a>
     <a href="/pricing" class="active">Pricing</a>
-    <a href="/about">About</a>
-    <a href="/equipment">Equipment</a>
-    <a href="/app">Skills App</a>
+    <a href="/booking" >Booking</a>
+    <a href="/app" >Stillwater Skills App</a>
   </div>
   <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
+  <a href="/about" onclick="toggleMenu()">Meet the Coach</a>
   <a href="/sports" onclick="toggleMenu()">Sports</a>
-  <a href="/#lessons" onclick="toggleMenu()">Lessons</a>
-  <a href="/pricing" onclick="toggleMenu()">Pricing</a>
-  <a href="/about" onclick="toggleMenu()">About</a>
   <a href="/equipment" onclick="toggleMenu()">Equipment</a>
-  <a href="/app" onclick="toggleMenu()">Skills App</a>
-  <a href="/booking" onclick="toggleMenu()">Book Now</a>
-</div>
-
-<section class="hero hero-short">
-  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,80,100,0.6) 0%,rgba(0,50,70,0.5) 100%),url('./pricing-hero.jpg') center/cover no-repeat;background-color:var(--cyan)"></div>
-  <div class="hero-coords">N 45°<br>OTTAWA</div>
-  <div class="hero-content">
-    <div class="hero-badge">All Inclusive · No Hidden Fees</div>
-    <h1>
-      <span class="l1">Simple, transparent</span>
-      <span class="l3">pricing.</span>
-    </h1>
-    <p class="hero-sub">Boat, equipment, coach — everything included. Choose the package that fits your summer.</p>
-  </div>
-  <div class="hero-bottom">
-    <div class="hero-scroll">See Packages</div>
-    <div class="hero-stats-mini">
-      <div class="hero-stat-mini"><div class="hero-stat-mini-num">30%</div><div class="hero-stat-mini-lbl">Deposit to Book</div></div>
-      <div class="hero-stat-mini"><div class="hero-stat-mini-num">100%</div><div class="hero-stat-mini-lbl">Gear Included</div></div>
-    </div>
-    <a href="mailto:christian@learnwatersports.ca" class="hero-contact-link">Christian Richards · Coach</a>
-  </div>
-</section>
-
-<!-- BASE PACKAGES -->
-<section style="background:var(--yellow)">
-  <div class="s">
-    <div class="eyebrow">Session Packages</div>
-    <h2 class="big-title" style="margin-bottom:12px">Pick your<br><em>package.</em></h2>
-    <p class="section-desc" style="margin-bottom:48px">All packages include boat, fuel, all equipment, life jackets, wetsuits, and coach time. We come to your lake.</p>
-    <div class="pricing-grid">
-      <div class="pricing-card">
-        <div class="pricing-package">Half Day</div>
-        <div class="pricing-price"><sup>$</sup>550</div>
-        <div class="pricing-duration">4 hours on water · AM or PM</div>
-        <ul class="pricing-features">
-          <li>Morning or afternoon session</li>
-          <li>Ideal for 1–3 riders</li>
-          <li>Boat, gear &amp; coach included</li>
-          <li>30% deposit to secure</li>
-        </ul>
-        <a href="/#book" class="btn-outline" style="width:100%;justify-content:center">Book This →</a>
-      </div>
-      <div class="pricing-card featured">
-        <div class="pricing-package">Full Day</div>
-        <div class="pricing-price"><sup>$</sup>850</div>
-        <div class="pricing-duration">7 hrs on water · 1hr midday break</div>
-        <ul class="pricing-features">
-          <li>Full day AM + PM sessions</li>
-          <li>1 hour midday break</li>
-          <li>Ideal for families &amp; groups</li>
-          <li>Boat, gear &amp; coach included</li>
-          <li>30% deposit to secure</li>
-        </ul>
-        <a href="/#book" class="btn-pink" style="width:100%;justify-content:center">Book This →</a>
-      </div>
-      <div class="pricing-card">
-        <div class="pricing-package">Weekend / Holiday Day</div>
-        <div class="pricing-price"><sup>$</sup>1,000</div>
-        <div class="pricing-duration">7 hrs on water · Sat, Sun or stat holiday</div>
-        <ul class="pricing-features">
-          <li>Saturdays, Sundays &amp; stat holidays</li>
-          <li>Minimum full day</li>
-          <li>Boat, gear &amp; coach included</li>
-          <li>30% deposit to secure</li>
-        </ul>
-        <a href="/#book" class="btn-outline" style="width:100%;justify-content:center">Book This →</a>
-      </div>
-      <div class="pricing-card">
-        <div class="pricing-package">Full Weekend</div>
-        <div class="pricing-price"><sup>$</sup>1,800</div>
-        <div class="pricing-duration">14 hrs on water · Sat + Sun or holiday weekend</div>
-        <ul class="pricing-features">
-          <li>Saturday + Sunday back to back</li>
-          <li>Best for cottage weekends</li>
-          <li>Boat, gear &amp; coach included</li>
-          <li>30% deposit to secure</li>
-        </ul>
-        <a href="/#book" class="btn-outline" style="width:100%;justify-content:center">Book This →</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- MULTI DAY -->
-<section style="background:linear-gradient(160deg,#f8ffe0,var(--yellow))">
-  <div class="s" style="padding-top:60px">
-    <div class="eyebrow">Multi-Day Packages</div>
-    <h2 class="big-title" style="margin-bottom:12px">More days,<br><em>more savings.</em></h2>
-    <p class="section-desc" style="margin-bottom:48px">Book multiple sessions and save. Consecutive bookings get the best rate.</p>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:800px">
-      <div class="pricing-card">
-        <div class="pricing-package">Holiday Weekend (3 Days)</div>
-        <div class="pricing-price"><sup>$</sup>2,350</div>
-        <div class="pricing-duration">21 hrs on water · Sat + Sun + stat holiday</div>
-        <ul class="pricing-features">
-          <li>3-day long weekend package</li>
-          <li>Sat, Sun + stat holiday</li>
-          <li>Boat, gear &amp; coach included</li>
-          <li>30% deposit to secure</li>
-        </ul>
-        <a href="/booking" class="btn-outline" style="width:100%;justify-content:center">Book This →</a>
-      </div>
-      <div class="pricing-card">
-        <div class="pricing-package">2 Days — Consecutive</div>
-        <div class="pricing-price"><sup>$</sup>1,600</div>
-        <div class="pricing-duration">Back to back · best value</div>
-        <ul class="pricing-features">
-          <li>$800/day — save $100 vs 2× full day</li>
-          <li>Booked on consecutive days</li>
-          <li>All equipment included both days</li>
-        </ul>
-        <a href="/#book" class="btn-pink" style="width:100%;justify-content:center">Book This →</a>
-      </div>
-      <div class="pricing-card">
-        <div class="pricing-package">3 Days — Consecutive</div>
-        <div class="pricing-price"><sup>$</sup>2,300</div>
-        <div class="pricing-duration">Back to back · best value</div>
-        <ul class="pricing-features">
-          <li>$766/day — great for skill camps</li>
-          <li>Booked on consecutive days</li>
-          <li>All equipment included every day</li>
-        </ul>
-        <a href="/booking" class="btn-outline" style="width:100%;justify-content:center">Book This →</a>
-      </div>
-      <div class="pricing-card">
-        <div class="pricing-package">2 Days — Spread</div>
-        <div class="pricing-price"><sup>$</sup>1,900</div>
-        <div class="pricing-duration">Any 2 days across the season</div>
-        <ul class="pricing-features">
-          <li>$950/day — save $100 vs 2× full day</li>
-          <li>Use any 2 days through the season</li>
-          <li>Subject to availability</li>
-        </ul>
-        <a href="/#book" class="btn-outline" style="width:100%;justify-content:center">Book This →</a>
-      </div>
-      <div class="pricing-card featured">
-        <div class="pricing-package">5 Days — Consecutive</div>
-        <div class="pricing-price"><sup>$</sup>3,500</div>
-        <div class="pricing-duration">Mon–Fri or similar · best value</div>
-        <ul class="pricing-features">
-          <li>$700/day — save $750 vs 5× full day</li>
-          <li>Immersive week-long progression</li>
-          <li>Perfect for rapid skill development</li>
-          <li>All equipment included every day</li>
-        </ul>
-        <a href="/#book" class="btn-pink" style="width:100%;justify-content:center">Book This →</a>
-      </div>
-      <div class="pricing-card">
-        <div class="pricing-package">5 Days — Spread</div>
-        <div class="pricing-price"><sup>$</sup>3,750</div>
-        <div class="pricing-duration">Any 5 days across the season</div>
-        <ul class="pricing-features">
-          <li>$750/day — save $500 vs 5× full day</li>
-          <li>Use any 5 days through the season</li>
-          <li>Subject to availability</li>
-        </ul>
-        <a href="/#book" class="btn-outline" style="width:100%;justify-content:center">Book This →</a>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ADD ONS -->
-<section style="background:var(--cyan);padding:64px 48px">
-  <div style="max-width:1200px;margin:0 auto">
-    <div class="eyebrow" style="color:rgba(255,255,231,0.6)">Add-Ons</div>
-    <h2 style="font-size:clamp(28px,4vw,42px);font-weight:800;color:var(--yellow);letter-spacing:-.02em;margin-bottom:32px">Surcharges &amp; extras.</h2>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px">
-      <div style="background:rgba(255,255,255,0.1);border-radius:var(--radius);padding:24px;border:1px solid rgba(255,255,231,0.15)">
-        <div style="font-size:28px;font-weight:800;color:var(--yellow);margin-bottom:4px">+$50<span style="font-size:14px;font-weight:500;color:rgba(255,255,231,0.6)">/hr</span></div>
-        <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:8px">Tubing Surcharge</div>
-        <div style="font-size:13px;color:rgba(255,255,231,0.65);line-height:1.6">Tubing sessions require additional fuel. A $50/hr surcharge applies to any session that includes tubing.</div>
-      </div>
-<div style="background:rgba(255,255,255,0.1);border-radius:var(--radius);padding:24px;border:1px solid rgba(255,255,231,0.15)">
-        <div style="font-size:28px;font-weight:800;color:var(--yellow);margin-bottom:4px">+$100<span style="font-size:14px;font-weight:500;color:rgba(255,255,231,0.6)"> / +$200</span></div>
-        <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:8px">Distance Surcharge</div>
-        <div style="font-size:13px;color:rgba(255,255,231,0.65);line-height:1.6">1.5–3hr drive from Manotick, ON: +$100 flat.<br>3–6hr drive from Manotick, ON: +$200 flat.</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.1);border-radius:var(--radius);padding:24px;border:1px solid rgba(255,255,231,0.15)">
-        <div style="font-size:28px;font-weight:800;color:var(--yellow);margin-bottom:4px">30%<span style="font-size:14px;font-weight:500;color:rgba(255,255,231,0.6)"> deposit</span></div>
-        <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:8px">Deposit to Secure</div>
-        <div style="font-size:13px;color:rgba(255,255,231,0.65);line-height:1.6">A 30% deposit is required to secure your booking. The remaining balance is due on the day of your session.</div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- WHAT'S INCLUDED -->
-<section style="background:var(--yellow)">
-  <div class="s" style="padding-top:60px;padding-bottom:60px">
-    <div style="text-align:center;max-width:680px;margin:0 auto">
-      <div class="eyebrow" style="text-align:center">What's Always Included</div>
-      <h2 class="big-title" style="margin-bottom:20px;text-align:center">No surprises.<br><em>Everything provided.</em></h2>
-      <p style="font-size:16px;color:var(--muted);line-height:1.7;margin-bottom:40px">Every single session — regardless of package — includes all of the following. You show up, we handle the rest.</p>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;text-align:left">
-        <div class="content-card" style="padding:20px"><span style="font-size:24px;display:block;margin-bottom:8px">🚤</span><strong>Sanger DLX Boat</strong><p style="font-size:13px;margin-top:4px">Professional ski/wake boat, fully fuelled</p></div>
-        <div class="content-card" style="padding:20px"><span style="font-size:24px;display:block;margin-bottom:8px">🎿</span><strong>All Equipment</strong><p style="font-size:13px;margin-top:4px">Waterskis, wakeboards, ropes, handles</p></div>
-        <div class="content-card" style="padding:20px"><span style="font-size:24px;display:block;margin-bottom:8px">🧥</span><strong>Wetsuits &amp; PFDs</strong><p style="font-size:13px;margin-top:4px">All sizes, all ages, safety first</p></div>
-        <div class="content-card" style="padding:20px"><span style="font-size:24px;display:block;margin-bottom:8px">🎓</span><strong>Expert Coaching</strong><p style="font-size:13px;margin-top:4px">Christian Richards, top 100 worldwide</p></div>
-        <div class="content-card" style="padding:20px"><span style="font-size:24px;display:block;margin-bottom:8px">📍</span><strong>We Come to You</strong><p style="font-size:13px;margin-top:4px">We travel to your lake or cottage</p></div>
-        <div class="content-card" style="padding:20px"><span style="font-size:24px;display:block;margin-bottom:8px">📱</span><strong>Skills App Access</strong><p style="font-size:13px;margin-top:4px">Track progress all season long</p></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<div class="highlight-band">
-  <div class="highlight-band-inner">
-    <div>
-      <div class="eyebrow" style="color:rgba(255,255,231,0.6)">Ready?</div>
-      <h2>Book your session<br><em>today.</em></h2>
-    </div>
-    <div>
-      <p>Summer books up fast — especially weekends and holidays. Secure your date with a 30% deposit. No payment required to submit your request.</p>
-      <a href="/#book" class="btn-pink">Book Now →</a>
-    </div>
-  </div>
+  <a href="/how-it-works" onclick="toggleMenu()">How It Works</a>
+  <a href="/pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="/booking" onclick="toggleMenu()">Booking</a>
+  <a href="/app" onclick="toggleMenu()">Stillwater Skills App</a>
+  <a href="/policies" onclick="toggleMenu()">Policies</a>
 </div>
 
 <footer>

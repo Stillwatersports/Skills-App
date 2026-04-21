@@ -68,25 +68,34 @@
 <body>
 
 <nav>
-  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports"/></a>
+  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:46px;width:auto;object-fit:contain;border-radius:6px;"/></a>
   <div class="nav-links">
-    <a href="/sports">Sports</a>
-    <a href="/#lessons">Lessons</a>
+    <div class="nav-dropdown">
+      <a href="/about" class="nav-link-top ">About ▾</a>
+      <div class="nav-dropdown-menu">
+        <a href="/about">Meet the Coach</a>
+        <a href="/sports">Sports</a>
+        <a href="/equipment">Equipment</a>
+        <a href="/policies">Policies</a>
+      </div>
+    </div>
+    <a href="/how-it-works">How It Works</a>
     <a href="/pricing">Pricing</a>
-    <a href="/about">About</a>
-    <a href="/equipment">Equipment</a>
-    <a href="/app">Skills App</a>
+    <a href="/booking" class="active">Booking</a>
+    <a href="/app">Stillwater Skills App</a>
   </div>
-  <a href="/booking" class="nav-book" style="background:var(--pink);color:#fff">Book Now</a>
+  <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
+  <a href="/about" onclick="toggleMenu()">Meet the Coach</a>
   <a href="/sports" onclick="toggleMenu()">Sports</a>
-  <a href="/#lessons" onclick="toggleMenu()">Lessons</a>
-  <a href="/pricing" onclick="toggleMenu()">Pricing</a>
-  <a href="/about" onclick="toggleMenu()">About</a>
   <a href="/equipment" onclick="toggleMenu()">Equipment</a>
-  <a href="/app" onclick="toggleMenu()">Skills App</a>
+  <a href="/how-it-works" onclick="toggleMenu()">How It Works</a>
+  <a href="/pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="/booking" onclick="toggleMenu()">Booking</a>
+  <a href="/app" onclick="toggleMenu()">Stillwater Skills App</a>
+  <a href="/policies" onclick="toggleMenu()">Policies</a>
 </div>
 
 <!-- HERO -->

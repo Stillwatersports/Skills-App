@@ -12,163 +12,34 @@
 <body>
 
 <nav>
-  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports"/></a>
+  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:46px;width:auto;object-fit:contain;border-radius:6px;"/></a>
   <div class="nav-links">
-    <a href="/sports" class="active">Sports</a>
-    <a href="/#lessons">Lessons</a>
-    <a href="/pricing">Pricing</a>
-    <a href="/about">About</a>
-    <a href="/equipment">Equipment</a>
-    <a href="/app">Skills App</a>
+    <div class="nav-dropdown">
+      <a href="/about" class="nav-link-top active">About ▾</a>
+      <div class="nav-dropdown-menu">
+        <a href="/about">Meet the Coach</a>
+        <a href="/sports">Sports</a>
+        <a href="/equipment">Equipment</a>
+        <a href="/policies">Policies</a>
+      </div>
+    </div>
+    <a href="/how-it-works" >How It Works</a>
+    <a href="/pricing" >Pricing</a>
+    <a href="/booking" >Booking</a>
+    <a href="/app" >Stillwater Skills App</a>
   </div>
   <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
+  <a href="/about" onclick="toggleMenu()">Meet the Coach</a>
   <a href="/sports" onclick="toggleMenu()">Sports</a>
-  <a href="/#lessons" onclick="toggleMenu()">Lessons</a>
-  <a href="/pricing" onclick="toggleMenu()">Pricing</a>
-  <a href="/about" onclick="toggleMenu()">About</a>
   <a href="/equipment" onclick="toggleMenu()">Equipment</a>
-  <a href="/app" onclick="toggleMenu()">Skills App</a>
-  <a href="/booking" onclick="toggleMenu()">Book Now</a>
-</div>
-
-<section class="hero hero-short">
-  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,70,90,0.6) 0%,rgba(0,40,60,0.5) 100%),url('./sports-hero.jpg') center/cover no-repeat;background-color:var(--cyan)"></div>
-  <div class="hero-coords">N 45°<br>OTTAWA</div>
-  <div class="hero-content">
-    <div class="hero-badge">All Disciplines · One Coach</div>
-    <h1>
-      <span class="l1">Pick your</span>
-      <span class="l3">discipline.</span>
-    </h1>
-    <p class="hero-sub">From your first deep water start to your first slalom pass — every discipline is taught with structured progression, professional equipment, and 20+ years of expertise.</p>
-  </div>
-  <div class="hero-bottom">
-    <div class="hero-scroll">The Disciplines</div>
-    <a href="mailto:christian@learnwatersports.ca" class="hero-contact-link">Christian Richards · Coach</a>
-  </div>
-</section>
-
-<!-- SPORTS CARDS SECTION -->
-<section style="background:var(--yellow)">
-  <div class="s" style="padding-bottom:0">
-    <div class="eyebrow">01 · Sport Matrix</div>
-    <h2 class="big-title" style="margin-bottom:12px">Every lesson, private.<br><em>Every rider, different.</em></h2>
-    <p class="section-desc" style="margin-bottom:0">All disciplines available in every session package. Mix and match across the day.</p>
-  </div>
-  <div class="sports-cards-wrap" style="padding-top:32px">
-    <div class="sports-cards">
-      <div class="sport-card"><div class="sport-card-bg" style="background:url('./waterski.jpg') center/cover no-repeat,linear-gradient(160deg,#004a60,#007080)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">01</span><span class="sport-card-name">Waterski</span></div>
-      <div class="sport-card"><div class="sport-card-bg" style="background:url('./wakeboard.jpg') center/cover no-repeat,linear-gradient(160deg,#003848,#006070)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">02</span><span class="sport-card-name">Wakeboard</span></div>
-      <div class="sport-card"><div class="sport-card-bg" style="background:url('./wakesurf.jpg') center/cover no-repeat,linear-gradient(160deg,#002838,#004858)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">03</span><span class="sport-card-name">Wakesurf</span></div>
-      <div class="sport-card"><div class="sport-card-bg" style="background:url('./slalom.jpg') center/cover no-repeat,linear-gradient(160deg,#003850,#005a70)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">04</span><span class="sport-card-name">Slalom</span></div>
-      <div class="sport-card"><div class="sport-card-bg" style="background:url('./barefoot.jpg') center/cover no-repeat,linear-gradient(160deg,#1a3020,#2a5535)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">05</span><span class="sport-card-name">Barefoot</span></div>
-      <div class="sport-card"><div class="sport-card-bg" style="background:url('./tubing.jpg') center/cover no-repeat,linear-gradient(160deg,#3a1a30,#602040)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">06</span><span class="sport-card-name">Tubing</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- SPORT DETAILS -->
-<section style="background:linear-gradient(160deg,var(--yellow),#f8ffe0)">
-  <div class="s">
-    <!-- WATERSKI -->
-    <div class="content-grid-2" style="margin-bottom:80px;padding-bottom:80px;border-bottom:1px solid rgba(0,200,212,0.15)">
-      <div>
-        <div class="eyebrow">01 · Waterski</div>
-        <h2 class="big-title" style="margin-bottom:20px">The <em>classic.</em></h2>
-        <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:16px">Waterskiing is where most riders start — and where many spend a lifetime. From your first deep water start on two skis to dropping a ski and carving on one, the progression is structured, achievable, and incredibly satisfying.</p>
-        <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:24px">We teach waterskiing from absolute beginner through advanced slalom technique, wake crossings, and slalom course introduction. Every session builds on the last.</p>
-        <div class="tag-list"><span class="tag cyan">Beginner → Advanced</span><span class="tag">Combo Skis</span><span class="tag">Slalom Intro</span><span class="tag">Deep Water Start</span></div>
-      </div>
-      <div style="background:linear-gradient(160deg,#004a60,#007080);border-radius:var(--radius);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center">
-        <div style="text-align:center;color:rgba(255,255,231,0.3)"><div style="font-size:48px">🎿</div><div style="font-size:11px;font-weight:600;letter-spacing:.06em;margin-top:8px">ADD PHOTO<br>waterski-action.jpg</div></div>
-      </div>
-    </div>
-    <!-- WAKEBOARD -->
-    <div class="content-grid-2" style="margin-bottom:80px;padding-bottom:80px;border-bottom:1px solid rgba(0,200,212,0.15)">
-      <div style="background:linear-gradient(160deg,#003848,#006070);border-radius:var(--radius);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center">
-        <div style="text-align:center;color:rgba(255,255,231,0.3)"><div style="font-size:48px">🏄</div><div style="font-size:11px;font-weight:600;letter-spacing:.06em;margin-top:8px">ADD PHOTO<br>wakeboard-action.jpg</div></div>
-      </div>
-      <div>
-        <div class="eyebrow">02 · Wakeboard</div>
-        <h2 class="big-title" style="margin-bottom:20px">Pop, grab, <em>land.</em></h2>
-        <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:16px">Wakeboarding is the most popular discipline on the water — and for good reason. The learning curve is fast, the tricks are visual, and the feeling of catching air off the wake never gets old.</p>
-        <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:24px">From your first edge cut and wake jump through heelside 180s, toeside tricks, and inverts — coaching is structured around clean technique first, progression second. Basic skills are completed and mastered before moving up.</p>
-        <div class="tag-list"><span class="tag cyan">Beginner → Advanced</span><span class="tag">Wake Jumps</span><span class="tag">Grabs</span><span class="tag">180s &amp; Beyond</span></div>
-      </div>
-    </div>
-    <!-- WAKESURF -->
-    <div class="content-grid-2" style="margin-bottom:80px;padding-bottom:80px;border-bottom:1px solid rgba(0,200,212,0.15)">
-      <div>
-        <div class="eyebrow">03 · Wakesurf</div>
-        <h2 class="big-title" style="margin-bottom:20px">Drop the rope.<br><em>Just surf.</em></h2>
-        <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:16px">Wakesurfing is the most relaxed and social discipline on the water — riding the boat's wake without a rope, surfing an endless wave behind the boat. Perfect for all ages and fitness levels.</p>
-        <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:24px">Coaching covers getting up, finding the sweet spot in the wave, dropping the rope, and eventually shredding turns and tricks. The ballast bags and surf tabs on the Sanger DLX create an excellent wave for learning.</p>
-        <div class="tag-list"><span class="tag cyan">All Ages</span><span class="tag">Ropeless Surfing</span><span class="tag">Surf Tabs</span><span class="tag">Ballast Wave</span></div>
-      </div>
-      <div style="background:linear-gradient(160deg,#002838,#004858);border-radius:var(--radius);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center">
-        <div style="text-align:center;color:rgba(255,255,231,0.3)"><div style="font-size:48px">🌊</div><div style="font-size:11px;font-weight:600;letter-spacing:.06em;margin-top:8px">ADD PHOTO<br>wakesurf-action.jpg</div></div>
-      </div>
-    </div>
-    <!-- SLALOM -->
-    <div class="content-grid-2" style="margin-bottom:80px;padding-bottom:80px;border-bottom:1px solid rgba(0,200,212,0.15)">
-      <div style="background:linear-gradient(160deg,#003850,#005a70);border-radius:var(--radius);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center">
-        <div style="text-align:center;color:rgba(255,255,231,0.3)"><div style="font-size:48px">🏁</div><div style="font-size:11px;font-weight:600;letter-spacing:.06em;margin-top:8px">ADD PHOTO<br>slalom-action.jpg</div></div>
-      </div>
-      <div>
-        <div class="eyebrow">04 · Slalom</div>
-        <h2 class="big-title" style="margin-bottom:20px">Six buoys.<br><em>One ski.</em></h2>
-        <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:16px">Slalom skiing is the technical pinnacle of waterski — threading six buoys on one ski at increasing speeds and shortening rope lengths. It demands precise edge control, timing, and body position.</p>
-        <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:24px">Christian coaches slalom from first one-ski attempts through course introduction, gate entries, and shortline technique. Perfect Pass on the boat ensures consistent, precise speeds every pass.</p>
-        <div class="tag-list"><span class="tag cyan">Course Introduction</span><span class="tag">Perfect Pass</span><span class="tag">Gate Technique</span><span class="tag">Shortline</span></div>
-      </div>
-    </div>
-    <!-- BAREFOOT -->
-    <div class="content-grid-2" style="margin-bottom:80px;padding-bottom:80px;border-bottom:1px solid rgba(0,200,212,0.15)">
-      <div>
-        <div class="eyebrow">05 · Barefoot</div>
-        <h2 class="big-title" style="margin-bottom:20px">No skis.<br><em>Just feet.</em></h2>
-        <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:16px">Barefoot water skiing is possibly the most extreme discipline on the water — skiing on your bare feet at high speeds.</p>
-        <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:24px">Coaching starts on the boom — this is where the application of proper, logical skills progression is most important. We go slow and controlled with the goal of minimizing wipe outs to create a positive experience.</p>
-        <div class="tag-list"><span class="tag cyan">Top 100 Worldwide</span><span class="tag">Barefoot Boom</span><span class="tag">Slalom</span><span class="tag">Trick</span><span class="tag">Jump</span></div>
-      </div>
-      <div style="background:linear-gradient(160deg,#1a3020,#2a5535);border-radius:var(--radius);aspect-ratio:4/3;overflow:hidden">
-        <img src="./barefoot.jpg" alt="Barefoot skiing" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85)"/>
-      </div>
-    </div>
-    <!-- TUBING -->
-    <div class="content-grid-2">
-      <div style="background:linear-gradient(160deg,#3a1a30,#602040);border-radius:var(--radius);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center">
-        <div style="text-align:center;color:rgba(255,255,231,0.3)"><div style="font-size:48px">🍩</div><div style="font-size:11px;font-weight:600;letter-spacing:.06em;margin-top:8px">ADD PHOTO<br>tubing-action.jpg</div></div>
-      </div>
-      <div>
-        <div class="eyebrow">06 · Tubing</div>
-        <h2 class="big-title" style="margin-bottom:20px">Hold on.<br><em>Have fun.</em></h2>
-        <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:16px">Tubing is the gateway to water sports — fun for the whole family, no experience required, and guaranteed to get everyone laughing. Perfect for kids, cottage weekends, and groups with mixed interest levels.</p>
-        <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:24px">Note: a $50/hr fuel surcharge applies to tubing sessions due to the additional fuel consumption at low speeds with a heavy tube.</p>
-        <div class="tag-list"><span class="tag cyan">All Ages</span><span class="tag">No Experience Needed</span><span class="tag pink">+$30/hr fuel surcharge</span></div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<div class="highlight-band">
-  <div class="highlight-band-inner">
-    <div>
-      <div class="eyebrow" style="color:rgba(255,255,231,0.6)">Book a Session</div>
-      <h2>Try one.<br><em>Try them all.</em></h2>
-    </div>
-    <div>
-      <p>Mix any combination of disciplines in a single session. Full-day and multi-day packages are perfect for families or groups who want to try everything.</p>
-      <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <a href="/#book" class="btn-pink">Book Now →</a>
-        <a href="/pricing" class="btn-outline" style="border-color:var(--yellow);color:var(--yellow)">See Pricing →</a>
-      </div>
-    </div>
-  </div>
+  <a href="/how-it-works" onclick="toggleMenu()">How It Works</a>
+  <a href="/pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="/booking" onclick="toggleMenu()">Booking</a>
+  <a href="/app" onclick="toggleMenu()">Stillwater Skills App</a>
+  <a href="/policies" onclick="toggleMenu()">Policies</a>
 </div>
 
 <footer>
