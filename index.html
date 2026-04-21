@@ -3,584 +3,20 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="Private waterski, wakeboard and wakesurf instruction across Ottawa's cottage country. Boat and equipment included. Stillwater Sports."/>
+<meta name="description" content="Waterski &amp; Wakeboard Instruction. Boat and all equipment included. <strong>Beginner to Advanced.</strong> For the Whole Familyquipment included. Book with Christian Richards — certified instructor serving Calabogie, Perth, Rideau Lakes, Buckhorn, White Lake and the Ottawa Valley."/>
 <title>Stillwater Sports — Ottawa Cottage Country</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="./styles.css"/>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --cyan:#00C8D4;
-  --pink:#E040A0;
-  --yellow:#FFFeb4;
-  --dark:#1a2a2a;
-  --text:#1a2525;
-  --muted:#4a7a7a;
-  --light-muted:#7aacac;
-  --white:#ffffff;
-  --card:#ffffff;
-  --radius:16px;
-  --rsm:10px;
-}
-html{scroll-behavior:smooth}
-body{font-family:'Outfit',sans-serif;background:var(--yellow);color:var(--text);overflow-x:hidden}
-
-/* ── NAV ── */
-nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 32px;height:64px;
-  background:var(--cyan);
-  border-bottom:2px solid var(--pink);
-}
-.nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
-.nav-icon{
-  width:38px;height:38px;border-radius:50%;
-  border:1.5px solid rgba(255,255,255,0.4);
-  display:flex;align-items:center;justify-content:center;
-  color:var(--yellow);font-size:16px;
-}
-.nav-name{display:flex;flex-direction:column;line-height:1.1}
-.nav-name-top{font-size:15px;font-weight:700;color:var(--yellow);letter-spacing:.01em}
-.nav-name-sub{font-size:9px;font-weight:600;color:rgba(255,255,231,0.6);letter-spacing:.12em;text-transform:uppercase}
-.nav-links{display:flex;align-items:center;gap:28px}
-.nav-links a{color:rgba(255,255,231,0.85);text-decoration:none;font-size:14px;font-weight:500;transition:color .15s}
-.nav-links a:hover{color:var(--yellow)}
-.nav-book{
-  background:var(--yellow);color:var(--dark);
-  border:none;border-radius:50px;
-  padding:10px 22px;font-size:14px;font-weight:700;
-  cursor:pointer;text-decoration:none;
-  display:flex;align-items:center;gap:6px;
-  font-family:'Outfit',sans-serif;
-  transition:all .15s;
-}
-.nav-book::after{content:'●';font-size:6px;color:var(--pink)}
-.nav-book:hover{background:var(--white)}
-.nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
-.nav-hamburger span{display:block;width:22px;height:2px;background:var(--yellow);border-radius:2px}
-.mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;z-index:99;background:var(--cyan);padding:24px 32px;flex-direction:column;gap:4px}
-.mobile-menu.open{display:flex}
-.mobile-menu a{color:var(--yellow);text-decoration:none;font-size:20px;font-weight:600;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.12)}
-
-/* ── HERO ── */
-.hero{
-  position:relative;min-height:100dvh;
-  display:flex;flex-direction:column;justify-content:flex-end;
-  padding:0 0 80px;
-  overflow:hidden;
-}
-.hero-bg{
-  position:absolute;inset:0;z-index:0;
-  background:
-    linear-gradient(to bottom, rgba(0,100,120,0.55) 0%, rgba(0,80,100,0.35) 40%, rgba(0,50,70,0.45) 100%),
-    url('./hero.jpg') center 40%/cover no-repeat;
-  background-color:var(--cyan);
-}
-/* Simulated water photo using CSS */
-.hero-bg::before{content:'';position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.15),rgba(0,0,0,0.05));}
-.hero-coords{
-  position:absolute;top:80px;left:32px;z-index:2;
-  text-align:left;
-  font-size:11px;font-weight:600;letter-spacing:.08em;
-  color:rgba(255,255,231,0.5);
-  line-height:1.6;
-}
-.hero-content{position:relative;z-index:2;padding:0 48px;text-align:right;display:flex;flex-direction:column;align-items:flex-end;}
-.hero-badge{
-  display:inline-flex;align-items:center;gap:8px;
-  background:var(--pink);
-  border:1px solid var(--pink);
-  border-radius:20px;padding:6px 16px;
-  font-size:12px;font-weight:600;letter-spacing:.06em;
-  color:#fff;margin-bottom:28px;
-  text-transform:uppercase;
-}
-.hero-badge::before{content:'●';font-size:7px;color:var(--pink);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
-.hero h1{
-  font-size:clamp(56px,8vw,110px);
-  font-weight:800;line-height:1.0;
-  letter-spacing:-.03em;
-  margin-bottom:28px;
-}
-.hero h1 .l1{color:var(--yellow)}
-.hero h1 .l2{color:rgba(255,255,231,0.45);display:block}
-.hero h1 .l3{color:var(--yellow);font-style:italic;display:block}
-.hero-sub{
-  font-size:16px;font-weight:400;
-  color:rgba(255,255,231,0.75);
-  line-height:1.65;max-width:420px;margin-bottom:36px;text-align:right;
-}
-.hero-sub strong{color:var(--yellow);font-weight:600}
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:56px;justify-content:flex-end}
-.btn-pink{
-  background:var(--pink);color:var(--white);
-  padding:14px 28px;border-radius:50px;
-  font-size:15px;font-weight:700;text-decoration:none;
-  display:inline-flex;align-items:center;gap:8px;
-  font-family:'Outfit',sans-serif;border:none;cursor:pointer;
-  transition:opacity .15s;
-}
-.btn-pink:hover{opacity:.88}
-.btn-ghost{
-  background:rgba(255,255,231,0.12);
-  border:1.5px solid rgba(255,255,231,0.35);
-  color:var(--yellow);
-  padding:14px 28px;border-radius:50px;
-  font-size:15px;font-weight:600;text-decoration:none;
-  transition:all .15s;
-}
-.btn-ghost:hover{background:rgba(255,255,231,0.22)}
-.hero-chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.hero-chip{
-  background:rgba(255,255,255,0.0);
-  border:1px solid rgba(255,255,231,0.3);
-  border-radius:4px;padding:5px 14px;
-  font-size:11px;font-weight:700;letter-spacing:.08em;
-  color:rgba(255,255,231,0.65);text-transform:uppercase;
-}
-/* Bottom bar */
-.hero-bottom{
-  position:absolute;bottom:0;left:0;right:0;z-index:2;
-  display:flex;justify-content:space-between;align-items:center;
-  padding:16px 48px;
-  border-top:1px solid rgba(255,255,231,0.1);
-}
-.hero-scroll{
-  font-size:11px;font-weight:600;letter-spacing:.1em;
-  color:rgba(255,255,231,0.5);text-transform:uppercase;
-  display:flex;align-items:center;gap:8px;
-}
-.hero-scroll::before{content:'↓';font-size:14px}
-.hero-stats-mini{display:flex;gap:40px}
-.hero-stat-mini{text-align:center}
-.hero-stat-mini-num{font-size:15px;font-weight:700;color:var(--yellow)}
-.hero-stat-mini-lbl{font-size:10px;font-weight:600;color:rgba(255,255,231,0.5);letter-spacing:.06em;text-transform:uppercase}
-.hero-contact-link{
-  font-size:12px;font-weight:600;letter-spacing:.06em;
-  color:var(--cyan);text-decoration:none;text-transform:uppercase;
-  border-bottom:1px solid var(--cyan);padding-bottom:1px;
-  margin-left:auto;
-}
-
-/* ── STATS BAND ── */
-.stats-band{
-  background:var(--cyan);
-  border-bottom:2px solid var(--pink);
-  padding:40px 48px;
-}
-.stats-inner{
-  max-width:1200px;margin:0 auto;
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:0;
-}
-.stat-item{
-  padding:0 32px;
-  border-right:1px solid rgba(255,255,231,0.15);
-}
-.stat-item:first-child{padding-left:0}
-.stat-item:last-child{border:none}
-.stat-eyebrow{font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,231,0.5);margin-bottom:8px}
-.stat-num{font-size:52px;font-weight:800;color:var(--yellow);line-height:1;letter-spacing:-.03em;margin-bottom:4px}
-.stat-label{font-size:14px;font-weight:400;color:rgba(255,255,231,0.7)}
-.stat-divider{height:1px;background:rgba(255,255,231,0.2);margin-top:16px}
-
-/* ── SHARED SECTION ── */
-.s{padding:100px 48px;max-width:1200px;margin:0 auto}
-.s-full{padding:100px 0}
-.s-full .s-inner{padding:0 48px;max-width:1200px;margin:0 auto}
-.eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--pink);margin-bottom:16px}
-.big-title{font-size:clamp(36px,5vw,68px);font-weight:800;line-height:1.05;letter-spacing:-.03em;color:var(--text);margin-bottom:0}
-.big-title em{font-style:italic;color:var(--cyan)}
-.section-desc{font-size:16px;color:var(--muted);line-height:1.65;max-width:480px}
-
-/* ── SPORTS SECTION ── */
-.sports-section{background:var(--yellow)}
-.sports-header{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end;margin-bottom:48px}
-.sports-cards-wrap{
-  position:relative;
-  padding:0 48px;
-}
-.sports-cards{
-  display:flex;
-  gap:0;
-  padding:16px 0 32px;
-  align-items:flex-end;
-}
-.sport-card{
-  position:relative;
-  height:460px;
-  border-radius:20px;
-  overflow:hidden;
-  cursor:pointer;
-  flex:1;
-  transition:flex .35s ease, transform .35s ease, box-shadow .35s ease;
-  z-index:1;
-  margin-right:-18px;
-  box-shadow:8px 0 28px rgba(0,0,0,0.28);
-  min-width:0;
-}
-.sport-card:hover{
-  flex:2;
-  transform:translateY(-16px);
-  z-index:10;
-  box-shadow:0 24px 48px rgba(0,0,0,0.35);
-}
-.sport-card:last-child{margin-right:0}
-.sport-card-bg{
-  position:absolute;inset:0;
-  background-size:cover;background-position:center;
-  transition:transform .4s ease;
-  filter:brightness(0.75);
-}
-.sport-card:hover .sport-card-bg{transform:scale(1.04)}
-.sport-card-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
-}
-/* Sport-specific bg colours since we don't have real photos */
-.sport-card:nth-child(1) .sport-card-bg{background:url('./waterski.jpg') center/cover no-repeat, linear-gradient(160deg,#004a60,#007080);}
-.sport-card:nth-child(2) .sport-card-bg{background:url('./wakeboard.jpg') center/cover no-repeat, linear-gradient(160deg,#003848,#006070);}
-.sport-card:nth-child(3) .sport-card-bg{background:url('./wakesurf.jpg') center/cover no-repeat, linear-gradient(160deg,#002838,#004858);}
-.sport-card-num{position:absolute;top:16px;left:20px;font-size:11px;font-weight:700;color:rgba(255,255,255,0.5);letter-spacing:.06em}
-.sport-card-eyebrow{position:absolute;top:16px;left:40px;font-size:10px;font-weight:600;color:rgba(255,255,231,0.6);letter-spacing:.1em;text-transform:uppercase}
-.sport-card-name{
-  position:absolute;bottom:24px;left:20px;
-  font-size:28px;font-weight:800;color:var(--white);
-  writing-mode:vertical-rl;text-orientation:mixed;
-  transform:rotate(180deg);letter-spacing:.04em;
-  text-shadow:0 2px 8px rgba(0,0,0,0.3);
-}
-.sport-card:hover .sport-card-name{
-  writing-mode:horizontal-tb;transform:none;
-  font-size:22px;bottom:24px;left:18px;letter-spacing:-.01em;
-}
-
-/* ── OFFERS SECTION ── */
-.offers-section{background:linear-gradient(160deg,var(--yellow) 0%,#fffac0 50%,#f8ffe0 100%)}
-.offers-header{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end;margin-bottom:56px}
-.offers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-.offer-card{
-  background:var(--card);
-  border-radius:var(--radius);
-  padding:28px 24px 24px;
-  position:relative;
-  border:1px solid rgba(0,0,0,0.06);
-  transition:transform .2s,border-color .2s;
-}
-.offer-card:hover{transform:translateY(-3px);border-color:rgba(0,200,212,0.3)}
-.offer-card-num{
-  position:absolute;top:20px;right:20px;
-  font-size:11px;font-weight:600;color:rgba(0,0,0,0.2);
-  letter-spacing:.04em;
-}
-.offer-icon-box{
-  width:52px;height:52px;border-radius:12px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:22px;margin-bottom:20px;
-}
-.offer-icon-box.cyan{background:rgba(0,200,212,0.1)}
-.offer-icon-box.pink{background:rgba(224,64,160,0.08)}
-.offer-card h3{font-size:18px;font-weight:700;color:var(--text);margin-bottom:10px;letter-spacing:-.01em}
-.offer-card p{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:20px}
-.offer-divider{height:1px;background:rgba(0,0,0,0.06);margin-bottom:14px}
-.offer-tag{
-  display:flex;align-items:center;gap:6px;
-  font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;
-}
-.offer-tag::before{content:'●';font-size:7px}
-.offer-tag.cyan{color:var(--cyan)}
-.offer-tag.cyan::before{color:var(--cyan)}
-.offer-tag.pink{color:var(--pink)}
-.offer-tag.pink::before{color:var(--pink)}
-
-/* ── HOW IT WORKS ── */
-.how-section{background:linear-gradient(180deg,#f8ffe0 0%,var(--yellow) 30%)}
-.how-header{margin-bottom:80px}
-.timeline{
-  display:grid;grid-template-columns:1fr 60px 1fr;
-  gap:0;
-}
-.timeline-left{display:flex;flex-direction:column;gap:120px;padding-right:48px}
-.timeline-right{display:flex;flex-direction:column;gap:120px;padding-left:48px;padding-top:120px}
-.timeline-line{
-  display:flex;flex-direction:column;align-items:center;
-  position:relative;
-}
-.timeline-line::before{
-  content:'';position:absolute;top:0;bottom:0;width:1px;
-  background:linear-gradient(to bottom,var(--cyan),rgba(0,200,212,0.2));
-  left:50%;transform:translateX(-50%);
-}
-.tl-dot{
-  width:28px;height:28px;border-radius:50%;
-  border:1.5px solid var(--cyan);
-  background:var(--yellow);
-  display:flex;align-items:center;justify-content:center;
-  position:relative;z-index:1;flex-shrink:0;margin:16px 0;
-}
-.tl-dot::after{content:'●';font-size:7px;color:var(--cyan)}
-.step-num-big{font-size:80px;font-weight:800;color:rgba(0,200,212,0.18);line-height:1;letter-spacing:-.04em;margin-bottom:-16px}
-.step-title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:10px}
-.step-desc{font-size:14px;color:var(--muted);line-height:1.65}
-
-/* ── AREAS SECTION ── */
-.areas-section{
-  background:linear-gradient(160deg,var(--yellow) 0%,#f5ffd0 40%,#e8ffd8 100%);
-}
-.areas-header{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end;margin-bottom:56px}
-.areas-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-.area-card{
-  background:rgba(255,255,255,0.75);
-  border:1px solid rgba(0,0,0,0.07);
-  border-radius:var(--radius);padding:20px;
-  position:relative;transition:all .2s;
-  backdrop-filter:blur(4px);
-}
-.area-card:hover{background:rgba(255,255,255,0.95);border-color:rgba(0,200,212,0.3);transform:translateY(-2px)}
-.area-card.special{border-color:rgba(224,64,160,0.3);background:rgba(255,240,250,0.6)}
-.area-coord{position:absolute;top:14px;right:14px;font-size:10px;font-weight:600;color:rgba(0,0,0,0.25);letter-spacing:.04em}
-.area-pin{color:var(--cyan);font-size:18px;margin-bottom:12px;display:block}
-.area-card.special .area-pin{color:var(--pink)}
-.area-name{font-size:16px;font-weight:700;color:var(--text);margin-bottom:4px}
-.area-card.special .area-name{color:var(--pink)}
-.area-detail{font-size:12px;color:var(--muted)}
-
-/* ── APP PROMO ── */
-.app-section{
-  background:var(--cyan);
-  padding:100px 48px;
-  position:relative;overflow:hidden;
-}
-.app-section::before{
-  content:'';position:absolute;bottom:-40px;right:-40px;
-  width:500px;height:500px;border-radius:50%;
-  background:rgba(0,160,180,0.3);pointer-events:none;
-}
-.app-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;position:relative;z-index:1}
-.app-card{
-  background:var(--white);
-  border-radius:20px;padding:28px;
-  box-shadow:0 24px 80px rgba(0,0,0,0.15);
-}
-.app-card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.app-card-logo{display:flex;align-items:center;gap:10px}
-.app-card-icon{width:32px;height:32px;border-radius:50%;background:rgba(0,200,212,0.12);display:flex;align-items:center;justify-content:center;font-size:14px}
-.app-card-title{font-size:15px;font-weight:700;color:var(--text)}
-.app-tiers{display:flex;gap:6px}
-.app-tiers span{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700}
-.t-bronze{background:#F5C4B3;color:#4a1a08}
-.t-silver{background:#C8C6BC;color:#222}
-.t-gold{background:#F5D87A;color:#3a2000}
-.app-sport-label{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:10px}
-.app-skill-row{
-  display:flex;align-items:center;gap:12px;
-  padding:11px 14px;border-radius:10px;margin-bottom:6px;
-  transition:background .15s;
-}
-.app-skill-row.done{background:rgba(0,200,212,0.07)}
-.app-skill-row:not(.done){opacity:.5}
-.app-skill-cb{
-  width:22px;height:22px;border-radius:50%;
-  border:1.5px solid #ddd;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;font-size:11px;
-}
-.app-skill-row.done .app-skill-cb{background:var(--cyan);border-color:var(--cyan);color:white}
-.app-skill-name{font-size:13px;font-weight:500;color:var(--text)}
-.app-progress{margin-top:16px}
-.app-prog-bar{height:5px;background:#eee;border-radius:3px;overflow:hidden;margin-bottom:6px}
-.app-prog-fill{height:100%;width:60%;background:linear-gradient(90deg,var(--cyan),var(--pink));border-radius:3px}
-.app-prog-meta{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
-.app-prog-meta span:last-child{color:var(--cyan);font-weight:700}
-.app-tier-dots{display:flex;gap:8px;align-items:center;margin-top:8px}
-.tier-dot{width:8px;height:8px;border-radius:50%}
-.tier-dot-label{font-size:11px;color:rgba(255,255,231,0.65);font-weight:500}
-.app-text .eyebrow{color:rgba(255,255,231,0.6)}
-.app-text h2{
-  font-size:clamp(36px,4vw,60px);font-weight:800;
-  color:var(--yellow);line-height:1.05;
-  letter-spacing:-.03em;margin-bottom:20px;
-}
-.app-text h2 em{font-style:italic;color:rgba(255,255,231,0.7)}
-.app-text p{font-size:15px;color:rgba(255,255,231,0.75);line-height:1.7;margin-bottom:32px}
-.app-text .tier-dots-row{display:flex;gap:16px;align-items:center;margin-bottom:32px}
-.btn-yellow{
-  background:var(--pink);color:var(--white);
-  padding:14px 32px;border-radius:50px;
-  font-size:15px;font-weight:700;text-decoration:none;
-  display:inline-flex;align-items:center;gap:8px;
-  font-family:'Outfit',sans-serif;
-  transition:opacity .15s;
-}
-.btn-yellow:hover{opacity:.88}
-
-/* ── BOOKING SECTION ── */
-.book-section{
-  background:linear-gradient(135deg,var(--yellow) 0%,#f0ffd8 40%,#e8ffc8 100%);
-  padding:100px 48px;
-}
-.book-inner{max-width:1200px;margin:0 auto}
-.book-header{margin-bottom:56px}
-.book-header h2{font-size:clamp(36px,5vw,64px);font-weight:800;letter-spacing:-.03em;color:var(--text);line-height:1.05;margin-bottom:16px}
-.book-header h2 em{font-style:italic;color:var(--cyan)}
-.book-header p{font-size:16px;color:var(--muted);line-height:1.65;max-width:440px}
-.book-layout{display:grid;grid-template-columns:1fr 1.6fr;gap:48px;align-items:start}
-.book-info{}
-.book-info-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:16px}
-.book-info-rule{height:1px;background:rgba(0,0,0,0.08);margin-bottom:0}
-.book-info-item{display:flex;gap:16px;align-items:flex-start;padding:18px 0;border-bottom:1px solid rgba(0,0,0,0.07)}
-.book-info-item:last-child{border:none}
-.book-info-icon{
-  width:36px;height:36px;border-radius:50%;
-  border:1.5px solid rgba(0,200,212,0.3);
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;font-size:16px;color:var(--cyan);
-}
-.book-info-key{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan);margin-bottom:4px}
-.book-info-val{font-size:13px;color:var(--muted);line-height:1.55}
-
-/* Calendar card */
-.cal-card{
-  background:var(--white);
-  border-radius:20px;padding:28px;
-  border:1px solid rgba(0,0,0,0.07);
-}
-.cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.cal-live{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan)}
-.cal-live::before{content:'●';font-size:8px;animation:pulse 2s infinite}
-.cal-legend{display:flex;gap:12px;font-size:11px;color:var(--muted)}
-.cal-legend-item{display:flex;align-items:center;gap:4px}
-.cal-legend-dot{width:8px;height:8px;border-radius:50%}
-.cal-title{font-size:20px;font-weight:700;color:var(--text)}
-.cal-regions{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
-.cal-region{
-  padding:6px 14px;border-radius:20px;
-  font-size:12px;font-weight:600;
-  border:1.5px solid rgba(0,200,212,0.3);
-  color:var(--muted);cursor:pointer;transition:all .15s;
-  background:none;font-family:'Outfit',sans-serif;
-}
-.cal-region.active{background:var(--cyan);color:white;border-color:var(--cyan)}
-.cal-region.more{background:none;border:1.5px solid #ddd;color:var(--muted)}
-.cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}
-.cal-nav-btn{
-  width:32px;height:32px;border-radius:50%;
-  border:1.5px solid #ddd;background:none;
-  cursor:pointer;font-size:14px;color:var(--muted);
-  display:flex;align-items:center;justify-content:center;
-  font-family:'Outfit',sans-serif;transition:all .15s;
-}
-.cal-nav-btn:hover{border-color:var(--cyan);color:var(--cyan)}
-.cal-month{font-size:16px;font-weight:700;color:var(--text)}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.cal-day-header{text-align:center;font-size:11px;font-weight:600;color:var(--muted);padding:6px 0;letter-spacing:.04em}
-.cal-day{
-  text-align:center;padding:8px 4px;
-  font-size:13px;font-weight:500;color:var(--text);
-  border-radius:8px;cursor:pointer;
-  position:relative;transition:all .15s;
-  min-height:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-}
-.cal-day:hover{background:rgba(0,200,212,0.1)}
-.cal-day.empty{cursor:default}
-.cal-day.selected{background:var(--cyan);color:white;font-weight:700}
-.cal-day-dot{width:5px;height:5px;border-radius:50%}
-.cal-day-dot.open{background:var(--cyan)}
-.cal-day-dot.limited{background:#f0a030}
-
-/* ── FOOTER ── */
-footer{
-  background:var(--cyan);
-  border-top:2px solid var(--pink);
-  padding:80px 48px 32px;
-  position:relative;overflow:hidden;
-}
-.footer-watermark{
-  position:absolute;bottom:-20px;left:-20px;
-  font-size:200px;font-weight:900;letter-spacing:-.05em;
-  color:rgba(255,255,255,0.06);line-height:1;
-  pointer-events:none;user-select:none;
-  white-space:nowrap;
-}
-.footer-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1}
-.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;margin-bottom:56px}
-.footer-brand{}
-.footer-brand-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.footer-icon{width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(255,255,231,0.3);display:flex;align-items:center;justify-content:center;color:var(--yellow);font-size:18px}
-.footer-name-top{font-size:18px;font-weight:700;color:var(--yellow)}
-.footer-name-sub{font-size:10px;font-weight:600;color:rgba(255,255,231,0.5);letter-spacing:.1em;text-transform:uppercase}
-.footer-desc{font-size:14px;color:rgba(255,255,231,0.65);line-height:1.7;max-width:360px;margin-bottom:24px}
-.footer-social{display:flex;gap:10px}
-.footer-social-btn{
-  width:36px;height:36px;border-radius:50%;
-  border:1px solid rgba(255,255,231,0.25);
-  display:flex;align-items:center;justify-content:center;
-  color:rgba(255,255,231,0.6);font-size:14px;text-decoration:none;
-  transition:all .15s;
-}
-.footer-social-btn:hover{border-color:var(--yellow);color:var(--yellow)}
-.footer-col h4{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,231,0.4);margin-bottom:20px}
-.footer-col a{display:block;font-size:15px;font-weight:500;color:rgba(255,255,231,0.75);text-decoration:none;margin-bottom:12px;transition:color .15s}
-.footer-col a:hover{color:var(--yellow)}
-.footer-col-sub{font-size:11px;color:rgba(255,255,231,0.4);margin-bottom:4px;letter-spacing:.06em;text-transform:uppercase;margin-top:24px}
-.footer-bottom{
-  border-top:1px solid rgba(255,255,231,0.1);
-  padding-top:24px;
-  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
-}
-.footer-copy{font-size:13px;color:rgba(255,255,231,0.4)}
-.footer-dot{display:flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,231,0.4)}
-.footer-dot::before{content:'●';font-size:7px;color:var(--pink)}
-
-/* ── TOAST ── */
-#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--dark);color:var(--yellow);padding:12px 24px;border-radius:var(--rsm);font-size:14px;font-weight:600;opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* ── FADE UP ── */
-.fade-up{opacity:1;transform:translateY(0);transition:opacity .6s ease,transform .6s ease}
-.fade-up.visible{opacity:1;transform:translateY(0)}
-
-/* ── RESPONSIVE ── */
-@media(max-width:960px){
-  .sports-cards-wrap{padding:0 16px}
-  .sports-cards{grid-template-columns:repeat(3,1fr);gap:8px}
-  .sport-card{height:280px;margin-right:0}
-  .sports-header,.offers-header,.areas-header,.book-layout,.app-inner,.footer-top{grid-template-columns:1fr}
-  .areas-grid{grid-template-columns:repeat(2,1fr)}
-  .offers-grid{grid-template-columns:1fr 1fr}
-  .stats-inner{grid-template-columns:repeat(2,1fr);gap:32px}
-  .stat-item{border:none;padding:0}
-  .timeline{grid-template-columns:1fr}
-  .timeline-line{display:none}
-  .timeline-right{padding-top:0}
-  nav .nav-links,.nav-book{display:none}
-  .nav-hamburger{display:flex}
-  .hero-content{padding:0 24px}
-  .hero-bottom{padding:16px 24px}
-  .s,.book-section,.app-section,.stats-band{padding-left:24px;padding-right:24px}
-  .footer-watermark{font-size:100px}
-  footer{padding:60px 24px 32px}
-}
-@media(max-width:600px){
-  .areas-grid{grid-template-columns:1fr 1fr}
-  .offers-grid{grid-template-columns:1fr}
-  .hero h1{font-size:clamp(42px,10vw,72px)}
-  .hero-stats-mini{gap:20px}
-}
-</style>
 </head>
 <body>
 
-<!-- NAV -->
 <nav>
   <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:46px;width:auto;object-fit:contain;border-radius:6px;"/></a>
   <div class="nav-links">
     <div class="nav-dropdown">
-      <a href="/about" class="nav-link-top ">About ▾</a>
+      <a href="/about" class="nav-link-top">About ▾</a>
       <div class="nav-dropdown-menu">
         <a href="/about">Meet the Coach</a>
         <a href="/sports">Sports</a>
@@ -588,10 +24,10 @@ footer{
         <a href="/policies">Policies</a>
       </div>
     </div>
-    <a href="/how-it-works" >How It Works</a>
-    <a href="/pricing" >Pricing</a>
-    <a href="/booking" >Booking</a>
-    <a href="/app" >Stillwater Skills App</a>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/booking">Booking</a>
+    <a href="/app">Stillwater Skills App</a>
   </div>
   <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
@@ -605,6 +41,423 @@ footer{
   <a href="/booking" onclick="toggleMenu()">Booking</a>
   <a href="/app" onclick="toggleMenu()">Stillwater Skills App</a>
   <a href="/policies" onclick="toggleMenu()">Policies</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,100,120,0.55) 0%,rgba(0,80,100,0.35) 40%,rgba(0,50,70,0.45) 100%),url('./hero.jpg') center 40%/cover no-repeat;background-color:var(--cyan)"></div>
+  <div class="hero-water"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Now booking Summer 2026</div>
+    <h1 class="hero-h1">
+      Private lessons.<br>
+      <span class="line2">Your lake.</span><br>
+      <span class="line3">Your pace.</span>
+    </h1>
+    <p class="hero-sub" style="text-align:right;max-width:480px">Waterski &amp; Wakeboard Instruction. Boat and all equipment included. <strong>Beginner to Advanced.</strong> For the Whole Family</p>
+    <div class="hero-actions">
+      <a href="#book" class="btn-primary">Book Your Lesson →</a>
+      <a href="#lessons" class="btn-secondary">See What's Offered</a>
+    </div>
+    <div class="hero-trust">
+      <span class="hero-trust-text">TRUSTED BY FAMILIES ACROSS</span>
+      <div class="hero-trust-badges">
+        <span class="trust-badge">Ottawa Valley</span>
+        <span class="trust-badge">Rideau Lakes</span>
+        <span class="trust-badge">Calabogie</span>
+        <span class="trust-badge">Perth</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOCATIONS RIBBON -->
+<div class="locations-ribbon">
+  <div class="locations-scroll">
+    <!-- duplicated for seamless loop -->
+    <div class="loc-item"><span class="loc-icon">??</span>Calabogie</div>
+    <div class="loc-item"><span class="loc-icon">??</span>Perth</div>
+    <div class="loc-item"><span class="loc-icon">??</span>Rideau Lakes</div>
+    <div class="loc-item"><span class="loc-icon">??</span>Buckhorn</div>
+    <div class="loc-item"><span class="loc-icon">??</span>White Lake</div>
+    <div class="loc-item"><span class="loc-icon">??</span>Ottawa Valley</div>
+    <div class="loc-item"><span class="loc-icon">??</span>Arnprior</div>
+    <div class="loc-item"><span class="loc-icon">??</span>Carleton Place</div>
+    <div class="loc-item"><span class="loc-icon">??</span>Smiths Falls</div>
+    <div class="loc-item"><span class="loc-icon">??</span>Kemptville</div>
+    <div class="loc-item"><span class="loc-icon">??</span>Calabogie</div>
+    <div class="loc-item"><span class="loc-icon">??</span>Perth</div>
+    <div class="loc-item"><span class="loc-icon">??</span>Rideau Lakes</div>
+    <div class="loc-item"><span class="loc-icon">??</span>Buckhorn</div>
+    <div class="loc-item"><span class="loc-icon">??</span>White Lake</div>
+    <div class="loc-item"><span class="loc-icon">??</span>Ottawa Valley</div>
+    <div class="loc-item"><span class="loc-icon">??</span>Arnprior</div>
+    <div class="loc-item"><span class="loc-icon">??</span>Carleton Place</div>
+    <div class="loc-item"><span class="loc-icon">??</span>Smiths Falls</div>
+    <div class="loc-item"><span class="loc-icon">??</span>Kemptville</div>
+  </div>
+</div>
+
+<!-- WHAT YOU GET -->
+<section class="offerings" id="lessons">
+  <div class="fade-up">
+    <div class="section-label">What's Included</div>
+    <h2 class="section-h2">Everything you need<br>to get up and ride.</h2>
+    <p class="section-sub">Every lesson is private, fully equipped, and tailored to your level. No experience necessary — just show up ready to have fun.</p>
+  </div>
+  <div class="offerings-grid fade-up">
+    <div class="offer-card">
+      <span class="offer-icon">??</span>
+      <div class="offer-title">Boat & Equipment Included</div>
+      <div class="offer-desc">No need to own anything. We bring a professional ski boat, wakeboards, waterskis, wetsuits, life jackets, and tow ropes — fully set up for your group.</div>
+      <span class="offer-tag">EVERYTHING PROVIDED</span>
+    </div>
+    <div class="offer-card">
+      <span class="offer-icon">??</span>
+      <div class="offer-title">Beginner to Advanced</div>
+      <div class="offer-desc">Whether it's your first time on the water or you're working on slalom passes and wakeboard tricks, lessons are structured around where you are right now.</div>
+      <span class="offer-tag">ALL SKILL LEVELS</span>
+    </div>
+    <div class="offer-card">
+      <span class="offer-icon">??‍??‍??‍??</span>
+      <div class="offer-title">Family & Group Sessions</div>
+      <div class="offer-desc">Perfect for cottage weekends. Book a half-day or full-day session and get the whole family on the water. Kids 6+ welcome. We make it fun and safe.</div>
+      <span class="offer-tag">FAMILIES WELCOME</span>
+    </div>
+    <div class="offer-card">
+      <span class="offer-icon">??</span>
+      <div class="offer-title">Private One-on-One Coaching</div>
+      <div class="offer-desc">Serious about improving? Focused one-on-one sessions for slalom, trick skiing, wakeboarding, or wakesurf. Video analysis and structured skill progression available.</div>
+      <span class="offer-tag">COMPETITIVE FOCUS</span>
+    </div>
+    <div class="offer-card">
+      <span class="offer-icon">??</span>
+      <div class="offer-title">We Come to Your Lake</div>
+      <div class="offer-desc">You choose the location. We travel to your cottage, your lake, or a nearby public access point across the Ottawa Valley and cottage country regions.</div>
+      <span class="offer-tag">MOBILE INSTRUCTION</span>
+    </div>
+    <div class="offer-card">
+      <span class="offer-icon">??</span>
+      <div class="offer-title">Skills Tracking with the App</div>
+      <div class="offer-desc">Riders can track their progress, earn Bronze to Platinum skill badges, and share achievements — powered by the Stillwater Skills app. Included for all students.</div>
+      <span class="offer-tag">POWERED BY STILLWATER</span>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="fade-up">
+    <div class="section-label">The Process</div>
+    <h2 class="section-h2">Simple from start<br>to splash.</h2>
+  </div>
+  <div class="steps fade-up">
+    <div class="step">
+      <span class="step-num">01</span>
+      <div class="step-title">Book Online</div>
+      <div class="step-desc">Fill out the booking form below. Tell us your location, group size, skill level, and preferred dates. We'll confirm within 24 hours.</div>
+    </div>
+    <div class="step">
+      <span class="step-num">02</span>
+      <div class="step-title">We Plan Your Session</div>
+      <div class="step-desc">Christian will reach out to discuss your goals, pick the best spot on the water, and tailor the lesson plan to your group.</div>
+    </div>
+    <div class="step">
+      <span class="step-num">03</span>
+      <div class="step-title">We Come to You</div>
+      <div class="step-desc">We arrive with everything — boat, gear, and a structured plan. All you need to bring is sunscreen and enthusiasm.</div>
+    </div>
+    <div class="step">
+      <span class="step-num">04</span>
+      <div class="step-title">Learn & Progress</div>
+      <div class="step-desc">Get on the water, build skills, and have a blast. Students get access to the Stillwater Skills app to track progress all season long.</div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICE AREAS -->
+<section class="areas" id="areas">
+  <div class="fade-up">
+    <div class="section-label">Where We Operate</div>
+    <h2 class="section-h2">Ottawa's best<br>cottage country lakes.</h2>
+    <p class="section-sub">We travel across the Ottawa Valley and surrounding regions. Don't see your area? Reach out — if the water is good, we'll make it work.</p>
+  </div>
+  <div class="areas-grid fade-up">
+    <div class="area-pill"><div class="area-name">Calabogie</div><div class="area-detail">Calabogie Lake & area</div></div>
+    <div class="area-pill"><div class="area-name">Perth</div><div class="area-detail">Tay River & Drummond</div></div>
+    <div class="area-pill"><div class="area-name">Rideau Lakes</div><div class="area-detail">Upper & Lower Rideau</div></div>
+    <div class="area-pill"><div class="area-name">Buckhorn</div><div class="area-detail">Kawartha Lakes access</div></div>
+    <div class="area-pill"><div class="area-name">White Lake</div><div class="area-detail">White Lake & Burnstown</div></div>
+    <div class="area-pill"><div class="area-name">Arnprior</div><div class="area-detail">Ottawa River corridor</div></div>
+    <div class="area-pill"><div class="area-name">Carleton Place</div><div class="area-detail">Mississippi River lakes</div></div>
+    <div class="area-pill"><div class="area-name">Smiths Falls</div><div class="area-detail">Rideau waterway</div></div>
+    <div class="area-pill"><div class="area-name">Kemptville</div><div class="area-detail">South Ottawa region</div></div>
+    <div class="area-pill"><div class="area-name">Renfrew County</div><div class="area-detail">Ottawa Valley interior</div></div>
+    <div class="area-pill"><div class="area-name">Almonte</div><div class="area-detail">Mississippi Lakes</div></div>
+    <div class="area-pill"><div class="area-name">Your Lake</div><div class="area-detail">Ask us — we travel</div></div>
+  </div>
+</section>
+
+<!-- STILLWATER APP PROMO -->
+<section class="app-promo" id="app">
+  <div class="app-promo-inner">
+    <div class="app-promo-mockup fade-up">
+      <div class="app-screen-mock">
+        <div class="mock-topbar">
+          <span class="mock-logo">Stillwater</span>
+          <div class="mock-tier">
+            <span class="mock-bronze">Bronze ✓</span>
+            <span class="mock-silver">Silver ✓</span>
+            <span class="mock-gold">Gold →</span>
+          </div>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,.4);margin-bottom:10px;letter-spacing:.06em">GOLD SKILLS — WATERSKI</div>
+        <div class="mock-skill"><div class="mock-check done"></div><span>Deep water start — both skis</span></div>
+        <div class="mock-skill"><div class="mock-check done"></div><span>One-ski drop at speed</span></div>
+        <div class="mock-skill"><div class="mock-check done"></div><span>Jump wake — both directions</span></div>
+        <div class="mock-skill"><div class="mock-check"></div><span style="color:rgba(255,255,255,.5)">Crossing all 6 wakes cleanly</span></div>
+        <div class="mock-skill" style="border:none"><div class="mock-check"></div><span style="color:rgba(255,255,255,.5)">Slalom course introduction</span></div>
+        <div style="margin-top:14px;height:4px;background:rgba(255,255,255,.08);border-radius:2px">
+          <div style="width:60%;height:100%;background:linear-gradient(90deg,var(--cyan),var(--pink));border-radius:2px"></div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">3 of 5 skills completed</div>
+      </div>
+    </div>
+    <div class="fade-up">
+      <div class="app-promo-label">Stillwater Skills App</div>
+      <h3>Track every skill.<br>Earn every badge.</h3>
+      <p class="app-promo-desc">All students get access to the Stillwater Skills progressive tracking app — Bronze through Platinum certifications, coach-approved skill sign-offs, leaderboards, and GPS session tracking. Also available for clubs and schools.</p>
+      <a href="/stillwaterapp" class="btn-outline-cyan">Explore the App →</a>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section class="booking" id="book">
+  <div class="booking-inner">
+    <div class="booking-info fade-up">
+      <div class="section-label">Book a Lesson</div>
+      <h3>Ready to get<br>on the water?</h3>
+      <p>Fill out the form and Christian will be in touch within 24 hours to confirm your booking, discuss your goals, and plan your perfect session.</p>
+      <div class="info-item">
+        <span class="info-icon">??</span>
+        <div>
+          <div class="info-label">Season</div>
+          <div class="info-detail">May through September. Weekdays and weekends available. Book early — summer fills fast.</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">⏱️</span>
+        <div>
+          <div class="info-label">Session Lengths</div>
+          <div class="info-detail">2-hour intro sessions · Half-day (4 hrs) · Full-day (6–8 hrs) for families and groups</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">??</span>
+        <div>
+          <div class="info-label">Everything Included</div>
+          <div class="info-detail">Boat, fuel, all equipment, life jackets, wetsuits, and instructor time. Just show up.</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <span class="info-icon">??</span>
+        <div>
+          <div class="info-label">Location</div>
+          <div class="info-detail">We come to you. Specify your lake or cottage address in the form and we'll handle the rest.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="booking-form fade-up" id="bookingForm">
+      <div class="form-row">
+        <label>YOUR NAME</label>
+        <input type="text" id="f-name" placeholder="First and last name"/>
+      </div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label>EMAIL</label>
+          <input type="email" id="f-email" placeholder="you@email.com"/>
+        </div>
+        <div class="form-row">
+          <label>PHONE</label>
+          <input type="tel" id="f-phone" placeholder="613-555-0100"/>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>LOCATION / LAKE</label>
+        <input type="text" id="f-location" placeholder="e.g. White Lake, Calabogie, Rideau..."/>
+      </div>
+      <div class="form-grid">
+        <div class="form-row">
+          <label>PREFERRED DATE</label>
+          <input type="date" id="f-date"/>
+        </div>
+        <div class="form-row">
+          <label>GROUP SIZE</label>
+          <select id="f-group">
+            <option value="">Select...</option>
+            <option>1 person</option>
+            <option>2 people</option>
+            <option>3–4 people</option>
+            <option>5+ people</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <label>SKILL LEVEL</label>
+        <select id="f-level">
+          <option value="">Select...</option>
+          <option>Complete beginner — never tried it</option>
+          <option>Tried it a few times</option>
+          <option>Intermediate — up and riding</option>
+          <option>Advanced — looking to improve</option>
+          <option>Mixed group — different levels</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>SPORT INTEREST</label>
+        <select id="f-sport">
+          <option value="">Select...</option>
+          <option>Waterski</option>
+          <option>Wakeboard</option>
+          <option>Wakesurf</option>
+          <option>Not sure — open to anything</option>
+          <option>Multiple / all of the above</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label>ANYTHING ELSE?</label>
+        <textarea id="f-notes" placeholder="Ages of riders, specific goals, questions..."></textarea>
+      </div>
+      <button class="form-submit" onclick="submitBooking()">Send Booking Request →</button>
+      <p class="form-note">No payment required to book. Christian will confirm availability and send details within 24 hours.</p>
+    </div>
+
+    <div class="form-success" id="formSuccess">
+      <div class="form-success-icon">??</div>
+      <h3>Request Sent!</h3>
+      <p>Thanks — Christian will be in touch within 24 hours to confirm your booking and plan your session. Check your email.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo">
+        <img src="https://raw.githubusercontent.com/Stillwatersports/Skills-App/main/Logo4.png" alt="Learn Water Sports"/>
+        <span class="footer-logo-name">Learn<span>Water</span>Sports</span>
+      </div>
+      <p class="footer-desc">Private waterski and wakeboard instruction across Ottawa's cottage country. Boat and equipment included. Beginner to advanced.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Lessons</h4>
+      <a href="#lessons">What's Included</a>
+      <a href="#how">How It Works</a>
+      <a href="#areas">Service Areas</a>
+      <a href="#book">Book Now</a>
+    </div>
+    <div class="footer-col">
+      <h4>More</h4>
+      <a href="/stillwaterapp">Stillwater Skills App</a>
+      <a href="mailto:christian@learnwatersports.ca">Contact</a>
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms of Service</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2026 Christian Richards / learnwatersports.ca · All rights reserved.</span>
+    <a href="/stillwaterapp" class="footer-app-link">Stillwater Skills App →</a>
+  </div>
+</footer>
+
+<script>
+// ── SCROLL ANIMATIONS ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible') });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// ── NAV SCROLL ──
+window.addEventListener('scroll', () => {
+  document.getElementById('nav').style.background =
+    window.scrollY > 60 ? 'rgba(13,31,31,0.97)' : 'rgba(13,31,31,0.85)';
+});
+
+// ── MOBILE MENU ──
+function toggleMenu() {
+  const menu = document.getElementById('mobileMenu');
+  const open = menu.classList.toggle('open');
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+
+// ── BOOKING FORM ──
+function submitBooking() {
+  const name = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const location = document.getElementById('f-location').value.trim();
+  const date = document.getElementById('f-date').value;
+  const group = document.getElementById('f-group').value;
+  const level = document.getElementById('f-level').value;
+  const sport = document.getElementById('f-sport').value;
+  const notes = document.getElementById('f-notes').value.trim();
+
+  if (!name || !email || !location) {
+    alert('Please fill in your name, email, and location to submit.');
+    return;
+  }
+
+  // Build mailto link as fallback (replace with Formspree/EmailJS in production)
+  const subject = encodeURIComponent(`Lesson Booking Request — ${name}`);
+  const body = encodeURIComponent(
+    `Name: ${name}\nEmail: ${email}\nPhone: ${document.getElementById('f-phone').value}\n\nLocation: ${location}\nDate: ${date}\nGroup Size: ${group}\nSkill Level: ${level}\nSport: ${sport}\n\nNotes:\n${notes}`
+  );
+
+  // Show success state
+  document.getElementById('bookingForm').style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'block';
+
+  // Open email client as fallback
+  setTimeout(() => {
+    window.location.href = `mailto:christian@learnwatersports.ca?subject=${subject}&body=${body}`;
+  }, 800);
+}
+</script>
+
+
+<!-- BOOKING MODAL -->
+<div id="bookingModal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;border-radius:20px;padding:32px;max-width:480px;width:100%;max-height:90dvh;overflow-y:auto;position:relative">
+    <button onclick="closeModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:#888">✕</button>
+    <div id="modal-form">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#E040A0;margin-bottom:8px">Book a Lesson</div>
+      <h3 style="font-family:Outfit,sans-serif;font-size:22px;font-weight:800;margin-bottom:4px;color:#1a2a2a">Request <span id="modal-date-display" style="color:#00C8D4"></span></h3>
+      <p style="font-size:13px;color:#4a7a7a;margin-bottom:24px;line-height:1.5">Fill in your details and Christian will confirm within 24 hours.</p>
+      <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:700;color:#4a7a7a;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase">Your Name *</label><input type="text" id="b-name" placeholder="First and last name" style="width:100%;padding:11px 14px;border:1px solid rgba(0,180,190,0.3);border-radius:10px;font-size:15px;font-family:Outfit,sans-serif;outline:none;background:#FFFeb4"/></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+        <div><label style="display:block;font-size:11px;font-weight:700;color:#4a7a7a;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase">Email</label><input type="email" id="b-email" placeholder="you@email.com" style="width:100%;padding:11px 14px;border:1px solid rgba(0,180,190,0.3);border-radius:10px;font-size:15px;font-family:Outfit,sans-serif;outline:none;background:#FFFeb4"/></div>
+        <div><label style="display:block;font-size:11px;font-weight:700;color:#4a7a7a;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase">Phone</label><input type="tel" id="b-phone" placeholder="613-555-0100" style="width:100%;padding:11px 14px;border:1px solid rgba(0,180,190,0.3);border-radius:10px;font-size:15px;font-family:Outfit,sans-serif;outline:none;background:#FFFeb4"/></div>
+      </div>
+      <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:700;color:#4a7a7a;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase">Location / Lake *</label><input type="text" id="b-location" placeholder="e.g. White Lake, Calabogie, Rideau..." style="width:100%;padding:11px 14px;border:1px solid rgba(0,180,190,0.3);border-radius:10px;font-size:15px;font-family:Outfit,sans-serif;outline:none;background:#FFFeb4"/></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+        <div><label style="display:block;font-size:11px;font-weight:700;color:#4a7a7a;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase">Group Size</label><select id="b-group" style="width:100%;padding:11px 14px;border:1px solid rgba(0,180,190,0.3);border-radius:10px;font-size:15px;font-family:Outfit,sans-serif;outline:none;background:#FFFeb4;-webkit-appearance:none"><option value="">Select...</option><option>1 person</option><option>2 people</option><option>3–4 people</option><option>5+ people</option></select></div>
+        <div><label style="display:block;font-size:11px;font-weight:700;color:#4a7a7a;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase">Skill Level</label><select id="b-level" style="width:100%;padding:11px 14px;border:1px solid rgba(0,180,190,0.3);border-radius:10px;font-size:15px;font-family:Outfit,sans-serif;outline:none;background:#FFFeb4;-webkit-appearance:none"><option value="">Select...</option><option>Complete beginner</option><option>Tried it a few times</option><option>Intermediate</option><option>Advanced</option><option>Mixed group</option></select></div>
+      </div>
+      <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:700;color:#4a7a7a;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase">Sport</label><select id="b-sport" style="width:100%;padding:11px 14px;border:1px solid rgba(0,180,190,0.3);border-radius:10px;font-size:15px;font-family:Outfit,sans-serif;outline:none;background:#FFFeb4;-webkit-appearance:none"><option value="">Select...</option><option>Waterski</option><option>Wakeboard</option><option>Wakesurf</option><option>Not sure</option><option>Multiple sports</option></select></div>
+      <div style="margin-bottom:20px"><label style="display:block;font-size:11px;font-weight:700;color:#4a7a7a;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase">Anything Else?</label><textarea id="b-notes" placeholder="Ages of riders, goals, questions..." style="width:100%;padding:11px 14px;border:1px solid rgba(0,180,190,0.3);border-radius:10px;font-size:14px;font-family:Outfit,sans-serif;outline:none;background:#FFFeb4;resize:vertical;min-height:70px;line-height:1.5"></textarea></div>
+      <button id="b-submit" onclick="submitBooking()" style="width:100%;padding:14px;background:#E040A0;color:#fff;border:none;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif;transition:opacity .15s">Request This Date →</button>
+      <p style="font-size:11px;color:#7aacac;text-align:center;margin-top:10px">No payment required. Christian will confirm within 24 hours. <strong style="color:#E040A0">Deposits are non-refundable.</strong></p>
+    </div>
+    <div id="modal-success" style="display:none;text-align:center;padding:20px 0">
+      <div style="font-size:52px;margin-bottom:16px">🌊</div>
+      <h3 style="font-family:Outfit,sans-serif;font-size:22px;font-weight:800;color:#00C8D4;margin-bottom:8px">Request Sent!</h3>
+      <p style="font-size:14px;color:#4a7a7a;line-height:1.6">Christian will be in touch within 24 hours to confirm your session and plan the details.</p>
+      <p style="font-size:13px;color:#4a7a7a;line-height:1.6;margin-top:12px;padding:12px 16px;background:rgba(0,200,212,0.06);border-radius:10px;border-left:3px solid #00C8D4">Once confirmed, Christian will send you a deposit link to secure your booking. No payment is required until then.</p>
+      <button onclick="closeModal()" style="margin-top:20px;padding:12px 28px;background:#FFFeb4;border:1.5px solid #E040A0;color:#E040A0;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif">Close</button>
+    </div>
+  </div>
 </div>
 </body>
 </html>
