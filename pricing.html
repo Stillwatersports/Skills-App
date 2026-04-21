@@ -21,7 +21,7 @@
     <a href="/equipment">Equipment</a>
     <a href="/app">Skills App</a>
   </div>
-  <a href="/#book" class="nav-book">Book Now</a>
+  <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
@@ -31,7 +31,7 @@
   <a href="/about" onclick="toggleMenu()">About</a>
   <a href="/equipment" onclick="toggleMenu()">Equipment</a>
   <a href="/app" onclick="toggleMenu()">Skills App</a>
-  <a href="/#book" onclick="toggleMenu()">Book Now</a>
+  <a href="/booking" onclick="toggleMenu()">Book Now</a>
 </div>
 
 <section class="hero hero-short">
@@ -64,8 +64,8 @@
     <div class="pricing-grid">
       <div class="pricing-card">
         <div class="pricing-package">Half Day</div>
-        <div class="pricing-price"><sup>$</sup>600</div>
-        <div class="pricing-duration">3 hours on water · AM or PM</div>
+        <div class="pricing-price"><sup>$</sup>550</div>
+        <div class="pricing-duration">4 hours on water · AM or PM</div>
         <ul class="pricing-features">
           <li>Morning or afternoon session</li>
           <li>Ideal for 1–3 riders</li>
@@ -76,7 +76,7 @@
       </div>
       <div class="pricing-card featured">
         <div class="pricing-package">Full Day</div>
-        <div class="pricing-price"><sup>$</sup>1,000</div>
+        <div class="pricing-price"><sup>$</sup>850</div>
         <div class="pricing-duration">7 hrs on water · 1hr midday break</div>
         <ul class="pricing-features">
           <li>Full day AM + PM sessions</li>
@@ -89,7 +89,7 @@
       </div>
       <div class="pricing-card">
         <div class="pricing-package">Weekend / Holiday Day</div>
-        <div class="pricing-price"><sup>$</sup>1,350</div>
+        <div class="pricing-price"><sup>$</sup>1,000</div>
         <div class="pricing-duration">7 hrs on water · Sat, Sun or stat holiday</div>
         <ul class="pricing-features">
           <li>Saturdays, Sundays &amp; stat holidays</li>
@@ -101,8 +101,8 @@
       </div>
       <div class="pricing-card">
         <div class="pricing-package">Full Weekend</div>
-        <div class="pricing-price"><sup>$</sup>2,250</div>
-        <div class="pricing-duration">14 hrs on water · Sat + Sun</div>
+        <div class="pricing-price"><sup>$</sup>1,800</div>
+        <div class="pricing-duration">14 hrs on water · Sat + Sun or holiday weekend</div>
         <ul class="pricing-features">
           <li>Saturday + Sunday back to back</li>
           <li>Best for cottage weekends</li>
@@ -123,15 +123,38 @@
     <p class="section-desc" style="margin-bottom:48px">Book multiple sessions and save. Consecutive bookings get the best rate.</p>
     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:800px">
       <div class="pricing-card">
+        <div class="pricing-package">Holiday Weekend (3 Days)</div>
+        <div class="pricing-price"><sup>$</sup>2,350</div>
+        <div class="pricing-duration">21 hrs on water · Sat + Sun + stat holiday</div>
+        <ul class="pricing-features">
+          <li>3-day long weekend package</li>
+          <li>Sat, Sun + stat holiday</li>
+          <li>Boat, gear &amp; coach included</li>
+          <li>30% deposit to secure</li>
+        </ul>
+        <a href="/booking" class="btn-outline" style="width:100%;justify-content:center">Book This →</a>
+      </div>
+      <div class="pricing-card">
         <div class="pricing-package">2 Days — Consecutive</div>
-        <div class="pricing-price"><sup>$</sup>1,700</div>
+        <div class="pricing-price"><sup>$</sup>1,600</div>
         <div class="pricing-duration">Back to back · best value</div>
         <ul class="pricing-features">
-          <li>$850/day — save $150 vs 2× full day</li>
+          <li>$800/day — save $100 vs 2× full day</li>
           <li>Booked on consecutive days</li>
           <li>All equipment included both days</li>
         </ul>
         <a href="/#book" class="btn-pink" style="width:100%;justify-content:center">Book This →</a>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-package">3 Days — Consecutive</div>
+        <div class="pricing-price"><sup>$</sup>2,300</div>
+        <div class="pricing-duration">Back to back · best value</div>
+        <ul class="pricing-features">
+          <li>$766/day — great for skill camps</li>
+          <li>Booked on consecutive days</li>
+          <li>All equipment included every day</li>
+        </ul>
+        <a href="/booking" class="btn-outline" style="width:100%;justify-content:center">Book This →</a>
       </div>
       <div class="pricing-card">
         <div class="pricing-package">2 Days — Spread</div>
@@ -146,10 +169,10 @@
       </div>
       <div class="pricing-card featured">
         <div class="pricing-package">5 Days — Consecutive</div>
-        <div class="pricing-price"><sup>$</sup>3,900</div>
+        <div class="pricing-price"><sup>$</sup>3,500</div>
         <div class="pricing-duration">Mon–Fri or similar · best value</div>
         <ul class="pricing-features">
-          <li>$780/day — save $1,100 vs 5× full day</li>
+          <li>$700/day — save $750 vs 5× full day</li>
           <li>Immersive week-long progression</li>
           <li>Perfect for rapid skill development</li>
           <li>All equipment included every day</li>
@@ -158,10 +181,10 @@
       </div>
       <div class="pricing-card">
         <div class="pricing-package">5 Days — Spread</div>
-        <div class="pricing-price"><sup>$</sup>4,500</div>
+        <div class="pricing-price"><sup>$</sup>3,750</div>
         <div class="pricing-duration">Any 5 days across the season</div>
         <ul class="pricing-features">
-          <li>$900/day — save $500 vs 5× full day</li>
+          <li>$750/day — save $500 vs 5× full day</li>
           <li>Use any 5 days through the season</li>
           <li>Subject to availability</li>
         </ul>
@@ -182,10 +205,10 @@
         <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:8px">Tubing Surcharge</div>
         <div style="font-size:13px;color:rgba(255,255,231,0.65);line-height:1.6">Tubing sessions require additional fuel. A $50/hr surcharge applies to any session that includes tubing.</div>
       </div>
-      <div style="background:rgba(255,255,255,0.1);border-radius:var(--radius);padding:24px;border:1px solid rgba(255,255,231,0.15)">
-        <div style="font-size:28px;font-weight:800;color:var(--yellow);margin-bottom:4px">+$100<span style="font-size:14px;font-weight:500;color:rgba(255,255,231,0.6)"> flat</span></div>
+<div style="background:rgba(255,255,255,0.1);border-radius:var(--radius);padding:24px;border:1px solid rgba(255,255,231,0.15)">
+        <div style="font-size:28px;font-weight:800;color:var(--yellow);margin-bottom:4px">+$100<span style="font-size:14px;font-weight:500;color:rgba(255,255,231,0.6)"> / +$200</span></div>
         <div style="font-size:15px;font-weight:700;color:#fff;margin-bottom:8px">Distance Surcharge</div>
-        <div style="font-size:13px;color:rgba(255,255,231,0.65);line-height:1.6">For locations more than 90 minutes from North Gower, ON. Covers additional travel time and fuel for the boat trailer.</div>
+        <div style="font-size:13px;color:rgba(255,255,231,0.65);line-height:1.6">1.5–3hr drive from Manotick, ON: +$100 flat.<br>3–6hr drive from Manotick, ON: +$200 flat.</div>
       </div>
       <div style="background:rgba(255,255,255,0.1);border-radius:var(--radius);padding:24px;border:1px solid rgba(255,255,231,0.15)">
         <div style="font-size:28px;font-weight:800;color:var(--yellow);margin-bottom:4px">30%<span style="font-size:14px;font-weight:500;color:rgba(255,255,231,0.6)"> deposit</span></div>

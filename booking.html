@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Book a private waterski, wakeboard or wakesurf lesson with Christian Richards across Ottawa's cottage country. Live calendar, instant confirmation."/>
+<title>Book a Session — Stillwater Sports</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="./styles.css"/>
+<style>
+.booking-layout{display:grid;grid-template-columns:1fr 1.8fr;gap:48px;align-items:start}
+.booking-sidebar{}
+.sticky-sidebar{position:sticky;top:88px}
+.info-card{background:var(--white);border-radius:var(--radius);padding:28px;border:1px solid rgba(0,0,0,0.07);margin-bottom:16px}
+.info-card h3{font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(0,0,0,0.07)}
+.info-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05)}
+.info-row:last-child{border:none;padding-bottom:0}
+.info-icon{width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(0,200,212,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;color:var(--cyan)}
+.info-key{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--cyan);margin-bottom:2px}
+.info-val{font-size:13px;color:var(--muted);line-height:1.5}
+.price-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05)}
+.price-row:last-child{border:none;padding-bottom:0}
+.price-label{font-size:13px;color:var(--muted)}
+.price-val{font-size:14px;font-weight:700;color:var(--text)}
+.price-val.highlight{color:var(--cyan)}
+.price-val.pink{color:var(--pink)}
+.faq-item{border-bottom:1px solid rgba(0,0,0,0.07);overflow:hidden}
+.faq-item:last-child{border:none}
+.faq-q{width:100%;background:none;border:none;text-align:left;padding:16px 0;font-size:14px;font-weight:600;color:var(--text);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Outfit',sans-serif}
+.faq-q::after{content:'＋';font-size:16px;color:var(--cyan);flex-shrink:0}
+.faq-q.open::after{content:'－'}
+.faq-a{font-size:13px;color:var(--muted);line-height:1.7;padding-bottom:16px;display:none}
+.faq-a.open{display:block}
+.booking-main{}
+.cal-card-full{background:var(--white);border-radius:20px;padding:32px;border:1px solid rgba(0,0,0,0.07);margin-bottom:24px}
+.step-indicator{display:flex;gap:0;margin-bottom:32px}
+.step{display:flex;align-items:center;gap:8px;flex:1}
+.step-num{width:28px;height:28px;border-radius:50%;background:rgba(0,200,212,0.1);border:1.5px solid rgba(0,200,212,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);flex-shrink:0}
+.step-num.active{background:var(--cyan);border-color:var(--cyan);color:#fff}
+.step-num.done{background:var(--cyan);border-color:var(--cyan);color:#fff}
+.step-label{font-size:12px;font-weight:600;color:var(--muted)}
+.step-label.active{color:var(--cyan)}
+.step-divider{flex:1;height:1px;background:rgba(0,200,212,0.2);margin:0 8px}
+.form-section{background:var(--white);border-radius:20px;padding:32px;border:1px solid rgba(0,0,0,0.07);margin-bottom:24px;display:none}
+.form-section.visible{display:block}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-field{margin-bottom:0}
+.form-field label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase}
+.form-field input,.form-field select,.form-field textarea{width:100%;padding:12px 16px;border:1.5px solid rgba(0,200,212,0.2);border-radius:10px;font-size:15px;font-family:'Outfit',sans-serif;outline:none;background:var(--yellow);color:var(--text);transition:border-color .15s}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--cyan)}
+.form-field textarea{resize:vertical;min-height:80px;line-height:1.5}
+.form-field select{-webkit-appearance:none}
+.form-full{grid-column:1/-1}
+.submit-area{background:rgba(0,200,212,0.04);border-radius:var(--rsm);padding:20px;border:1px solid rgba(0,200,212,0.12);margin-top:8px}
+.deposit-note{font-size:12px;color:var(--muted);line-height:1.6;margin-top:10px}
+.deposit-note strong{color:var(--pink)}
+.success-card{background:var(--white);border-radius:20px;padding:48px 32px;border:1px solid rgba(0,0,0,0.07);text-align:center;display:none}
+.success-card.visible{display:block}
+@media(max-width:960px){
+  .booking-layout{grid-template-columns:1fr}
+  .sticky-sidebar{position:static}
+  .form-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports"/></a>
+  <div class="nav-links">
+    <a href="/sports">Sports</a>
+    <a href="/#lessons">Lessons</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/about">About</a>
+    <a href="/equipment">Equipment</a>
+    <a href="/app">Skills App</a>
+  </div>
+  <a href="/booking" class="nav-book" style="background:var(--pink);color:#fff">Book Now</a>
+  <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/sports" onclick="toggleMenu()">Sports</a>
+  <a href="/#lessons" onclick="toggleMenu()">Lessons</a>
+  <a href="/pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="/about" onclick="toggleMenu()">About</a>
+  <a href="/equipment" onclick="toggleMenu()">Equipment</a>
+  <a href="/app" onclick="toggleMenu()">Skills App</a>
+</div>
+
+<!-- HERO -->
+<section class="hero hero-short">
+  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,80,100,0.65) 0%,rgba(0,50,70,0.55) 100%),url('./hero.jpg') center 40%/cover no-repeat;background-color:var(--cyan)"></div>
+  <div class="hero-coords">N 45°<br>OTTAWA</div>
+  <div class="hero-content">
+    <div class="hero-badge">Live Availability · 24hr Confirmation</div>
+    <h1>
+      <span class="l1">Book your</span>
+      <span class="l3">session.</span>
+    </h1>
+    <p class="hero-sub">Pick a date, fill in the details, and Christian will confirm within 24 hours. No payment required to request.</p>
+  </div>
+  <div class="hero-bottom">
+    <div class="hero-scroll">Select a Date Below</div>
+    <div class="hero-stats-mini">
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num">24h</div><div class="hero-stat-mini-lbl">Confirmation</div></div>
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num">30%</div><div class="hero-stat-mini-lbl">Deposit to Secure</div></div>
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num">100%</div><div class="hero-stat-mini-lbl">Gear Included</div></div>
+    </div>
+    <a href="mailto:christian@learnwatersports.ca" class="hero-contact-link">Christian Richards · Coach</a>
+  </div>
+</section>
+
+<!-- MAIN BOOKING SECTION -->
+<section style="background:linear-gradient(135deg,var(--yellow) 0%,#f0ffd8 50%,#e8ffc8 100%);padding:80px 48px">
+  <div style="max-width:1200px;margin:0 auto">
+
+    <div class="booking-layout">
+
+      <!-- SIDEBAR -->
+      <div class="booking-sidebar">
+        <div class="sticky-sidebar">
+
+          <!-- Session Info -->
+          <div class="info-card">
+            <h3>What's Included</h3>
+            <div class="info-row"><div class="info-icon">🚤</div><div><div class="info-key">Boat</div><div class="info-val">Sanger DLX — professional ski/wake hybrid, fully fuelled</div></div></div>
+            <div class="info-row"><div class="info-icon">🎿</div><div><div class="info-key">All Equipment</div><div class="info-val">Waterskis, wakeboards, wakesurf, barefoot gear, ropes, handles</div></div></div>
+            <div class="info-row"><div class="info-icon">🧥</div><div><div class="info-key">Safety Gear</div><div class="info-val">Wetsuits & PFDs in all sizes — kids to adults</div></div></div>
+            <div class="info-row"><div class="info-icon">🎓</div><div><div class="info-key">Expert Coaching</div><div class="info-val">Christian Richards — top 100 worldwide barefoot, 10+ yrs coaching</div></div></div>
+            <div class="info-row"><div class="info-icon">📍</div><div><div class="info-key">We Come to You</div><div class="info-val">Your lake, your cottage — anywhere across Ottawa's cottage country</div></div></div>
+          </div>
+
+          <!-- Pricing Summary -->
+          <div class="info-card">
+            <h3>Session Pricing</h3>
+            <div class="price-row"><span class="price-label">Half Day (4 hrs)</span><span class="price-val highlight">$550</span></div>
+            <div class="price-row"><span class="price-label">Full Day (7 hrs)</span><span class="price-val highlight">$850</span></div>
+            <div class="price-row"><span class="price-label">Weekend / Holiday Day</span><span class="price-val highlight">$850</span></div>
+            <div class="price-row"><span class="price-label">Full Weekend</span><span class="price-val highlight">$1,800</span></div>
+            <div class="price-row"><span class="price-label">2 Days Consecutive</span><span class="price-val highlight">$1,600</span></div>
+            <div class="price-row"><span class="price-label">5 Days Consecutive</span><span class="price-val highlight">$3,500</span></div>
+            <div class="price-row" style="border-top:1px solid rgba(0,0,0,0.08);margin-top:4px;padding-top:14px"><span class="price-label">Deposit to Book</span><span class="price-val pink">30%</span></div>
+            <div class="price-row"><span class="price-label">Full Payment Due</span><span class="price-val">48hrs before</span></div>
+            <a href="/pricing" style="display:block;text-align:center;font-size:12px;font-weight:600;color:var(--cyan);margin-top:12px;text-decoration:none">View Full Pricing →</a>
+          </div>
+
+          <!-- Season -->
+          <div class="info-card">
+            <h3>Season & Availability</h3>
+            <div class="info-row"><div class="info-icon">📅</div><div><div class="info-key">Season</div><div class="info-val">May through September — weekdays and weekends</div></div></div>
+            <div class="info-row"><div class="info-icon">⛅</div><div><div class="info-key">Weather Policy</div><div class="info-val">Sessions proceed in light rain. Heavy rain or thunder = reschedule with full credit</div></div></div>
+            <div class="info-row"><div class="info-icon">🚗</div><div><div class="info-key">Distance</div><div class="info-val">+$100 (1.5–3hr drive) or +$200 (3–6hr drive) from Manotick, ON</div></div></div>
+            <div class="info-row"><div class="info-icon">🍩</div><div><div class="info-key">Tubing</div><div class="info-val">+$30/hr fuel surcharge for tubing sessions</div></div></div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- MAIN COLUMN -->
+      <div class="booking-main">
+
+        <!-- Step indicator -->
+        <div class="step-indicator" id="stepIndicator">
+          <div class="step"><div class="step-num active" id="s1">1</div><span class="step-label active">Pick a Date</span></div>
+          <div class="step-divider"></div>
+          <div class="step"><div class="step-num" id="s2">2</div><span class="step-label" id="s2l">Your Details</span></div>
+          <div class="step-divider"></div>
+          <div class="step"><div class="step-num" id="s3">3</div><span class="step-label" id="s3l">Confirm</span></div>
+        </div>
+
+        <!-- STEP 1: CALENDAR -->
+        <div class="cal-card-full" id="step1">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+            <div>
+              <div class="eyebrow" style="margin-bottom:4px">Step 1</div>
+              <div style="font-size:20px;font-weight:700;color:var(--text)">Select a Date</div>
+            </div>
+            <div style="display:flex;gap:12px;font-size:11px;color:var(--muted)">
+              <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:var(--cyan)"></div>Open</div>
+              <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:#f0a030"></div>Limited</div>
+              <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:#ddd"></div>Unavail.</div>
+            </div>
+          </div>
+          <div class="cal-regions" id="calRegions">
+            <button class="cal-region active" onclick="setRegion(this)">All Areas</button>
+            <button class="cal-region" onclick="setRegion(this)">Calabogie</button>
+            <button class="cal-region" onclick="setRegion(this)">Perth</button>
+            <button class="cal-region" onclick="setRegion(this)">Rideau Lakes</button>
+            <button class="cal-region" onclick="setRegion(this)">White Lake</button>
+            <button class="cal-region" onclick="setRegion(this)">Arnprior</button>
+            <button class="cal-region" onclick="setRegion(this)">Carleton Place</button>
+          </div>
+          <div class="cal-nav">
+            <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+            <div class="cal-month" id="calMonth"></div>
+            <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+          </div>
+          <div class="cal-grid" id="calGrid"></div>
+          <div id="calSelected" style="display:none;margin-top:20px">
+            <div style="background:rgba(0,200,212,0.07);border:1.5px solid rgba(0,200,212,0.2);border-radius:12px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center">
+              <div>
+                <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px">Selected</div>
+                <div style="font-size:18px;font-weight:700;color:var(--text)" id="calSelectedDate"></div>
+              </div>
+              <button onclick="goToStep2()" class="btn-pink">Continue →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2: FORM -->
+        <div class="form-section" id="step2">
+          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:24px">
+            <div>
+              <div class="eyebrow" style="margin-bottom:4px">Step 2</div>
+              <div style="font-size:20px;font-weight:700;color:var(--text)">Your Details</div>
+              <div style="font-size:13px;color:var(--muted);margin-top:4px">Booking for <span id="formDateLabel" style="color:var(--cyan);font-weight:700"></span></div>
+            </div>
+            <button onclick="goToStep1()" style="background:none;border:1.5px solid rgba(0,200,212,0.3);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Outfit',sans-serif">← Change Date</button>
+          </div>
+
+          <div class="form-grid">
+            <div class="form-field form-full">
+              <label>Your Name *</label>
+              <input type="text" id="b-name" placeholder="First and last name"/>
+            </div>
+            <div class="form-field">
+              <label>Email</label>
+              <input type="email" id="b-email" placeholder="you@email.com"/>
+            </div>
+            <div class="form-field">
+              <label>Phone</label>
+              <input type="tel" id="b-phone" placeholder="613-555-0100"/>
+            </div>
+            <div class="form-field form-full">
+              <label>Lake / Location *</label>
+              <input type="text" id="b-location" placeholder="e.g. White Lake, Calabogie, Rideau River..."/>
+            </div>
+            <div class="form-field">
+              <label>Session Type</label>
+              <select id="b-session">
+                <option value="">Select...</option>
+                <option>Half Day (4 hrs) — $550</option>
+                <option>Full Day (7 hrs) — $850</option>
+                <option>Weekend Day — $1,000</option>
+                <option>Full Weekend — $1,800</option>
+                <option>2 Days Consecutive — $1,600</option>
+                <option>2 Days Spread — $1,900</option>
+                <option>5 Days Consecutive — $3,500</option>
+                <option>5 Days Spread — $3,750</option>
+                <option>Not sure yet</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Group Size</label>
+              <select id="b-group">
+                <option value="">Select...</option>
+                <option>1 person</option>
+                <option>2 people</option>
+                <option>3–4 people</option>
+                <option>5–6 people</option>
+                <option>7+ people</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Sport(s)</label>
+              <select id="b-sport">
+                <option value="">Select...</option>
+                <option>Waterski</option>
+                <option>Wakeboard</option>
+                <option>Wakesurf</option>
+                <option>Slalom</option>
+                <option>Barefoot</option>
+                <option>Tubing</option>
+                <option>Multiple / Not sure</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>Skill Level</label>
+              <select id="b-level">
+                <option value="">Select...</option>
+                <option>Complete beginner</option>
+                <option>Tried it a few times</option>
+                <option>Intermediate</option>
+                <option>Advanced</option>
+                <option>Mixed group</option>
+              </select>
+            </div>
+            <div class="form-field form-full">
+              <label>Anything Else?</label>
+              <textarea id="b-notes" placeholder="Ages of riders, goals, questions, AM or PM preference for half days..."></textarea>
+            </div>
+          </div>
+
+          <div class="submit-area">
+            <button id="b-submit" onclick="submitBooking()" class="btn-pink" style="width:100%;justify-content:center;font-size:16px;padding:16px">Request This Date →</button>
+            <p class="deposit-note">By submitting you agree to our <a href="/policies" style="color:var(--cyan)">booking policies</a>. <strong>Deposits are non-refundable.</strong> Full payment due 48 hours before your session. No payment required to submit this request — Christian will confirm within 24 hours and send a deposit link.</p>
+          </div>
+        </div>
+
+        <!-- STEP 3: SUCCESS -->
+        <div class="success-card" id="step3">
+          <div style="font-size:64px;margin-bottom:20px">🌊</div>
+          <div class="eyebrow" style="text-align:center;margin-bottom:8px">Request Received</div>
+          <h2 style="font-size:32px;font-weight:800;color:var(--cyan);margin-bottom:12px;letter-spacing:-.02em">You're on the water.</h2>
+          <p style="font-size:15px;color:var(--muted);line-height:1.7;max-width:480px;margin:0 auto 8px">Christian will be in touch within 24 hours to confirm your session, discuss the details, and send a deposit link to lock in your date.</p>
+          <div style="background:rgba(0,200,212,0.06);border:1px solid rgba(0,200,212,0.15);border-radius:var(--rsm);padding:16px 20px;max-width:480px;margin:20px auto 0;text-align:left">
+            <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">What Happens Next</div>
+            <div style="font-size:13px;color:var(--muted);line-height:1.8">
+              ① Christian confirms your session within 24 hours<br>
+              ② A 30% deposit link is sent via Square to secure your date<br>
+              ③ Full payment is due 48 hours before your session<br>
+              ④ We come to your lake — just show up ready to ride
+            </div>
+          </div>
+          <div style="margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <a href="/" class="btn-outline">Back to Home</a>
+            <a href="/pricing" class="btn-pink">View Pricing →</a>
+          </div>
+        </div>
+
+        <!-- FAQ -->
+        <div style="background:var(--white);border-radius:20px;padding:32px;border:1px solid rgba(0,0,0,0.07)" id="faqSection">
+          <div style="font-size:20px;font-weight:700;color:var(--text);margin-bottom:24px">Frequently Asked Questions</div>
+
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">How far in advance should I book?</button>
+            <div class="faq-a">Summer weekends fill quickly — especially July and August. We recommend booking at least 2–3 weeks in advance for weekend dates. Weekdays are generally more available. The calendar above shows live availability.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">What if it rains on my session day?</button>
+            <div class="faq-a">Light rain is not a reason to cancel — people get wet on the water anyway and it's often some of the best skiing weather. Sessions are only cancelled for heavy rain or thunder/lightning forecasted. If we cancel, you receive a full credit to rebook or a full refund if no date is available before end of season.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">What ages are welcome?</button>
+            <div class="faq-a">Kids aged 6 and older are welcome. Children under 16 must be accompanied by a parent or guardian. We have equipment in all sizes and experience coaching kids through to adults. Mixed-age family groups are common.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">Do I need to have my own lake?</button>
+            <div class="faq-a">Not at all. We operate across Ottawa's cottage country — just tell us where you're based and we'll sort out the access. If you're at a friends cottage or renting a place, that works too. For locations more than 90 minutes from North Gower, a $100 distance surcharge applies.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">Can we mix sports in one session?</button>
+            <div class="faq-a">Absolutely — that's common, especially for family and group sessions. A full day might include wakeboard sets in the morning and wakesurf in the afternoon. Just mention your interests in the notes and we'll plan accordingly.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">What is the deposit policy?</button>
+            <div class="faq-a">A 30% deposit is required to secure your date. Deposits are non-refundable but can be credited toward rebooking within the same season (subject to availability). Full payment is due 48 hours before your session via a Square payment link.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">How many people can ride in a session?</button>
+            <div class="faq-a">We suggest a maximum of 2 sets per person per half day — so 4 sets per person for a full day. For a typical family of 4, a full day works perfectly. Larger groups may want to consider multiple days or accept that each person gets fewer sets.</div>
+          </div>
+          <div class="faq-item">
+            <button class="faq-q" onclick="toggleFaq(this)">What should we bring?</button>
+            <div class="faq-a">Swimwear, sunscreen, water, snacks, and a towel. We provide everything else — wetsuits, life jackets, all equipment, and the boat. Wear athletic swimwear that won't come off. Avoid jewellery on the water.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-watermark">LEARNWATERSPORTS</div>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.png" alt="Stillwater Sports"/></div>
+        <p class="footer-desc">Private waterski, wakeboard &amp; wakesurf coaching. Boat and all equipment included. Beginner to advanced — we come to your lake.</p>
+        <div class="footer-social"><a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a><a href="#" class="footer-social-btn">⊙</a></div>
+      </div>
+      <div class="footer-col"><h4>Explore</h4><a href="/sports">Sports</a><a href="/#lessons">Lessons</a><a href="/pricing">Pricing</a><a href="/about">About</a><a href="/equipment">Equipment</a></div>
+      <div class="footer-col"><h4>Stillwater Skills</h4><a href="/stillwaterapp">Open the App</a><a href="/app">For Clubs &amp; Schools</a></div>
+      <div class="footer-col"><h4>Legal</h4><a href="/policies">Privacy Policy</a><a href="/policies#terms">Terms of Service</a><a href="/policies#waiver">Waiver</a><a href="/policies#refunds">Refund Policy</a></div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 Christian Richards · Stillwater Sports · All rights reserved</span>
+      <span class="footer-dot">Ottawa's Cottage Country · learnwatersports.ca</span>
+    </div>
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<script>
+// ── SUPABASE ──
+let db=null;
+try{
+  const SUPABASE_URL='https://jjnhsbgmcjqwlmeihwuy.supabase.co';
+  const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqbmhzYmdtY2pxd2xtZWlod3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyODkwNDEsImV4cCI6MjA4OTg2NTA0MX0.MOTbufdBqUhB36P1YBL-zo-KKlvJ-LBHwPS70D7DoWU';
+  db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+}catch(e){console.warn('Supabase init failed',e)}
+
+// ── NAV ──
+function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
+document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
+
+// ── CALENDAR ──
+let calYear=2026,calMonth=4,selectedDay=null,bookedDates={};
+const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const days=['SU','MO','TU','WE','TH','FR','SA'];
+
+async function loadBookedDates(){
+  const start=new Date(calYear,calMonth,1).toISOString().split('T')[0];
+  const end=new Date(calYear,calMonth+1,0).toISOString().split('T')[0];
+  if(!db){renderCal();return}
+  const{data}=await db.from('bookings').select('requested_date,status').gte('requested_date',start).lte('requested_date',end).in('status',['pending','confirmed']);
+  bookedDates={};
+  if(data)data.forEach(r=>{const d=new Date(r.requested_date).getDate();if(!bookedDates[d])bookedDates[d]=[];bookedDates[d].push(r.status)});
+  renderCal();
+}
+
+function setRegion(btn){document.querySelectorAll('.cal-region').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selectedDay=null;document.getElementById('calSelected').style.display='none';renderCal();}
+
+function changeMonth(dir){
+  calMonth+=dir;
+  if(calMonth>11){calMonth=0;calYear++}
+  if(calMonth<0){calMonth=11;calYear--}
+  selectedDay=null;document.getElementById('calSelected').style.display='none';
+  loadBookedDates();
+}
+
+function renderCal(){
+  document.getElementById('calMonth').textContent=months[calMonth]+' '+calYear;
+  const grid=document.getElementById('calGrid');
+  grid.innerHTML='';
+  days.forEach(d=>{const h=document.createElement('div');h.className='cal-day-header';h.textContent=d;grid.appendChild(h)});
+  const first=new Date(calYear,calMonth,1).getDay();
+  const total=new Date(calYear,calMonth+1,0).getDate();
+  const today=new Date();
+  for(let i=0;i<first;i++){const e=document.createElement('div');e.className='cal-day empty';grid.appendChild(e)}
+  for(let d=1;d<=total;d++){
+    const cell=document.createElement('div');
+    const thisDate=new Date(calYear,calMonth,d);
+    const isPast=thisDate<new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    const isSunday=thisDate.getDay()===0;
+    const bookings=bookedDates[d]||[];
+    let status='open';
+    if(isPast||isSunday)status='unavailable';
+    else if(bookings.includes('confirmed'))status='unavailable';
+    else if(bookings.includes('pending'))status='limited';
+    cell.className='cal-day'+(selectedDay===d?' selected':'')+(status==='unavailable'?' unavail':'');
+    if(status==='unavailable')cell.style.opacity='.35';
+    const num=document.createElement('span');num.textContent=d;cell.appendChild(num);
+    if(status!=='unavailable'){
+      const dot=document.createElement('div');dot.className='cal-day-dot '+(status==='limited'?'limited':'open');cell.appendChild(dot);
+      cell.onclick=()=>selectDay(d);
+    }
+    grid.appendChild(cell);
+  }
+}
+
+function selectDay(d){
+  if((bookedDates[d]||[]).includes('confirmed'))return;
+  selectedDay=d;renderCal();
+  const dateStr=months[calMonth]+' '+d+', '+calYear;
+  document.getElementById('calSelectedDate').textContent=dateStr;
+  document.getElementById('calSelected').style.display='block';
+  document.getElementById('calSelected').scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+// ── STEPS ──
+function goToStep2(){
+  if(!selectedDay){showToast('Please select a date first');return}
+  const dateStr=months[calMonth]+' '+selectedDay+', '+calYear;
+  document.getElementById('formDateLabel').textContent=dateStr;
+  document.getElementById('step1').style.display='none';
+  document.getElementById('faqSection').style.display='none';
+  document.getElementById('step2').classList.add('visible');
+  document.getElementById('s1').classList.remove('active');document.getElementById('s1').classList.add('done');document.getElementById('s1').textContent='✓';
+  document.getElementById('s2').classList.add('active');document.getElementById('s2l').classList.add('active');
+  window.scrollTo({top:document.getElementById('stepIndicator').offsetTop-100,behavior:'smooth'});
+}
+
+function goToStep1(){
+  document.getElementById('step2').classList.remove('visible');
+  document.getElementById('step1').style.display='block';
+  document.getElementById('faqSection').style.display='block';
+  document.getElementById('s1').classList.add('active');document.getElementById('s1').classList.remove('done');document.getElementById('s1').textContent='1';
+  document.getElementById('s2').classList.remove('active');document.getElementById('s2l').classList.remove('active');
+}
+
+// ── SUBMIT ──
+async function submitBooking(){
+  const name=document.getElementById('b-name').value.trim();
+  const email=document.getElementById('b-email').value.trim();
+  const phone=document.getElementById('b-phone').value.trim();
+  const location=document.getElementById('b-location').value.trim();
+  const session=document.getElementById('b-session').value;
+  const group=document.getElementById('b-group').value;
+  const sport=document.getElementById('b-sport').value;
+  const level=document.getElementById('b-level').value;
+  const notes=document.getElementById('b-notes').value.trim();
+  const btn=document.getElementById('b-submit');
+
+  if(!name||!location){showToast('Please enter your name and location');return}
+  if(!email&&!phone){showToast('Please enter an email or phone number');return}
+
+  btn.disabled=true;btn.textContent='Sending...';
+
+  const requestedDate=new Date(calYear,calMonth,selectedDay).toISOString().split('T')[0];
+
+  if(db){
+    await db.from('bookings').insert({
+      name,email:email||null,phone:phone||null,location,
+      requested_date:requestedDate,group_size:group||null,
+      skill_level:level||null,sport:sport||null,
+      notes:(session?'Session: '+session+'\n':'')+notes||null,
+      status:'pending'
+    });
+  }
+
+  await fetch('https://formspree.io/f/mwvwzdwj',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify({
+      name,email:email||'not provided',phone:phone||'not provided',
+      location,date:requestedDate,session_type:session||'not specified',
+      group_size:group||'not specified',skill_level:level||'not specified',
+      sport:sport||'not specified',notes:notes||'none',
+      _subject:`New Booking Request — ${name} · ${requestedDate}`
+    })
+  });
+
+  // Show step 3
+  document.getElementById('step2').classList.remove('visible');
+  document.getElementById('step3').classList.add('visible');
+  document.getElementById('s2').classList.remove('active');document.getElementById('s2').classList.add('done');document.getElementById('s2').textContent='✓';document.getElementById('s2l').classList.remove('active');
+  document.getElementById('s3').classList.add('active');document.getElementById('s3l').classList.add('active');
+  if(!bookedDates[selectedDay])bookedDates[selectedDay]=[];
+  bookedDates[selectedDay].push('pending');
+  btn.disabled=false;btn.textContent='Request This Date →';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── FAQ ──
+function toggleFaq(btn){
+  const a=btn.nextElementSibling;
+  btn.classList.toggle('open');
+  a.classList.toggle('open');
+}
+
+// ── TOAST ──
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+
+// Init
+renderCal();
+loadBookedDates();
+</script>
+</body>
+</html>
