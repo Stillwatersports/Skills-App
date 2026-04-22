@@ -16,7 +16,7 @@
   <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:46px;width:auto;object-fit:contain;border-radius:6px"/></a>
   <div class="nav-links">
     <div class="nav-dropdown">
-      <a href="/about" class="nav-link-top">About ▾</a>
+      <a href="/about" class="nav-link-top" onclick="toggleDropdown(event)">About ▾</a>
       <div class="nav-dropdown-menu">
         <a href="/about">Meet the Coach</a>
         <a href="/sports">Sports</a>
@@ -47,7 +47,7 @@
 <section class="hero">
   <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,100,120,0.55) 0%,rgba(0,80,100,0.35) 40%,rgba(0,50,70,0.45) 100%),url('./hero.jpg') center 40%/cover no-repeat;background-color:var(--cyan)"></div>
   <div class="hero-coords">N 45°<br>OTTAWA</div>
-  <div class="hero-content">
+  <div class="hero-content" style="margin-left:auto;max-width:660px">
     <div class="hero-badge">Now Booking · Summer 2026</div>
     <h1>
       <span class="l1">Your lake.</span>
@@ -142,7 +142,6 @@
   </div>
 </section>
 
-<!-- 02 SPORTS -->
 <section class="sports-section" id="sports">
   <div class="s">
     <div class="sports-header fade-up">
@@ -153,58 +152,43 @@
       <p class="section-desc">Structured progression. Safety 1st. Boat, coach &amp; all equipment included.</p>
     </div>
   </div>
-  <div class="sports-cards-wrap fade-up">
-    <div class="sports-cards">
-      <div class="sport-card"><div class="sport-card-bg" style="background:url('./waterski.jpg') center/cover no-repeat,linear-gradient(160deg,#004a60,#007080)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">01</span><span class="sport-card-name">Waterski</span></div>
-      <div class="sport-card"><div class="sport-card-bg" style="background:url('./wakeboard.jpg') center/cover no-repeat,linear-gradient(160deg,#003848,#006070)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">02</span><span class="sport-card-name">Wakeboard</span></div>
-      <div class="sport-card"><div class="sport-card-bg" style="background:url('./wakesurf.jpg') center/cover no-repeat,linear-gradient(160deg,#002838,#004858)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">03</span><span class="sport-card-name">Wakesurf</span></div>
-      <div class="sport-card"><div class="sport-card-bg" style="background:url('./slalom.jpg') center/cover no-repeat,linear-gradient(160deg,#003850,#005a70)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">04</span><span class="sport-card-name">Slalom</span></div>
-      <div class="sport-card"><div class="sport-card-bg" style="background:url('./barefoot.jpg') center/cover no-repeat,linear-gradient(160deg,#1a3020,#2a5535)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">05</span><span class="sport-card-name">Barefoot</span></div>
-      <div class="sport-card"><div class="sport-card-bg" style="background:url('./tubing.jpg') center/cover no-repeat,linear-gradient(160deg,#3a1a30,#602040)"></div><div class="sport-card-overlay"></div><span class="sport-card-num">06</span><span class="sport-card-name">Tubing</span></div>
-    </div>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section class="how-section" id="how">
-  <div class="s">
-    <div class="how-header fade-up">
-      <div class="eyebrow">04 · The Process</div>
-      <h2 class="big-title">Simple from booking<br><em>to splash.</em></h2>
-      <p style="font-size:16px;color:var(--muted);margin-top:12px">Four steps and you're on the water. <a href="/how-it-works" style="color:var(--cyan);font-weight:600">Learn more →</a></p>
-    </div>
-    <div class="timeline fade-up">
-      <div class="timeline-left">
-        <div>
-          <div class="step-num-big">01</div>
-          <div class="step-title">Book Online</div>
-          <div class="step-desc">Fill out the form. Tell us your location, group size, skill level, and preferred dates. We confirm within 24 hours.</div>
-        </div>
-        <div>
-          <div class="step-num-big">03</div>
-          <div class="step-title">We Come to You</div>
-          <div class="step-desc">We arrive at your lake fully set up — boat, all gear, and a structured plan ready to go. Just show up.</div>
-        </div>
-      </div>
-      <div class="timeline-line">
-        <div class="tl-dot"></div>
-        <div class="tl-dot" style="margin-top:160px"></div>
-        <div class="tl-dot" style="margin-top:160px"></div>
-        <div class="tl-dot" style="margin-top:160px"></div>
-      </div>
-      <div class="timeline-right">
-        <div>
-          <div class="step-num-big">02</div>
-          <div class="step-title">We Plan Your Session</div>
-          <div class="step-desc">Christian will reach out to discuss your goals, choose the best spot on the water, and tailor the lesson plan to your group.</div>
-        </div>
-        <div>
-          <div class="step-num-big">04</div>
-          <div class="step-title">Learn &amp; Progress</div>
-          <div class="step-desc">Hit the water, build real skills, and have a great time. Track every milestone in the Stillwater Skills app all season long.</div>
-        </div>
-      </div>
-    </div>
+  <div class="sport-fan-wrap fade-up">
+    <a href="/sports#waterski" class="sport-fan-card active" data-sport="waterski" onclick="expandCard(this)">
+      <div class="sport-fan-bg" style="background:url('./waterski.jpg') center/cover no-repeat,linear-gradient(160deg,#004a60,#007080)"></div>
+      <div class="sport-fan-overlay"></div>
+      <span class="sport-fan-num">01</span>
+      <span class="sport-fan-name">Waterski</span>
+    </a>
+    <a href="/sports#wakeboard" class="sport-fan-card" data-sport="wakeboard" onclick="expandCard(this)">
+      <div class="sport-fan-bg" style="background:url('./wakeboard.jpg') center/cover no-repeat,linear-gradient(160deg,#003848,#006070)"></div>
+      <div class="sport-fan-overlay"></div>
+      <span class="sport-fan-num">02</span>
+      <span class="sport-fan-name">Wakeboard</span>
+    </a>
+    <a href="/sports#wakesurf" class="sport-fan-card" data-sport="wakesurf" onclick="expandCard(this)">
+      <div class="sport-fan-bg" style="background:url('./wakesurf.jpg') center/cover no-repeat,linear-gradient(160deg,#002838,#004858)"></div>
+      <div class="sport-fan-overlay"></div>
+      <span class="sport-fan-num">03</span>
+      <span class="sport-fan-name">Wakesurf</span>
+    </a>
+    <a href="/sports#slalom" class="sport-fan-card" data-sport="slalom" onclick="expandCard(this)">
+      <div class="sport-fan-bg" style="background:url('./slalom.jpg') center/cover no-repeat,linear-gradient(160deg,#003850,#005a70)"></div>
+      <div class="sport-fan-overlay"></div>
+      <span class="sport-fan-num">04</span>
+      <span class="sport-fan-name">Slalom</span>
+    </a>
+    <a href="/sports#barefoot" class="sport-fan-card" data-sport="barefoot" onclick="expandCard(this)">
+      <div class="sport-fan-bg" style="background:url('./barefoot.jpg') center/cover no-repeat,linear-gradient(160deg,#1a3020,#2a5535)"></div>
+      <div class="sport-fan-overlay"></div>
+      <span class="sport-fan-num">05</span>
+      <span class="sport-fan-name">Barefoot</span>
+    </a>
+    <a href="/sports#tubing" class="sport-fan-card" data-sport="tubing" onclick="expandCard(this)">
+      <div class="sport-fan-bg" style="background:url('./tubing.jpg') center/cover no-repeat,linear-gradient(160deg,#3a1a30,#602040)"></div>
+      <div class="sport-fan-overlay"></div>
+      <span class="sport-fan-num">06</span>
+      <span class="sport-fan-name">Tubing</span>
+    </a>
   </div>
 </section>
 
@@ -292,7 +276,7 @@
           </div>
         </div>
         <div class="cal-title" style="margin-bottom:16px">Select a Date</div>
-        <div class="cal-regions" id="calRegions">
+        <div class="cal-regions" id="calRegions" style="overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding-bottom:4px">
           <button class="cal-region active" onclick="setRegion(this)">All Areas</button>
           <button class="cal-region" onclick="setRegion(this)">Calabogie</button>
           <button class="cal-region" onclick="setRegion(this)">Perth</button>

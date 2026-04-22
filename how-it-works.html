@@ -3,38 +3,19 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="How booking a waterski, wakeboard or wakesurf lesson with Stillwater Sports works — from request to first run. Ottawa cottage country."/>
+<meta name="description" content="How booking a waterski or wakeboard lesson with Stillwater Sports works — from request to first run."/>
 <title>How It Works — Stillwater Sports</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="./styles.css"/>
-<style>
-.how-grid{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;margin-bottom:80px}
-.how-grid:nth-child(even){direction:rtl}.how-grid:nth-child(even) > *{direction:ltr}
-.how-step-num{font-size:120px;font-weight:800;line-height:1;color:rgba(0,200,212,0.12);letter-spacing:-.05em;margin-bottom:-20px}
-.how-step-title{font-size:clamp(28px,4vw,42px);font-weight:800;color:var(--text);letter-spacing:-.02em;margin-bottom:16px}
-.how-step-body{font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:24px}
-.how-step-detail{background:rgba(0,200,212,0.06);border-left:3px solid var(--cyan);border-radius:0 var(--rsm) var(--rsm) 0;padding:16px 20px;font-size:14px;color:var(--muted);line-height:1.7}
-.how-step-detail strong{color:var(--text)}
-.how-visual{border-radius:var(--radius);overflow:hidden;aspect-ratio:4/3;display:flex;align-items:center;justify-content:center}
-.how-visual-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
-.step-connector{display:flex;justify-content:center;margin:0 0 80px;position:relative}
-.step-connector::before{content:'';position:absolute;top:50%;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),transparent)}
-.step-connector-dot{width:40px;height:40px;border-radius:50%;background:var(--cyan);display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;font-weight:700;position:relative;z-index:1}
-@media(max-width:960px){
-  .how-grid{grid-template-columns:1fr}
-  .how-grid:nth-child(even){direction:ltr}
-  .how-step-num{font-size:80px}
-}
-</style>
-</head>
-<body>
 
-<nav>
-  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:46px;width:auto;object-fit:contain;border-radius:6px;"/></a>
+</head>
+<body><nav>
+  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:46px;width:auto;object-fit:contain;border-radius:6px"/></a>
   <div class="nav-links">
     <div class="nav-dropdown">
-      <a href="/about" class="nav-link-top">About ▾</a>
+      <a href="/about" class="nav-link-top" onclick="toggleDropdown(event)">About ▾</a>
       <div class="nav-dropdown-menu">
         <a href="/about">Meet the Coach</a>
         <a href="/sports">Sports</a>
@@ -43,9 +24,9 @@
       </div>
     </div>
     <a href="/how-it-works" class="active">How It Works</a>
-    <a href="/pricing">Pricing</a>
-    <a href="/booking">Booking</a>
-    <a href="/app">Stillwater Skills App</a>
+    <a href="/pricing" >Pricing</a>
+    <a href="/booking" >Booking</a>
+    <a href="/app" >Stillwater Skills App</a>
   </div>
   <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
@@ -60,30 +41,24 @@
   <a href="/app" onclick="toggleMenu()">Stillwater Skills App</a>
   <a href="/policies" onclick="toggleMenu()">Policies</a>
 </div>
-
 <section class="hero hero-short">
   <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,80,100,0.65) 0%,rgba(0,50,70,0.55) 100%),url('./hero.jpg') center 40%/cover no-repeat;background-color:var(--cyan)"></div>
   <div class="hero-coords">N 45°<br>OTTAWA</div>
-  <div class="hero-content">
+  <div class="hero-content" style="margin-left:auto;max-width:660px">
     <div class="hero-badge">Four Steps · First Run Guaranteed</div>
-    <h1>
-      <span class="l1">Simple from</span>
-      <span class="l3">booking to splash.</span>
-    </h1>
+    <h1><span class="l1">Simple from</span><span class="l3">booking to splash.</span></h1>
     <p class="hero-sub">No complicated forms, no phone tag, no surprises. Pick a date, tell us your lake, and we handle everything else.</p>
   </div>
   <div class="hero-bottom">
     <div class="hero-scroll">The Process</div>
     <div class="hero-stats-mini">
       <div class="hero-stat-mini"><div class="hero-stat-mini-num">24h</div><div class="hero-stat-mini-lbl">Confirmation</div></div>
-      <div class="hero-stat-mini"><div class="hero-stat-mini-num">100%</div><div class="hero-stat-mini-lbl">Gear Included</div></div>
       <div class="hero-stat-mini"><div class="hero-stat-mini-num">4 Steps</div><div class="hero-stat-mini-lbl">To First Run</div></div>
     </div>
     <a href="mailto:christian@learnwatersports.ca" class="hero-contact-link">Christian Richards · Coach</a>
   </div>
 </section>
 
-<!-- OVERVIEW BAND -->
 <div style="background:var(--cyan);padding:40px 48px">
   <div style="max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:24px">
     <div style="color:var(--yellow);font-size:clamp(18px,3vw,28px);font-weight:800;letter-spacing:-.02em">Book → Plan → Arrive → Ride</div>
@@ -91,118 +66,78 @@
   </div>
 </div>
 
-<!-- STEP 1 -->
 <section style="background:var(--yellow)">
   <div class="s">
-    <div class="how-grid">
+    <div class="content-grid-2" style="gap:64px;margin-bottom:80px;padding-bottom:80px;border-bottom:1px solid rgba(0,200,212,0.15)">
       <div>
-        <div class="how-step-num">01</div>
+        <div style="font-size:100px;font-weight:800;line-height:1;color:rgba(0,200,212,0.12);letter-spacing:-.05em;margin-bottom:-10px">01</div>
         <div class="eyebrow">First Step</div>
-        <div class="how-step-title">Request a date online.</div>
-        <p class="how-step-body">Head to the booking page, pick an open date on the live calendar, and fill in your details — your name, lake or cottage area, group size, sport, and skill level. The whole thing takes about 2 minutes.</p>
-        <p class="how-step-body">No phone calls needed. No back-and-forth emails. Just submit your request and we take it from there.</p>
-        <div class="how-step-detail">
-          <strong>What you'll need:</strong> Your preferred date, the name of your lake or cottage area, approximate group size, and a rough idea of what you want to try. Don't worry if you're not sure on the sport — just say so and we'll figure it out together.
-        </div>
+        <h2 class="big-title" style="margin-bottom:20px">Request a date<br><em>online.</em></h2>
+        <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:16px">Head to the booking page, pick an open date on the live calendar, and fill in your details — your name, lake or cottage area, group size, sport, and skill level. The whole thing takes about 2 minutes.</p>
+        <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:24px">No phone calls needed. No back-and-forth emails. Just submit your request and we take it from there.</p>
+        <a href="/booking" class="btn-pink">Book Now →</a>
       </div>
-      <div class="how-visual" style="background:linear-gradient(160deg,#004a60,#007080)">
-        <div class="how-visual-placeholder" style="color:rgba(255,255,231,0.3)">
-          <div style="font-size:48px">📅</div>
-          <div style="font-size:12px;font-weight:600;letter-spacing:.06em;text-align:center">ADD SCREENSHOT<br>booking-calendar.jpg</div>
-        </div>
+      <div style="background:linear-gradient(160deg,#004a60,#007080);border-radius:var(--radius);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center">
+        <div style="color:rgba(255,255,231,0.3);text-align:center;font-size:12px;font-weight:600;letter-spacing:.06em">ADD SCREENSHOT<br>booking-calendar.jpg</div>
       </div>
     </div>
 
-    <!-- STEP 2 -->
-    <div class="how-grid">
-      <div class="how-visual" style="background:linear-gradient(160deg,#003848,#005870)">
-        <div class="how-visual-placeholder" style="color:rgba(255,255,231,0.3)">
-          <div style="font-size:48px">💬</div>
-          <div style="font-size:12px;font-weight:600;letter-spacing:.06em;text-align:center">ADD PHOTO<br>planning-session.jpg</div>
-        </div>
+    <div class="content-grid-2" style="gap:64px;margin-bottom:80px;padding-bottom:80px;border-bottom:1px solid rgba(0,200,212,0.15)">
+      <div style="background:linear-gradient(160deg,#003848,#005870);border-radius:var(--radius);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center">
+        <div style="color:rgba(255,255,231,0.3);text-align:center;font-size:12px;font-weight:600;letter-spacing:.06em">ADD PHOTO<br>planning-session.jpg</div>
       </div>
       <div>
-        <div class="how-step-num">02</div>
+        <div style="font-size:100px;font-weight:800;line-height:1;color:rgba(0,200,212,0.12);letter-spacing:-.05em;margin-bottom:-10px">02</div>
         <div class="eyebrow">Within 24 Hours</div>
-        <div class="how-step-title">Christian confirms and plans your session.</div>
-        <p class="how-step-body">Within 24 hours Christian will reach out to confirm the date, discuss your group's goals, choose the best spot on your lake, and tailor a session plan around your skill levels and interests.</p>
-        <p class="how-step-body">Once confirmed, a 30% deposit link is sent via Square to secure your booking. Full payment is due 48 hours before your session.</p>
-        <div class="how-step-detail">
-          <strong>What to expect:</strong> A quick message or call to confirm logistics — which part of the lake works best, what time works for your group, and any specific goals or questions. Christian will also confirm equipment sizes if needed.
-        </div>
+        <h2 class="big-title" style="margin-bottom:20px">Christian confirms<br><em>and plans.</em></h2>
+        <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:16px">Within 24 hours Christian will reach out to confirm the date, discuss your group's goals, choose the best spot on your lake, and tailor a session plan around your skill levels and interests.</p>
+        <p style="font-size:16px;color:var(--muted);line-height:1.8">Once confirmed, a 30% deposit link is sent via Square to secure your booking. Full payment is due 48 hours before your session.</p>
       </div>
     </div>
 
-    <!-- STEP 3 -->
-    <div class="how-grid">
+    <div class="content-grid-2" style="gap:64px;margin-bottom:80px;padding-bottom:80px;border-bottom:1px solid rgba(0,200,212,0.15)">
       <div>
-        <div class="how-step-num">03</div>
+        <div style="font-size:100px;font-weight:800;line-height:1;color:rgba(0,200,212,0.12);letter-spacing:-.05em;margin-bottom:-10px">03</div>
         <div class="eyebrow">Session Day</div>
-        <div class="how-step-title">We come to your lake. Fully set up.</div>
-        <p class="how-step-body">On the day of your session Christian arrives at your lake with everything — the Sanger DLX boat, all equipment, life jackets, and a structured plan ready to go. You don't need to bring a single thing except yourselves.</p>
-        <p class="how-step-body">Sessions run AM or PM for half days, or a full 7 hours on the water for full days with a 1-hour midday break. Weather is monitored the night before — you'll be notified early if conditions require a reschedule.</p>
-        <div class="how-step-detail">
-          <strong>What to bring:</strong> Swimwear, sunscreen, water, snacks, and a towel. Wetsuits, PFDs, all boards, skis, ropes, and handles are provided. Wear athletic swimwear that fits securely — nothing that'll come off on a fall.
-        </div>
+        <h2 class="big-title" style="margin-bottom:20px">We come to your lake.<br><em>Fully set up.</em></h2>
+        <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:16px">On the day of your session Christian arrives at your lake with everything — the Sanger DLX boat, all equipment, life jackets, and a structured plan ready to go. You don't need to bring a single thing except yourselves.</p>
+        <p style="font-size:16px;color:var(--muted);line-height:1.8"><strong>What to bring:</strong> Swimwear, sunscreen, water, snacks, and a towel. Everything else is provided.</p>
       </div>
-      <div class="how-visual" style="background:linear-gradient(160deg,#003050,#005570);overflow:hidden">
-        <img src="./hero.jpg" alt="Sanger DLX boat at sunset" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85)"/>
+      <div style="border-radius:var(--radius);overflow:hidden;aspect-ratio:4/3">
+        <img src="./hero.jpg" alt="Sanger DLX boat" style="width:100%;height:100%;object-fit:cover"/>
       </div>
     </div>
 
-    <!-- STEP 4 -->
-    <div class="how-grid">
-      <div class="how-visual" style="background:linear-gradient(160deg,#1a3020,#2a5535);overflow:hidden">
-        <img src="./barefoot.jpg" alt="Barefoot skiing action" style="width:100%;height:100%;object-fit:cover;filter:brightness(0.85)"/>
+    <div class="content-grid-2" style="gap:64px">
+      <div style="border-radius:var(--radius);overflow:hidden;aspect-ratio:4/3">
+        <img src="./barefoot.jpg" alt="Barefoot skiing" style="width:100%;height:100%;object-fit:cover"/>
       </div>
       <div>
-        <div class="how-step-num">04</div>
+        <div style="font-size:100px;font-weight:800;line-height:1;color:rgba(0,200,212,0.12);letter-spacing:-.05em;margin-bottom:-10px">04</div>
         <div class="eyebrow">On the Water</div>
-        <div class="how-step-title">Learn, progress, and have a great time.</div>
-        <p class="how-step-body">Every session follows a structured progression — starting with safety and fundamentals, building through skills at the right pace for each rider. No one gets left behind, and no one gets bored waiting.</p>
-        <p class="how-step-body">Our progressive system is designed so that everyone gets up on their first session. Kids and complete beginners especially — the boom, the right equipment, and proper coaching makes all the difference.</p>
-        <div class="how-step-detail">
-          <strong>After your session:</strong> All Stillwater Sports students get access to the Stillwater Skills app — track your progress, earn Bronze through Platinum badges, and pick up exactly where you left off next time.
-        </div>
+        <h2 class="big-title" style="margin-bottom:20px">Learn, progress,<br><em>have fun.</em></h2>
+        <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:16px">Every session follows a structured progression — starting with safety and fundamentals, building through skills at the right pace for each rider. Our progressive system is designed so that everyone gets up on their first session.</p>
+        <p style="font-size:16px;color:var(--muted);line-height:1.8">After your session, all Stillwater Sports students get access to the Stillwater Skills app — track your progress, earn Bronze through Platinum badges, and pick up exactly where you left off next time.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- FAQ BAND -->
 <div style="background:var(--cyan);padding:80px 48px">
   <div style="max-width:800px;margin:0 auto">
     <div class="eyebrow" style="color:rgba(255,255,231,0.6);text-align:center">Common Questions</div>
-    <h2 style="font-size:clamp(28px,4vw,48px);font-weight:800;color:var(--yellow);letter-spacing:-.02em;text-align:center;margin-bottom:48px">Before you book.</h2>
-    <div style="display:grid;gap:16px">
-      <div style="background:rgba(255,255,255,0.08);border-radius:var(--rsm);padding:20px 24px;border:1px solid rgba(255,255,231,0.1)">
-        <div style="font-size:15px;font-weight:700;color:var(--yellow);margin-bottom:8px">Do I need my own boat or lake access?</div>
-        <div style="font-size:14px;color:rgba(255,255,231,0.75);line-height:1.7">No — we bring the boat and travel to you. You just need a lake. If you're at a friend's cottage or a rental, that works too. For locations more than 1.5hrs from Manotick a distance surcharge applies.</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.08);border-radius:var(--rsm);padding:20px 24px;border:1px solid rgba(255,255,231,0.1)">
-        <div style="font-size:15px;font-weight:700;color:var(--yellow);margin-bottom:8px">What age can kids start?</div>
-        <div style="font-size:14px;color:rgba(255,255,231,0.75);line-height:1.7">Kids 6 and older are welcome. Children under 16 must be with a parent or guardian. We have equipment in all sizes and lots of experience coaching kids — the boom makes learning safe and fast for young riders.</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.08);border-radius:var(--rsm);padding:20px 24px;border:1px solid rgba(255,255,231,0.1)">
-        <div style="font-size:15px;font-weight:700;color:var(--yellow);margin-bottom:8px">What if the weather is bad?</div>
-        <div style="font-size:14px;color:rgba(255,255,231,0.75);line-height:1.7">Light rain — we go. Heavy rain or thunder forecasted — we reschedule. Christian monitors conditions the night before and will contact you early if a reschedule is needed. You get a full credit to rebook, or a full refund if no date is available before September 30.</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.08);border-radius:var(--rsm);padding:20px 24px;border:1px solid rgba(255,255,231,0.1)">
-        <div style="font-size:15px;font-weight:700;color:var(--yellow);margin-bottom:8px">Can we try multiple sports in one session?</div>
-        <div style="font-size:14px;color:rgba(255,255,231,0.75);line-height:1.7">Absolutely. Full-day sessions often mix disciplines — waterski in the morning, wakeboard or wakesurf in the afternoon. Just mention your interests when booking and Christian will plan around them.</div>
-      </div>
-      <div style="background:rgba(255,255,255,0.08);border-radius:var(--rsm);padding:20px 24px;border:1px solid rgba(255,255,231,0.1)">
-        <div style="font-size:15px;font-weight:700;color:var(--yellow);margin-bottom:8px">What's the deposit and payment process?</div>
-        <div style="font-size:14px;color:rgba(255,255,231,0.75);line-height:1.7">Once confirmed, a 30% deposit is due via Square to hold your date. Full payment is due 48 hours before your session. Deposits are non-refundable but credited toward rebooking. See our <a href="/policies#refunds" style="color:var(--yellow);font-weight:600">refund policy</a> for full details.</div>
-      </div>
+    <h2 style="font-size:clamp(28px,4vw,48px);font-weight:800;color:var(--yellow);letter-spacing:-.02em;text-align:center;margin-bottom:40px">Before you book.</h2>
+    <div style="display:grid;gap:12px">
+      <div style="background:rgba(255,255,255,0.08);border-radius:var(--rsm);padding:20px 24px;border:1px solid rgba(255,255,231,0.1)"><div style="font-size:15px;font-weight:700;color:var(--yellow);margin-bottom:8px">Do I need my own boat or lake access?</div><div style="font-size:14px;color:rgba(255,255,231,0.75);line-height:1.7">No — we bring the boat and travel to you. You just need a lake. Distance surcharges apply for locations 1.5+ hrs from Manotick.</div></div>
+      <div style="background:rgba(255,255,255,0.08);border-radius:var(--rsm);padding:20px 24px;border:1px solid rgba(255,255,231,0.1)"><div style="font-size:15px;font-weight:700;color:var(--yellow);margin-bottom:8px">What age can kids start?</div><div style="font-size:14px;color:rgba(255,255,231,0.75);line-height:1.7">Kids 6 and older are welcome. Children under 16 must be with a parent or guardian. We have equipment in all sizes.</div></div>
+      <div style="background:rgba(255,255,255,0.08);border-radius:var(--rsm);padding:20px 24px;border:1px solid rgba(255,255,231,0.1)"><div style="font-size:15px;font-weight:700;color:var(--yellow);margin-bottom:8px">What if the weather is bad?</div><div style="font-size:14px;color:rgba(255,255,231,0.75);line-height:1.7">Light rain — we go. Heavy rain or thunder — we reschedule with full credit. Full refund if no date is available before September 30.</div></div>
+      <div style="background:rgba(255,255,255,0.08);border-radius:var(--rsm);padding:20px 24px;border:1px solid rgba(255,255,231,0.1)"><div style="font-size:15px;font-weight:700;color:var(--yellow);margin-bottom:8px">What is the deposit policy?</div><div style="font-size:14px;color:rgba(255,255,231,0.75);line-height:1.7">30% deposit required. <strong>Non-refundable.</strong> Full payment due 48 hours before session via Square payment link. See our <a href="/policies#refunds" style="color:var(--yellow);font-weight:600">refund policy</a> for full details.</div></div>
     </div>
   </div>
 </div>
 
-<!-- CTA -->
 <section style="background:var(--yellow);text-align:center">
   <div class="s" style="padding:80px 48px">
-    <div class="eyebrow" style="text-align:center">Ready?</div>
     <h2 class="big-title" style="text-align:center;margin-bottom:16px">Pick your date.<br><em>We handle the rest.</em></h2>
     <p style="font-size:16px;color:var(--muted);max-width:480px;margin:0 auto 36px;line-height:1.7;text-align:center">Summer fills up fast. Check live availability and lock in your session today.</p>
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
@@ -211,13 +146,12 @@
     </div>
   </div>
 </section>
-
 <footer>
   <div class="footer-watermark">LEARNWATERSPORTS</div>
   <div class="footer-inner">
     <div class="footer-top">
       <div>
-        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.png" alt="Stillwater Sports"/></div>
+        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.png" alt="Stillwater Sports" style="height:44px;width:auto;object-fit:contain;border-radius:6px"/></div>
         <p class="footer-desc">Private waterski, wakeboard &amp; wakesurf coaching. Boat and all equipment included. Beginner to advanced — we come to your lake.</p>
         <div class="footer-social"><a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a><a href="#" class="footer-social-btn">⊙</a></div>
       </div>
@@ -231,7 +165,6 @@
     </div>
   </div>
 </footer>
-
 <div id="toast"></div>
 <script>
 function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
