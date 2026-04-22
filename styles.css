@@ -29,7 +29,7 @@ nav{
 .nav-links a{color:var(--yellow);text-decoration:none;font-size:15px;font-weight:600;transition:color .15s}
 .nav-links a:hover,.nav-links a.active{color:#fff}
 .nav-book{
-  background:var(--yellow);color:var(--dark);
+  background:var(--pink);color:var(--yellow);
   border:none;border-radius:50px;
   padding:10px 22px;font-size:14px;font-weight:700;
   cursor:pointer;text-decoration:none;
@@ -37,7 +37,7 @@ nav{
   font-family:'Outfit',sans-serif;
   transition:all .15s;white-space:nowrap;
 }
-.nav-book:hover{background:var(--white)}
+.nav-book:hover{background:#c0307a;color:var(--yellow)}
 .nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
 .nav-hamburger span{display:block;width:22px;height:2px;background:var(--yellow);border-radius:2px}
 .mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;z-index:99;background:var(--cyan);padding:24px 32px;flex-direction:column;gap:4px;overflow-y:auto}
@@ -68,15 +68,15 @@ nav{
   display:flex;flex-direction:column;justify-content:flex-end;
   padding:0 0 80px;overflow:hidden;
 }
-.hero-short{min-height:62dvh}
-.hero-mid{min-height:62dvh}
+.hero-short{min-height:100dvh}
+.hero-mid{min-height:100dvh}
 .hero-bg{position:absolute;inset:0;z-index:0}
 .hero-coords{
   position:absolute;top:80px;left:32px;z-index:2;
   font-size:11px;font-weight:600;letter-spacing:.08em;
   color:rgba(255,255,231,0.5);line-height:1.6;
 }
-.hero-content{position:relative;z-index:2;padding:0 48px}
+.hero-content{position:relative;z-index:2;padding:80px 48px 0}
 .hero-badge{
   display:inline-flex;align-items:center;gap:8px;
   border:none;
@@ -208,7 +208,7 @@ nav{
 .content-card p{font-size:14px;color:var(--muted);line-height:1.65}
 
 /* ── OFFER CARDS ── */
-.offers-section{background:linear-gradient(160deg,var(--yellow) 0%,#fffac0 50%,#f8ffe0 100%)}
+.offers-section{background:linear-gradient(160deg,var(--yellow) 0%,#fffac0 50%,var(--yellow) 100%)}
 .offers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
 .offer-card{
   background:var(--card);border-radius:var(--radius);
@@ -248,7 +248,7 @@ nav{
 }
 
 /* ── HOW IT WORKS ── */
-.how-section{background:linear-gradient(180deg,#f8ffe0 0%,var(--yellow) 30%)}
+.how-section{background:var(--yellow) 30%)}
 .how-header{margin-bottom:80px}
 .timeline{display:grid;grid-template-columns:1fr 60px 1fr;gap:0}
 .timeline-left{display:flex;flex-direction:column;gap:120px;padding-right:48px}
@@ -568,3 +568,10 @@ footer{background:var(--cyan);border-top:2px solid var(--pink);padding:80px 48px
   .sport-fan-name{font-size:0}
   .sport-fan-num{font-size:10px}
 }
+
+/* Center incomplete rows in pricing grid */
+.pricing-grid{justify-items:stretch}
+.pricing-grid .pricing-card:nth-child(3n+1):last-child,
+.pricing-grid .pricing-card:nth-child(3n+2):last-child{margin-left:auto;margin-right:auto}
+/* For 2 remaining items in last row — use subgrid trick */
+.pricing-grid::after{content:'';display:block}
