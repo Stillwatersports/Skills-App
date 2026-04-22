@@ -13,7 +13,7 @@
   <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:46px;width:auto;object-fit:contain;border-radius:6px"/></a>
   <div class="nav-links">
     <div class="nav-dropdown">
-      <a href="#" class="nav-link-top active" onclick="toggleDropdown(event)">About ▾</a>
+      <a href="javascript:void(0)" class="nav-link-top active" onclick="toggleDropdown(event)">About ▾</a>
       <div class="nav-dropdown-menu">
         <a href="/about">Meet the Coach</a>
         <a href="/sports">Sports</a>
@@ -24,6 +24,7 @@
     <a href="/how-it-works" >How It Works</a>
     <a href="/pricing" >Pricing</a>
     <a href="/booking" >Booking</a>
+    <a href="/contact" >Contact</a>
     <a href="/app" >Stillwater Skills App</a>
   </div>
   <a href="/booking" class="nav-book">Book Now</a>
@@ -36,10 +37,11 @@
   <a href="/how-it-works" onclick="toggleMenu()">How It Works</a>
   <a href="/pricing" onclick="toggleMenu()">Pricing</a>
   <a href="/booking" onclick="toggleMenu()">Booking</a>
+  <a href="/contact" onclick="toggleMenu()">Contact</a>
   <a href="/app" onclick="toggleMenu()">Stillwater Skills App</a>
   <a href="/policies" onclick="toggleMenu()">Policies</a>
-  <a href="/contact" onclick="toggleMenu()">Contact</a>
 </div>
+
 <section class="hero hero-mid">
   <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,80,100,0.6) 0%,rgba(0,50,70,0.5) 100%),url('./about-hero.jpg') center/cover no-repeat;background-color:var(--cyan)"></div>
   <div class="hero-coords">N 45°<br>OTTAWA</div>
@@ -92,7 +94,7 @@
   </div>
 </section>
 
-<section style="background:linear-gradient(160deg,var(--yellow),#f8ffe0)">
+<section style="background:var(--yellow)">
   <div class="s" style="padding-top:60px">
     <div class="eyebrow">Credentials</div>
     <h2 class="big-title" style="margin-bottom:48px">Certified.<br><em>Experienced. Safe.</em></h2>
@@ -135,7 +137,19 @@
   </div>
 </footer>
 <div id="toast"></div>
+
 <script>
+function toggleDropdown(e){
+  e.preventDefault();
+  e.stopPropagation();
+  const menu=document.querySelector('.nav-dropdown-menu');
+  menu.classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.nav-dropdown')){
+    document.querySelectorAll('.nav-dropdown-menu').forEach(m=>m.classList.remove('open'));
+  }
+});
 function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
 document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
 </script>

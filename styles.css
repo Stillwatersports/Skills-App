@@ -26,8 +26,8 @@ nav{
 }
 .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
 .nav-links{display:flex;align-items:center;gap:28px}
-.nav-links a{color:rgba(255,255,231,0.85);text-decoration:none;font-size:14px;font-weight:500;transition:color .15s}
-.nav-links a:hover,.nav-links a.active{color:var(--yellow)}
+.nav-links a{color:var(--yellow);text-decoration:none;font-size:15px;font-weight:600;transition:color .15s}
+.nav-links a:hover,.nav-links a.active{color:#fff}
 .nav-book{
   background:var(--yellow);color:var(--dark);
   border:none;border-radius:50px;
@@ -46,8 +46,8 @@ nav{
 
 /* ── NAV DROPDOWN ── */
 .nav-dropdown{position:relative;display:flex;align-items:center}
-.nav-link-top{color:rgba(255,255,231,0.85);text-decoration:none;font-size:14px;font-weight:500;transition:color .15s;cursor:pointer;display:flex;align-items:center;gap:4px}
-.nav-link-top:hover,.nav-link-top.active{color:var(--yellow)}
+.nav-link-top{color:var(--yellow);text-decoration:none;font-size:15px;font-weight:600;transition:color .15s;cursor:pointer;display:flex;align-items:center;gap:4px}
+.nav-link-top:hover,.nav-link-top.active{color:#fff}
 .nav-dropdown-menu{
   display:none;position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%);
   background:var(--dark);border-radius:var(--rsm);padding:8px 0;min-width:160px;
@@ -68,8 +68,8 @@ nav{
   display:flex;flex-direction:column;justify-content:flex-end;
   padding:0 0 80px;overflow:hidden;
 }
-.hero-short{min-height:55dvh}
-.hero-mid{min-height:65dvh}
+.hero-short{min-height:62dvh}
+.hero-mid{min-height:62dvh}
 .hero-bg{position:absolute;inset:0;z-index:0}
 .hero-coords{
   position:absolute;top:80px;left:32px;z-index:2;
@@ -80,13 +80,15 @@ nav{
 .hero-badge{
   display:inline-flex;align-items:center;gap:8px;
   border:none;
-  border-radius:20px;padding:8px 18px;
-  font-size:12px;font-weight:700;letter-spacing:.06em;
+  border-radius:20px;padding:8px 20px;
+  font-size:11px;font-weight:700;letter-spacing:.05em;
   color:var(--yellow);margin-bottom:24px;
   text-transform:uppercase;
   background:var(--pink);
-  white-space:nowrap;
-  max-width:100%;
+  white-space:normal;
+  max-width:min(100%, 480px);
+  line-height:1.4;
+  text-align:left;
 }
 .hero h1{
   font-size:clamp(48px,7vw,100px);
