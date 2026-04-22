@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Contact Stillwater Sports — get in touch with Christian Richards to book a waterski or wakeboard session across Ottawa's cottage country."/>
+<title>Contact — Stillwater Sports</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="./styles.css"/>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:46px;width:auto;object-fit:contain;border-radius:6px"/></a>
+  <div class="nav-links">
+    <div class="nav-dropdown">
+      <a href="#" class="nav-link-top" onclick="toggleDropdown(event)">About ▾</a>
+      <div class="nav-dropdown-menu">
+        <a href="/about">Meet the Coach</a>
+        <a href="/sports">Sports</a>
+        <a href="/equipment">Equipment</a>
+        <a href="/policies">Policies</a>
+      </div>
+    </div>
+    <a href="/how-it-works">How It Works</a>
+    <a href="/pricing">Pricing</a>
+    <a href="/booking">Booking</a>
+    <a href="/app">Stillwater Skills App</a>
+  </div>
+  <a href="/booking" class="nav-book">Book Now</a>
+  <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/about" onclick="toggleMenu()">Meet the Coach</a>
+  <a href="/sports" onclick="toggleMenu()">Sports</a>
+  <a href="/equipment" onclick="toggleMenu()">Equipment</a>
+  <a href="/how-it-works" onclick="toggleMenu()">How It Works</a>
+  <a href="/pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="/booking" onclick="toggleMenu()">Booking</a>
+  <a href="/app" onclick="toggleMenu()">Stillwater Skills App</a>
+  <a href="/policies" onclick="toggleMenu()">Policies</a>
+</div>
+
+<section class="hero hero-short">
+  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,80,100,0.65) 0%,rgba(0,50,70,0.55) 100%),url('./hero.jpg') center 40%/cover no-repeat;background-color:var(--cyan)"></div>
+  <div class="hero-coords">N 45°<br>OTTAWA</div>
+  <div class="hero-content" style="margin-left:auto;max-width:660px">
+    <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)">Response Within 24 Hours</div>
+    <h1>
+      <span class="l1">Get in</span>
+      <span class="l3">touch.</span>
+    </h1>
+    <p class="hero-sub">Questions about booking, locations, pricing, or anything else — Christian replies personally, usually same day.</p>
+  </div>
+  <div class="hero-bottom">
+    <div class="hero-scroll">Contact Below</div>
+    <a href="mailto:christian@learnwatersports.ca" class="hero-contact-link">Christian Richards · Coach</a>
+  </div>
+</section>
+
+<section style="background:var(--yellow)">
+  <div class="s">
+    <div class="content-grid-2" style="gap:80px;align-items:start">
+
+      <!-- CONTACT FORM -->
+      <div>
+        <div class="eyebrow">Send a Message</div>
+        <h2 class="big-title" style="margin-bottom:32px">Ask us<br><em>anything.</em></h2>
+
+        <div id="contact-form">
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase">Your Name *</label>
+            <input type="text" id="c-name" placeholder="First and last name" style="width:100%;padding:13px 16px;border:1.5px solid rgba(0,200,212,0.25);border-radius:10px;font-size:15px;font-family:'Outfit',sans-serif;outline:none;background:#fff;color:var(--text);transition:border-color .15s" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='rgba(0,200,212,0.25)'"/>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px">
+            <div>
+              <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase">Email *</label>
+              <input type="email" id="c-email" placeholder="you@email.com" style="width:100%;padding:13px 16px;border:1.5px solid rgba(0,200,212,0.25);border-radius:10px;font-size:15px;font-family:'Outfit',sans-serif;outline:none;background:#fff;color:var(--text);transition:border-color .15s" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='rgba(0,200,212,0.25)'"/>
+            </div>
+            <div>
+              <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase">Phone</label>
+              <input type="tel" id="c-phone" placeholder="613-555-0100" style="width:100%;padding:13px 16px;border:1.5px solid rgba(0,200,212,0.25);border-radius:10px;font-size:15px;font-family:'Outfit',sans-serif;outline:none;background:#fff;color:var(--text);transition:border-color .15s" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='rgba(0,200,212,0.25)'"/>
+            </div>
+          </div>
+          <div style="margin-bottom:16px">
+            <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase">Subject</label>
+            <select id="c-subject" style="width:100%;padding:13px 16px;border:1.5px solid rgba(0,200,212,0.25);border-radius:10px;font-size:15px;font-family:'Outfit',sans-serif;outline:none;background:#fff;color:var(--text);-webkit-appearance:none;transition:border-color .15s" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='rgba(0,200,212,0.25)'">
+              <option value="">Select a topic...</option>
+              <option>Booking enquiry</option>
+              <option>Pricing question</option>
+              <option>Location / travel distance</option>
+              <option>Group or corporate session</option>
+              <option>Stillwater Skills App</option>
+              <option>Something else</option>
+            </select>
+          </div>
+          <div style="margin-bottom:24px">
+            <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase">Message *</label>
+            <textarea id="c-message" rows="5" placeholder="Tell us what's on your mind — no question is too small." style="width:100%;padding:13px 16px;border:1.5px solid rgba(0,200,212,0.25);border-radius:10px;font-size:15px;font-family:'Outfit',sans-serif;outline:none;background:#fff;color:var(--text);resize:vertical;line-height:1.6;transition:border-color .15s" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='rgba(0,200,212,0.25)'"></textarea>
+          </div>
+          <button id="c-submit" onclick="submitContact()" class="btn-pink" style="width:100%;justify-content:center;font-size:16px;padding:16px;border:none;cursor:pointer">Send Message →</button>
+          <p style="font-size:12px;color:var(--light-muted);text-align:center;margin-top:10px">Christian replies personally — usually same day, always within 24 hours.</p>
+        </div>
+
+        <div id="contact-success" style="display:none;text-align:center;padding:48px 24px;background:#fff;border-radius:20px;border:1px solid rgba(0,200,212,0.15)">
+          <div style="font-size:52px;margin-bottom:16px">🌊</div>
+          <h3 style="font-size:24px;font-weight:800;color:var(--cyan);margin-bottom:10px">Message sent!</h3>
+          <p style="font-size:15px;color:var(--muted);line-height:1.7;max-width:360px;margin:0 auto 24px">Christian will be in touch within 24 hours. If your question is about booking, you can also go straight to the calendar.</p>
+          <a href="/booking" class="btn-pink" style="margin:0 auto">Book a Session →</a>
+        </div>
+      </div>
+
+      <!-- CONTACT DETAILS -->
+      <div>
+        <div class="eyebrow">Direct Contact</div>
+        <h2 class="big-title" style="margin-bottom:32px">Prefer to<br><em>reach out directly?</em></h2>
+
+        <div style="display:grid;gap:16px;margin-bottom:48px">
+          <a href="mailto:christian@learnwatersports.ca" style="display:flex;align-items:center;gap:20px;background:#fff;border-radius:16px;padding:22px 24px;border:1.5px solid rgba(0,200,212,0.15);text-decoration:none;transition:border-color .2s;group" onmouseover="this.style.borderColor='var(--cyan)'" onmouseout="this.style.borderColor='rgba(0,200,212,0.15)'">
+            <div style="width:48px;height:48px;border-radius:50%;background:rgba(0,200,212,0.1);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">✉</div>
+            <div>
+              <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);margin-bottom:4px">Email</div>
+              <div style="font-size:16px;font-weight:600;color:var(--text)">christian@learnwatersports.ca</div>
+              <div style="font-size:13px;color:var(--muted);margin-top:2px">For general enquiries and booking questions</div>
+            </div>
+          </a>
+          <a href="mailto:bookings@learnwatersports.ca" style="display:flex;align-items:center;gap:20px;background:#fff;border-radius:16px;padding:22px 24px;border:1.5px solid rgba(0,200,212,0.15);text-decoration:none;transition:border-color .2s" onmouseover="this.style.borderColor='var(--cyan)'" onmouseout="this.style.borderColor='rgba(0,200,212,0.15)'">
+            <div style="width:48px;height:48px;border-radius:50%;background:rgba(224,64,160,0.08);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">📅</div>
+            <div>
+              <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--pink);margin-bottom:4px">Bookings</div>
+              <div style="font-size:16px;font-weight:600;color:var(--text)">bookings@learnwatersports.ca</div>
+              <div style="font-size:13px;color:var(--muted);margin-top:2px">For existing booking changes or questions</div>
+            </div>
+          </a>
+          <div style="display:flex;align-items:center;gap:20px;background:#fff;border-radius:16px;padding:22px 24px;border:1.5px solid rgba(0,200,212,0.15)">
+            <div style="width:48px;height:48px;border-radius:50%;background:rgba(0,200,212,0.1);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">📍</div>
+            <div>
+              <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);margin-bottom:4px">Based In</div>
+              <div style="font-size:16px;font-weight:600;color:var(--text)">Manotick, Ottawa ON</div>
+              <div style="font-size:13px;color:var(--muted);margin-top:2px">Serving Ottawa Valley &amp; cottage country</div>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:20px;background:#fff;border-radius:16px;padding:22px 24px;border:1.5px solid rgba(0,200,212,0.15)">
+            <div style="width:48px;height:48px;border-radius:50%;background:rgba(0,200,212,0.1);display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">🕐</div>
+            <div>
+              <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);margin-bottom:4px">Response Time</div>
+              <div style="font-size:16px;font-weight:600;color:var(--text)">Within 24 hours</div>
+              <div style="font-size:13px;color:var(--muted);margin-top:2px">Usually same day during season (May–Sept)</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="background:rgba(0,200,212,0.06);border:1px solid rgba(0,200,212,0.15);border-radius:16px;padding:24px">
+          <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:12px">Ready to book?</div>
+          <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:16px">If you know your dates and lake, you can go straight to the booking calendar — no need to contact us first. Christian confirms within 24 hours.</p>
+          <a href="/booking" class="btn-pink">Book a Session →</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-watermark">LEARNWATERSPORTS</div>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.png" alt="Stillwater Sports" style="height:44px;width:auto;object-fit:contain;border-radius:6px"/></div>
+        <p class="footer-desc">Private water sports coaching across Ottawa's cottage country. Six disciplines, all skill levels, all equipment included.</p>
+        <div class="footer-social"><a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a><a href="#" class="footer-social-btn">⊙</a></div>
+      </div>
+      <div class="footer-col"><h4>Explore</h4><a href="/about">About</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/how-it-works">How It Works</a><a href="/pricing">Pricing</a></div>
+      <div class="footer-col"><h4>Stillwater Skills</h4><a href="/stillwaterapp">Open the App</a><a href="/app">For Clubs &amp; Schools</a></div>
+      <div class="footer-col"><h4>Legal</h4><a href="/policies">Privacy Policy</a><a href="/policies#terms">Terms of Service</a><a href="/policies#waiver">Waiver</a><a href="/policies#refunds">Refund Policy</a></div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 Christian Richards · Stillwater Sports · All rights reserved</span>
+      <span class="footer-dot">Ottawa's Cottage Country · learnwatersports.ca</span>
+    </div>
+  </div>
+</footer>
+
+<div id="toast"></div>
+<script>
+function toggleDropdown(e){
+  e.preventDefault();
+  const menu=document.querySelector('.nav-dropdown-menu');
+  menu.classList.toggle('open');
+  e.stopPropagation();
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.nav-dropdown')){
+    document.querySelectorAll('.nav-dropdown-menu').forEach(m=>m.classList.remove('open'));
+  }
+});
+function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
+document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
+
+async function submitContact(){
+  const name=document.getElementById('c-name').value.trim();
+  const email=document.getElementById('c-email').value.trim();
+  const phone=document.getElementById('c-phone').value.trim();
+  const subject=document.getElementById('c-subject').value;
+  const message=document.getElementById('c-message').value.trim();
+  const btn=document.getElementById('c-submit');
+  if(!name||!email||!message){showToast('Please fill in your name, email, and message');return}
+  btn.disabled=true;btn.textContent='Sending...';
+  try{
+    await fetch('https://formspree.io/f/mwvwzdwj',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({name,email,phone:phone||'not provided',subject:subject||'General enquiry',message,_subject:`Contact Form — ${subject||'General Enquiry'} — ${name}`})
+    });
+  }catch(e){}
+  document.getElementById('contact-form').style.display='none';
+  document.getElementById('contact-success').style.display='block';
+  btn.disabled=false;btn.textContent='Send Message →';
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
+</script>
+</body>
+</html>

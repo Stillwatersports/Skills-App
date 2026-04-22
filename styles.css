@@ -68,8 +68,8 @@ nav{
   display:flex;flex-direction:column;justify-content:flex-end;
   padding:0 0 80px;overflow:hidden;
 }
-.hero-short{min-height:65dvh}
-.hero-mid{min-height:80dvh}
+.hero-short{min-height:55dvh}
+.hero-mid{min-height:65dvh}
 .hero-bg{position:absolute;inset:0;z-index:0}
 .hero-coords{
   position:absolute;top:80px;left:32px;z-index:2;
@@ -79,11 +79,14 @@ nav{
 .hero-content{position:relative;z-index:2;padding:0 48px}
 .hero-badge{
   display:inline-flex;align-items:center;gap:8px;
-  border:1px solid rgba(255,255,231,0.35);
-  border-radius:20px;padding:6px 16px;
-  font-size:12px;font-weight:600;letter-spacing:.06em;
-  color:rgba(255,255,231,0.85);margin-bottom:24px;
-  text-transform:uppercase;background:rgba(255,255,255,0.06);
+  border:none;
+  border-radius:20px;padding:8px 18px;
+  font-size:12px;font-weight:700;letter-spacing:.06em;
+  color:var(--yellow);margin-bottom:24px;
+  text-transform:uppercase;
+  background:var(--pink);
+  white-space:nowrap;
+  max-width:100%;
 }
 .hero h1{
   font-size:clamp(48px,7vw,100px);
@@ -132,7 +135,7 @@ nav{
 
 /* ── BUTTONS ── */
 .btn-pink{
-  background:var(--pink);color:var(--white);
+  background:var(--pink);color:var(--yellow);
   padding:13px 28px;border-radius:50px;
   font-size:15px;font-weight:700;text-decoration:none;
   display:inline-flex;align-items:center;gap:8px;
@@ -304,7 +307,7 @@ nav{
 .book-info-icon{width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(0,200,212,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;color:var(--cyan)}
 .book-info-key{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan);margin-bottom:4px}
 .book-info-val{font-size:13px;color:var(--muted);line-height:1.55}
-.cal-card{background:var(--white);border-radius:20px;padding:28px;border:1px solid rgba(0,0,0,0.07)}
+.cal-card{background:var(--white);border-radius:20px;padding:28px;border:1px solid rgba(0,0,0,0.07);min-width:0;overflow:hidden}
 .cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
 .cal-live{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan)}
 .cal-live::before{content:'●';font-size:8px;animation:pulse 2s infinite}
@@ -318,7 +321,7 @@ nav{
 .cal-nav-btn{width:32px;height:32px;border-radius:50%;border:1.5px solid #ddd;background:none;cursor:pointer;font-size:14px;color:var(--muted);display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;transition:all .15s}
 .cal-nav-btn:hover{border-color:var(--cyan);color:var(--cyan)}
 .cal-month{font-size:16px;font-weight:700;color:var(--text)}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;min-width:0}
 .cal-day-header{text-align:center;font-size:11px;font-weight:600;color:var(--muted);padding:6px 0;letter-spacing:.04em}
 .cal-day{text-align:center;padding:8px 4px;font-size:13px;font-weight:500;color:var(--text);border-radius:8px;cursor:pointer;position:relative;transition:all .15s;min-height:40px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
 .cal-day:hover{background:rgba(0,200,212,0.1)}
@@ -396,6 +399,14 @@ footer{background:var(--cyan);border-top:2px solid var(--pink);padding:80px 48px
   .hero-stats-mini{gap:16px;order:2;width:100%;justify-content:center;padding:8px 0;border-top:1px solid rgba(255,255,231,0.08)}
   .hero-contact-link{display:none}
   .hero-scroll{order:1}
+
+  /* CALENDAR MOBILE */
+
+  .cal-card,.cal-card-full{padding:16px;overflow:hidden}
+  .cal-grid{gap:2px}
+  .cal-day{padding:5px 2px;font-size:12px;min-height:34px}
+  .cal-regions{max-width:100%}
+  .book-layout{overflow:hidden}
 
   /* SECTIONS */
   .s{padding:56px 20px}
