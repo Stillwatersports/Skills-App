@@ -68,15 +68,15 @@ nav{
   display:flex;flex-direction:column;justify-content:flex-end;
   padding:0 0 80px;overflow:hidden;
 }
-.hero-short{min-height:72dvh}
-.hero-mid{min-height:72dvh}
+.hero-short{min-height:100dvh}
+.hero-mid{min-height:100dvh}
 .hero-bg{position:absolute;inset:0;z-index:0}
 .hero-coords{
   position:absolute;top:80px;left:32px;z-index:2;
   font-size:11px;font-weight:600;letter-spacing:.08em;
   color:rgba(255,255,231,0.5);line-height:1.6;
 }
-.hero-content{position:relative;z-index:2;padding:100px 48px 0}
+.hero-content{position:relative;z-index:2;padding:80px 48px 0}
 .hero-badge{
   display:inline-flex;align-items:center;gap:8px;
   border:none;
@@ -288,11 +288,11 @@ nav{
 .app-prog-meta span:last-child{color:var(--cyan);font-weight:700}
 .app-text .eyebrow{color:rgba(255,255,231,0.6)}
 .app-text h2{font-size:clamp(32px,3.5vw,54px);font-weight:800;color:var(--yellow);line-height:1.05;letter-spacing:-.03em;margin-bottom:20px}
-.app-text h2 em{font-style:italic;color:rgba(255,255,231,0.75)}
-.app-text p{font-size:15px;color:rgba(255,255,231,0.75);line-height:1.7;margin-bottom:28px}
+.app-text h2 em{font-style:italic;color:#3a6a6a}
+.app-text p{font-size:15px;color:#3a6a6a;line-height:1.7;margin-bottom:28px}
 .tier-dots-row{display:flex;gap:16px;align-items:center;margin-bottom:28px;flex-wrap:wrap}
 .tier-dot{width:8px;height:8px;border-radius:50%}
-.tier-dot-label{font-size:11px;color:rgba(255,255,231,0.65);font-weight:500}
+.tier-dot-label{font-size:11px;color:#3a6a6a;font-weight:500}
 
 /* ── BOOKING / CALENDAR ── */
 .book-section{background:linear-gradient(135deg,var(--yellow) 0%,#f0ffd8 40%,#e8ffc8 100%);padding:100px 48px}
@@ -352,7 +352,7 @@ nav{
 .highlight-band-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center}
 .highlight-band h2{font-size:clamp(28px,4vw,52px);font-weight:800;color:var(--yellow);letter-spacing:-.03em;line-height:1.05;margin-bottom:0}
 .highlight-band h2 em{font-style:italic;color:var(--cyan)}
-.highlight-band p{font-size:15px;color:rgba(255,255,231,0.65);line-height:1.75;margin-bottom:24px}
+.highlight-band p{font-size:15px;color:#3a6a6a;line-height:1.75;margin-bottom:24px}
 
 /* ── FOOTER ── */
 footer{background:var(--cyan);border-top:2px solid var(--pink);padding:80px 48px 32px;position:relative;overflow:hidden}
@@ -361,16 +361,16 @@ footer{background:var(--cyan);border-top:2px solid var(--pink);padding:80px 48px
 .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
 .footer-brand-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
 .footer-logo{height:44px;width:auto;border-radius:6px}
-.footer-desc{font-size:14px;color:rgba(255,255,231,0.65);line-height:1.7;max-width:340px;margin-bottom:20px}
+.footer-desc{font-size:14px;color:#3a6a6a;line-height:1.7;max-width:340px;margin-bottom:20px}
 .footer-social{display:flex;gap:10px}
-.footer-social-btn{width:36px;height:36px;border-radius:50%;border:1px solid rgba(255,255,231,0.25);display:flex;align-items:center;justify-content:center;color:rgba(255,255,231,0.6);font-size:14px;text-decoration:none;transition:all .15s}
+.footer-social-btn{width:36px;height:36px;border-radius:50%;border:1px solid rgba(58,106,106,0.4);display:flex;align-items:center;justify-content:center;color:#3a6a6a;font-size:14px;text-decoration:none;transition:all .15s}
 .footer-social-btn:hover{border-color:var(--yellow);color:var(--yellow)}
-.footer-col h4{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,231,0.4);margin-bottom:20px}
-.footer-col a{display:block;font-size:14px;font-weight:500;color:rgba(255,255,231,0.7);text-decoration:none;margin-bottom:10px;transition:color .15s}
+.footer-col h4{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5a8a8a;margin-bottom:20px}
+.footer-col a{display:block;font-size:14px;font-weight:500;color:#3a6a6a;text-decoration:none;margin-bottom:10px;transition:color .15s}
 .footer-col a:hover{color:var(--yellow)}
 .footer-bottom{border-top:1px solid rgba(255,255,231,0.1);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
-.footer-copy{font-size:13px;color:rgba(255,255,231,0.4)}
-.footer-dot{display:flex;align-items:center;gap:6px;font-size:13px;color:rgba(255,255,231,0.4)}
+.footer-copy{font-size:13px;color:#3a6a6a}
+.footer-dot{display:flex;align-items:center;gap:6px;font-size:13px;color:#3a6a6a}
 .footer-dot::before{content:'●';font-size:7px;color:var(--pink)}
 
 /* ── TOAST ── */
