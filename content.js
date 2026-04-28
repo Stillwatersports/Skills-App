@@ -1,3 +1,4 @@
+// © 2026 Christian Richards / Stillwater Sports. All rights reserved.
 /**
  * ============================================================
  *  STILLWATER SPORTS — SITE CONTENT
@@ -66,7 +67,7 @@ const CONTENT = {
   home_booking_h2_2:    "on the water?",
   home_booking_desc:    "Pick an open date directly from the live calendar and lock in your session!",
   home_booking_season:  "May through September. Weekdays and weekends available. Book early — summer fills fast.",
-  home_booking_lengths: "Half-day morning or afternoon · Full-day · Multi-day Savings",
+  home_booking_lengths: "Single session · Full day · Multi-day packages",
   home_booking_included:"Boat, fuel, gear, and coach time. No hidden costs.",
   home_booking_location:"Tell us where you are. We handle the drive, the launch, and the lesson.",
   home_booking_pricing: "See our <a href='/pricing'>pricing page</a> for full details.",
@@ -113,89 +114,77 @@ const CONTENT = {
 
   // ── PRICING PAGE ─────────────────────────────────────
   pricing_hero_badge:   "All Inclusive · No Hidden Fees",
-  pricing_hero_l1:      "Taxes inlcuded",
-  pricing_hero_l3:      "",
+  pricing_hero_l1:      "Simple, transparent",
+  pricing_hero_l3:      "pricing.",
 
   pricing_base_eyebrow: "Base Session Packages",
   pricing_base_h2_1:    "Pick your",
   pricing_base_h2_2:    "package.",
   pricing_base_desc:    "All packages include boat, fuel, all equipment, life jackets, and coach time. We come to you.",
 
-  pricing_pkg1_name:    "Half Day",
-  pricing_pkg1_price:   "550",
-  pricing_pkg1_duration:"4 hours · AM or PM",
-  pricing_pkg1_f1:      "Morning or afternoon/evening session",
-  pricing_pkg1_f2:      "All equipment included",
+  pricing_pkg1_name:    "Single Session",
+  pricing_pkg1_price:   "600",
+  pricing_pkg1_duration:"4 hours · Morning, Afternoon, or Evening",
+  pricing_pkg1_f1:      "Morning, afternoon or evening session",
+  pricing_pkg1_f2:      "10% credit toward your next booking",
 
-  pricing_pkg2_name:    "Full Day - Weekday",
-  pricing_pkg2_price:   "850",
-  pricing_pkg2_duration:"A Full day AM + PM ",
-  pricing_pkg2_f1:      "1 hour lunch break",
-  pricing_pkg2_f2:      "Ideal for families",
+  pricing_pkg2_name:    "Full Day — Weekday",
+  pricing_pkg2_price:   "1,000",
+  pricing_pkg2_duration:"8 hours · AM + PM or PM + Eve",
+  pricing_pkg2_f1:      "1 hour lunch break included",
+  pricing_pkg2_f2:      "Ideal for families & groups",
   pricing_pkg2_f3:      "",
 
-  pricing_pkg3_name:    "Full Day - Weekend / Holiday ",
-  pricing_pkg3_price:   "1,000",
-  pricing_pkg3_duration:"Sat, Sun or holiday",
-  pricing_pkg3_f1:      "Weekends book up first",
-  pricing_pkg3_f2:      "Minimum full day on weekends",
-
-  pricing_pkg4_name:    "Full Weekend",
-  pricing_pkg4_price:   "1,800",
-  pricing_pkg4_duration:"Saturday + Sunday back to back",
-  pricing_pkg4_f1:      "Best value for cottage weekends",
-  pricing_pkg4_f2:      "",
-
-  pricing_pkg5_name:    "Holiday Weekend",
-  pricing_pkg5_price:   "2,550",
-  pricing_pkg5_duration:"3-day long weekend package.",
-  pricing_pkg5_f1:      "Sat + Sun + Holiday Mon. or Fri.",
-  pricing_pkg5_f2:      "",
+  pricing_pkg3_name:    "Premium Day",
+  pricing_pkg3_price:   "1,250",
+  pricing_pkg3_duration:"8 hours · Split Day, Weekend, or Holiday",
+  pricing_pkg3_f1:      "Split Day (Morn + Eve) · Weekend · or Holiday",
+  pricing_pkg3_f2:      "Best water conditions both sessions",
 
   pricing_multi_eyebrow:"Multi-Day Packages",
   pricing_multi_h2_1:   "More days,",
   pricing_multi_h2_2:   "more savings.",
-  pricing_multi_desc:   "Book multiple sessions and save. Consecutive bookings get the best rate.",
+  pricing_multi_desc:   "Book multiple days and save. All multi-day packages include your choice of any 2 time slots per day.",
 
-  pricing_multi1_name:  "2 Days — Consecutive",
-  pricing_multi1_price: "1,500",
-  pricing_multi1_dur:   "any 2 consectuvie weekdays",
-  pricing_multi1_f1:    "",
-  pricing_multi1_f2:    "Booked on consecutive days",
+  pricing_multi1_name:  "Double Weekday",
+  pricing_multi1_price: "1,750",
+  pricing_multi1_dur:   "2 consecutive weekdays",
+  pricing_multi1_f1:    "Great value · booked back to back",
+  pricing_multi1_f2:    "Pick any 2 time slots each day",
 
-  pricing_multi2_name:  "",
-  pricing_multi2_price: "",
-  pricing_multi2_dur:   "",
-  pricing_multi2_f1:    "",
-  pricing_multi2_f2:    "",
+  pricing_multi2_name:  "3 Day Work Week",
+  pricing_multi2_price: "2,500",
+  pricing_multi2_dur:   "Any 3 days out of a work week",
+  pricing_multi2_f1:    "Monday to Friday · best value",
+  pricing_multi2_f2:    "Keep the kids busy all week",
 
-  pricing_multi3_name:  "3 Days — out of 5",
-  pricing_multi3_price: "$2,300",
-  pricing_multi3_dur:   "pick any 3 days out of a work week",
-  pricing_multi3_f1:    "Monday to Friday",
-  pricing_multi3_f2:    "",
+  pricing_multi3_name:  "Full Weekend",
+  pricing_multi3_price: "2,100",
+  pricing_multi3_dur:   "Saturday + Sunday",
+  pricing_multi3_f1:    "Best cottage weekend package",
+  pricing_multi3_f2:    "Pick any 2 slots each day",
 
-  pricing_multi4_name:  "5 Days — Consecutive",
-  pricing_multi4_price: "$3,500",
-  pricing_multi4_dur:   "Pick any 5 days out of a full week",
-  pricing_multi4_f1:    "Best Value!",
-  pricing_multi4_f2:    "Immersive week-long progression",
+  pricing_multi4_name:  "5 Day Week",
+  pricing_multi4_price: "4,500",
+  pricing_multi4_dur:   "Any 5 days out of 7 — weekends included!",
+  pricing_multi4_f1:    "Perfect for a week at the cottage!",
+  pricing_multi4_f2:    "\$1,000 savings vs individual days",
 
-  pricing_multi5_name:  "5 Days — A La Carte",
-  pricing_multi5_price: "$3,750",
-  pricing_multi5_dur:   "Any 5 days across the season - Weekends Included!",
-  pricing_multi5_f1:    "",
-  pricing_multi5_f2:    "Subject to availability",
+  pricing_multi5_name:  "Holiday Weekend",
+  pricing_multi5_price: "3,000",
+  pricing_multi5_dur:   "Sat + Sun + Holiday Mon or Fri",
+  pricing_multi5_f1:    "Full 3-day long weekend",
+  pricing_multi5_f2:    "Pick any 2 slots each day",
 
-  pricing_surcharge_tubing:    "+$30/hr — Tubing surcharge. Extra fuel cost.",
-  pricing_surcharge_dist1:     "+$100 flat — 1.5–3hr drive from Ottawa, ON.",
-  pricing_surcharge_dist2:     "+$200 flat — 3–6hr drive from Ottawa, ON.",
+  pricing_surcharge_tubing:    "+\$30/hr — Tubing surcharge. Extra fuel cost. Waived above 2 consecutive days.",
+  pricing_surcharge_dist1:     "+\$100 flat — 1.5–3hr drive from Ottawa, ON.",
+  pricing_surcharge_dist2:     "+\$200 flat — 3–6hr drive from Ottawa, ON.",
 
 
   // ── SPORTS PAGE ───────────────────────────────────────
   sports_hero_badge:    "All Disciplines · One Coach",
   sports_hero_l1:       "Pick your",
-  sports_hero_l3:       "favourite",
+  sports_hero_l3:       "favourite.",
 
   sports_waterski_h2:   "The classic.",
   sports_waterski_p1:   "Waterskiing is where most riders start — and where many spend a lifetime. From your first deep water start on two skis to dropping a ski and carving on one, the progression is structured, achievable, and incredibly satisfying.",
@@ -219,7 +208,7 @@ const CONTENT = {
 
   sports_tubing_h2:     "Hold on. Have fun.",
   sports_tubing_p1:     "Tubing is the gateway to water sports — fun for the whole family, no experience required, and guaranteed to get everyone laughing. Perfect for kids, cottage weekends, and groups with mixed interest levels.",
-  sports_tubing_surcharge: "A <strong>$30/hr fuel surcharge</strong> applies to tubing sessions due to the additional fuel consumption.",
+  sports_tubing_surcharge: "A <strong>\$30/hr fuel surcharge</strong> applies to tubing sessions due to the additional fuel consumption.",
 
 
   // ── EQUIPMENT PAGE ────────────────────────────────────
@@ -253,16 +242,16 @@ const CONTENT = {
   how_hero_l1:          "Simple, from",
   how_hero_l3:          "booking to splash.",
 
-  how_step1_eyebrow:    "Planning and booking your session",
+  how_step1_eyebrow:    "Planning and Booking Your Session",
   how_step1_h2_1:       "Request a date",
   how_step1_h2_2:       "online.",
-  how_step1_p1:         "Available times are blocked by morning, afternoon, and evening. Morning and Evening blocks often offer the best conditions as wind and boat traffic is typically lower than mid-day. For a Single Day during the week we offer the option of either morning + afternoon or afternoon + evening. A premium day is a weekend, holiday or a split weekday, which allows you to book morning and evening on a single day. All Multi-day packages allow you to chose any 2 out of 3 time slots for each of those days.",
-  how_step1_p2:         "Head to the booking page, pick an open date on the live calendar, and fill in your details — your name, lake or cottage area, group size, sport, and skill level. The whole thing takes about 2 minutes. ",
+  how_step1_p1:         "Available times are blocked by morning, afternoon, and evening. Morning and Evening blocks often offer the best conditions as wind and boat traffic is typically lower than mid-day. For a Single Day during the week we offer the option of either morning + afternoon or afternoon + evening. A Premium Day is a weekend, holiday or a split weekday, which allows you to book morning and evening on a single day. All Multi-day packages allow you to choose any 2 out of 3 time slots for each of those days.",
+  how_step1_p2:         "Head to the booking page, pick an open date on the live calendar, and fill in your details — your name, lake or cottage area, group size, sport, and skill level. The whole thing takes about 2 minutes.",
 
   how_step2_eyebrow:    "Within 24 Hours",
   how_step2_h2_1:       "We confirm",
   how_step2_h2_2:       "and plan.",
-  how_step2_p1:         "Within 24 hours we will reach out to confirm the date, discuss your group's goals, choose the best spot on your lake, and tailor a session plan around your skill levels and interests. If you have any questions about the available options or would like to make a request before booking, please contact us",
+  how_step2_p1:         "Within 24 hours we will reach out to confirm the date, discuss your group's goals, choose the best spot on your lake, and tailor a session plan around your skill levels and interests. If you have any questions about the available options or would like to make a request before booking, please contact us.",
   how_step2_p2:         "Once confirmed, a 30% deposit link is sent via Square to secure your booking. Full payment is due 48 hours before your session.",
 
   how_step3_eyebrow:    "Before Your Session",
@@ -283,7 +272,7 @@ const CONTENT = {
   how_step5_p2:         "After your session, all Stillwater Sports students get access to the Stillwater Skills app — track your progress, earn Bronze through Gold badges, and try to unlock the secret Platinum level!",
 
   how_faq1_q:           "Do I need my own boat or lake access?",
-  how_faq1_a:           "No! No boat required, we bring our own. Typically we go to our clients cottage however we can arrange to meet at a public park on a lake near you, or come to us. We also run on the Rideau River in Ottawa. Distance surcharges apply for locations 1.5+ hrs from Manotick. A Boat launch on the same body of water is required. If there are any culverts to pass through, a minimum 8' clearance is required",
+  how_faq1_a:           "No! No boat required, we bring our own. Typically we go to our clients cottage however we can arrange to meet at a public park on a lake near you, or come to us. We also run on the Rideau River in Ottawa. Distance surcharges apply for locations 1.5+ hrs from Ottawa. A boat launch on the same body of water is required. If there are any culverts to pass through, a minimum 8' clearance is required.",
   how_faq2_q:           "What age can kids start?",
   how_faq2_a:           "Kids of all ages are welcome. We have equipment for all sizes. Our youngest skier to date was 2.5 years old! There must be an adult present on shore at all times, waivers are required for all minors.",
   how_faq3_q:           "What if the weather is bad?",
@@ -345,7 +334,6 @@ const CONTENT = {
 
 
 // ── INJECT CONTENT INTO PAGE ─────────────────────────────
-// Any element with data-content="key" gets its innerHTML set from CONTENT
 document.addEventListener('DOMContentLoaded', function() {
   document.querySelectorAll('[data-content]').forEach(function(el) {
     const key = el.getAttribute('data-content');

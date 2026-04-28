@@ -1,3 +1,4 @@
+/* © 2026 Christian Richards / Stillwater Sports. All rights reserved. */
 /* ── RESET ── */
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -20,13 +21,13 @@ body{font-family:'Outfit',sans-serif;background:var(--yellow);color:var(--text);
 nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 32px;height:64px;
+  padding:0 40px;height:80px;
   background:var(--cyan);
   border-bottom:2px solid var(--pink);
 }
 .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
 .nav-links{display:flex;align-items:center;gap:28px}
-.nav-links a{color:var(--yellow);text-decoration:none;font-size:15px;font-weight:600;transition:color .15s}
+.nav-links a{color:var(--yellow);text-decoration:none;font-size:16px;font-weight:600;transition:color .15s}
 .nav-links a:hover,.nav-links a.active{color:#fff}
 .nav-book{
   background:var(--pink);color:var(--yellow);
@@ -40,13 +41,13 @@ nav{
 .nav-book:hover{background:#c0307a;color:var(--yellow)}
 .nav-hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:4px;background:none;border:none}
 .nav-hamburger span{display:block;width:22px;height:2px;background:var(--yellow);border-radius:2px}
-.mobile-menu{display:none;position:fixed;top:64px;left:0;right:0;bottom:0;z-index:99;background:var(--cyan);padding:24px 32px;flex-direction:column;gap:4px;overflow-y:auto}
+.mobile-menu{display:none;position:fixed;top:80px;left:0;right:0;bottom:0;z-index:99;background:var(--cyan);padding:24px 32px;flex-direction:column;gap:4px;overflow-y:auto}
 .mobile-menu.open{display:flex}
 .mobile-menu a{color:var(--yellow);text-decoration:none;font-size:20px;font-weight:600;padding:16px 0;border-bottom:1px solid rgba(255,255,255,0.12)}
 
 /* ── NAV DROPDOWN ── */
 .nav-dropdown{position:relative;display:flex;align-items:center}
-.nav-link-top{color:var(--yellow);text-decoration:none;font-size:15px;font-weight:600;transition:color .15s;cursor:pointer;display:flex;align-items:center;gap:4px}
+.nav-link-top{color:var(--yellow);text-decoration:none;font-size:16px;font-weight:600;transition:color .15s;cursor:pointer;display:flex;align-items:center;gap:4px}
 .nav-link-top:hover,.nav-link-top.active{color:#fff}
 .nav-dropdown-menu{
   display:none;position:absolute;top:calc(100% + 12px);left:50%;transform:translateX(-50%);
@@ -72,7 +73,7 @@ nav{
 .hero-mid{min-height:100dvh}
 .hero-bg{position:absolute;inset:0;z-index:0}
 .hero-coords{
-  position:absolute;top:80px;left:32px;z-index:2;
+  position:absolute;top:96px;left:32px;z-index:2;
   font-size:11px;font-weight:600;letter-spacing:.08em;
   color:rgba(255,255,231,0.5);line-height:1.6;
 }
@@ -360,7 +361,7 @@ footer{background:var(--cyan);border-top:2px solid var(--pink);padding:80px 48px
 .footer-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1}
 .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
 .footer-brand-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.footer-logo{height:44px;width:auto;border-radius:6px}
+.footer-logo{height:80px;width:auto;border-radius:8px}
 .footer-desc{font-size:14px;color:#3a6a6a;line-height:1.7;max-width:340px;margin-bottom:20px}
 .footer-social{display:flex;gap:10px}
 .footer-social-btn{width:36px;height:36px;border-radius:50%;border:1px solid rgba(58,106,106,0.4);display:flex;align-items:center;justify-content:center;color:#3a6a6a;font-size:14px;text-decoration:none;transition:all .15s}

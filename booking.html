@@ -1,3 +1,4 @@
+<!-- © 2026 Christian Richards / Stillwater Sports. All rights reserved. Unauthorized copying or reproduction of this code or content is prohibited. -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -54,6 +55,7 @@
 .faq-a.open{display:block}
 @media(max-width:960px){.booking-layout{grid-template-columns:1fr}.sticky-sidebar{position:static}.form-grid{grid-template-columns:1fr}}
 </style>
+<style>img{pointer-events:none;user-select:none;-webkit-user-drag:none}body{-webkit-user-select:none;user-select:none}</style>
 </head>
 <body><nav>
   <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:60px;width:auto;object-fit:contain;border-radius:8px"/></a>
@@ -121,15 +123,14 @@
           </div>
           <div class="info-card">
             <h3>Session Pricing</h3>
-            <div class="price-row"><span class="price-label">Half Day </span><span class="price-val hl">$550</span></div>
-            <div class="price-row"><span class="price-label">Full Day </span><span class="price-val hl">$850</span></div>
-            <div class="price-row"><span class="price-label">Weekend / Holiday Day</span><span class="price-val hl">$1,000</span></div>
-            <div class="price-row"><span class="price-label">Full Weekend</span><span class="price-val hl">$1,800</span></div>
-            <div class="price-row"><span class="price-label">Holiday Weekend (3 days)</span><span class="price-val hl">$2,350</span></div>
-            <div class="price-row"><span class="price-label">2 Days Consecutive</span><span class="price-val hl">$1,600</span></div>
-            <div class="price-row"><span class="price-label">3 Days Consecutive</span><span class="price-val hl">$2,300</span></div>
-            <div class="price-row"><span class="price-label">5 Days Consecutive</span><span class="price-val hl">$3,500</span></div>
-            <div class="price-row"><span class="price-label">5 Days Spread</span><span class="price-val hl">$3,750</span></div>
+            <div class="price-row"><span class="price-label">Single Session (4 hrs)</span><span class="price-val hl">$600</span></div>
+            <div class="price-row"><span class="price-label">Full Day — Weekday</span><span class="price-val hl">$1,000</span></div>
+            <div class="price-row"><span class="price-label">Premium Day</span><span class="price-val hl">$1,250</span></div>
+            <div class="price-row"><span class="price-label">Double Weekday</span><span class="price-val hl">$1,750</span></div>
+            <div class="price-row"><span class="price-label">Full Weekend</span><span class="price-val hl">$2,100</span></div>
+            <div class="price-row"><span class="price-label">3 Day Work Week</span><span class="price-val hl">$2,500</span></div>
+            <div class="price-row"><span class="price-label">Holiday Weekend</span><span class="price-val hl">$3,000</span></div>
+            <div class="price-row"><span class="price-label">5 Day Week</span><span class="price-val hl">$4,500</span></div>
             <div class="price-row" style="border-top:1px solid rgba(0,0,0,0.08);margin-top:4px;padding-top:12px"><span class="price-label">Deposit (non-refundable)</span><span class="price-val" style="color:var(--pink)">30%</span></div>
             <a href="/pricing" style="display:block;text-align:center;font-size:12px;font-weight:600;color:var(--cyan);margin-top:12px;text-decoration:none">View Full Pricing →</a>
           </div>
@@ -195,15 +196,14 @@
             <div class="form-field"><label>Session Type</label>
               <select id="b-session">
                 <option value="">Select...</option>
-                <option>Half Day — $550</option>
-                <option>Full Day — $850</option>
-                <option>Weekend / Holiday Day — $1,000</option>
-                <option>Full Weekend (2 days) — $1,800</option>
-                <option>Holiday Weekend (3 days) — $2,350</option>
-                <option>2 Days Consecutive — $1,600</option>
-                <option>3 Days Consecutive — $2,300</option>
-                <option>5 Days Consecutive — $3,500</option>
-                <option>5 Days Spread — $3,750</option>
+                <option>Single Session (4 hrs) — $600</option>
+                <option>Full Day — Weekday — $1,000</option>
+                <option>Premium Day (Split/Weekend/Holiday) — $1,250</option>
+                <option>Double Weekday — $1,750</option>
+                <option>Full Weekend (Sat+Sun) — $2,100</option>
+                <option>3 Day Work Week — $2,500</option>
+                <option>Holiday Weekend — $3,000</option>
+                <option>5 Day Week — $4,500</option>
                 <option>Not sure yet</option>
               </select>
             </div>
