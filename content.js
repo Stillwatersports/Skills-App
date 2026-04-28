@@ -113,33 +113,34 @@ const CONTENT = {
 
 
   // ── PRICING PAGE ─────────────────────────────────────
-  pricing_hero_badge:   "All Inclusive · No Hidden Fees",
-  pricing_hero_l1:      "Simple, transparent",
-  pricing_hero_l3:      "pricing.",
+  pricing_hero_badge:   "All Inclusive · No Hidden Fees · Tax Included",
+  pricing_hero_l1:      "2 Sessions per day",
+  pricing_hero_l3:      "Choose from Morning, Afternoon or Evening",
 
   pricing_base_eyebrow: "Base Session Packages",
   pricing_base_h2_1:    "Pick your",
   pricing_base_h2_2:    "package.",
-  pricing_base_desc:    "All packages include boat, fuel, all equipment, life jackets, and coach time. We come to you.",
+  pricing_base_desc:    "Morning and Evening time slots usually offer the best condiitions due to reduced boat traffic and lower wind speeds. All packages include tax, boat, fuel, equipment, life jackets, and coach time. We come to you!",
 
   pricing_pkg1_name:    "Single Session",
   pricing_pkg1_price:   "600",
-  pricing_pkg1_duration:"4 hours · Morning, Afternoon, or Evening",
+  pricing_pkg1_duration:" · 4 hours · ",
   pricing_pkg1_f1:      "Morning, afternoon or evening session",
-  pricing_pkg1_f2:      "10% credit toward your next booking",
+  pricing_pkg1_f2:      "<strong>10% credit toward your next booking</strong>",
+  pricing_pkg1_f3:      "The perfect deal if your just testing the water!",
 
   pricing_pkg2_name:    "Full Day — Weekday",
   pricing_pkg2_price:   "1,000",
-  pricing_pkg2_duration:"8 hours · AM + PM or PM + Eve",
+  pricing_pkg2_duration:" · Morning + Afternoon or Afternoon + Evening · ",
   pricing_pkg2_f1:      "1 hour lunch break included",
   pricing_pkg2_f2:      "Ideal for families & groups",
   pricing_pkg2_f3:      "",
 
   pricing_pkg3_name:    "Premium Day",
   pricing_pkg3_price:   "1,250",
-  pricing_pkg3_duration:"8 hours · Split Day, Weekend, or Holiday",
-  pricing_pkg3_f1:      "Split Day (Morn + Eve) · Weekend · or Holiday",
-  pricing_pkg3_f2:      "Best water conditions both sessions",
+  pricing_pkg3_duration:" · Split Day, Weekend, or Holiday",
+  pricing_pkg3_f1:      "Weekends book fast!",
+  pricing_pkg3_f2:      "Book a split day during the week for the best conditions",
 
   pricing_multi_eyebrow:"Multi-Day Packages",
   pricing_multi_h2_1:   "More days,",
@@ -149,13 +150,14 @@ const CONTENT = {
   pricing_multi1_name:  "Double Weekday",
   pricing_multi1_price: "1,750",
   pricing_multi1_dur:   "2 consecutive weekdays",
-  pricing_multi1_f1:    "Great value · booked back to back",
+  pricing_multi1_f1:    "Booked back to back",
   pricing_multi1_f2:    "Pick any 2 time slots each day",
+  pricing_multi1_f3:    "Great Value!",
 
   pricing_multi2_name:  "3 Day Work Week",
   pricing_multi2_price: "2,500",
-  pricing_multi2_dur:   "Any 3 days out of a work week",
-  pricing_multi2_f1:    "Monday to Friday · best value",
+  pricing_multi2_dur:   "Any 3 days",
+  pricing_multi2_f1:    "Monday to Friday",
   pricing_multi2_f2:    "Keep the kids busy all week",
 
   pricing_multi3_name:  "Full Weekend",
