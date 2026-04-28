@@ -113,7 +113,7 @@ const CONTENT = {
 
 
   // ── PRICING PAGE ─────────────────────────────────────
-  pricing_hero_badge:   "All Inclusive · No Hidden Fees",
+  pricing_hero_badge:   "All Inclusive · No Hidden Fees · No Taxes",
   pricing_hero_l1:      "Simple, transparent",
   pricing_hero_l3:      "pricing.",
 
