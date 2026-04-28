@@ -75,7 +75,7 @@
     <div class="content-grid-2" style="gap:64px;margin-bottom:80px;padding-bottom:80px;border-bottom:1px solid rgba(0,200,212,0.15)">
       <div>
         <div style="font-size:100px;font-weight:800;line-height:1;color:rgba(0,200,212,0.12);letter-spacing:-.05em;margin-bottom:-10px">01</div>
-        <div class="eyebrow">First Step</div>
+        <div class="eyebrow" data-content="how_step1_eyebrow">First Step</div>
         <h2 class="big-title" style="margin-bottom:20px">Request a date<br><em>online.</em></h2>
         <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:16px">Head to the booking page, pick an open date on the live calendar, and fill in your details — your name, lake or cottage area, group size, sport, and skill level. The whole thing takes about 2 minutes.</p>
         <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:24px">No phone calls needed. No back-and-forth emails. Just submit your request and we take it from there.</p>
@@ -92,7 +92,7 @@
       </div>
       <div>
         <div style="font-size:100px;font-weight:800;line-height:1;color:rgba(0,200,212,0.12);letter-spacing:-.05em;margin-bottom:-10px">02</div>
-        <div class="eyebrow">Within 24 Hours</div>
+        <div class="eyebrow" data-content="how_step2_eyebrow">Within 24 Hours</div>
         <h2 class="big-title" style="margin-bottom:20px">We confirm<br><em>and plans.</em></h2>
         <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:16px">Within 24 hours We will reach out to confirm the date, discuss your group's goals, choose the best spot on your lake, and tailor a session plan around your skill levels and interests.</p>
         <p style="font-size:16px;color:var(--muted);line-height:1.8">Once confirmed, a 30% deposit link is sent via Square to secure your booking. Full payment is due 48 hours before your session.</p>
@@ -105,7 +105,7 @@
       </div>
       <div>
         <div style="font-size:100px;font-weight:800;line-height:1;color:rgba(0,200,212,0.12);letter-spacing:-.05em;margin-bottom:-10px">03</div>
-        <div class="eyebrow">Before Your Session</div>
+        <div class="eyebrow" data-content="how_step3_eyebrow">Before Your Session</div>
         <h2 class="big-title" style="margin-bottom:20px">Athlete<br><em>prep.</em></h2>
         <p style="font-size:16px;color:var(--muted);line-height:1.8;">Leading up to our session we will send some resources for all athletes to look over including some videos that will cover all of the pre-session rules, instructions and how-to's so that we can maximize our time on the water!</p>
       </div>
@@ -114,7 +114,7 @@
     <div class="content-grid-2" style="gap:64px;margin-bottom:80px;padding-bottom:80px;border-bottom:1px solid rgba(0,200,212,0.15)">
       <div>
         <div style="font-size:100px;font-weight:800;line-height:1;color:rgba(0,200,212,0.12);letter-spacing:-.05em;margin-bottom:-10px">04</div>
-        <div class="eyebrow">Session Day</div>
+        <div class="eyebrow" data-content="how_step4_eyebrow">Session Day</div>
         <h2 class="big-title" style="margin-bottom:20px">We come to your lake.<br><em>Fully set up.</em></h2>
         <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:16px">On the day of your session We arrive at your lake with everything — the Sanger DLX boat, all equipment, life jackets, and a structured plan ready to go. You don't need to bring a single thing except yourselves.</p>
         <p style="font-size:16px;color:var(--muted);line-height:1.8"><strong>What to bring:</strong> Swimwear, sunscreen, water, snacks, and a towel. Everything else is provided.</p>
@@ -130,7 +130,7 @@
       </div>
       <div>
         <div style="font-size:100px;font-weight:800;line-height:1;color:rgba(0,200,212,0.12);letter-spacing:-.05em;margin-bottom:-10px">05</div>
-        <div class="eyebrow">On the Water</div>
+        <div class="eyebrow" data-content="how_step5_eyebrow">On the Water</div>
         <h2 class="big-title" style="margin-bottom:20px">Learn, progress,<br><em>have fun.</em></h2>
         <p style="font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:16px">Every session follows a structured progression — starting with safety and fundamentals, building through skills at the right pace for each rider. Our progressive system is designed so that everyone gets up on their first session.</p>
         <p style="font-size:16px;color:var(--muted);line-height:1.8">After your session, all Stillwater Sports students get access to the Stillwater Skills app — track your progress, earn Bronze through Platinum badges, and pick up exactly where you left off next time, or submit your videos in the app for approvals of a new skill! </p>
@@ -199,5 +199,6 @@ document.addEventListener('click',function(e){
 function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
 document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
 </script>
+<script src="./content.js"></script>
 </body>
 </html>

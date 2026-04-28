@@ -78,14 +78,14 @@
 <section style="background:var(--yellow)">
   <div class="s">
     <div class="content-grid-2" style="margin-bottom:64px;padding-bottom:64px;border-bottom:1px solid rgba(0,200,212,0.15)">
-      <div><div id="waterski" style="scroll-margin-top:80px"></div><div class="eyebrow">01 · Waterski</div><h2 class="big-title" style="margin-bottom:20px">The <em>classic.</em></h2>
+      <div><div id="waterski" style="scroll-margin-top:80px"></div><div class="eyebrow">01 · Waterski</div><h2 class="big-title" style="margin-bottom:20px">The <em data-content="sports_waterski_h2">classic.</em></h2>
       <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:16px">Waterskiing is where most riders start — and where many spend a lifetime. From your first deep water start on two skis to dropping a ski and carving on one, the progression is structured, achievable, and incredibly satisfying.</p>
       <p style="font-size:15px;color:var(--muted);line-height:1.8">We teach waterskiing from absolute beginner through advanced slalom technique, wake crossings, and slalom course introduction. Every session builds on the last.</p></div>
       <div style="background:url('./waterski.jpg') center/cover no-repeat,linear-gradient(160deg,#004a60,#007080);border-radius:var(--radius);aspect-ratio:4/3"></div>
     </div>
     <div class="content-grid-2" style="margin-bottom:64px;padding-bottom:64px;border-bottom:1px solid rgba(0,200,212,0.15)">
       <div style="background:url('./wakeboard.jpg') center/cover no-repeat,linear-gradient(160deg,#003848,#005870);border-radius:var(--radius);aspect-ratio:4/3"></div>
-      <div><div id="wakeboard" style="scroll-margin-top:80px"></div><div class="eyebrow">02 · Wakeboard</div><h2 class="big-title" style="margin-bottom:20px">Pop, grab, <em>land.</em></h2>
+      <div><div id="wakeboard" style="scroll-margin-top:80px"></div><div class="eyebrow">02 · Wakeboard</div><h2 class="big-title" style="margin-bottom:20px">Pop, grab, <em data-content="sports_wakeboard_h2">land.</em></h2>
       <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:16px">Wakeboarding is the most popular discipline on the water — and for good reason. The learning curve is fast, the tricks are visual, and the feeling of catching air off the wake never gets old.</p>
       <p style="font-size:15px;color:var(--muted);line-height:1.8">From your first edge cut and wake jump through heelside 180s, toeside tricks, and inverts — coaching is structured around clean technique first, progression second. Basic skills are completed and mastered before moving up.</p></div>
     </div>
@@ -97,7 +97,7 @@
     </div>
     <div class="content-grid-2" style="margin-bottom:64px;padding-bottom:64px;border-bottom:1px solid rgba(0,200,212,0.15)">
       <div style="background:url('./slalom.jpg') center/cover no-repeat,linear-gradient(160deg,#003850,#005a70);border-radius:var(--radius);aspect-ratio:4/3"></div>
-      <div><div id="slalom" style="scroll-margin-top:80px"></div><div class="eyebrow">04 · Slalom</div><h2 class="big-title" style="margin-bottom:20px">Six buoys.<br><em>One ski.</em></h2>
+      <div><div id="slalom" style="scroll-margin-top:80px"></div><div class="eyebrow">04 · Slalom</div><h2 class="big-title" style="margin-bottom:20px">Six buoys.<br><em data-content="sports_slalom_h2">One ski.</em></h2>
       <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:16px">Slalom skiing is the technical pinnacle of waterski — threading six buoys on one ski at increasing speeds and shortening rope lengths. It demands precise edge control, timing, and body position.</p>
       <p style="font-size:15px;color:var(--muted);line-height:1.8">We coach slalom from first one-ski attempts through course introduction, gate entries, and shortline technique. Perfect Pass on the boat ensures consistent, precise speeds every pass.</p></div>
     </div>
@@ -157,5 +157,6 @@ document.addEventListener('click',function(e){
 function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
 document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
 </script>
+<script src="./content.js"></script>
 </body>
 </html>
