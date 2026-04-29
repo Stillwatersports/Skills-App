@@ -13,7 +13,6 @@
 <style>img{pointer-events:none;user-select:none;-webkit-user-drag:none}body{-webkit-user-select:none;user-select:none}</style>
 </head>
 <body><nav>
-  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:60px;width:auto;object-fit:contain;border-radius:8px"/></a>
   <div class="nav-links">
     <div class="nav-dropdown">
       <a href="javascript:void(0)" class="nav-link-top active" onclick="toggleDropdown(event,'about-menu')">About ▾</a>
@@ -33,11 +32,14 @@
       </div>
     </div>
     <a href="/pricing">Pricing</a>
+  </div>
+  <a href="/" class="nav-brand"><img src="./Sports_clear_bg.png" alt="Stillwater Sports" style="height:68px;width:auto;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.25))"/></a>
+  <div class="nav-links-right">
     <a href="/booking">Booking</a>
     <a href="/contact">Contact</a>
     <a href="/app">Stillwater Skills App</a>
+    <a href="/booking" class="nav-book">Book Now</a>
   </div>
-  <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
@@ -153,11 +155,11 @@
 
 
 <script src="./content.js"></script>
+
 <script>
 function toggleDropdown(e, menuId){
   e.preventDefault();
   e.stopPropagation();
-  // Close all menus first
   document.querySelectorAll('.nav-dropdown-menu').forEach(m => {
     if(m.id !== menuId) m.classList.remove('open');
   });

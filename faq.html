@@ -27,10 +27,9 @@
 <body>
 
 <nav>
-  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:60px;width:auto;object-fit:contain;border-radius:8px"/></a>
   <div class="nav-links">
     <div class="nav-dropdown">
-      <a href="javascript:void(0)" class="nav-link-top" onclick="toggleDropdown(event,'about-menu')">About ▾</a>
+      <a href="javascript:void(0)" class="nav-link-top " onclick="toggleDropdown(event,'about-menu')">About ▾</a>
       <div class="nav-dropdown-menu" id="about-menu">
         <a href="/about">Meet the Coach</a>
         <a href="/sports">Sports</a>
@@ -47,11 +46,14 @@
       </div>
     </div>
     <a href="/pricing">Pricing</a>
+  </div>
+  <a href="/" class="nav-brand"><img src="./Sports_clear_bg.png" alt="Stillwater Sports" style="height:68px;width:auto;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.25))"/></a>
+  <div class="nav-links-right">
     <a href="/booking">Booking</a>
     <a href="/contact">Contact</a>
     <a href="/app">Stillwater Skills App</a>
+    <a href="/booking" class="nav-book">Book Now</a>
   </div>
-  <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
@@ -69,7 +71,7 @@
 </div>
 
 <section class="hero hero-short">
-   <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,80,100,0.6) 0%,rgba(0,50,70,0.5) 100%),url('./faq-hero.jpg') center/cover no-repeat;background-color:var(--cyan)"></div>
+  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,60,80,0.75) 0%,rgba(0,40,60,0.65) 100%);background-color:var(--dark)"></div>
   <div class="hero-coords">N 45°<br>OTTAWA</div>
   <div class="hero-content" style="margin-left:auto;max-width:660px">
     <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)">Common Questions · Honest Answers</div>
@@ -231,6 +233,8 @@
 </footer>
 
 <div id="toast"></div>
+
+<script src="./content.js"></script>
 <script>
 function toggleDropdown(e, menuId){
   e.preventDefault();
@@ -247,17 +251,6 @@ document.addEventListener('click',function(e){
 });
 function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
 document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
-
-function toggleFaq(btn){
-  const answer = btn.nextElementSibling;
-  const isOpen = btn.classList.contains('open');
-  // close all
-  document.querySelectorAll('.faq-q').forEach(b => b.classList.remove('open'));
-  document.querySelectorAll('.faq-a').forEach(a => a.classList.remove('open'));
-  // open this one if it was closed
-  if(!isOpen){ btn.classList.add('open'); answer.classList.add('open'); }
-}
 </script>
-<script src="./content.js"></script>
 </body>
 </html>

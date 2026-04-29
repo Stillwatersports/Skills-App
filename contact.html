@@ -15,7 +15,6 @@
 <body>
 
 <nav>
-  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:60px;width:auto;object-fit:contain;border-radius:8px"/></a>
   <div class="nav-links">
     <div class="nav-dropdown">
       <a href="javascript:void(0)" class="nav-link-top " onclick="toggleDropdown(event,'about-menu')">About ▾</a>
@@ -35,11 +34,14 @@
       </div>
     </div>
     <a href="/pricing">Pricing</a>
+  </div>
+  <a href="/" class="nav-brand"><img src="./Sports_clear_bg.png" alt="Stillwater Sports" style="height:68px;width:auto;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.25))"/></a>
+  <div class="nav-links-right">
     <a href="/booking">Booking</a>
     <a href="/contact" class="active">Contact</a>
     <a href="/app">Stillwater Skills App</a>
+    <a href="/booking" class="nav-book">Book Now</a>
   </div>
-  <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
@@ -57,7 +59,7 @@
 </div>
 
 <section class="hero hero-short">
-  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,80,100,0.65) 0%,rgba(0,50,70,0.55) 100%),url('./contact-hero.jpeg') center 40%/cover no-repeat;background-color:var(--cyan)"></div>
+  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,80,100,0.65) 0%,rgba(0,50,70,0.55) 100%),url('./hero.jpg') center 40%/cover no-repeat;background-color:var(--cyan)"></div>
   <div class="hero-coords">N 45°<br>OTTAWA</div>
   <div class="hero-content" style="margin-left:auto;max-width:660px">
     <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)" data-content="contact_hero_badge"></div>
@@ -200,11 +202,11 @@
 
 
 <script src="./content.js"></script>
+
 <script>
 function toggleDropdown(e, menuId){
   e.preventDefault();
   e.stopPropagation();
-  // Close all menus first
   document.querySelectorAll('.nav-dropdown-menu').forEach(m => {
     if(m.id !== menuId) m.classList.remove('open');
   });
