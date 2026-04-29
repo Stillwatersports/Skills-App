@@ -346,6 +346,15 @@ const CONTENT = {
   app_clubs_plan1:      "Free Tier Available",
   app_clubs_plan2:      "Club Plan — $49/mo",
   app_clubs_plan3:      "Pro Plan — $99/mo",
+  // ── BOOKING HERO ──────────────────────────────────────
+  booking_hero_badge:   "Live Availability · 24hr Confirmation",
+  booking_hero_l1:      "Book your",
+  booking_hero_l3:      "session.",
+
+  // ── POLICIES HERO ─────────────────────────────────────
+  policies_hero_badge:  "Transparency · Trust · Safety",
+  policies_hero_l1:     "Policies &",
+  policies_hero_l3:     "Legal.",
 
 };
 
@@ -359,14 +368,3 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 })
-  // ── BOOKING HERO ──────────────────────────────────────
-  booking_hero_badge:   "Live Availability · 24hr Confirmation",
-  booking_hero_l1:      "Book your",
-  booking_hero_l3:      "session.",
-
-  // ── POLICIES HERO ─────────────────────────────────────
-  policies_hero_badge:  "Transparency · Trust · Safety",
-  policies_hero_l1:     "Policies &",
-  policies_hero_l3:     "Legal.",
-
-};
