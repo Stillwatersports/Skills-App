@@ -90,6 +90,13 @@ const CONTENT = {
   about_stat2_num:      "Thousands",
   about_stat2_label:    "of new waterskiers coached",
 
+
+  about_cred1_text:     "Certified through Water Ski & Wakeboard Canada — the national governing body for the sport. The highest coaching certification available in Canada.",
+  about_cred2_text:     "National Lifeguard certification with CPR-C and Standard First Aid. Every session on the water is run with full emergency preparedness.",
+  about_cred3_text:     "The foundational Canadian coaching certification covering technique, teaching methodology, and on-water instruction from beginner through advanced.",
+  about_cred4_text:     "Actively competing in all three barefoot disciplines: slalom, trick, and jump — bringing real competitive insight to every coaching session without forgetting the fun!",
+  about_cred5_text:     "Volunteer board member for Water Ski & Wakeboard Canada and formerly for the Ottawa Water Ski Club. Invested in growing the sport at a national level.",
+  about_cred6_text:     "Over 52 weeks as a camper, Leader In Training, Counsellor In Training, and three seasons as a waterski instructor at HOC in South River, ON — one of Canada's most respected waterski programs.",
   about_cred_eyebrow:   "Credentials",
   about_cred_h2_1:      "Certified.",
   about_cred_h2_2:      "Experienced. Safe.",
@@ -106,6 +113,11 @@ const CONTENT = {
   about_cred6_title:    "Hockey Opportunity Camp",
   about_cred6_text:     "Over 52 weeks as a camper, Leader In Training, Counsellor In Training, and three seasons as a waterski instructor at HOC in South River, ON — one of Canada's most respected waterski programs.",
 
+
+  about_story_h2_1:     "Born on",
+  about_story_h2_2:     "the water.",
+  about_cred_h2_1:      "Certified.",
+  about_cred_h2_2:      "Experienced. Safe.",
   about_cta_eyebrow:    "Ready to Ride?",
   about_cta_h2:         "Book a session now!",
   about_cta_desc:       "Spots are limited — summer fills fast.",
@@ -201,6 +213,9 @@ const CONTENT = {
   sports_wakesurf_p2:   "Coaching covers getting up, finding the sweet spot in the wave, dropping the rope, and eventually shredding turns and tricks. The ballast bags and surf tabs on the Sanger DLX create an excellent wave for learning.",
 
   sports_slalom_h2:     "Six buoys.<br><em>One ski.</em>",
+  sports_wakesurf_h2:   "Drop the rope…<br><em>And surf.</em>",
+  sports_barefoot_h2:   "No skis.<br><em>Just feet.</em>",
+  sports_tubing_h2:     "Hold on.<br><em>Have fun.</em>",
   sports_slalom_p1:     "Slalom skiing is the technical pinnacle of waterski — threading six buoys on one ski at increasing speeds and shortening rope lengths. It demands precise edge control, timing, and body position.",
   sports_slalom_p2:     "We coach slalom from first one-ski attempts through course introduction, gate entries, and shortline technique. Perfect Pass on the boat ensures consistent, precise speeds every pass.",
 
@@ -219,7 +234,7 @@ const CONTENT = {
   equip_hero_l3:        "",
 
   equip_boat_eyebrow:   "The Boat",
-  equip_boat_h2:        "Sanger DLX.",
+  equip_boat_h2:        "Sanger <em>DLX.</em>",
   equip_boat_p1:        "Sanger boats are one of the most respected manufacturers in competitive water sports — The DLX, is specifically chosen for its hull design, wake shape, and performance at both ski and wakeboard speeds. This isn't a recreational runabout. It's a purpose-built all-watersports platform. The open bow design allows up to 8 passengers comfortably!",
   equip_boat_p2:        "The hull design means the boat performs across every discipline — clean, flat wakes for slalom and barefoot, configurable wave for wakeboard and wakesurf, and stable, predictable handling that lets the driver focus entirely on the rider.",
 
@@ -343,4 +358,15 @@ document.addEventListener('DOMContentLoaded', function() {
       el.innerHTML = CONTENT[key];
     }
   });
-});
+})
+  // ── BOOKING HERO ──────────────────────────────────────
+  booking_hero_badge:   "Live Availability · 24hr Confirmation",
+  booking_hero_l1:      "Book your",
+  booking_hero_l3:      "session.",
+
+  // ── POLICIES HERO ─────────────────────────────────────
+  policies_hero_badge:  "Transparency · Trust · Safety",
+  policies_hero_l1:     "Policies &",
+  policies_hero_l3:     "Legal.",
+
+};
