@@ -262,7 +262,7 @@ const CONTENT = {
   how_step1_eyebrow:    "Planning and Booking Your Session",
   how_step1_h2_1:       "Request a date",
   how_step1_h2_2:       "online.",
-  how_step1_p1:         "Available times are blocked by morning, afternoon, and evening. Morning and evening blocks often offer great conditions as wind and boat traffic is typically lower than mid-day. For a Single Day during the week we offer the option of either morning + afternoon or afternoon + evening. A Premium Day is a weekend, holiday or a split weekday, which allows you to book morning and evening on a single day. All Multi-day packages allow you to choose any 2 out of 3 time slots for each of those days.",
+  how_step1_p1:         "Available times are blocked by morning, afternoon, and evening. Morning and evening blocks often offer great conditions as wind and boat traffic is typically lower than mid-day. For a Single Day during the week we offer the option of either morning + afternoon or afternoon + evening. A Premium Day is a weekend, holiday or a split weekday, which allows you to book morning and evening on a single day during the week. All Multi-day packages allow you to choose any 2 out of 3 time slots for each of those days.",
   how_step1_p2:         "Check our booking page for available dates and please feel free to contact us if you ave questions before requesting dates",
 
   how_step2_eyebrow:    "Within 24 Hours",
@@ -279,7 +279,7 @@ const CONTENT = {
   how_step4_eyebrow:    "Session Day",
   how_step4_h2_1:       "We come to your lake.",
   how_step4_h2_2:       "Fully set up.",
-  how_step4_p1:         "On the day of your session we arrive at your lake with everything — the boat, all equipment, life jackets, and a structured plan ready to go.",
+  how_step4_p1:         "On the day of your session we arrive with a structured plan, ready to go. We will review the plan, rules, signals, techniques and safety protocol with the whole group. We will run lessons from the 'staging area' which can be a cottage, a park, or a beach. An adult is not required in the boat but is required to be present on shore if there are minors participating.",
   how_step4_bring:      "<strong>What to bring:</strong> Swimwear, sunscreen, water, snacks, and a towel. Everything else is provided.",
 
   how_step5_eyebrow:    "On the Water",
