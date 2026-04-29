@@ -20,7 +20,7 @@ const CONTENT = {
 
   // ── GLOBAL ─────────────────────────────────────────────
   business_name:        "Stillwater Sports",
-  business_tagline:     "Ontario Cottage Country",
+  business_tagline:     "Learn to Ride with StillWaterSports",
   business_email:       "christian@learnwatersports.ca",
   business_bookings_email: "bookings@learnwatersports.ca",
   business_location:    "Ottawa ON",
@@ -66,7 +66,7 @@ const CONTENT = {
   home_booking_h2_1:    "Ready to get",
   home_booking_h2_2:    "on the water?",
   home_booking_desc:    "Pick an open date directly from the live calendar and lock in your session!",
-  home_booking_season:  "May through September. Weekdays and weekends available. Book early — summer fills fast.",
+  home_booking_season:  "May through September. Weekdays and weekends available. Book early — summer fills up fast.",
   home_booking_lengths: "Single session · Full day · Multi-day packages",
   home_booking_included:"Boat, fuel, gear, and coach time. No hidden costs.",
   home_booking_location:"Tell us where you are. We handle the drive, the launch, and the lesson.",
@@ -215,12 +215,12 @@ const CONTENT = {
 
   // ── EQUIPMENT PAGE ────────────────────────────────────
   equip_hero_badge:     "Professional Grade · All Included",
-  equip_hero_l1:        "The right boat.",
-  equip_hero_l3:        "The right gear.",
+  equip_hero_l1:        "The right stuff.",
+  equip_hero_l3:        "",
 
   equip_boat_eyebrow:   "The Boat",
   equip_boat_h2:        "Sanger DLX.",
-  equip_boat_p1:        "Sanger boats are one of the most respected manufacturers in competitive water sports — The DLX specifically chosen for its hull design, wake shape, and performance at both ski and wakeboard speeds. This isn't a recreational runabout. It's a purpose-built all-watersports platform. The open bow design allows up to 8 passengers comfortably!",
+  equip_boat_p1:        "Sanger boats are one of the most respected manufacturers in competitive water sports — The DLX, is specifically chosen for its hull design, wake shape, and performance at both ski and wakeboard speeds. This isn't a recreational runabout. It's a purpose-built all-watersports platform. The open bow design allows up to 8 passengers comfortably!",
   equip_boat_p2:        "The hull design means the boat performs across every discipline — clean, flat wakes for slalom and barefoot, configurable wave for wakeboard and wakesurf, and stable, predictable handling that lets the driver focus entirely on the rider.",
 
   equip_feat1_title:    "Perfect Pass",
@@ -247,18 +247,18 @@ const CONTENT = {
   how_step1_eyebrow:    "Planning and Booking Your Session",
   how_step1_h2_1:       "Request a date",
   how_step1_h2_2:       "online.",
-  how_step1_p1:         "Available times are blocked by morning, afternoon, and evening. Morning and Evening blocks often offer the best conditions as wind and boat traffic is typically lower than mid-day. For a Single Day during the week we offer the option of either morning + afternoon or afternoon + evening. A Premium Day is a weekend, holiday or a split weekday, which allows you to book morning and evening on a single day. All Multi-day packages allow you to choose any 2 out of 3 time slots for each of those days.",
-  how_step1_p2:         "Head to the booking page, pick an open date on the live calendar, and fill in your details — your name, lake or cottage area, group size, sport, and skill level. The whole thing takes about 2 minutes.",
+  how_step1_p1:         "Available times are blocked by morning, afternoon, and evening. Morning and evening blocks often offer great conditions as wind and boat traffic is typically lower than mid-day. For a Single Day during the week we offer the option of either morning + afternoon or afternoon + evening. A Premium Day is a weekend, holiday or a split weekday, which allows you to book morning and evening on a single day. All Multi-day packages allow you to choose any 2 out of 3 time slots for each of those days.",
+  how_step1_p2:         "Check our booking page for available dates and please feel free to contact us if you ave questions before requesting dates",
 
   how_step2_eyebrow:    "Within 24 Hours",
   how_step2_h2_1:       "We confirm",
   how_step2_h2_2:       "and plan.",
-  how_step2_p1:         "Within 24 hours we will reach out to confirm the date, discuss your group's goals, choose the best spot on your lake, and tailor a session plan around your skill levels and interests. If you have any questions about the available options or would like to make a request before booking, please contact us.",
+  how_step2_p1:         "Within 24 hours we will reach out to confirm the date, discuss your group's goals, choose the best spot on your lake, and tailor a session plan around your groups skill levels and interests. If you have any questions about the available options or would like to make a request before booking, please contact us.",
   how_step2_p2:         "Once confirmed, a 30% deposit link is sent via Square to secure your booking. Full payment is due 48 hours before your session.",
 
   how_step3_eyebrow:    "Before Your Session",
   how_step3_h2_1:       "Athlete",
-  how_step3_h2_2:       "prep.",
+  how_step3_h2_2:       "preparation.",
   how_step3_p1:         "Leading up to our session we will send some resources for all athletes to look over including some videos that will cover all of the pre-session rules, instructions and how-to's so that we can maximize our time on the water!",
 
   how_step4_eyebrow:    "Session Day",
@@ -271,7 +271,7 @@ const CONTENT = {
   how_step5_h2_1:       "Learn, progress,",
   how_step5_h2_2:       "have fun.",
   how_step5_p1:         "Every session follows a structured progression — starting with safety and fundamentals, building through skills at the right pace for each rider. Our progressive system is designed so that everyone gets up on their first session.",
-  how_step5_p2:         "After your session, all Stillwater Sports students get access to the Stillwater Skills app — track your progress, earn Bronze through Gold badges, and try to unlock the secret Platinum level!",
+  how_step5_p2:         "After your session, all Stillwater Sports athlets get access to the Stillwater Skills app — track your progress, earn Bronze through Gold badges, and try to unlock the secret Platinum level!",
 
   how_faq1_q:           "Do I need my own boat or lake access?",
   how_faq1_a:           "No! No boat required, we bring our own. Typically we go to our clients cottage however we can arrange to meet at a public park on a lake near you, or come to us. We also run on the Rideau River in Ottawa. Distance surcharges apply for locations 1.5+ hrs from Ottawa. A boat launch on the same body of water is required. If there are any culverts to pass through, a minimum 8' clearance is required.",
@@ -286,9 +286,9 @@ const CONTENT = {
 
 
   // ── CONTACT PAGE ──────────────────────────────────────
-  contact_hero_badge:   "Response Within 24 Hours",
-  contact_hero_l1:      "Get in",
-  contact_hero_l3:      "touch.",
+  contact_hero_badge:   "Got Questions?",
+  contact_hero_l1:      "We Have ",
+  contact_hero_l3:      "Answers!",
 
   contact_form_eyebrow: "Send a Message",
   contact_form_h2_1:    "Ask us",
