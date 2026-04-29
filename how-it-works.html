@@ -16,31 +16,42 @@
 <body>
 
 <nav>
-  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:60px;width:auto;object-fit:contain;border-radius:8px"/></a>
   <div class="nav-links">
     <div class="nav-dropdown">
-      <a href="javascript:void(0)" class="nav-link-top" onclick="toggleDropdown(event)">About ▾</a>
-      <div class="nav-dropdown-menu">
+      <a href="javascript:void(0)" class="nav-link-top " onclick="toggleDropdown(event,'about-menu')">About ▾</a>
+      <div class="nav-dropdown-menu" id="about-menu">
         <a href="/about">Meet the Coach</a>
         <a href="/sports">Sports</a>
         <a href="/equipment">Equipment</a>
         <a href="/policies">Policies</a>
       </div>
     </div>
-    <a href="/how-it-works" class="active">How It Works</a>
+    <div class="nav-dropdown">
+      <a href="javascript:void(0)" class="nav-link-top active" onclick="toggleDropdown(event,'hiw-menu')">How It Works ▾</a>
+      <div class="nav-dropdown-menu" id="hiw-menu">
+        <a href="/how-it-works">What to Expect</a>
+        <a href="/guidelines">Guidelines</a>
+        <a href="/faq">FAQ</a>
+      </div>
+    </div>
     <a href="/pricing">Pricing</a>
+  </div>
+  <a href="/" class="nav-brand"><img src="./Sports_clear_bg.png" alt="Stillwater Sports" style="height:68px;width:auto;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.25))"/></a>
+  <div class="nav-links-right">
     <a href="/booking">Booking</a>
     <a href="/contact">Contact</a>
     <a href="/app">Stillwater Skills App</a>
+    <a href="/booking" class="nav-book">Book Now</a>
   </div>
-  <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
   <a href="/about" onclick="toggleMenu()">Meet the Coach</a>
   <a href="/sports" onclick="toggleMenu()">Sports</a>
   <a href="/equipment" onclick="toggleMenu()">Equipment</a>
-  <a href="/how-it-works" onclick="toggleMenu()">How It Works</a>
+  <a href="/how-it-works" onclick="toggleMenu()">What to Expect</a>
+  <a href="/guidelines" onclick="toggleMenu()">Guidelines</a>
+  <a href="/faq" onclick="toggleMenu()">FAQ</a>
   <a href="/pricing" onclick="toggleMenu()">Pricing</a>
   <a href="/booking" onclick="toggleMenu()">Booking</a>
   <a href="/contact" onclick="toggleMenu()">Contact</a>
@@ -49,7 +60,7 @@
 </div>
 
 <section class="hero hero-short">
-  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,80,100,0.65) 0%,rgba(0,50,70,0.55) 100%),url('./how-hero.jpeg') center 40%/cover no-repeat;background-color:var(--cyan)"></div>
+  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,80,100,0.65) 0%,rgba(0,50,70,0.55) 100%),url('./hero.jpg') center 40%/cover no-repeat;background-color:var(--cyan)"></div>
   <div class="hero-coords">N 45°<br>OTTAWA</div>
   <div class="hero-content" style="margin-left:auto;max-width:660px">
     <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)" data-content="how_hero_badge"></div>
@@ -148,20 +159,6 @@
   </div>
 </section>
 
-<div style="background:var(--cyan);padding:80px 48px">
-  <div style="max-width:800px;margin:0 auto">
-    <div class="eyebrow" style="color:#5a8a8a;text-align:center">Common Questions</div>
-    <h2 style="font-size:clamp(28px,4vw,48px);font-weight:800;color:var(--yellow);letter-spacing:-.02em;text-align:center;margin-bottom:40px">Before you book.</h2>
-    <div style="display:grid;gap:12px">
-      <div style="background:rgba(255,255,255,0.08);border-radius:var(--rsm);padding:20px 24px;border:1px solid rgba(255,255,231,0.1)"><div style="font-size:15px;font-weight:700;color:var(--yellow);margin-bottom:8px" data-content="how_faq1_q"></div><div style="font-size:14px;color:#3a6a6a;line-height:1.7" data-content="how_faq1_a"></div></div>
-      <div style="background:rgba(255,255,255,0.08);border-radius:var(--rsm);padding:20px 24px;border:1px solid rgba(255,255,231,0.1)"><div style="font-size:15px;font-weight:700;color:var(--yellow);margin-bottom:8px" data-content="how_faq2_q"></div><div style="font-size:14px;color:#3a6a6a;line-height:1.7" data-content="how_faq2_a"></div></div>
-      <div style="background:rgba(255,255,255,0.08);border-radius:var(--rsm);padding:20px 24px;border:1px solid rgba(255,255,231,0.1)"><div style="font-size:15px;font-weight:700;color:var(--yellow);margin-bottom:8px" data-content="how_faq3_q"></div><div style="font-size:14px;color:#3a6a6a;line-height:1.7" data-content="how_faq3_a"></div></div>
-      <div style="background:rgba(255,255,255,0.08);border-radius:var(--rsm);padding:20px 24px;border:1px solid rgba(255,255,231,0.1)"><div style="font-size:15px;font-weight:700;color:var(--yellow);margin-bottom:8px" data-content="how_faq4_q"></div><div style="font-size:14px;color:#3a6a6a;line-height:1.7" data-content="how_faq4_a"></div></div>
-      <div style="background:rgba(255,255,255,0.08);border-radius:var(--rsm);padding:20px 24px;border:1px solid rgba(255,255,231,0.1)"><div style="font-size:15px;font-weight:700;color:var(--yellow);margin-bottom:8px" data-content="how_faq5_q"></div><div style="font-size:14px;color:#3a6a6a;line-height:1.7" data-content="how_faq5_a"></div></div>
-    </div>
-  </div>
-</div>
-
 <section style="background:var(--yellow);text-align:center">
   <div class="s" style="padding:80px 48px">
     <h2 class="big-title" style="text-align:center;margin-bottom:16px">Pick your date.<br><em>We handle the rest.</em></h2>
@@ -169,6 +166,7 @@
     <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
       <a href="/booking" class="btn-pink">Book Now →</a>
       <a href="/pricing" class="btn-outline">See Pricing →</a>
+      <a href="/faq" class="btn-outline">FAQ →</a>
     </div>
   </div>
 </section>
@@ -182,9 +180,10 @@
         <p class="footer-desc">Private water sports coaching across Ontario cottage country. Six disciplines, all skill levels, all equipment included.</p>
         <div class="footer-social"><a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a><a href="#" class="footer-social-btn">⊙</a></div>
       </div>
-      <div class="footer-col"><h4>Explore</h4><a href="/about">About</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/how-it-works">How It Works</a><a href="/pricing">Pricing</a><a href="/contact">Contact</a></div>
+      <div class="footer-col"><h4>Explore</h4><a href="/about">About</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/pricing">Pricing</a><a href="/contact">Contact</a></div>
+      <div class="footer-col"><h4>How It Works</h4><a href="/how-it-works">What to Expect</a><a href="/guidelines">Guidelines</a><a href="/faq">FAQ</a></div>
       <div class="footer-col"><h4>Stillwater Skills</h4><a href="/stillwaterapp">Open the App</a><a href="/app">For Clubs &amp; Schools</a></div>
-      <div class="footer-col"><h4>Legal</h4><a href="/policies">Privacy Policy</a><a href="/policies#terms">Terms of Service</a><a href="/policies#waiver">Waiver</a><a href="/policies#refunds">Refund Policy</a></div>
+      <div class="footer-col"><h4>Legal</h4><a href="/policies">Privacy Policy</a><a href="/policies#terms">Terms of Service</a><a href="/policies#waiver">Waiver</a><a href="/policies#refunds">Refund Policy</a><a href="/requirements">Requirements</a></div>
     </div>
     <div class="footer-bottom">
       <span class="footer-copy">© 2026 Christian Richards · Stillwater Sports · All rights reserved</span>
@@ -195,12 +194,17 @@
 
 <div id="toast"></div>
 
+
+<script src="./content.js"></script>
+
 <script>
-function toggleDropdown(e){
+function toggleDropdown(e, menuId){
   e.preventDefault();
   e.stopPropagation();
-  const menu=document.querySelector('.nav-dropdown-menu');
-  menu.classList.toggle('open');
+  document.querySelectorAll('.nav-dropdown-menu').forEach(m => {
+    if(m.id !== menuId) m.classList.remove('open');
+  });
+  document.getElementById(menuId).classList.toggle('open');
 }
 document.addEventListener('click',function(e){
   if(!e.target.closest('.nav-dropdown')){
@@ -210,6 +214,5 @@ document.addEventListener('click',function(e){
 function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
 document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
 </script>
-<script src="./content.js"></script>
 </body>
 </html>
