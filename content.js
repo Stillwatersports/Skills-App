@@ -150,9 +150,9 @@ const CONTENT = {
 
   pricing_pkg3_name:    "Premium Day",
   pricing_pkg3_price:   "1,250",
-  pricing_pkg3_duration:" · Split Day, Weekend, or Holiday",
+  pricing_pkg3_duration:" · Weekend, Holiday, or Split Day, ",
   pricing_pkg3_f1:      "Weekends book fast!",
-  pricing_pkg3_f2:      "Book a split day during the week for the best conditions",
+  pricing_pkg3_f2:      "Book a split day during the week for the best conditions - morning + evening ",
 
   pricing_multi_eyebrow:"Multi-Day Packages",
   pricing_multi_h2_1:   "More days,",
