@@ -127,7 +127,7 @@ const CONTENT = {
   // ── PRICING PAGE ─────────────────────────────────────
   pricing_hero_badge:   "All Inclusive · No Hidden Fees · Tax Included",
   pricing_hero_l1:      "2 Sessions per day",
-  pricing_hero_l3:      "Choose from Morning, Afternoon or Evening",
+  pricing_hero_sub:      "Choose from Morning, Afternoon or Evening",
 
   pricing_base_eyebrow: "Base Session Packages",
   pricing_base_h2_1:    "Pick your",
