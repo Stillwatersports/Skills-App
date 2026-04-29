@@ -188,11 +188,11 @@ const CONTENT = {
   sports_hero_l1:       "Pick your",
   sports_hero_l3:       "favourite.",
 
-  sports_waterski_h2:   "The classic.",
+  sports_waterski_h2:   "The <em>classic.</em>",
   sports_waterski_p1:   "Waterskiing is where most riders start — and where many spend a lifetime. From your first deep water start on two skis to dropping a ski and carving on one, the progression is structured, achievable, and incredibly satisfying.",
   sports_waterski_p2:   "We teach waterskiing from absolute beginner through advanced slalom technique, wake crossings, and slalom course introduction. Every session builds on the last.",
 
-  sports_wakeboard_h2:  "Pop, grab, land.",
+  sports_wakeboard_h2:  "Pop, grab, <em>land.</em>",
   sports_wakeboard_p1:  "Wakeboarding is the most popular discipline on the water — and for good reason. The learning curve is fast, the tricks are visual, and the feeling of catching air off the wake never gets old.",
   sports_wakeboard_p2:  "From your first edge cut and wake jump through heelside 180s, toeside tricks, and inverts — coaching is structured around clean technique first, progression second. Basic skills are completed and mastered before moving up.",
 
@@ -200,7 +200,7 @@ const CONTENT = {
   sports_wakesurf_p1:   "Wakesurfing is the most relaxed and social discipline on the water — riding the boat's wake without a rope, surfing an endless wave behind the boat. Perfect for all ages and fitness levels.",
   sports_wakesurf_p2:   "Coaching covers getting up, finding the sweet spot in the wave, dropping the rope, and eventually shredding turns and tricks. The ballast bags and surf tabs on the Sanger DLX create an excellent wave for learning.",
 
-  sports_slalom_h2:     "Six buoys. One ski.",
+  sports_slalom_h2:     "Six buoys.<br><em>One ski.</em>",
   sports_slalom_p1:     "Slalom skiing is the technical pinnacle of waterski — threading six buoys on one ski at increasing speeds and shortening rope lengths. It demands precise edge control, timing, and body position.",
   sports_slalom_p2:     "We coach slalom from first one-ski attempts through course introduction, gate entries, and shortline technique. Perfect Pass on the boat ensures consistent, precise speeds every pass.",
 
