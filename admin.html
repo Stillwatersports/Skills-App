@@ -1,0 +1,895 @@
+<!-- © 2026 Christian Richards / Stillwater Sports. Admin Panel. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Stillwater Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cyan:#00C8D4;--pink:#E040A0;--yellow:#FFFeb4;--dark:#1a2a2a;
+  --muted:#4a7a7a;--white:#fff;--bg:#f4f6f8;--border:#e0e8ea;
+  --card:#fff;--red:#e53935;--green:#2e7d32;--orange:#e65100;
+}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh}
+
+/* LOGIN */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--dark)}
+.login-box{background:var(--white);border-radius:16px;padding:48px;width:100%;max-width:400px;text-align:center}
+.login-box h1{font-size:24px;font-weight:800;color:var(--dark);margin-bottom:4px}
+.login-box p{font-size:14px;color:var(--muted);margin-bottom:32px}
+.login-box input{width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;font-family:'Outfit',sans-serif;margin-bottom:16px;outline:none}
+.login-box input:focus{border-color:var(--cyan)}
+.login-box button{width:100%;padding:14px;background:var(--cyan);color:var(--dark);font-weight:700;font-size:15px;border:none;border-radius:10px;cursor:pointer;font-family:'Outfit',sans-serif}
+.login-error{color:var(--red);font-size:13px;margin-top:8px}
+
+/* LAYOUT */
+#app{display:none;min-height:100vh}
+.topbar{background:var(--dark);color:var(--yellow);padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-brand{font-size:18px;font-weight:800;letter-spacing:-.02em}
+.topbar-brand span{color:var(--cyan)}
+.topbar-right{display:flex;align-items:center;gap:16px;font-size:13px;color:rgba(255,255,231,0.6)}
+.topbar-right button{background:none;border:1px solid rgba(255,255,231,0.2);color:var(--yellow);padding:6px 14px;border-radius:20px;cursor:pointer;font-family:'Outfit',sans-serif;font-size:12px}
+
+/* TABS */
+.tabs{background:var(--white);border-bottom:2px solid var(--border);padding:0 32px;display:flex;gap:0}
+.tab{padding:16px 24px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab:hover{color:var(--dark)}
+.tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.tab-badge{background:var(--pink);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:6px}
+
+/* CONTENT */
+.content{padding:32px;max-width:1400px;margin:0 auto}
+.panel{display:none}
+.panel.active{display:block}
+
+/* CARDS */
+.card{background:var(--card);border-radius:12px;border:1px solid var(--border);padding:24px;margin-bottom:20px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.card-title{font-size:16px;font-weight:700;color:var(--dark)}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--card);border-radius:12px;border:1px solid var(--border);padding:20px 24px}
+.stat-num{font-size:32px;font-weight:800;color:var(--cyan)}
+.stat-label{font-size:12px;color:var(--muted);font-weight:600;letter-spacing:.04em;text-transform:uppercase;margin-top:4px}
+
+/* CALENDAR */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.cal-nav h2{font-size:20px;font-weight:800}
+.cal-nav button{background:var(--cyan);color:var(--dark);border:none;border-radius:8px;padding:8px 16px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day-header{text-align:center;font-size:11px;font-weight:700;color:var(--muted);padding:8px 0;text-transform:uppercase;letter-spacing:.06em}
+.cal-day{border-radius:8px;border:1px solid var(--border);min-height:90px;padding:6px;background:var(--white);cursor:pointer;transition:border-color .15s}
+.cal-day:hover{border-color:var(--cyan)}
+.cal-day.empty{background:transparent;border-color:transparent;cursor:default}
+.cal-day.today{border-color:var(--cyan);background:rgba(0,200,212,0.04)}
+.cal-day-num{font-size:12px;font-weight:700;margin-bottom:4px;color:var(--dark)}
+.cal-slot{font-size:9px;font-weight:600;padding:2px 5px;border-radius:4px;margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+.slot-open{background:rgba(0,200,212,0.12);color:var(--cyan)}
+.slot-blocked{background:rgba(229,57,53,0.12);color:var(--red)}
+.slot-booked{background:rgba(224,64,160,0.15);color:var(--pink)}
+.slot-pending{background:rgba(230,81,0,0.12);color:var(--orange)}
+
+/* BOOKINGS TABLE */
+.bookings-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.bookings-toolbar input,.bookings-toolbar select{padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'Outfit',sans-serif;outline:none}
+.bookings-toolbar input:focus,.bookings-toolbar select:focus{border-color:var(--cyan)}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:10px 14px;text-align:left;border-bottom:2px solid var(--border);background:var(--bg)}
+td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:14px;vertical-align:middle}
+tr:hover td{background:rgba(0,200,212,0.03)}
+.status-badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.status-new{background:rgba(230,81,0,0.1);color:var(--orange)}
+.status-confirmed{background:rgba(0,200,212,0.12);color:var(--cyan)}
+.status-deposit_paid{background:rgba(46,125,50,0.1);color:var(--green)}
+.status-complete{background:rgba(26,42,42,0.08);color:var(--dark)}
+.status-cancelled{background:rgba(229,57,53,0.1);color:var(--red)}
+.btn{padding:8px 16px;border-radius:8px;border:none;font-weight:600;font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .15s}
+.btn-primary{background:var(--cyan);color:var(--dark)}
+.btn-pink{background:var(--pink);color:#fff}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--dark)}
+.btn-danger{background:var(--red);color:#fff}
+.btn-sm{padding:5px 12px;font-size:12px}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:16px;padding:32px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;position:relative}
+.modal-title{font-size:20px;font-weight:800;margin-bottom:24px;padding-right:32px}
+.modal-close{position:absolute;top:20px;right:20px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'Outfit',sans-serif;outline:none}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--cyan)}
+.form-group textarea{min-height:80px;resize:vertical;line-height:1.6}
+.section-label{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+/* PARTICIPANTS */
+.participant-row{display:grid;grid-template-columns:1fr 80px 120px 40px;gap:10px;align-items:center;padding:10px;background:var(--bg);border-radius:8px;margin-bottom:8px}
+.minor-flag{background:rgba(229,57,53,0.1);color:var(--red);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.04em}
+.waiver-check{display:flex;align-items:center;gap:6px;font-size:13px}
+.waiver-check input[type=checkbox]{width:16px;height:16px;accent-color:var(--cyan)}
+
+/* CLIENTS */
+.client-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;cursor:pointer;transition:border-color .15s}
+.client-card:hover{border-color:var(--cyan)}
+.client-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.client-name{font-size:16px;font-weight:700;margin-bottom:4px}
+.client-meta{font-size:13px;color:var(--muted);margin-bottom:8px}
+.client-sessions{font-size:12px;font-weight:600;color:var(--cyan)}
+
+/* EMAILS */
+.template-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:12px;cursor:pointer;transition:border-color .15s}
+.template-card:hover{border-color:var(--cyan)}
+.template-name{font-size:15px;font-weight:700;margin-bottom:4px}
+.template-subject{font-size:13px;color:var(--muted)}
+.email-compose{background:var(--bg);border-radius:12px;padding:24px;margin-top:20px}
+.email-preview{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;font-size:14px;line-height:1.8;white-space:pre-wrap;max-height:400px;overflow-y:auto;font-family:monospace}
+.var-chip{display:inline-block;background:rgba(0,200,212,0.12);color:var(--cyan);border-radius:4px;padding:1px 6px;font-size:12px;font-weight:600;margin:2px}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--dark);color:var(--yellow);padding:14px 20px;border-radius:10px;font-size:14px;font-weight:600;z-index:999;transform:translateY(100px);opacity:0;transition:all .3s;max-width:320px}
+.toast.show{transform:translateY(0);opacity:1}
+
+/* MINOR WARNING */
+.minor-warning{background:rgba(229,57,53,0.08);border:1px solid rgba(229,57,53,0.2);border-radius:8px;padding:12px 16px;font-size:13px;color:var(--red);font-weight:600;margin-top:8px;display:none}
+
+@media(max-width:900px){
+  .stats-row{grid-template-columns:1fr 1fr}
+  .client-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .cal-grid{grid-template-columns:repeat(7,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>Stillwater Admin</h1>
+    <p>Coach dashboard — restricted access</p>
+    <input type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button onclick="doLogin()">Sign In</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-brand">Stillwater <span>Admin</span></div>
+    <div class="topbar-right">
+      <span id="topbar-date"></span>
+      <button onclick="doLogout()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('dashboard')">Dashboard</div>
+    <div class="tab" onclick="showTab('calendar')">Calendar</div>
+    <div class="tab" onclick="showTab('bookings')">Bookings <span class="tab-badge" id="new-badge">0</span></div>
+    <div class="tab" onclick="showTab('clients')">Clients</div>
+    <div class="tab" onclick="showTab('emails')">Emails</div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-num" id="stat-new">—</div><div class="stat-label">New Requests</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-confirmed">—</div><div class="stat-label">Confirmed</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-upcoming">—</div><div class="stat-label">This Month</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-clients">—</div><div class="stat-label">Total Clients</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Recent Requests</div><button class="btn btn-primary btn-sm" onclick="showTab('bookings')">View All</button></div>
+        <table><thead><tr><th>Client</th><th>Date</th><th>Slot</th><th>Package</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="recent-bookings"></tbody></table>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Upcoming Sessions — Next 14 Days</div></div>
+        <table><thead><tr><th>Date</th><th>Slot</th><th>Client</th><th>Package</th><th>Location</th><th>Waivers</th></tr></thead>
+        <tbody id="upcoming-sessions"></tbody></table>
+      </div>
+    </div>
+
+    <!-- CALENDAR -->
+    <div class="panel" id="panel-calendar">
+      <div class="card">
+        <div class="cal-nav">
+          <button onclick="calPrev()">← Prev</button>
+          <h2 id="cal-month-label"></h2>
+          <button onclick="calNext()">Next →</button>
+        </div>
+        <div style="margin-bottom:16px;display:flex;gap:16px;flex-wrap:wrap;font-size:13px">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(0,200,212,0.2);display:inline-block"></span>Open</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(229,57,53,0.2);display:inline-block"></span>Blocked</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(224,64,160,0.2);display:inline-block"></span>Booked</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(230,81,0,0.2);display:inline-block"></span>Pending</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+          <button class="btn btn-ghost btn-sm" onclick="blockDateRange()">Block Date Range</button>
+          <button class="btn btn-primary btn-sm" onclick="openAddBooking()">+ New Booking</button>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+    </div>
+
+    <!-- BOOKINGS -->
+    <div class="panel" id="panel-bookings">
+      <div class="bookings-toolbar">
+        <input type="text" id="search-bookings" placeholder="Search client name..." oninput="filterBookings()"/>
+        <select id="filter-status" onchange="filterBookings()">
+          <option value="">All Statuses</option>
+          <option value="new">New</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="deposit_paid">Deposit Paid</option>
+          <option value="complete">Complete</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+        <select id="filter-slot" onchange="filterBookings()">
+          <option value="">All Slots</option>
+          <option value="morning">Morning</option>
+          <option value="afternoon">Afternoon</option>
+          <option value="evening">Evening</option>
+        </select>
+        <button class="btn btn-primary" onclick="openAddBooking()">+ New Booking</button>
+      </div>
+      <div class="card" style="padding:0">
+        <table><thead><tr><th>Date</th><th>Slot</th><th>Client</th><th>Package</th><th>Location</th><th>Participants</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="bookings-table"></tbody></table>
+      </div>
+    </div>
+
+    <!-- CLIENTS -->
+    <div class="panel" id="panel-clients">
+      <div class="bookings-toolbar">
+        <input type="text" id="search-clients" placeholder="Search clients..." oninput="filterClients()"/>
+        <button class="btn btn-primary" onclick="openAddClient()">+ New Client</button>
+      </div>
+      <div class="client-grid" id="clients-grid"></div>
+    </div>
+
+    <!-- EMAILS -->
+    <div class="panel" id="panel-emails">
+      <div style="display:grid;grid-template-columns:280px 1fr;gap:24px">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Templates</div>
+          <div id="template-list"></div>
+          <button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="openNewTemplate()">+ New Template</button>
+        </div>
+        <div id="email-composer">
+          <div style="color:var(--muted);font-size:15px;padding:40px;text-align:center">Select a template to compose an email</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- BOOKING MODAL -->
+<div class="modal-overlay" id="booking-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('booking-modal')">✕</button>
+    <div class="modal-title" id="booking-modal-title">New Booking</div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Client</label>
+        <select id="bk-client" onchange="loadClientDetails()">
+          <option value="">Select existing client...</option>
+          <option value="new">+ New Client</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="bk-status">
+          <option value="new">New Request</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="deposit_paid">Deposit Paid</option>
+          <option value="complete">Complete</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="new-client-fields" style="display:none">
+      <div class="section-label">New Client Details</div>
+      <div class="form-row">
+        <div class="form-group"><label>Name *</label><input type="text" id="nc-name" placeholder="Full name"/></div>
+        <div class="form-group"><label>Email</label><input type="email" id="nc-email" placeholder="email@example.com"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Phone</label><input type="tel" id="nc-phone" placeholder="613-555-0100"/></div>
+        <div class="form-group"><label>Lake / Location</label><input type="text" id="nc-location" placeholder="Rideau Lake, ON"/></div>
+      </div>
+    </div>
+
+    <div class="section-label">Session Details</div>
+    <div class="form-row">
+      <div class="form-group"><label>Date *</label><input type="date" id="bk-date"/></div>
+      <div class="form-group">
+        <label>Time Slot *</label>
+        <select id="bk-slot">
+          <option value="morning">Morning (~8am–12pm)</option>
+          <option value="afternoon">Afternoon (~12pm–4pm)</option>
+          <option value="evening">Evening (~4pm–8pm)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Package</label>
+        <select id="bk-package">
+          <option>Single Session — $600</option>
+          <option>Full Day Weekday — $1,000</option>
+          <option>Premium Day — $1,250</option>
+          <option>Double Weekday — $1,750</option>
+          <option>Full Weekend — $2,100</option>
+          <option>3 Day Work Week — $2,500</option>
+          <option>Holiday Weekend — $3,000</option>
+          <option>5 Day Week — $4,500</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Sport(s)</label><input type="text" id="bk-sport" placeholder="Waterski, Wakeboard..."/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Location / Lake</label><input type="text" id="bk-location" placeholder="Lake name, ON"/></div>
+      <div class="form-group"><label>Deposit Link (Square)</label><input type="text" id="bk-deposit" placeholder="https://square.link/..."/></div>
+    </div>
+    <div class="form-group"><label>Notes</label><textarea id="bk-notes" placeholder="Any notes about this booking..."></textarea></div>
+
+    <div class="section-label">Class Participants</div>
+    <div id="participants-list"></div>
+    <div class="minor-warning" id="minor-warning">⚠️ This class includes minors under 18 — ensure waivers are completed and parent/guardian is confirmed present on shore.</div>
+    <button class="btn btn-ghost btn-sm" onclick="addParticipant()" style="margin-bottom:16px">+ Add Participant</button>
+
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px">
+      <button class="btn btn-ghost" onclick="closeModal('booking-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveBooking()">Save Booking</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLIENT MODAL -->
+<div class="modal-overlay" id="client-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('client-modal')">✕</button>
+    <div class="modal-title" id="client-modal-title">Client</div>
+    <div class="form-row">
+      <div class="form-group"><label>Name *</label><input type="text" id="cl-name"/></div>
+      <div class="form-group"><label>Email</label><input type="email" id="cl-email"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Phone</label><input type="tel" id="cl-phone"/></div>
+      <div class="form-group"><label>Lake / Location</label><input type="text" id="cl-location"/></div>
+    </div>
+    <div class="form-group"><label>Notes</label><textarea id="cl-notes"></textarea></div>
+    <div class="section-label">Session History</div>
+    <div id="cl-history" style="font-size:14px;color:var(--muted)">No sessions yet.</div>
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px">
+      <button class="btn btn-ghost" onclick="closeModal('client-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveClient()">Save Client</button>
+    </div>
+  </div>
+</div>
+
+<!-- TEMPLATE MODAL -->
+<div class="modal-overlay" id="template-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('template-modal')">✕</button>
+    <div class="modal-title">Email Template</div>
+    <div class="form-group"><label>Template Name</label><input type="text" id="tpl-name"/></div>
+    <div class="form-group"><label>Subject Line</label><input type="text" id="tpl-subject"/></div>
+    <div class="form-group">
+      <label>Body</label>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Use {{variable_name}} for dynamic fields</div>
+      <textarea id="tpl-body" style="min-height:300px;font-family:monospace;font-size:13px"></textarea>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px">
+      <button class="btn btn-ghost" onclick="closeModal('template-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTemplate()">Save Template</button>
+    </div>
+  </div>
+</div>
+
+<!-- BLOCK RANGE MODAL -->
+<div class="modal-overlay" id="block-modal">
+  <div class="modal" style="max-width:440px">
+    <button class="modal-close" onclick="closeModal('block-modal')">✕</button>
+    <div class="modal-title">Block Date Range</div>
+    <div class="form-row">
+      <div class="form-group"><label>From</label><input type="date" id="block-from"/></div>
+      <div class="form-group"><label>To</label><input type="date" id="block-to"/></div>
+    </div>
+    <div class="form-group">
+      <label>Slots to Block</label>
+      <div style="display:flex;gap:12px;margin-top:8px">
+        <label style="display:flex;align-items:center;gap:6px;text-transform:none;letter-spacing:0;font-size:14px;font-weight:400"><input type="checkbox" id="bl-morning" checked> Morning</label>
+        <label style="display:flex;align-items:center;gap:6px;text-transform:none;letter-spacing:0;font-size:14px;font-weight:400"><input type="checkbox" id="bl-afternoon" checked> Afternoon</label>
+        <label style="display:flex;align-items:center;gap:6px;text-transform:none;letter-spacing:0;font-size:14px;font-weight:400"><input type="checkbox" id="bl-evening" checked> Evening</label>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px">
+      <button class="btn btn-ghost" onclick="closeModal('block-modal')">Cancel</button>
+      <button class="btn btn-danger" onclick="applyBlockRange()">Block These Dates</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ────────────────────────────────────────────────
+const SUPABASE_URL = 'https://jjnhsbgmcjqwlmeihwuy.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impqbmhzb2dtY2pxd2xtZWlod3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MTI2MDgwMDAsImV4cCI6MjAyODE4NDAwMH0.placeholder';
+const ADMIN_PASSWORD = 'Duke1246';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ── STATE ─────────────────────────────────────────────────
+let bookings = [], clients = [], availability = [], templates = [], participants = {};
+let calYear = new Date().getFullYear(), calMonth = new Date().getMonth();
+let editingBookingId = null, editingClientId = null, editingTemplateId = null;
+let activeTab = 'dashboard';
+
+// ── AUTH ──────────────────────────────────────────────────
+function doLogin(){
+  const pw = document.getElementById('pw-input').value;
+  if(pw === ADMIN_PASSWORD){
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-CA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    loadAll();
+  } else {
+    document.getElementById('login-error').textContent = 'Incorrect password.';
+    setTimeout(()=>document.getElementById('login-error').textContent='', 2000);
+  }
+}
+function doLogout(){
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('pw-input').value='';
+}
+
+// ── DATA LOAD ─────────────────────────────────────────────
+async function loadAll(){
+  await Promise.all([loadBookings(), loadClients(), loadAvailability(), loadTemplates()]);
+  renderDashboard();
+  renderCalendar();
+  renderBookingsTable();
+  renderClients();
+  renderTemplates();
+}
+async function loadBookings(){
+  const {data} = await db.from('bookings').select('*, clients(name,email,phone)').order('date');
+  bookings = data || [];
+  // load participants for each booking
+  const ids = bookings.map(b=>b.id);
+  if(ids.length){
+    const {data:p} = await db.from('participants').select('*').in('booking_id', ids);
+    participants = {};
+    (p||[]).forEach(r=>{ if(!participants[r.booking_id]) participants[r.booking_id]=[]; participants[r.booking_id].push(r); });
+  }
+  const nb = bookings.filter(b=>b.status==='new').length;
+  document.getElementById('new-badge').textContent = nb;
+}
+async function loadClients(){
+  const {data} = await db.from('clients').select('*').order('name');
+  clients = data || [];
+}
+async function loadAvailability(){
+  const {data} = await db.from('availability').select('*');
+  availability = data || [];
+}
+async function loadTemplates(){
+  const {data} = await db.from('email_templates').select('*');
+  templates = data || [];
+}
+
+// ── TABS ──────────────────────────────────────────────────
+function showTab(tab){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('panel-'+tab).classList.add('active');
+  activeTab = tab;
+}
+
+// ── DASHBOARD ─────────────────────────────────────────────
+function renderDashboard(){
+  const now = new Date();
+  const monthEnd = new Date(now.getFullYear(), now.getMonth()+1, 0);
+  document.getElementById('stat-new').textContent = bookings.filter(b=>b.status==='new').length;
+  document.getElementById('stat-confirmed').textContent = bookings.filter(b=>b.status==='confirmed'||b.status==='deposit_paid').length;
+  document.getElementById('stat-upcoming').textContent = bookings.filter(b=>{const d=new Date(b.date);return d>=now&&d<=monthEnd}).length;
+  document.getElementById('stat-clients').textContent = clients.length;
+
+  const recent = [...bookings].filter(b=>b.status==='new').slice(0,5);
+  document.getElementById('recent-bookings').innerHTML = recent.length ? recent.map(b=>bookingRow(b,true)).join('') : '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:24px">No new requests</td></tr>';
+
+  const in14 = new Date(); in14.setDate(in14.getDate()+14);
+  const upcoming = bookings.filter(b=>{const d=new Date(b.date);return d>=now&&d<=in14&&b.status!=='cancelled'}).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  document.getElementById('upcoming-sessions').innerHTML = upcoming.length ? upcoming.map(b=>{
+    const p = participants[b.id]||[];
+    const minors = p.filter(x=>x.is_minor);
+    const waiverPending = p.filter(x=>!x.waiver_signed).length;
+    return `<tr>
+      <td><strong>${fmtDate(b.date)}</strong></td>
+      <td><span class="status-badge status-${b.slot}">${cap(b.slot)}</span></td>
+      <td>${b.clients?.name||'—'}</td>
+      <td>${b.package||'—'}</td>
+      <td>${b.location||'—'}</td>
+      <td>${p.length} riders${minors.length?` · <span style="color:var(--red)">${minors.length} minor${minors.length>1?'s':''}</span>`:''}${waiverPending?` · <span style="color:var(--orange)">${waiverPending} waiver pending</span>`:' · <span style="color:var(--green)">✓ waivers</span>'}</td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:24px">No upcoming sessions in the next 14 days</td></tr>';
+}
+
+// ── CALENDAR ──────────────────────────────────────────────
+function renderCalendar(){
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month-label').textContent = `${months[calMonth]} ${calYear}`;
+  const grid = document.getElementById('cal-grid');
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let html = days.map(d=>`<div class="cal-day-header">${d}</div>`).join('');
+  const first = new Date(calYear,calMonth,1).getDay();
+  for(let i=0;i<first;i++) html+=`<div class="cal-day empty"></div>`;
+  const total = new Date(calYear,calMonth+1,0).getDate();
+  const today = new Date();
+  for(let d=1;d<=total;d++){
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = d===today.getDate()&&calMonth===today.getMonth()&&calYear===today.getFullYear();
+    const slots = ['morning','afternoon','evening'].map(slot=>{
+      const avail = availability.find(a=>a.date===dateStr&&a.slot===slot);
+      const booking = bookings.find(b=>b.date===dateStr&&b.slot===slot&&b.status!=='cancelled');
+      let cls = 'slot-open', label = slot.slice(0,3).toUpperCase(), icon='○';
+      if(booking && booking.status==='new'){ cls='slot-pending'; icon='●'; }
+      else if(booking){ cls='slot-booked'; icon='●'; }
+      else if(avail?.is_blocked){ cls='slot-blocked'; icon='×'; }
+      return `<div class="cal-slot ${cls}" onclick="toggleSlot('${dateStr}','${slot}',event)" title="${cap(slot)}">${icon} ${label}</div>`;
+    }).join('');
+    html+=`<div class="cal-day${isToday?' today':''}"><div class="cal-day-num">${d}</div>${slots}</div>`;
+  }
+  grid.innerHTML = html;
+}
+function calPrev(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); }
+function calNext(){ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); }
+async function toggleSlot(date, slot, e){
+  e.stopPropagation();
+  const booking = bookings.find(b=>b.date===date&&b.slot===slot&&b.status!=='cancelled');
+  if(booking){ openEditBooking(booking.id); return; }
+  const avail = availability.find(a=>a.date===date&&a.slot===slot);
+  if(avail){
+    await db.from('availability').update({is_blocked:!avail.is_blocked}).eq('id',avail.id);
+    avail.is_blocked = !avail.is_blocked;
+  } else {
+    const {data} = await db.from('availability').insert({date,slot,is_blocked:true}).select().single();
+    if(data) availability.push(data);
+  }
+  renderCalendar();
+  toast(avail?.is_blocked ? `${cap(slot)} on ${date} unblocked` : `${cap(slot)} on ${date} blocked`);
+}
+function blockDateRange(){ openModal('block-modal'); }
+async function applyBlockRange(){
+  const from = new Date(document.getElementById('block-from').value);
+  const to   = new Date(document.getElementById('block-to').value);
+  const slots = ['morning','afternoon','evening'].filter(s=>document.getElementById('bl-'+s).checked);
+  if(!from||!to||!slots.length){ toast('Please fill in all fields'); return; }
+  const rows = [];
+  for(let d=new Date(from); d<=to; d.setDate(d.getDate()+1)){
+    const ds = d.toISOString().split('T')[0];
+    slots.forEach(s=>rows.push({date:ds,slot:s,is_blocked:true}));
+  }
+  await db.from('availability').upsert(rows,{onConflict:'date,slot'});
+  await loadAvailability();
+  renderCalendar();
+  closeModal('block-modal');
+  toast(`Blocked ${rows.length} slots`);
+}
+
+// ── BOOKINGS TABLE ────────────────────────────────────────
+function renderBookingsTable(filter='', status='', slot=''){
+  let list = [...bookings];
+  if(filter) list = list.filter(b=>(b.clients?.name||'').toLowerCase().includes(filter.toLowerCase()));
+  if(status) list = list.filter(b=>b.status===status);
+  if(slot) list = list.filter(b=>b.slot===slot);
+  list.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  document.getElementById('bookings-table').innerHTML = list.length
+    ? list.map(b=>bookingRow(b,false)).join('')
+    : '<tr><td colspan="8" style="color:var(--muted);text-align:center;padding:24px">No bookings found</td></tr>';
+}
+function bookingRow(b, compact){
+  const p = participants[b.id]||[];
+  const minors = p.filter(x=>x.is_minor).length;
+  const waivers = p.filter(x=>!x.waiver_signed).length;
+  const warn = (minors>0||waivers>0) ? `<span style="color:var(--orange);font-size:11px;margin-left:4px">⚠</span>` : '';
+  if(compact) return `<tr>
+    <td>${b.clients?.name||'—'}${warn}</td>
+    <td>${fmtDate(b.date)}</td>
+    <td>${cap(b.slot)}</td>
+    <td>${b.package||'—'}</td>
+    <td><span class="status-badge status-${b.status}">${b.status.replace('_',' ')}</span></td>
+    <td><button class="btn btn-primary btn-sm" onclick="openEditBooking('${b.id}')">Open</button></td>
+  </tr>`;
+  return `<tr>
+    <td>${fmtDate(b.date)}</td>
+    <td><span class="status-badge" style="background:rgba(0,200,212,0.1);color:var(--cyan)">${cap(b.slot)}</span></td>
+    <td>${b.clients?.name||'—'}${warn}</td>
+    <td style="font-size:13px">${(b.package||'—').split('—')[0]}</td>
+    <td style="font-size:13px">${b.location||'—'}</td>
+    <td style="font-size:13px">${p.length} rider${p.length!==1?'s':''}${minors?` · <span style="color:var(--red)">${minors}⚠</span>`:''}${waivers?` · <span style="color:var(--orange)">${waivers} pending</span>`:p.length?' · ✓':''}</td>
+    <td><span class="status-badge status-${b.status}">${b.status.replace('_',' ')}</span></td>
+    <td style="display:flex;gap:6px">
+      <button class="btn btn-primary btn-sm" onclick="openEditBooking('${b.id}')">Edit</button>
+      <button class="btn btn-ghost btn-sm" onclick="openEmailForBooking('${b.id}')">Email</button>
+    </td>
+  </tr>`;
+}
+function filterBookings(){
+  renderBookingsTable(
+    document.getElementById('search-bookings').value,
+    document.getElementById('filter-status').value,
+    document.getElementById('filter-slot').value
+  );
+}
+
+// ── BOOKING MODAL ─────────────────────────────────────────
+function openAddBooking(){
+  editingBookingId = null;
+  document.getElementById('booking-modal-title').textContent = 'New Booking';
+  clearBookingForm();
+  populateClientSelect();
+  document.getElementById('participants-list').innerHTML = '';
+  openModal('booking-modal');
+}
+function openEditBooking(id){
+  editingBookingId = id;
+  const b = bookings.find(x=>x.id===id);
+  if(!b) return;
+  document.getElementById('booking-modal-title').textContent = 'Edit Booking';
+  populateClientSelect(b.client_id);
+  document.getElementById('new-client-fields').style.display='none';
+  document.getElementById('bk-date').value = b.date;
+  document.getElementById('bk-slot').value = b.slot;
+  document.getElementById('bk-package').value = b.package||'';
+  document.getElementById('bk-sport').value = b.sport||'';
+  document.getElementById('bk-location').value = b.location||'';
+  document.getElementById('bk-deposit').value = b.deposit_link||'';
+  document.getElementById('bk-status').value = b.status;
+  document.getElementById('bk-notes').value = b.notes||'';
+  renderParticipants(participants[id]||[]);
+  openModal('booking-modal');
+}
+function clearBookingForm(){
+  ['bk-date','bk-sport','bk-location','bk-deposit','bk-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('bk-slot').value='morning';
+  document.getElementById('bk-status').value='new';
+  document.getElementById('minor-warning').style.display='none';
+}
+function populateClientSelect(selectedId=''){
+  const sel = document.getElementById('bk-client');
+  sel.innerHTML = '<option value="">Select existing client...</option><option value="new">+ New Client</option>';
+  clients.forEach(c=>{ const o=document.createElement('option'); o.value=c.id; o.textContent=`${c.name} — ${c.email||c.phone||''}`;if(c.id===selectedId)o.selected=true; sel.appendChild(o); });
+}
+function loadClientDetails(){
+  const val = document.getElementById('bk-client').value;
+  document.getElementById('new-client-fields').style.display = val==='new'?'grid':'none';
+}
+let partCount = 0;
+function addParticipant(p=null){
+  const i = partCount++;
+  const div = document.createElement('div');
+  div.className = 'participant-row';
+  div.id = `part-${i}`;
+  div.innerHTML = `
+    <input type="text" placeholder="Full name" value="${p?.name||''}" style="padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'Outfit',sans-serif;outline:none"/>
+    <input type="number" placeholder="Age" value="${p?.age||''}" min="1" max="100" style="padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'Outfit',sans-serif;outline:none" onchange="checkMinors()"/>
+    <div class="waiver-check"><input type="checkbox" ${p?.waiver_signed?'checked':''}/><label style="font-size:13px">Waiver signed</label></div>
+    <button onclick="this.closest('.participant-row').remove();checkMinors()" style="background:none;border:none;cursor:pointer;font-size:16px;color:var(--muted)">✕</button>`;
+  document.getElementById('participants-list').appendChild(div);
+  checkMinors();
+}
+function renderParticipants(list){
+  document.getElementById('participants-list').innerHTML='';
+  partCount=0;
+  list.forEach(p=>addParticipant(p));
+}
+function checkMinors(){
+  const rows = document.querySelectorAll('.participant-row');
+  let hasMinor = false;
+  rows.forEach(r=>{
+    const age = parseInt(r.querySelector('input[type=number]')?.value||'99');
+    if(age<18) hasMinor=true;
+  });
+  document.getElementById('minor-warning').style.display = hasMinor?'block':'none';
+}
+async function saveBooking(){
+  let clientId = document.getElementById('bk-client').value;
+  if(clientId==='new'||clientId===''){
+    const name = document.getElementById('nc-name').value.trim();
+    if(!name){ toast('Please enter a client name'); return; }
+    const {data,error} = await db.from('clients').insert({
+      name, email:document.getElementById('nc-email').value,
+      phone:document.getElementById('nc-phone').value,
+      location:document.getElementById('nc-location').value
+    }).select().single();
+    if(error){ toast('Error creating client'); return; }
+    clients.push(data); clientId=data.id;
+  }
+  const bkData = {
+    client_id:clientId,
+    date:document.getElementById('bk-date').value,
+    slot:document.getElementById('bk-slot').value,
+    package:document.getElementById('bk-package').value,
+    sport:document.getElementById('bk-sport').value,
+    location:document.getElementById('bk-location').value,
+    deposit_link:document.getElementById('bk-deposit').value,
+    status:document.getElementById('bk-status').value,
+    notes:document.getElementById('bk-notes').value,
+  };
+  let bookingId;
+  if(editingBookingId){
+    await db.from('bookings').update(bkData).eq('id',editingBookingId);
+    bookingId = editingBookingId;
+  } else {
+    const {data,error} = await db.from('bookings').insert(bkData).select().single();
+    if(error){ toast('Error saving booking'); return; }
+    bookingId = data.id;
+  }
+  // Save participants
+  await db.from('participants').delete().eq('booking_id',bookingId);
+  const rows = document.querySelectorAll('.participant-row');
+  const partData = [];
+  rows.forEach(r=>{
+    const name = r.querySelector('input[type=text]').value.trim();
+    const age = parseInt(r.querySelector('input[type=number]').value)||null;
+    const waiver = r.querySelector('input[type=checkbox]').checked;
+    if(name) partData.push({booking_id:bookingId,name,age,waiver_signed:waiver});
+  });
+  if(partData.length) await db.from('participants').insert(partData);
+  closeModal('booking-modal');
+  await loadAll();
+  toast('Booking saved ✓');
+}
+
+// ── CLIENTS ───────────────────────────────────────────────
+function renderClients(filter=''){
+  let list = filter ? clients.filter(c=>c.name.toLowerCase().includes(filter.toLowerCase())) : clients;
+  document.getElementById('clients-grid').innerHTML = list.length
+    ? list.map(c=>{
+        const sessions = bookings.filter(b=>b.client_id===c.id).length;
+        return `<div class="client-card" onclick="openEditClient('${c.id}')">
+          <div class="client-name">${c.name}</div>
+          <div class="client-meta">${c.email||''} ${c.phone?'· '+c.phone:''}</div>
+          <div class="client-meta">${c.location||'No location set'}</div>
+          <div class="client-sessions">${sessions} session${sessions!==1?'s':''}</div>
+        </div>`;
+      }).join('')
+    : '<div style="color:var(--muted);padding:24px">No clients yet.</div>';
+}
+function filterClients(){ renderClients(document.getElementById('search-clients').value); }
+function openAddClient(){
+  editingClientId=null;
+  ['cl-name','cl-email','cl-phone','cl-location','cl-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('cl-history').innerHTML='No sessions yet.';
+  document.getElementById('client-modal-title').textContent='New Client';
+  openModal('client-modal');
+}
+function openEditClient(id){
+  editingClientId=id;
+  const c=clients.find(x=>x.id===id); if(!c) return;
+  document.getElementById('client-modal-title').textContent=c.name;
+  document.getElementById('cl-name').value=c.name||'';
+  document.getElementById('cl-email').value=c.email||'';
+  document.getElementById('cl-phone').value=c.phone||'';
+  document.getElementById('cl-location').value=c.location||'';
+  document.getElementById('cl-notes').value=c.notes||'';
+  const sessions = bookings.filter(b=>b.client_id===id);
+  document.getElementById('cl-history').innerHTML = sessions.length
+    ? sessions.map(b=>`<div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;font-size:13px"><span>${fmtDate(b.date)}</span><span style="color:var(--muted)">${cap(b.slot)}</span><span>${b.package||''}</span><span class="status-badge status-${b.status}">${b.status}</span></div>`).join('')
+    : 'No sessions yet.';
+  openModal('client-modal');
+}
+async function saveClient(){
+  const data={name:document.getElementById('cl-name').value.trim(),email:document.getElementById('cl-email').value,phone:document.getElementById('cl-phone').value,location:document.getElementById('cl-location').value,notes:document.getElementById('cl-notes').value};
+  if(!data.name){ toast('Name is required'); return; }
+  if(editingClientId){ await db.from('clients').update(data).eq('id',editingClientId); }
+  else { const {data:d}=await db.from('clients').insert(data).select().single(); if(d) clients.push(d); }
+  closeModal('client-modal');
+  await loadClients();
+  renderClients();
+  toast('Client saved ✓');
+}
+
+// ── EMAILS ────────────────────────────────────────────────
+function renderTemplates(){
+  document.getElementById('template-list').innerHTML = templates.map(t=>`
+    <div class="template-card" onclick="selectTemplate('${t.id}')">
+      <div class="template-name">${t.name}</div>
+      <div class="template-subject" style="font-size:12px;color:var(--muted)">${t.subject}</div>
+    </div>`).join('');
+}
+function selectTemplate(id){
+  const t = templates.find(x=>x.id===id);
+  if(!t) return;
+  const vars = (t.body.match(/\{\{(\w+)\}\}/g)||[]).filter((v,i,a)=>a.indexOf(v)===i);
+  const chips = vars.map(v=>`<span class="var-chip">${v}</span>`).join('');
+  document.getElementById('email-composer').innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-size:18px;font-weight:700">${t.name}</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm" onclick="editTemplate('${id}')">Edit</button>
+        <button class="btn btn-primary btn-sm" onclick="composeEmail('${id}')">Compose →</button>
+      </div>
+    </div>
+    <div class="form-group"><label>Subject</label><div style="padding:10px 14px;background:var(--bg);border-radius:8px;font-size:14px">${t.subject}</div></div>
+    ${vars.length?`<div style="margin-bottom:16px"><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Variables</div>${chips}</div>`:''}
+    <div class="form-group"><label>Preview</label><div class="email-preview">${t.body}</div></div>`;
+}
+function composeEmail(templateId){
+  const t = templates.find(x=>x.id===templateId);
+  if(!t) return;
+  const vars = (t.body.match(/\{\{(\w+)\}\}/g)||[]).filter((v,i,a)=>a.indexOf(v)===i).map(v=>v.replace(/[{}]/g,''));
+  let filled = t.body, subj = t.subject;
+  vars.forEach(v=>{
+    const val = prompt(`Value for {{${v}}}:`, '');
+    if(val!==null){ filled=filled.replaceAll(`{{${v}}}`,val); subj=subj.replaceAll(`{{${v}}}`,val); }
+  });
+  const mailto = `mailto:?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(filled)}`;
+  document.getElementById('email-composer').innerHTML += `
+    <div style="margin-top:20px;padding:16px;background:rgba(0,200,212,0.06);border-radius:10px;border:1px solid rgba(0,200,212,0.2)">
+      <div style="font-size:13px;font-weight:700;color:var(--cyan);margin-bottom:10px">Draft Ready</div>
+      <div class="email-preview" style="margin-bottom:16px">${filled}</div>
+      <a href="${mailto}" class="btn btn-primary" style="text-decoration:none;display:inline-block">Open in Mail App →</a>
+      <button class="btn btn-ghost" style="margin-left:8px" onclick="navigator.clipboard.writeText(${JSON.stringify(filled)}).then(()=>toast('Copied to clipboard ✓'))">Copy to Clipboard</button>
+    </div>`;
+}
+function openEmailForBooking(bookingId){
+  showTab('emails');
+  document.querySelector('.tab:nth-child(5)').click();
+}
+function editTemplate(id){
+  editingTemplateId=id;
+  const t=templates.find(x=>x.id===id);
+  document.getElementById('tpl-name').value=t.name;
+  document.getElementById('tpl-subject').value=t.subject;
+  document.getElementById('tpl-body').value=t.body;
+  openModal('template-modal');
+}
+function openNewTemplate(){
+  editingTemplateId=null;
+  ['tpl-name','tpl-subject','tpl-body'].forEach(id=>document.getElementById(id).value='');
+  openModal('template-modal');
+}
+async function saveTemplate(){
+  const data={name:document.getElementById('tpl-name').value,subject:document.getElementById('tpl-subject').value,body:document.getElementById('tpl-body').value};
+  if(!data.name||!data.subject){ toast('Name and subject required'); return; }
+  if(editingTemplateId){ await db.from('email_templates').update(data).eq('id',editingTemplateId); }
+  else { const {data:d}=await db.from('email_templates').insert(data).select().single(); if(d) templates.push(d); }
+  closeModal('template-modal');
+  await loadTemplates();
+  renderTemplates();
+  toast('Template saved ✓');
+}
+
+// ── MODALS ────────────────────────────────────────────────
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+
+// ── HELPERS ───────────────────────────────────────────────
+function cap(s){ return s?s.charAt(0).toUpperCase()+s.slice(1):'' }
+function fmtDate(d){ if(!d) return '—'; const dt=new Date(d+'T12:00:00'); return dt.toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric',year:'numeric'}); }
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); }));
+</script>
+</body>
+</html>

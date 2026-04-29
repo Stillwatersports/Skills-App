@@ -54,11 +54,66 @@
 .faq-a{font-size:13px;color:var(--muted);line-height:1.7;padding-bottom:16px;display:none}
 .faq-a.open{display:block}
 @media(max-width:960px){.booking-layout{grid-template-columns:1fr}.sticky-sidebar{position:static}.form-grid{grid-template-columns:1fr}}
+
+/* ── PACKAGE CARDS ────────────────────────────────────── */
+.pkg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.pkg-card{padding:14px 16px;border:2px solid rgba(0,200,212,0.2);border-radius:12px;cursor:pointer;transition:all .15s;background:var(--yellow)}
+.pkg-card:hover{border-color:var(--cyan)}
+.pkg-card.selected{border-color:var(--cyan);background:rgba(0,200,212,0.08)}
+.pkg-card-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+.pkg-card-price{font-size:13px;color:var(--cyan);font-weight:600}
+.pkg-card-note{font-size:11px;color:var(--muted);margin-top:3px}
+
+/* ── SLOT PICKER ──────────────────────────────────────── */
+.slot-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.slot-opt{padding:14px 18px;border:2px solid rgba(0,200,212,0.2);border-radius:12px;cursor:pointer;margin-bottom:8px;transition:all .15s;background:var(--yellow)}
+.slot-opt:hover{border-color:var(--cyan)}
+.slot-opt.active{border-color:var(--cyan);background:rgba(0,200,212,0.08)}
+.slot-opt-label{font-size:14px;font-weight:700;color:var(--text)}
+.slot-opt-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.slot-blocked-opt{opacity:.5;cursor:not-allowed}
+.slot-blocked-opt:hover{border-color:rgba(229,57,53,0.3)}
+.rule-error{background:rgba(229,57,53,0.08);border:1px solid rgba(229,57,53,0.25);border-radius:10px;padding:14px 16px;font-size:14px;color:#c62828;margin-bottom:12px;line-height:1.6}
+.rule-info{background:rgba(0,200,212,0.07);border:1px solid rgba(0,200,212,0.2);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6}
+.slot-dates-preview{font-size:13px;font-weight:600;color:var(--cyan);padding:10px 14px;background:rgba(0,200,212,0.06);border-radius:8px;margin-bottom:16px;line-height:1.8}
+
+/* ── BOOKING SUMMARY ──────────────────────────────────── */
+.sum-row{display:flex;justify-content:space-between;align-items:center;font-size:14px;margin-bottom:10px;color:var(--muted)}
+.sum-row strong{color:var(--text);font-weight:700;text-align:right;max-width:55%}
+.sum-divider{border-top:1px solid rgba(0,200,212,0.2);margin:12px 0}
+
 </style>
-<style>img{pointer-events:none;user-select:none;-webkit-user-drag:none}body{-webkit-user-select:none;user-select:none}</style>
+<style>img{pointer-events:none;user-select:none;-webkit-user-drag:none}body{-webkit-user-select:none;user-select:none}
+/* ── PACKAGE CARDS ────────────────────────────────────── */
+.pkg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.pkg-card{padding:14px 16px;border:2px solid rgba(0,200,212,0.2);border-radius:12px;cursor:pointer;transition:all .15s;background:var(--yellow)}
+.pkg-card:hover{border-color:var(--cyan)}
+.pkg-card.selected{border-color:var(--cyan);background:rgba(0,200,212,0.08)}
+.pkg-card-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
+.pkg-card-price{font-size:13px;color:var(--cyan);font-weight:600}
+.pkg-card-note{font-size:11px;color:var(--muted);margin-top:3px}
+
+/* ── SLOT PICKER ──────────────────────────────────────── */
+.slot-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
+.slot-opt{padding:14px 18px;border:2px solid rgba(0,200,212,0.2);border-radius:12px;cursor:pointer;margin-bottom:8px;transition:all .15s;background:var(--yellow)}
+.slot-opt:hover{border-color:var(--cyan)}
+.slot-opt.active{border-color:var(--cyan);background:rgba(0,200,212,0.08)}
+.slot-opt-label{font-size:14px;font-weight:700;color:var(--text)}
+.slot-opt-sub{font-size:12px;color:var(--muted);margin-top:2px}
+.slot-blocked-opt{opacity:.5;cursor:not-allowed}
+.slot-blocked-opt:hover{border-color:rgba(229,57,53,0.3)}
+.rule-error{background:rgba(229,57,53,0.08);border:1px solid rgba(229,57,53,0.25);border-radius:10px;padding:14px 16px;font-size:14px;color:#c62828;margin-bottom:12px;line-height:1.6}
+.rule-info{background:rgba(0,200,212,0.07);border:1px solid rgba(0,200,212,0.2);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6}
+.slot-dates-preview{font-size:13px;font-weight:600;color:var(--cyan);padding:10px 14px;background:rgba(0,200,212,0.06);border-radius:8px;margin-bottom:16px;line-height:1.8}
+
+/* ── BOOKING SUMMARY ──────────────────────────────────── */
+.sum-row{display:flex;justify-content:space-between;align-items:center;font-size:14px;margin-bottom:10px;color:var(--muted)}
+.sum-row strong{color:var(--text);font-weight:700;text-align:right;max-width:55%}
+.sum-divider{border-top:1px solid rgba(0,200,212,0.2);margin:12px 0}
+
+</style>
 </head>
 <body><nav>
-  <a href="/" class="nav-brand"><img src="./Sports_clear_bg.png" alt="Stillwater Sports" style="height:56px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.3))"/></a>
   <div class="nav-links">
     <div class="nav-dropdown">
       <a href="javascript:void(0)" class="nav-link-top " onclick="toggleDropdown(event,'about-menu')">About ▾</a>
@@ -78,11 +133,14 @@
       </div>
     </div>
     <a href="/pricing">Pricing</a>
+  </div>
+  <a href="/" class="nav-brand"><img src="./Sports_clear_bg.png" alt="Stillwater Sports" style="height:68px;width:auto;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.25))"/></a>
+  <div class="nav-links-right">
     <a href="/booking" class="active">Booking</a>
     <a href="/contact">Contact</a>
     <a href="/app">Stillwater Skills App</a>
+    <a href="/booking" class="nav-book">Book Now</a>
   </div>
-  <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
@@ -100,7 +158,7 @@
 </div>
 
 <section class="hero hero-short">
-  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,80,100,0.65) 0%,rgba(0,50,70,0.55) 100%),url('./booking-hero.jpeg') center 40%/cover no-repeat;background-color:var(--cyan)"></div>
+  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,80,100,0.65) 0%,rgba(0,50,70,0.55) 100%),url('./hero.jpg') center 40%/cover no-repeat;background-color:var(--cyan)"></div>
   <div class="hero-coords">N 45°<br>OTTAWA</div>
   <div class="hero-content" style="margin-left:auto;max-width:660px">
     <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)" data-content="booking_hero_badge"></div>
@@ -180,7 +238,9 @@
           <div id="calSelected" style="display:none;margin-top:20px">
             <div style="background:rgba(0,200,212,0.07);border:1.5px solid rgba(0,200,212,0.2);border-radius:12px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center">
               <div>
-                <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px">Selected</div>
+                <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">Booking Summary</div>
+                <div id="booking-summary"><div style="color:var(--muted);font-size:14px">Select a package and date to see your summary.</div></div>
+                <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;margin-top:16px">Selected Date</div>
                 <div style="font-size:18px;font-weight:700;color:var(--text)" id="calSelectedDate"></div>
               </div>
               <button onclick="goToStep2()" class="btn-pink">Continue →</button>
@@ -289,100 +349,425 @@
 <div id="toast"></div>
 
 
+
 <script>
+// ── SUPABASE ──────────────────────────────────────────────
 let db=null;
 try{db=supabase.createClient('https://jjnhsbgmcjqwlmeihwuy.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqbmhzYmdtY2pxd2xtZWlod3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyODkwNDEsImV4cCI6MjA4OTg2NTA0MX0.MOTbufdBqUhB36P1YBL-zo-KKlvJ-LBHwPS70D7DoWU');}catch(e){}
-function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
-document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
-let calYear=2026,calMonth=4,selectedDay=null,bookedDates={};
-const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-const days=['SU','MO','TU','WE','TH','FR','SA'];
-function setRegion(btn){document.querySelectorAll('.cal-region').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selectedDay=null;document.getElementById('calSelected').style.display='none';renderCal();}
-function changeMonth(dir){calMonth+=dir;if(calMonth>11){calMonth=0;calYear++}if(calMonth<0){calMonth=11;calYear--}selectedDay=null;document.getElementById('calSelected').style.display='none';loadBookedDates();}
+
+// ── CALENDAR STATE ────────────────────────────────────────
+let calYear=2026, calMonth=4, selectedDay=null, bookedDates={}, blockedSlots={};
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS=['SU','MO','TU','WE','TH','FR','SA'];
+
+// ── PACKAGE RULES ─────────────────────────────────────────
+const PACKAGES = {
+  'single':         { label:'Single Session — $600',         days:1, slotMode:'pick1',       weekdayOnly:false },
+  'full-weekday':   { label:'Full Day — Weekday — $1,000',   days:1, slotMode:'consecutive', weekdayOnly:true  },
+  'premium':        { label:'Premium Day — $1,250',          days:1, slotMode:'premium',     weekdayOnly:false },
+  'double-weekday': { label:'Double Weekday — $1,750',       days:2, slotMode:'consecutive', weekdayOnly:true, multiStart:true },
+  'full-weekend':   { label:'Full Weekend — $2,100',         days:2, slotMode:'any2',        weekdayOnly:false, multiStart:true, forceWeekend:true },
+  'three-day-week': { label:'3 Day Work Week — $2,500',      days:3, slotMode:'any2',        weekdayOnly:true, multiStart:true },
+  'holiday-weekend':{ label:'Holiday Weekend — $3,000',      days:3, slotMode:'any2',        weekdayOnly:false, multiStart:true },
+  'five-day':       { label:'5 Day Week — $4,500',           days:5, slotMode:'any2',        weekdayOnly:false, multiStart:true },
+};
+
+// slotMode meanings:
+// pick1       → choose any 1 slot
+// consecutive → morning+afternoon OR afternoon+evening (no split)
+// premium     → if weekday: morning+evening only | if weekend: any 2
+// any2        → any 2 slots (multi-day each day)
+
+let selectedPackage = null;
+let selectedSlots   = [];   // for single-day: ['morning','evening'] etc
+let selectedDates   = [];   // for multi-day: computed from start date
+
+// ── SLOT / PACKAGE SELECTION UI ───────────────────────────
+function selectPackage(pkg) {
+  selectedPackage = pkg;
+  selectedSlots = [];
+  selectedDates = [];
+  renderPackageCards();
+  renderSlotPicker();
+  updateSummary();
+}
+
+function renderPackageCards() {
+  document.querySelectorAll('.pkg-card').forEach(c => {
+    c.classList.toggle('selected', c.dataset.pkg === selectedPackage);
+  });
+}
+
+function isWeekday(date) {
+  const dow = date.getDay();
+  return dow >= 1 && dow <= 5;
+}
+function isWeekend(date) {
+  const dow = date.getDay();
+  return dow === 0 || dow === 6;
+}
+
+function renderSlotPicker() {
+  const el = document.getElementById('slot-picker');
+  if (!el) return;
+  if (!selectedPackage || !selectedDay) { el.innerHTML = ''; return; }
+
+  const pkg = PACKAGES[selectedPackage];
+  const date = new Date(calYear, calMonth, selectedDay);
+  const dow = date.getDay(); // 0=Sun,6=Sat
+  const isWD = isWeekday(date);
+  const isWE = isWeekend(date);
+
+  // Weekday-only package selected on weekend
+  if (pkg.weekdayOnly && isWE) {
+    el.innerHTML = `<div class="rule-error">⚠️ <strong>${pkg.label.split('—')[0].trim()}</strong> is only available on weekdays (Mon–Fri). Please select a weekday or choose a different package.</div>`;
+    selectedSlots = [];
+    return;
+  }
+
+  // Sunday — unavailable
+  if (dow === 0) {
+    el.innerHTML = `<div class="rule-error">⚠️ Sundays are not available for booking. Please choose another day.</div>`;
+    selectedSlots = [];
+    return;
+  }
+
+  let html = '';
+
+  if (pkg.multiStart) {
+    // Multi-day: show what dates will be booked
+    const dates = computeDates(selectedPackage, date);
+    selectedDates = dates;
+    const dateList = dates.map(d => d.toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric'})).join(' · ');
+    html += `<div class="slot-label">Session Dates</div>
+    <div class="slot-dates-preview">${dateList}</div>
+    <div class="slot-label" style="margin-top:16px">Time Slots (choose 2 per day)</div>`;
+
+    if (pkg.slotMode === 'consecutive') {
+      html += slotOptionHTML('consecutive-am', 'Morning + Afternoon', '~8am–4pm', ['morning','afternoon']);
+      html += slotOptionHTML('consecutive-pm', 'Afternoon + Evening', '~12pm–8pm', ['afternoon','evening']);
+    } else {
+      // any2
+      html += slotOptionHTML('slots-ma', 'Morning + Afternoon', '~8am–4pm', ['morning','afternoon']);
+      html += slotOptionHTML('slots-ae', 'Afternoon + Evening', '~12pm–8pm', ['afternoon','evening']);
+      html += slotOptionHTML('slots-me', 'Morning + Evening (Split)', '~8am–12pm & ~4pm–8pm', ['morning','evening']);
+    }
+    html += `<p style="font-size:13px;color:var(--muted);margin-top:8px;line-height:1.6">Same slot selection applies to all days in your package. If you need different slots on different days, let us know in the notes.</p>`;
+
+  } else if (pkg.slotMode === 'pick1') {
+    html += `<div class="slot-label">Choose Your Time Slot</div>`;
+    html += slotOptionHTML('slot-morn', 'Morning', '~8am–12pm', ['morning']);
+    html += slotOptionHTML('slot-aft',  'Afternoon','~12pm–4pm', ['afternoon']);
+    html += slotOptionHTML('slot-eve',  'Evening',  '~4pm–8pm',  ['evening']);
+
+  } else if (pkg.slotMode === 'consecutive') {
+    html += `<div class="slot-label">Choose Your Day Format</div>`;
+    html += slotOptionHTML('consec-am', 'Morning + Afternoon', '~8am–4pm', ['morning','afternoon']);
+    html += slotOptionHTML('consec-pm', 'Afternoon + Evening', '~12pm–8pm', ['afternoon','evening']);
+
+  } else if (pkg.slotMode === 'premium') {
+    html += `<div class="slot-label">Choose Your Day Format</div>`;
+    if (isWD) {
+      // Weekday premium = split only
+      html += `<div class="rule-info">ℹ️ For a weekday Premium Day, sessions run <strong>Morning + Evening</strong> (split day).</div>`;
+      html += slotOptionHTML('prem-split', 'Morning + Evening (Split Day)', '~8am–12pm & ~4pm–8pm', ['morning','evening']);
+    } else {
+      // Weekend = any 2
+      html += slotOptionHTML('prem-ma', 'Morning + Afternoon', '~8am–4pm', ['morning','afternoon']);
+      html += slotOptionHTML('prem-ae', 'Afternoon + Evening', '~12pm–8pm', ['afternoon','evening']);
+    }
+  }
+
+  el.innerHTML = html;
+
+  // Auto-select if only one option
+  const opts = el.querySelectorAll('.slot-opt');
+  if (opts.length === 1) opts[0].click();
+}
+
+function slotOptionHTML(id, label, sublabel, slots) {
+  const blocked = slots.some(s => isSlotBlocked(selectedDay, s));
+  return `<div class="slot-opt${blocked?' slot-blocked-opt':''}" id="${id}" onclick="pickSlot(this, ${JSON.stringify(slots)})" data-slots='${JSON.stringify(slots)}'>
+    <div class="slot-opt-label">${label}${blocked?` <span style="color:var(--red);font-size:11px">— Unavailable</span>`:''}</div>
+    <div class="slot-opt-sub">${sublabel}</div>
+  </div>`;
+}
+
+function pickSlot(el, slots) {
+  if (el.classList.contains('slot-blocked-opt')) {
+    showToast('That slot is not available on this date — please choose another');
+    return;
+  }
+  document.querySelectorAll('.slot-opt').forEach(o => o.classList.remove('active'));
+  el.classList.add('active');
+  selectedSlots = slots;
+  updateSummary();
+}
+
+function computeDates(pkg, startDate) {
+  const dates = [new Date(startDate)];
+  const d = new Date(startDate);
+  if (pkg === 'double-weekday') {
+    d.setDate(d.getDate()+1); while(!isWeekday(d)) d.setDate(d.getDate()+1);
+    dates.push(new Date(d));
+  } else if (pkg === 'three-day-week') {
+    for(let i=0;i<2;i++){ d.setDate(d.getDate()+1); while(!isWeekday(d)) d.setDate(d.getDate()+1); dates.push(new Date(d)); }
+  } else if (pkg === 'full-weekend') {
+    // start must be Sat — find next Sat+Sun
+    const sat = new Date(startDate);
+    while(sat.getDay()!==6) sat.setDate(sat.getDate()+1);
+    const sun = new Date(sat); sun.setDate(sun.getDate()+1);
+    return [sat, sun];
+  } else if (pkg === 'holiday-weekend') {
+    for(let i=0;i<2;i++){ d.setDate(d.getDate()+1); dates.push(new Date(d)); }
+  } else if (pkg === 'five-day') {
+    for(let i=0;i<4;i++){ d.setDate(d.getDate()+1); dates.push(new Date(d)); }
+  }
+  return dates;
+}
+
+function isSlotBlocked(day, slot) {
+  const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+  return !!(blockedSlots[dateStr] && blockedSlots[dateStr].includes(slot));
+}
+
+function updateSummary() {
+  const el = document.getElementById('booking-summary');
+  if (!el) return;
+  if (!selectedPackage || !selectedDay) { el.innerHTML = '<div style="color:var(--muted);font-size:14px">Select a package and date to see your summary.</div>'; return; }
+  const pkg = PACKAGES[selectedPackage];
+  const dateStr = MONTHS[calMonth]+' '+selectedDay+', '+calYear;
+  const slotStr = selectedSlots.length ? selectedSlots.map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(' + ') : '—';
+  const dates = selectedDates.length
+    ? selectedDates.map(d=>d.toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric'})).join(', ')
+    : dateStr;
+  el.innerHTML = `
+    <div class="sum-row"><span>Package</span><strong>${pkg.label}</strong></div>
+    <div class="sum-row"><span>${selectedDates.length>1?'Dates':'Date'}</span><strong>${dates}</strong></div>
+    <div class="sum-row"><span>Slots</span><strong>${slotStr}</strong></div>
+    <div class="sum-divider"></div>
+    <div class="sum-row"><span>Deposit (30%)</span><strong>$${Math.round(parseInt(pkg.label.match(/\$[\d,]+/)?.[0].replace(/[\$,]/g,'')||'0')*0.3).toLocaleString()}</strong></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:4px">Non-refundable · Full payment due 48hrs before</div>`;
+}
+
+// ── CALENDAR ──────────────────────────────────────────────
+function setRegion(btn){
+  document.querySelectorAll('.cal-region').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedDay=null;
+  document.getElementById('calSelected').style.display='none';
+  renderCal();
+}
+function changeMonth(dir){
+  calMonth+=dir;
+  if(calMonth>11){calMonth=0;calYear++}
+  if(calMonth<0){calMonth=11;calYear--}
+  selectedDay=null;
+  document.getElementById('calSelected').style.display='none';
+  loadBookedDates();
+}
 async function loadBookedDates(){
   const start=new Date(calYear,calMonth,1).toISOString().split('T')[0];
   const end=new Date(calYear,calMonth+1,0).toISOString().split('T')[0];
   if(!db){renderCal();return}
-  const{data}=await db.from('bookings').select('requested_date,status').gte('requested_date',start).lte('requested_date',end).in('status',['pending','confirmed']);
+  const{data:bk}=await db.from('bookings').select('date,slot,status').gte('date',start).lte('date',end).in('status',['new','confirmed','deposit_paid']);
+  const{data:av}=await db.from('availability').select('date,slot,is_blocked').gte('date',start).lte('date',end).eq('is_blocked',true);
   bookedDates={};
-  if(data)data.forEach(r=>{const d=new Date(r.requested_date).getDate();if(!bookedDates[d])bookedDates[d]=[];bookedDates[d].push(r.status)});
+  blockedSlots={};
+  if(bk) bk.forEach(r=>{
+    const d=new Date(r.date+'T12:00:00').getDate();
+    if(!bookedDates[d]) bookedDates[d]=[];
+    bookedDates[d].push(r.status);
+    const ds=r.date;
+    if(!blockedSlots[ds]) blockedSlots[ds]=[];
+    blockedSlots[ds].push(r.slot);
+  });
+  if(av) av.forEach(r=>{
+    if(!blockedSlots[r.date]) blockedSlots[r.date]=[];
+    if(!blockedSlots[r.date].includes(r.slot)) blockedSlots[r.date].push(r.slot);
+    const d=new Date(r.date+'T12:00:00').getDate();
+    if(!bookedDates[d]) bookedDates[d]=[];
+    bookedDates[d].push('blocked');
+  });
   renderCal();
 }
 function renderCal(){
-  document.getElementById('calMonth').textContent=months[calMonth]+' '+calYear;
-  const grid=document.getElementById('calGrid');grid.innerHTML='';
-  days.forEach(d=>{const h=document.createElement('div');h.className='cal-day-header';h.textContent=d;grid.appendChild(h)});
+  document.getElementById('calMonth').textContent=MONTHS[calMonth]+' '+calYear;
+  const grid=document.getElementById('calGrid');
+  grid.innerHTML='';
+  DAYS.forEach(d=>{const h=document.createElement('div');h.className='cal-day-header';h.textContent=d;grid.appendChild(h)});
   const first=new Date(calYear,calMonth,1).getDay();
   const total=new Date(calYear,calMonth+1,0).getDate();
   const today=new Date();
   for(let i=0;i<first;i++){const e=document.createElement('div');e.className='cal-day empty';grid.appendChild(e)}
   for(let d=1;d<=total;d++){
     const cell=document.createElement('div');
-    const isPast=new Date(calYear,calMonth,d)<new Date(today.getFullYear(),today.getMonth(),today.getDate());
-    const isSun=new Date(calYear,calMonth,d).getDay()===0;
+    const dt=new Date(calYear,calMonth,d);
+    const isPast=dt<new Date(today.getFullYear(),today.getMonth(),today.getDate());
+    const isSun=dt.getDay()===0;
     const b=bookedDates[d]||[];
+    const allSlotsBlocked = b.filter(x=>x==='blocked'||x==='confirmed'||x==='deposit_paid').length>=3;
     let status='open';
-    if(isPast||isSun)status='unavailable';
-    else if(b.includes('confirmed'))status='unavailable';
-    else if(b.includes('pending'))status='limited';
+    if(isPast||isSun) status='unavailable';
+    else if(allSlotsBlocked) status='unavailable';
+    else if(b.some(x=>x==='new'||x==='limited')) status='limited';
     cell.className='cal-day'+(selectedDay===d?' selected':'');
-    if(status==='unavailable')cell.style.opacity='.35';
+    if(status==='unavailable') cell.style.opacity='.35';
     const num=document.createElement('span');num.textContent=d;cell.appendChild(num);
-    if(status!=='unavailable'){const dot=document.createElement('div');dot.className='cal-day-dot '+(status==='limited'?'limited':'open');cell.appendChild(dot);cell.onclick=()=>selectDay(d);}
+    if(status!=='unavailable'){
+      const dot=document.createElement('div');
+      dot.className='cal-day-dot '+(status==='limited'?'limited':'open');
+      cell.appendChild(dot);
+      cell.onclick=()=>selectDay(d);
+    }
     grid.appendChild(cell);
   }
 }
-function selectDay(d){if((bookedDates[d]||[]).includes('confirmed'))return;selectedDay=d;renderCal();const dateStr=months[calMonth]+' '+d+', '+calYear;document.getElementById('calSelectedDate').textContent=dateStr;document.getElementById('calSelected').style.display='block';}
+function selectDay(d){
+  selectedDay=d;
+  selectedSlots=[];
+  renderCal();
+  const dateStr=MONTHS[calMonth]+' '+d+', '+calYear;
+  document.getElementById('calSelectedDate').textContent=dateStr;
+  document.getElementById('calSelected').style.display='block';
+  renderSlotPicker();
+  updateSummary();
+}
+
+// ── STEP NAVIGATION ───────────────────────────────────────
 function goToStep2(){
-  if(!selectedDay){showToast('Please select a date first');return}
-  const dateStr=months[calMonth]+' '+selectedDay+', '+calYear;
-  document.getElementById('formDateLabel').textContent=dateStr;
+  if(!selectedDay){ showToast('Please select a date first'); return; }
+  if(!selectedPackage){ showToast('Please select a package'); return; }
+  if(!selectedSlots.length){ showToast('Please select a time slot'); return; }
+
+  const pkg = PACKAGES[selectedPackage];
+  const date = new Date(calYear, calMonth, selectedDay);
+
+  // Final rule validation
+  if(pkg.weekdayOnly && !isWeekday(date)){
+    showToast('That package is weekdays only — please pick a weekday');
+    return;
+  }
+  if(pkg.slotMode==='consecutive' && !pkg.multiStart){
+    const invalid = JSON.stringify(selectedSlots)===JSON.stringify(['morning','evening']);
+    if(invalid){ showToast('Full Day Weekday requires consecutive slots — try Premium Day for a split day'); return; }
+  }
+  if(selectedPackage==='full-weekend'){
+    if(!isWeekend(date)){ showToast('Full Weekend must start on a Saturday'); return; }
+  }
+
+  // Set summary for step 2 display
+  const dateStr = MONTHS[calMonth]+' '+selectedDay+', '+calYear;
+  document.getElementById('formDateLabel').textContent = dateStr;
   document.getElementById('step1').style.display='none';
   document.getElementById('faqSection').style.display='none';
   document.getElementById('step2').classList.add('visible');
-  document.getElementById('s1').classList.remove('active');document.getElementById('s1').classList.add('done');document.getElementById('s1').textContent='✓';
-  document.getElementById('s2').classList.add('active');document.getElementById('s2l').classList.add('active');
+  document.getElementById('s1').classList.remove('active');
+  document.getElementById('s1').classList.add('done');
+  document.getElementById('s1').textContent='✓';
+  document.getElementById('s2').classList.add('active');
+  document.getElementById('s2l').classList.add('active');
   window.scrollTo({top:document.getElementById('stepIndicator').offsetTop-100,behavior:'smooth'});
 }
 function goToStep1(){
   document.getElementById('step2').classList.remove('visible');
   document.getElementById('step1').style.display='block';
   document.getElementById('faqSection').style.display='block';
-  document.getElementById('s1').classList.add('active');document.getElementById('s1').classList.remove('done');document.getElementById('s1').textContent='1';
-  document.getElementById('s2').classList.remove('active');document.getElementById('s2l').classList.remove('active');
+  document.getElementById('s1').classList.add('active');
+  document.getElementById('s1').classList.remove('done');
+  document.getElementById('s1').textContent='1';
+  document.getElementById('s2').classList.remove('active');
+  document.getElementById('s2l').classList.remove('active');
 }
+
+// ── SUBMIT ────────────────────────────────────────────────
 async function submitBooking(){
-  const name=document.getElementById('b-name').value.trim();
-  const email=document.getElementById('b-email').value.trim();
-  const phone=document.getElementById('b-phone').value.trim();
-  const location=document.getElementById('b-location').value.trim();
-  const session=document.getElementById('b-session').value;
-  const group=document.getElementById('b-group').value;
-  const sport=document.getElementById('b-sport').value;
-  const level=document.getElementById('b-level').value;
-  const notes=document.getElementById('b-notes').value.trim();
-  const btn=document.getElementById('b-submit');
-  if(!name||!location){showToast('Please enter your name and location');return}
-  if(!email&&!phone){showToast('Please enter an email or phone number');return}
-  btn.disabled=true;btn.textContent='Sending...';
-  const requestedDate=new Date(calYear,calMonth,selectedDay).toISOString().split('T')[0];
-  if(db){try{await db.from('bookings').insert({name,email:email||null,phone:phone||null,location,requested_date:requestedDate,group_size:group||null,skill_level:level||null,sport:sport||null,notes:(session?'Session: '+session+'\n':'')+notes||null,status:'pending'});}catch(e){}}
-  try{await fetch('https://formspree.io/f/mwvwzdwj',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({name,email:email||'not provided',phone:phone||'not provided',location,date:requestedDate,session_type:session||'not specified',group_size:group||'not specified',skill_level:level||'not specified',sport:sport||'not specified',notes:notes||'none',_subject:`New Booking Request — ${name} · ${requestedDate}`})});}catch(e){}
+  const name     = document.getElementById('b-name').value.trim();
+  const email    = document.getElementById('b-email').value.trim();
+  const phone    = document.getElementById('b-phone').value.trim();
+  const location = document.getElementById('b-location').value.trim();
+  const group    = document.getElementById('b-group').value;
+  const sport    = document.getElementById('b-sport').value;
+  const level    = document.getElementById('b-level').value;
+  const notes    = document.getElementById('b-notes').value.trim();
+  const btn      = document.getElementById('b-submit');
+
+  if(!name||!location){ showToast('Please enter your name and location'); return; }
+  if(!email&&!phone){ showToast('Please enter an email or phone number'); return; }
+
+  btn.disabled=true; btn.textContent='Sending...';
+
+  const pkg = PACKAGES[selectedPackage];
+  const requestedDate = new Date(calYear,calMonth,selectedDay).toISOString().split('T')[0];
+  const allDates = selectedDates.length
+    ? selectedDates.map(d=>d.toISOString().split('T')[0])
+    : [requestedDate];
+  const slotStr = selectedSlots.map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(' + ');
+
+  // Write to Supabase
+  if(db){
+    try{
+      const{data:bk}=await db.from('bookings').insert({
+        date:requestedDate,
+        slot:selectedSlots[0],
+        package:pkg.label,
+        location,
+        sport:sport||null,
+        notes:(notes||'')+(allDates.length>1?'\nAll dates: '+allDates.join(', '):''),
+        status:'new',
+        raw_request:{name,email,phone,group,level,selectedSlots,allDates}
+      }).select().single();
+      // Try to find or create client
+      if(bk){
+        let{data:cl}=await db.from('clients').select('id').eq('email',email).single();
+        if(!cl&&email){ const{data}=await db.from('clients').insert({name,email,phone,location}).select().single(); cl=data; }
+        if(cl) await db.from('bookings').update({client_id:cl.id}).eq('id',bk.id);
+      }
+    }catch(e){}
+  }
+
+  // Formspree email to you
+  try{
+    await fetch('https://formspree.io/f/mwvwzdwj',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({
+        name, email:email||'not provided', phone:phone||'not provided', location,
+        package:pkg.label,
+        date:requestedDate,
+        all_dates:allDates.join(', '),
+        slots:slotStr,
+        group_size:group||'not specified',
+        skill_level:level||'not specified',
+        sport:sport||'not specified',
+        notes:notes||'none',
+        _subject:`New Booking Request — ${name} · ${requestedDate} · ${pkg.label.split('—')[0].trim()}`
+      })
+    });
+  }catch(e){}
+
+  // Move to step 3
   document.getElementById('step2').classList.remove('visible');
   document.getElementById('step3').classList.add('visible');
-  document.getElementById('s2').classList.remove('active');document.getElementById('s2').classList.add('done');document.getElementById('s2').textContent='✓';document.getElementById('s2l').classList.remove('active');
-  document.getElementById('s3').classList.add('active');document.getElementById('s3l').classList.add('active');
-  if(!bookedDates[selectedDay])bookedDates[selectedDay]=[];bookedDates[selectedDay].push('pending');
-  btn.disabled=false;btn.textContent='Request This Date →';
+  document.getElementById('s2').classList.remove('active');
+  document.getElementById('s2').classList.add('done');
+  document.getElementById('s2').textContent='✓';
+  document.getElementById('s2l').classList.remove('active');
+  document.getElementById('s3').classList.add('active');
+  document.getElementById('s3l').classList.add('active');
+  btn.disabled=false; btn.textContent='Request This Date →';
   window.scrollTo({top:0,behavior:'smooth'});
 }
-function toggleFaq(btn){const a=btn.nextElementSibling;btn.classList.toggle('open');a.classList.toggle('open');}
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3000);}
-renderCal();loadBookedDates();
+
+function toggleFaq(btn){ const a=btn.nextElementSibling; btn.classList.toggle('open'); a.classList.toggle('open'); }
+function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3500); }
+
+renderCal();
+loadBookedDates();
 </script>
 
-<script src="./content.js"></script>
 
+<script src="./content.js"></script>
 
 <script>
 function toggleDropdown(e, menuId){
@@ -398,15 +783,8 @@ document.addEventListener('click',function(e){
     document.querySelectorAll('.nav-dropdown-menu').forEach(m=>m.classList.remove('open'));
   }
 });
-function toggleMenu(){
-  const m=document.getElementById('mobileMenu');
-  m.classList.toggle('open');
-  document.body.style.overflow=m.classList.contains('open')?'hidden':'';
-}
-document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{
-  document.getElementById('mobileMenu').classList.remove('open');
-  document.body.style.overflow='';
-}));
+function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
+document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
 </script>
 </body>
 </html>
