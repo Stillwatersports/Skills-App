@@ -1,0 +1,389 @@
+<!-- © 2026 Christian Richards / Stillwater Sports. All rights reserved. Unauthorized copying or reproduction of this code or content is prohibited. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="google-site-verification" content="_ymjlW_Dw-AhwY4WSTsuzvuAlaIJYNpKvLNRo2aS4Js"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Stillwater Sports session guidelines — lake access, participant rules, safety, what to bring, and booking policies."/>
+<title>Guidelines — Stillwater Sports</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="./styles.css"/>
+<style>img{pointer-events:none;user-select:none;-webkit-user-drag:none}body{-webkit-user-select:none;user-select:none}</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:60px;width:auto;object-fit:contain;border-radius:8px"/></a>
+  <div class="nav-links">
+    <div class="nav-dropdown">
+      <a href="javascript:void(0)" class="nav-link-top active" onclick="toggleDropdown(event,'about-menu')">About ▾</a>
+      <div class="nav-dropdown-menu" id="about-menu">
+        <a href="/about">Meet the Coach</a>
+        <a href="/sports">Sports</a>
+        <a href="/equipment">Equipment</a>
+        <a href="/policies">Policies</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <a href="javascript:void(0)" class="nav-link-top active" onclick="toggleDropdown(event,'hiw-menu')">How It Works ▾</a>
+      <div class="nav-dropdown-menu" id="hiw-menu">
+        <a href="/how-it-works">What to Expect</a>
+        <a href="/guidelines">Guidelines</a>
+        <a href="/faq">FAQ</a>
+      </div>
+    </div>
+    <a href="/pricing">Pricing</a>
+    <a href="/booking">Booking</a>
+    <a href="/contact">Contact</a>
+    <a href="/app">Stillwater Skills App</a>
+  </div>
+  <a href="/booking" class="nav-book">Book Now</a>
+  <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/about" onclick="toggleMenu()">Meet the Coach</a>
+  <a href="/sports" onclick="toggleMenu()">Sports</a>
+  <a href="/equipment" onclick="toggleMenu()">Equipment</a>
+  <a href="/how-it-works" onclick="toggleMenu()">What to Expect</a>
+  <a href="/guidelines" onclick="toggleMenu()">Guidelines</a>
+  <a href="/faq" onclick="toggleMenu()">FAQ</a>
+  <a href="/pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="/booking" onclick="toggleMenu()">Booking</a>
+  <a href="/contact" onclick="toggleMenu()">Contact</a>
+  <a href="/app" onclick="toggleMenu()">Stillwater Skills App</a>
+  <a href="/policies" onclick="toggleMenu()">Policies</a>
+</div>
+
+<section class="hero hero-short">
+  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,60,80,0.75) 0%,rgba(0,40,60,0.65) 100%);background-color:var(--dark)"></div>
+  <div class="hero-coords">N 45°<br>OTTAWA</div>
+  <div class="hero-content" style="margin-left:auto;max-width:660px">
+    <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)">Please Read Before Booking</div>
+    <h1><span class="l1">Session</span><span class="l3">Guidelines.</span></h1>
+  </div>
+  <div class="hero-bottom">
+    <div class="hero-scroll">Read Below</div>
+    <div class="hero-stats-mini">
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num">6</div><div class="hero-stat-mini-lbl">Sections</div></div>
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num">All Ages</div><div class="hero-stat-mini-lbl">Welcome</div></div>
+    </div>
+    <a href="mailto:christian@learnwatersports.ca" class="hero-contact-link">Questions? Contact Us</a>
+  </div>
+</section>
+
+<!-- JUMP LINKS -->
+<div style="background:var(--cyan);padding:24px 48px">
+  <div style="max-width:900px;margin:0 auto;display:flex;flex-wrap:wrap;gap:10px;justify-content:center">
+    <a href="#lake" style="background:rgba(255,255,255,0.15);color:var(--yellow);border-radius:20px;padding:8px 18px;font-size:13px;font-weight:600;text-decoration:none;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">01 · Lake & Location</a>
+    <a href="#participants" style="background:rgba(255,255,255,0.15);color:var(--yellow);border-radius:20px;padding:8px 18px;font-size:13px;font-weight:600;text-decoration:none;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">02 · Participants</a>
+    <a href="#bring" style="background:rgba(255,255,255,0.15);color:var(--yellow);border-radius:20px;padding:8px 18px;font-size:13px;font-weight:600;text-decoration:none;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">03 · What to Bring</a>
+    <a href="#safety" style="background:rgba(255,255,255,0.15);color:var(--yellow);border-radius:20px;padding:8px 18px;font-size:13px;font-weight:600;text-decoration:none;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">04 · Safety Rules</a>
+    <a href="#booking" style="background:rgba(255,255,255,0.15);color:var(--yellow);border-radius:20px;padding:8px 18px;font-size:13px;font-weight:600;text-decoration:none;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">05 · Booking & Payment</a>
+    <a href="#app" style="background:rgba(255,255,255,0.15);color:var(--yellow);border-radius:20px;padding:8px 18px;font-size:13px;font-weight:600;text-decoration:none;transition:background .2s" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">06 · Stillwater Skills App</a>
+  </div>
+</div>
+
+<div style="background:var(--yellow)">
+<div style="max-width:820px;margin:0 auto;padding:64px 48px">
+
+<!-- INTRO -->
+<p style="font-size:16px;color:var(--muted);line-height:1.8;margin-bottom:48px">Please read through the following requirements before booking your session. They cover everything you need to know about location access, participant rules, what to bring, safety expectations, and booking policies. If you have any questions, <a href="/contact" style="color:var(--cyan);font-weight:600">contact us</a> before booking — we&#39;re happy to help.</p>
+
+<!-- ─────────────────────────────────── -->
+<!-- 01 LAKE & LOCATION -->
+<!-- ─────────────────────────────────── -->
+<div id="lake" style="scroll-margin-top:90px;margin-bottom:56px">
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--cyan)">
+    <div style="background:var(--cyan);color:var(--yellow);font-size:11px;font-weight:800;letter-spacing:.08em;padding:6px 14px;border-radius:20px;white-space:nowrap">01</div>
+    <h2 style="font-size:26px;font-weight:800;color:var(--text);margin:0;letter-spacing:-.02em">Lake &amp; Location Requirements</h2>
+  </div>
+
+  <h3 style="font-size:15px;font-weight:700;color:var(--cyan);margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em">Boat Launch</h3>
+  <ul style="margin:0 0 24px 20px;padding:0">
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">A usable boat launch must be present on the <strong>same body of water</strong> as your session</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">A trailer-friendly ramp (concrete or gravel) is strongly preferred — we arrive with a full-size ski boat and trailer</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Minimum <strong>8 feet of clearance</strong> required for any culverts, bridges, or locks on the route to the launch</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">If the launch is on a different lake or waterway, please advise us before booking</li>
+  </ul>
+
+  <h3 style="font-size:15px;font-weight:700;color:var(--cyan);margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em">Water Requirements</h3>
+  <ul style="margin:0 0 24px 20px;padding:0">
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Any lake, river, or waterway that allows motorized watercraft is suitable</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Open water preferred — a clear stretch of at least 200–300m is ideal for most disciplines</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">We also operate on the Rideau River in Ottawa — no cottage required</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Public parks and boat launches are acceptable if no private cottage access is available</li>
+  </ul>
+
+  <h3 style="font-size:15px;font-weight:700;color:var(--cyan);margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em">Location</h3>
+  <ul style="margin:0 0 24px 20px;padding:0">
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Please ensure there is a bathroom on-site or nearby</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">A covered area and/or seating is recommended for observers</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">A nearby gas station (non-marine) is strongly preferred for full day and multi-day bookings</li>
+  </ul>
+
+  <h3 style="font-size:15px;font-weight:700;color:var(--cyan);margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em">Distance Surcharges</h3>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+    <div style="background:rgba(0,200,212,0.06);border-radius:var(--rsm);padding:16px;border:1px solid rgba(0,200,212,0.15)">
+      <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">Within 1.5hrs</div>
+      <div style="font-size:20px;font-weight:800;color:var(--text)">No charge</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">From Ottawa (Manotick)</div>
+    </div>
+    <div style="background:rgba(0,200,212,0.06);border-radius:var(--rsm);padding:16px;border:1px solid rgba(0,200,212,0.15)">
+      <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">1.5 – 3hr Drive</div>
+      <div style="font-size:20px;font-weight:800;color:var(--text)">+$100 flat</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">One-time surcharge</div>
+    </div>
+    <div style="background:rgba(0,200,212,0.06);border-radius:var(--rsm);padding:16px;border:1px solid rgba(0,200,212,0.15)">
+      <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">3 – 6hr Drive</div>
+      <div style="font-size:20px;font-weight:800;color:var(--text)">+$200 flat</div>
+      <div style="font-size:12px;color:var(--muted);margin-top:4px">One-time surcharge</div>
+    </div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────── -->
+<!-- 02 PARTICIPANTS -->
+<!-- ─────────────────────────────────── -->
+<div id="participants" style="scroll-margin-top:90px;margin-bottom:56px">
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--pink)">
+    <div style="background:var(--pink);color:var(--yellow);font-size:11px;font-weight:800;letter-spacing:.08em;padding:6px 14px;border-radius:20px;white-space:nowrap">02</div>
+    <h2 style="font-size:26px;font-weight:800;color:var(--text);margin:0;letter-spacing:-.02em">Participant Requirements</h2>
+  </div>
+
+  <h3 style="font-size:15px;font-weight:700;color:var(--cyan);margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em">Age</h3>
+  <ul style="margin:0 0 24px 20px;padding:0">
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">All ages welcome — our youngest skier was 2.5 years old, our oldest is… undisclosed!</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Children under 16 must have a <strong>parent or guardian present on shore at all times</strong></li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">If a minor&#39;s parents are not present, contact information and additional written consent is required prior to the session — a form will be provided</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Equipment is available in all sizes — we accommodate all ages</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">We offer lifejackets in every size but recommend bringing your own for proper fitment
+      <ul style="margin:8px 0 0 20px;padding:0">
+        <li style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:4px;font-style:italic">A well-fitting lifejacket should be snug but not tight. To test: lift the jacket by the shoulders — if it rises to or past the wearer&#39;s ears, it does not fit properly.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3 style="font-size:15px;font-weight:700;color:var(--cyan);margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em">Health & Physical Condition</h3>
+  <ul style="margin:0 0 24px 20px;padding:0">
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Participants should be comfortable in the water — basic swimming ability is required</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">If any participant has a physical limitation, injury, or medical condition, please advise us in advance</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Participants who appear to be under the influence of alcohol or drugs will not be permitted to participate — <strong>no refund will be issued</strong></li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Alcohol and drugs are not permitted on the boat</li>
+  </ul>
+
+  <h3 style="font-size:15px;font-weight:700;color:var(--cyan);margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em">Waivers</h3>
+  <ul style="margin:0 0 0 20px;padding:0">
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">A signed liability waiver is required for every participant before entering the water</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Waivers for minors must be signed by a parent or legal guardian</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Waivers will be sent upon booking confirmation — please complete them in advance</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Our full waiver and policies are available at <a href="/policies" style="color:var(--cyan);font-weight:600">learnwatersports.ca/policies</a></li>
+  </ul>
+</div>
+
+<!-- ─────────────────────────────────── -->
+<!-- 03 WHAT TO BRING -->
+<!-- ─────────────────────────────────── -->
+<div id="bring" style="scroll-margin-top:90px;margin-bottom:56px">
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--cyan)">
+    <div style="background:var(--cyan);color:var(--yellow);font-size:11px;font-weight:800;letter-spacing:.08em;padding:6px 14px;border-radius:20px;white-space:nowrap">03</div>
+    <h2 style="font-size:26px;font-weight:800;color:var(--text);margin:0;letter-spacing:-.02em">What to Bring</h2>
+  </div>
+  <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:20px">We provide everything on the water. Just show up ready to ride.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+    <div>
+      <h3 style="font-size:15px;font-weight:700;color:var(--pink);margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em">Required</h3>
+      <ul style="margin:0 0 0 20px;padding:0">
+        <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Swimwear</li>
+        <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Sunscreen — apply before boarding</li>
+        <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Water &amp; snacks for your group</li>
+        <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Towels</li>
+        <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Signed waivers (sent after booking)</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="font-size:15px;font-weight:700;color:var(--cyan);margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em">Optional but Recommended</h3>
+      <ul style="margin:0 0 0 20px;padding:0">
+        <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Your own life jacket — we have all sizes but yours is better</li>
+        <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Your own ski, board, or handle</li>
+        <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Rash guard or UV protection</li>
+        <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Warm layer for morning/evening sessions</li>
+        <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Camera / GoPro</li>
+        <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Change of clothes for the drive home</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-top:20px;background:rgba(0,200,212,0.06);border-radius:var(--rsm);padding:20px 24px;border:1px solid rgba(0,200,212,0.15)">
+    <div style="font-size:12px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px">We Provide Everything Else</div>
+    <div style="font-size:14px;color:var(--muted);line-height:1.8">Sanger DLX boat · Fuel · Waterskis · Wakeboards · Wakesurf board · Combo skis · Trick skis · Slalom ski · Ropes · Handles · PFDs in all sizes · Barefoot boom · Wakeboard tower · Surf tabs · Ballast bags · First aid kit · Safety equipment</div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────── -->
+<!-- 04 SAFETY -->
+<!-- ─────────────────────────────────── -->
+<div id="safety" style="scroll-margin-top:90px;margin-bottom:56px">
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--pink)">
+    <div style="background:var(--pink);color:var(--yellow);font-size:11px;font-weight:800;letter-spacing:.08em;padding:6px 14px;border-radius:20px;white-space:nowrap">04</div>
+    <h2 style="font-size:26px;font-weight:800;color:var(--text);margin:0;letter-spacing:-.02em">On-Water Safety Rules</h2>
+  </div>
+  <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:20px">Safety is covered at the start of every session. These rules are non-negotiable and apply to all participants on and around the water.</p>
+
+  <h3 style="font-size:15px;font-weight:700;color:var(--cyan);margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em">Life Jackets</h3>
+  <ul style="margin:0 0 24px 20px;padding:0">
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">A properly fitting PFD must be worn by every rider while in the water — no exceptions</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Children under 16 must wear a PFD on the boat as well</li>
+  </ul>
+
+  <h3 style="font-size:15px;font-weight:700;color:var(--cyan);margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em">Spotter / Observer</h3>
+  <ul style="margin:0 0 24px 20px;padding:0">
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">A designated spotter must face the rider at all times while they are in the water</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Hand signals are reviewed at the start of each session: thumb up, thumb down, OK, stop, emergency</li>
+  </ul>
+
+  <h3 style="font-size:15px;font-weight:700;color:var(--cyan);margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em">In the Water</h3>
+  <ul style="margin:0 0 24px 20px;padding:0">
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Always hold your ski(s) or board up out of the water after a fall — signals your location to the driver and other boaters</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Stay visible — do not swim toward the boat until instructed by the coach</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">After a fall, give the appropriate signal — OK or NOT OK. The boat will return slowly to pick you up</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Never approach the boat near the propeller — wait for the all-clear signal</li>
+  </ul>
+
+  <h3 style="font-size:15px;font-weight:700;color:var(--cyan);margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em">On the Boat</h3>
+  <ul style="margin:0 0 24px 20px;padding:0">
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Remain seated while the boat is at speed</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">No standing or sitting on the bow, gunwales, or tower while underway</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Participants who have consumed alcohol will not be permitted to ride — no refund will be issued</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">All instructions from the coach must be followed at all times on and around the water</li>
+  </ul>
+
+  <div style="background:rgba(224,64,160,0.06);border-radius:var(--rsm);padding:16px 20px;border-left:3px solid var(--pink)">
+    <div style="font-size:14px;color:var(--muted);line-height:1.7"><strong style="color:var(--text)">Coach Authority:</strong> The coach has final say on all safety decisions — including weather, conditions, and participant readiness. Sessions may be paused or ended at any time if safety is a concern.</div>
+  </div>
+</div>
+
+<!-- ─────────────────────────────────── -->
+<!-- 05 BOOKING -->
+<!-- ─────────────────────────────────── -->
+<div id="booking" style="scroll-margin-top:90px;margin-bottom:56px">
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--cyan)">
+    <div style="background:var(--cyan);color:var(--yellow);font-size:11px;font-weight:800;letter-spacing:.08em;padding:6px 14px;border-radius:20px;white-space:nowrap">05</div>
+    <h2 style="font-size:26px;font-weight:800;color:var(--text);margin:0;letter-spacing:-.02em">Booking &amp; Payment Requirements</h2>
+  </div>
+
+  <p style="font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:16px">For full policy details see <a href="/policies" style="color:var(--cyan);font-weight:600">learnwatersports.ca/policies</a></p>
+  <h3 style="font-size:15px;font-weight:700;color:var(--cyan);margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em">To Secure Your Booking</h3>
+  <ul style="margin:0 0 24px 20px;padding:0">
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">A <strong>30% deposit</strong> is required — your date is not held until the deposit is received</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Full payment is due <strong>48 hours before your session</strong> via Square payment link</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Failure to pay by this deadline may result in forfeiture of the booking without refund of deposit</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Bookings are confirmed only upon receipt of deposit and written confirmation from Stillwater Sports</li>
+  </ul>
+
+  <h3 style="font-size:15px;font-weight:700;color:var(--cyan);margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em">Cancellation Policy</h3>
+  <ul style="margin:0 0 24px 20px;padding:0">
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Deposit is <strong>non-refundable</strong> in all cases of client cancellation</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Cancellation by client — no refund, no credit</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Cancellation by Stillwater Sports — reschedule at no charge with credit for any money paid. Full refund if no suitable date is available</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Cancellations must be submitted by email to <a href="mailto:bookings@learnwatersports.ca" style="color:var(--cyan);font-weight:600">bookings@learnwatersports.ca</a> — not accepted by phone or text</li>
+  </ul>
+
+  <h3 style="font-size:15px;font-weight:700;color:var(--cyan);margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em">Weather Policy</h3>
+  <ul style="margin:0 0 24px 20px;padding:0">
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px"><strong>Light rain</strong> — session proceeds as scheduled</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px"><strong>Heavy rain or thunder</strong> — session cancelled by coach, full credit to rebook</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px"><strong>Overcast or wind only</strong> — session proceeds; if conditions deteriorate, pro-rated credit for remaining time</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">If no suitable rebook date before September 30 — full refund of all payments made</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">The coach has final say on all weather-related decisions</li>
+  </ul>
+
+  <h3 style="font-size:15px;font-weight:700;color:var(--cyan);margin:0 0 12px;text-transform:uppercase;letter-spacing:.06em">Surcharges</h3>
+  <ul style="margin:0 0 0 20px;padding:0">
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Tubing: +$30/hr additional fuel surcharge — waived for 2+ consecutive day bookings. It&#39;s a fun way to break up the other activities!</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Distance: +$100 flat (1.5–3hr) or +$200 flat (3–6hr) from Ottawa</li>
+  </ul>
+</div>
+
+<!-- ─────────────────────────────────── -->
+<!-- 06 APP -->
+<!-- ─────────────────────────────────── -->
+<div id="app" style="scroll-margin-top:90px;margin-bottom:56px">
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid var(--pink)">
+    <div style="background:var(--pink);color:var(--yellow);font-size:11px;font-weight:800;letter-spacing:.08em;padding:6px 14px;border-radius:20px;white-space:nowrap">06</div>
+    <h2 style="font-size:26px;font-weight:800;color:var(--text);margin:0;letter-spacing:-.02em">Stillwater Skills App</h2>
+  </div>
+  <p style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:16px">All Stillwater Sports students receive free access to the Stillwater Skills app — a structured progression platform for tracking skills and earning certifications from Bronze through Platinum.</p>
+  <ul style="margin:0 0 24px 20px;padding:0">
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Access at <a href="/stillwaterapp" style="color:var(--cyan);font-weight:600">learnwatersports.ca/stillwaterapp</a> — free for all students</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Track your skills from Bronze through Gold — complete Gold to unlock the secret Platinum level</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">Submit videos for coach approval and sign-off on each skill</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">GPS session tracking — record your time on the water all season and compare against your friends</li>
+    <li style="font-size:15px;color:var(--muted);line-height:1.8;margin-bottom:6px">We recommend creating your account before your session — we&#39;ll sign off your first skills on the day</li>
+  </ul>
+  <a href="/app" class="btn-pink" style="display:inline-flex">Learn More About the App →</a>
+</div>
+
+</div>
+</div>
+
+<!-- BOTTOM CTA -->
+<section style="background:var(--cyan);text-align:center;padding:80px 48px">
+  <div style="max-width:600px;margin:0 auto">
+    <div class="eyebrow" style="color:#5a8a8a;text-align:center">Ready to Book?</div>
+    <h2 style="font-size:clamp(28px,4vw,42px);font-weight:800;color:var(--yellow);letter-spacing:-.02em;margin-bottom:16px;text-align:center">Questions? We&#39;re happy<br>to help before you book.</h2>
+    <p style="font-size:16px;color:#3a6a6a;max-width:480px;margin:0 auto 36px;line-height:1.7;text-align:center">Contact us any time — we reply personally, usually same day.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="/booking" class="btn-pink">Book a Session →</a>
+      <a href="/contact" class="btn-outline" style="border-color:var(--yellow);color:var(--yellow)">Contact Us →</a>
+      <a href="/policies" class="btn-outline" style="border-color:var(--yellow);color:var(--yellow)">Full Policies →</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-watermark">LEARNWATERSPORTS</div>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.png" alt="Stillwater Sports" style="height:80px;width:auto;object-fit:contain;border-radius:8px"/></div>
+        <p class="footer-desc">Private water sports coaching across Ontario cottage country. Six disciplines, all skill levels, all equipment included.</p>
+        <div class="footer-social"><a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a><a href="#" class="footer-social-btn">⊙</a></div>
+      </div>
+      <div class="footer-col"><h4>Explore</h4><a href="/about">About</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/pricing">Pricing</a><a href="/contact">Contact</a></div>
+      <div class="footer-col"><h4>How It Works</h4><a href="/how-it-works">What to Expect</a><a href="/guidelines">Guidelines</a><a href="/faq">FAQ</a></div>
+      <div class="footer-col"><h4>Stillwater Skills</h4><a href="/stillwaterapp">Open the App</a><a href="/app">For Clubs &amp; Schools</a></div>
+      <div class="footer-col"><h4>Legal</h4><a href="/policies">Privacy Policy</a><a href="/policies#terms">Terms of Service</a><a href="/policies#waiver">Waiver</a><a href="/policies#refunds">Refund Policy</a><a href="/guidelines">Requirements</a></div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 Christian Richards · Stillwater Sports · All rights reserved</span>
+      <span class="footer-dot">Ontario Cottage Country · learnwatersports.ca</span>
+    </div>
+  </div>
+</footer>
+
+<div id="toast"></div>
+
+<script src="./content.js"></script>
+<script>
+function toggleDropdown(e, menuId){
+  e.preventDefault();
+  e.stopPropagation();
+  // Close all menus first
+  document.querySelectorAll('.nav-dropdown-menu').forEach(m => {
+    if(m.id !== menuId) m.classList.remove('open');
+  });
+  document.getElementById(menuId).classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.nav-dropdown')){
+    document.querySelectorAll('.nav-dropdown-menu').forEach(m=>m.classList.remove('open'));
+  }
+});
+function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
+document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
+</script>
+</body>
+</html>

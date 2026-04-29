@@ -17,19 +17,26 @@
   <a href="/" class="nav-brand"><img src="./Logo4.png" alt="Stillwater Sports" style="height:60px;width:auto;object-fit:contain;border-radius:8px"/></a>
   <div class="nav-links">
     <div class="nav-dropdown">
-      <a href="javascript:void(0)" class="nav-link-top active" onclick="toggleDropdown(event)">About ▾</a>
-      <div class="nav-dropdown-menu">
+      <a href="javascript:void(0)" class="nav-link-top active" onclick="toggleDropdown(event,'about-menu')">About ▾</a>
+      <div class="nav-dropdown-menu" id="about-menu">
         <a href="/about">Meet the Coach</a>
         <a href="/sports">Sports</a>
         <a href="/equipment">Equipment</a>
         <a href="/policies">Policies</a>
       </div>
     </div>
-    <a href="/how-it-works" >How It Works</a>
-    <a href="/pricing" >Pricing</a>
-    <a href="/booking" >Booking</a>
-    <a href="/contact" >Contact</a>
-    <a href="/app" >Stillwater Skills App</a>
+    <div class="nav-dropdown">
+      <a href="javascript:void(0)" class="nav-link-top " onclick="toggleDropdown(event,'hiw-menu')">How It Works ▾</a>
+      <div class="nav-dropdown-menu" id="hiw-menu">
+        <a href="/how-it-works">What to Expect</a>
+        <a href="/guidelines">Guidelines</a>
+        <a href="/faq">FAQ</a>
+      </div>
+    </div>
+    <a href="/pricing">Pricing</a>
+    <a href="/booking">Booking</a>
+    <a href="/contact">Contact</a>
+    <a href="/app">Stillwater Skills App</a>
   </div>
   <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
@@ -38,7 +45,9 @@
   <a href="/about" onclick="toggleMenu()">Meet the Coach</a>
   <a href="/sports" onclick="toggleMenu()">Sports</a>
   <a href="/equipment" onclick="toggleMenu()">Equipment</a>
-  <a href="/how-it-works" onclick="toggleMenu()">How It Works</a>
+  <a href="/how-it-works" onclick="toggleMenu()">What to Expect</a>
+  <a href="/guidelines" onclick="toggleMenu()">Guidelines</a>
+  <a href="/faq" onclick="toggleMenu()">FAQ</a>
   <a href="/pricing" onclick="toggleMenu()">Pricing</a>
   <a href="/booking" onclick="toggleMenu()">Booking</a>
   <a href="/contact" onclick="toggleMenu()">Contact</a>
@@ -208,9 +217,10 @@
         <p class="footer-desc">Private water sports coaching across Ontario cottage country. Six disciplines, all skill levels, all equipment included.</p>
         <div class="footer-social"><a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a><a href="#" class="footer-social-btn">⊙</a></div>
       </div>
-      <div class="footer-col"><h4>Explore</h4><a href="/about">About</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/how-it-works">How It Works</a><a href="/pricing">Pricing</a><a href="/contact">Contact</a></div>
+      <div class="footer-col"><h4>Explore</h4><a href="/about">About</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/pricing">Pricing</a><a href="/contact">Contact</a></div>
+      <div class="footer-col"><h4>How It Works</h4><a href="/how-it-works">What to Expect</a><a href="/guidelines">Guidelines</a><a href="/faq">FAQ</a></div>
       <div class="footer-col"><h4>Stillwater Skills</h4><a href="/stillwaterapp">Open the App</a><a href="/app">For Clubs &amp; Schools</a></div>
-      <div class="footer-col"><h4>Legal</h4><a href="/policies">Privacy Policy</a><a href="/policies#terms">Terms of Service</a><a href="/policies#waiver">Waiver</a><a href="/policies#refunds">Refund Policy</a></div>
+      <div class="footer-col"><h4>Legal</h4><a href="/policies">Privacy Policy</a><a href="/policies#terms">Terms of Service</a><a href="/policies#waiver">Waiver</a><a href="/policies#refunds">Refund Policy</a><a href="/requirements">Requirements</a></div>
     </div>
     <div class="footer-bottom">
       <span class="footer-copy">© 2026 Christian Richards · Stillwater Sports · All rights reserved</span>
@@ -220,12 +230,17 @@
 </footer>
 <div id="toast"></div>
 
+
+<script src="./content.js"></script>
 <script>
-function toggleDropdown(e){
+function toggleDropdown(e, menuId){
   e.preventDefault();
   e.stopPropagation();
-  const menu=document.querySelector('.nav-dropdown-menu');
-  menu.classList.toggle('open');
+  // Close all menus first
+  document.querySelectorAll('.nav-dropdown-menu').forEach(m => {
+    if(m.id !== menuId) m.classList.remove('open');
+  });
+  document.getElementById(menuId).classList.toggle('open');
 }
 document.addEventListener('click',function(e){
   if(!e.target.closest('.nav-dropdown')){
@@ -235,6 +250,5 @@ document.addEventListener('click',function(e){
 function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
 document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
 </script>
-<script src="./content.js"></script>
 </body>
 </html>
