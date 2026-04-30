@@ -243,6 +243,52 @@
               </div>
               <button onclick="goToStep2()" class="btn-pink">Continue →</button>
             </div>
+
+          <div style="margin-top:24px">
+            <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">Select Package</div>
+            <div class="pkg-grid">
+              <div class="pkg-card" data-pkg="single" onclick="selectPackage('single')">
+                <div class="pkg-card-name">Single Session</div>
+                <div class="pkg-card-price">$600</div>
+                <div class="pkg-card-note">Any 1 slot · 4hrs</div>
+              </div>
+              <div class="pkg-card" data-pkg="full-weekday" onclick="selectPackage('full-weekday')">
+                <div class="pkg-card-name">Full Day — Weekday</div>
+                <div class="pkg-card-price">$1,000</div>
+                <div class="pkg-card-note">2 consecutive slots · Mon–Fri</div>
+              </div>
+              <div class="pkg-card" data-pkg="premium" onclick="selectPackage('premium')">
+                <div class="pkg-card-name">Premium Day</div>
+                <div class="pkg-card-price">$1,250</div>
+                <div class="pkg-card-note">Weekend · Holiday · Split Weekday</div>
+              </div>
+              <div class="pkg-card" data-pkg="double-weekday" onclick="selectPackage('double-weekday')">
+                <div class="pkg-card-name">Double Weekday</div>
+                <div class="pkg-card-price">$1,750</div>
+                <div class="pkg-card-note">2 consecutive weekdays</div>
+              </div>
+              <div class="pkg-card" data-pkg="full-weekend" onclick="selectPackage('full-weekend')">
+                <div class="pkg-card-name">Full Weekend</div>
+                <div class="pkg-card-price">$2,100</div>
+                <div class="pkg-card-note">Sat + Sun</div>
+              </div>
+              <div class="pkg-card" data-pkg="three-day-week" onclick="selectPackage('three-day-week')">
+                <div class="pkg-card-name">3 Day Work Week</div>
+                <div class="pkg-card-price">$2,500</div>
+                <div class="pkg-card-note">Any 3 weekdays · ★ Best Value</div>
+              </div>
+              <div class="pkg-card" data-pkg="holiday-weekend" onclick="selectPackage('holiday-weekend')">
+                <div class="pkg-card-name">Holiday Weekend</div>
+                <div class="pkg-card-price">$3,000</div>
+                <div class="pkg-card-note">3-day long weekend</div>
+              </div>
+              <div class="pkg-card" data-pkg="five-day" onclick="selectPackage('five-day')">
+                <div class="pkg-card-name">5 Day Week</div>
+                <div class="pkg-card-price">$4,500</div>
+                <div class="pkg-card-note">Any 5 days · 🔥 Huge Savings</div>
+              </div>
+            </div>
+            <div id="slot-picker" style="margin-top:12px"></div>
           </div>
         </div>
 
@@ -260,52 +306,6 @@
             <div class="form-field"><label>Email</label><input type="email" id="b-email" placeholder="you@email.com"/></div>
             <div class="form-field"><label>Phone</label><input type="tel" id="b-phone" placeholder="613-555-0100"/></div>
             <div class="form-field form-full"><label>Lake / Location *</label><input type="text" id="b-location" placeholder="e.g. White Lake, Calabogie, Rideau River..."/></div>
-            <div class="form-field form-full">
-              <label>Select Package *</label>
-              <div class="pkg-grid">
-                <div class="pkg-card" data-pkg="single" onclick="selectPackage('single')">
-                  <div class="pkg-card-name">Single Session</div>
-                  <div class="pkg-card-price">$600</div>
-                  <div class="pkg-card-note">Any 1 time slot · 4hrs</div>
-                </div>
-                <div class="pkg-card" data-pkg="full-weekday" onclick="selectPackage('full-weekday')">
-                  <div class="pkg-card-name">Full Day — Weekday</div>
-                  <div class="pkg-card-price">$1,000</div>
-                  <div class="pkg-card-note">2 consecutive slots · Mon–Fri only</div>
-                </div>
-                <div class="pkg-card" data-pkg="premium" onclick="selectPackage('premium')">
-                  <div class="pkg-card-name">Premium Day</div>
-                  <div class="pkg-card-price">$1,250</div>
-                  <div class="pkg-card-note">Weekend · Holiday · or Split Weekday</div>
-                </div>
-                <div class="pkg-card" data-pkg="double-weekday" onclick="selectPackage('double-weekday')">
-                  <div class="pkg-card-name">Double Weekday</div>
-                  <div class="pkg-card-price">$1,750</div>
-                  <div class="pkg-card-note">2 consecutive weekdays</div>
-                </div>
-                <div class="pkg-card" data-pkg="full-weekend" onclick="selectPackage('full-weekend')">
-                  <div class="pkg-card-name">Full Weekend</div>
-                  <div class="pkg-card-price">$2,100</div>
-                  <div class="pkg-card-note">Sat + Sun · start on Saturday</div>
-                </div>
-                <div class="pkg-card" data-pkg="three-day-week" onclick="selectPackage('three-day-week')">
-                  <div class="pkg-card-name">3 Day Work Week</div>
-                  <div class="pkg-card-price">$2,500</div>
-                  <div class="pkg-card-note">Any 3 weekdays · ★ Best Value</div>
-                </div>
-                <div class="pkg-card" data-pkg="holiday-weekend" onclick="selectPackage('holiday-weekend')">
-                  <div class="pkg-card-name">Holiday Weekend</div>
-                  <div class="pkg-card-price">$3,000</div>
-                  <div class="pkg-card-note">3-day long weekend</div>
-                </div>
-                <div class="pkg-card" data-pkg="five-day" onclick="selectPackage('five-day')">
-                  <div class="pkg-card-name">5 Day Week</div>
-                  <div class="pkg-card-price">$4,500</div>
-                  <div class="pkg-card-note">Any 5 days · 🔥 Huge Savings</div>
-                </div>
-              </div>
-              <div id="slot-picker" style="margin-top:8px"></div>
-            </div>
             <div class="form-field"><label>Group Size</label>
               <select id="b-group"><option value="">Select...</option><option>1 person</option><option>2 people</option><option>3–4 people</option><option>5–6 people</option><option>7+ people</option></select>
             </div>
