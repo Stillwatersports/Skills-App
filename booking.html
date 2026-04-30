@@ -114,7 +114,7 @@
 </style>
 </head>
 <body><nav>
-<a href="/" class="nav-brand"><img src="./Sports_clear_bg.png" alt="Stillwater Sports" style="height:116px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.3))"/></a>
+  <a href="/" class="nav-brand"><img src="./Sports_clear_bg.png" alt="Stillwater Sports" style="height:116px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.3))"/></a>
   <div class="nav-links">
     <div class="nav-dropdown">
       <a href="javascript:void(0)" class="nav-link-top" onclick="toggleDropdown(event,'about-menu')">About ▾</a>
@@ -138,14 +138,7 @@
     <a href="/contact">Contact</a>
     <a href="/app">Stillwater Skills App</a>
   </div>
-  </div>
-  <a href="/" class="nav-brand"><img src="./Sports_clear_bg.png" alt="Stillwater Sports" style="height:68px;width:auto;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.25))"/></a>
-  <div class="nav-links-right">
-    <a href="/booking" class="active">Booking</a>
-    <a href="/contact">Contact</a>
-    <a href="/app">Stillwater Skills App</a>
-    <a href="/booking" class="nav-book">Book Now</a>
-  </div>
+  <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
@@ -267,19 +260,51 @@
             <div class="form-field"><label>Email</label><input type="email" id="b-email" placeholder="you@email.com"/></div>
             <div class="form-field"><label>Phone</label><input type="tel" id="b-phone" placeholder="613-555-0100"/></div>
             <div class="form-field form-full"><label>Lake / Location *</label><input type="text" id="b-location" placeholder="e.g. White Lake, Calabogie, Rideau River..."/></div>
-            <div class="form-field"><label>Session Type</label>
-              <select id="b-session">
-                <option value="">Select...</option>
-                <option>Single Session (4 hrs) — $600</option>
-                <option>Full Day — Weekday — $1,000</option>
-                <option>Premium Day (Split/Weekend/Holiday) — $1,250</option>
-                <option>Double Weekday — $1,750</option>
-                <option>Full Weekend (Sat+Sun) — $2,100</option>
-                <option>3 Day Work Week — $2,500</option>
-                <option>Holiday Weekend — $3,000</option>
-                <option>5 Day Week — $4,500</option>
-                <option>Not sure yet</option>
-              </select>
+            <div class="form-field form-full">
+              <label>Select Package *</label>
+              <div class="pkg-grid">
+                <div class="pkg-card" data-pkg="single" onclick="selectPackage('single')">
+                  <div class="pkg-card-name">Single Session</div>
+                  <div class="pkg-card-price">$600</div>
+                  <div class="pkg-card-note">Any 1 time slot · 4hrs</div>
+                </div>
+                <div class="pkg-card" data-pkg="full-weekday" onclick="selectPackage('full-weekday')">
+                  <div class="pkg-card-name">Full Day — Weekday</div>
+                  <div class="pkg-card-price">$1,000</div>
+                  <div class="pkg-card-note">2 consecutive slots · Mon–Fri only</div>
+                </div>
+                <div class="pkg-card" data-pkg="premium" onclick="selectPackage('premium')">
+                  <div class="pkg-card-name">Premium Day</div>
+                  <div class="pkg-card-price">$1,250</div>
+                  <div class="pkg-card-note">Weekend · Holiday · or Split Weekday</div>
+                </div>
+                <div class="pkg-card" data-pkg="double-weekday" onclick="selectPackage('double-weekday')">
+                  <div class="pkg-card-name">Double Weekday</div>
+                  <div class="pkg-card-price">$1,750</div>
+                  <div class="pkg-card-note">2 consecutive weekdays</div>
+                </div>
+                <div class="pkg-card" data-pkg="full-weekend" onclick="selectPackage('full-weekend')">
+                  <div class="pkg-card-name">Full Weekend</div>
+                  <div class="pkg-card-price">$2,100</div>
+                  <div class="pkg-card-note">Sat + Sun · start on Saturday</div>
+                </div>
+                <div class="pkg-card" data-pkg="three-day-week" onclick="selectPackage('three-day-week')">
+                  <div class="pkg-card-name">3 Day Work Week</div>
+                  <div class="pkg-card-price">$2,500</div>
+                  <div class="pkg-card-note">Any 3 weekdays · ★ Best Value</div>
+                </div>
+                <div class="pkg-card" data-pkg="holiday-weekend" onclick="selectPackage('holiday-weekend')">
+                  <div class="pkg-card-name">Holiday Weekend</div>
+                  <div class="pkg-card-price">$3,000</div>
+                  <div class="pkg-card-note">3-day long weekend</div>
+                </div>
+                <div class="pkg-card" data-pkg="five-day" onclick="selectPackage('five-day')">
+                  <div class="pkg-card-name">5 Day Week</div>
+                  <div class="pkg-card-price">$4,500</div>
+                  <div class="pkg-card-note">Any 5 days · 🔥 Huge Savings</div>
+                </div>
+              </div>
+              <div id="slot-picker" style="margin-top:8px"></div>
             </div>
             <div class="form-field"><label>Group Size</label>
               <select id="b-group"><option value="">Select...</option><option>1 person</option><option>2 people</option><option>3–4 people</option><option>5–6 people</option><option>7+ people</option></select>
@@ -293,7 +318,7 @@
             <div class="form-field form-full"><label>Anything Else?</label><textarea id="b-notes" placeholder="Ages of riders, goals, questions, AM or PM preference for half days..."></textarea></div>
           </div>
           <div style="background:rgba(0,200,212,0.04);border-radius:var(--rsm);padding:20px;border:1px solid rgba(0,200,212,0.12);margin-top:8px">
-            <button id="b-submit" onclick="submitBooking()" class="btn-pink" style="width:100%;justify-content:center;font-size:16px;padding:16px">Request This Date →</button>
+            <button id="b-submit" onclick="submitBooking()" class="btn-pink" style="width:100%;justify-content:center;font-size:16px;padding:16px">Submit Booking Request →</button>
             <p style="font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6">By submitting you agree to our <a href="/policies" style="color:var(--cyan)">booking policies</a>. <strong style="color:var(--pink)">Deposits are non-refundable.</strong> Full payment due 48 hours before session. No payment required to submit.</p>
           </div>
         </div>
@@ -642,7 +667,7 @@ function selectDay(d){
 // ── STEP NAVIGATION ───────────────────────────────────────
 function goToStep2(){
   if(!selectedDay){ showToast('Please select a date first'); return; }
-  if(!selectedPackage){ showToast('Please select a package'); return; }
+  if(!selectedPackage){ showToast('Please select a package above'); return; }
   if(!selectedSlots.length){ showToast('Please select a time slot'); return; }
 
   const pkg = PACKAGES[selectedPackage];
@@ -687,6 +712,8 @@ function goToStep1(){
 
 // ── SUBMIT ────────────────────────────────────────────────
 async function submitBooking(){
+  if(!selectedPackage){ showToast('Please select a package'); return; }
+  if(!selectedSlots.length){ showToast('Please select a time slot for your package'); return; }
   const name     = document.getElementById('b-name').value.trim();
   const email    = document.getElementById('b-email').value.trim();
   const phone    = document.getElementById('b-phone').value.trim();
