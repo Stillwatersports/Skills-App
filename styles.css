@@ -72,7 +72,8 @@ nav{
   padding:0 0 80px;overflow:hidden;
 }
 .hero-short{min-height:48dvh}
-.hero-mid{min-height:60dvh}
+.hero-mid{min-height:62dvh}
+.hero-tall{min-height:85dvh}
 .hero-bg{position:absolute;inset:0;z-index:0}
 .hero-coords{
   position:absolute;top:96px;left:32px;z-index:2;
