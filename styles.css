@@ -372,7 +372,7 @@ footer{background:var(--cyan);border-top:2px solid var(--pink);padding:80px 48px
 .footer-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1}
 .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
 .footer-brand-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.footer-logo{height:80px;width:auto;border-radius:8px}
+.footer-logo{height:180px;width:auto;border-radius:8px}
 .footer-desc{font-size:14px;color:#3a6a6a;line-height:1.7;max-width:340px;margin-bottom:20px}
 .footer-social{display:flex;gap:10px}
 .footer-social-btn{width:36px;height:36px;border-radius:50%;border:1px solid rgba(58,106,106,0.4);display:flex;align-items:center;justify-content:center;color:#3a6a6a;font-size:14px;text-decoration:none;transition:all .15s}
