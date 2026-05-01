@@ -67,12 +67,12 @@ nav{
 
 /* ── HERO ── */
 .hero{
-  position:relative;min-height:100dvh;
+  position:relative;min-height:48dvh;
   display:flex;flex-direction:column;justify-content:flex-end;
   padding:0 0 80px;overflow:hidden;
 }
-.hero-short{min-height:100dvh}
-.hero-mid{min-height:100dvh}
+.hero-short{min-height:48dvh}
+.hero-mid{min-height:60dvh}
 .hero-bg{position:absolute;inset:0;z-index:0}
 .hero-coords{
   position:absolute;top:96px;left:32px;z-index:2;

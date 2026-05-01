@@ -69,7 +69,7 @@
       <span class="l2" data-content="home_hero_l2"></span>
       <span class="l3" data-content="home_hero_l3"></span>
     </h1>
-    <p class="hero-sub">Private coaching across Ontario cottage country — Ottawa · Muskoka · Kawarthas · Prince Edward County · Rideau Lakes · Thousand Islands · and beyond.</p>
+    <p class="hero-sub" style="color:var(--yellow);opacity:0.9">Private coaching across Ontario cottage country — Ottawa · Muskoka · Kawarthas · Prince Edward County · Rideau Lakes · Thousand Islands · and beyond.</p>
     <div class="hero-actions">
       <a href="/booking" class="btn-pink">Book a Session →</a>
       <a href="/sports" class="btn-ghost">Explore Sports</a>
@@ -242,68 +242,7 @@
 </section>
 
 <!-- 04 BOOKING -->
-<section class="book-section" id="book">
-  <div class="book-inner">
-    <div class="book-header fade-up">
-      <div class="eyebrow">04 · Command Center</div>
-      <h2>Ready to get<br><em>on the water?</em></h2>
-      <p>Pick an open date directly from the live calendar and lock in your session!</p>
-    </div>
-    <div class="book-layout fade-up">
-      <div class="book-info">
-        <div class="book-info-label">What You Get</div>
-        <div class="book-info-rule"></div>
-        <div class="book-info-item">
-          <div class="book-info-icon">📅</div>
-          <div><div class="book-info-key">Season</div><div class="book-info-val">May through September. Weekdays and weekends available. Book early — summer fills fast.</div></div>
-        </div>
-        <div class="book-info-item">
-          <div class="book-info-icon">⏱</div>
-          <div><div class="book-info-key">Session Lengths</div><div class="book-info-val">Half-day morning or afternoon · Full-day · Multi-day Savings</div></div>
-        </div>
-        <div class="book-info-item">
-          <div class="book-info-icon">🚤</div>
-          <div><div class="book-info-key">Everything Included</div><div class="book-info-val">Boat, fuel, gear, and coach time. No hidden costs.</div></div>
-        </div>
-        <div class="book-info-item">
-          <div class="book-info-icon">📍</div>
-          <div><div class="book-info-key">Your Lake</div><div class="book-info-val">Tell us where you are. We handle the drive, the launch, all of it.</div></div>
-        </div>
-        <div class="book-info-item">
-          <div class="book-info-icon">💰</div>
-          <div><div class="book-info-key">Pricing</div><div class="book-info-val">See our <a href="/pricing" style="color:var(--cyan)">pricing page</a> for full details. Starting from $550.</div></div>
-        </div>
-      </div>
-      <div class="cal-card">
-        <div class="cal-header">
-          <div class="cal-live">Live Availability</div>
-          <div class="cal-legend">
-            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--cyan)"></div> Open</div>
-            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#f0a030"></div> Limited</div>
-            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#ddd"></div> Unavail.</div>
-          </div>
-        </div>
-        <div class="cal-title" style="margin-bottom:16px">Select a Date</div>
-        
-        <div class="cal-nav">
-          <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
-          <div class="cal-month" id="calMonth"></div>
-          <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
-        </div>
-        <div class="cal-grid" id="calGrid"></div>
-        <div id="calSelected" style="display:none;margin-top:16px">
-          <div style="background:rgba(0,200,212,0.08);border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center">
-            <div>
-              <div style="font-size:12px;font-weight:700;color:var(--cyan);margin-bottom:2px">Selected Date</div>
-              <div style="font-size:15px;font-weight:700;color:var(--text)" id="calSelectedDate"></div>
-            </div>
-            <button onclick="showBookingModal()" class="btn-pink" style="padding:10px 20px;font-size:13px;border:none;cursor:pointer;font-family:'Outfit',sans-serif">Request This Date →</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+
 
 <footer>
   <div class="footer-watermark">LEARNWATERSPORTS</div>
@@ -385,10 +324,20 @@
 // SUPABASE
 let db=null;
 try{
-  db=supabase.createClient('https://jjnhsbgmcjqwlmeihwuy.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqbmhzYmdtY2pxd2xtZWlod3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyODkwNDEsImV4cCI6MjA4OTg2NTA0MX0.MOTbufdBqUhB36P1YBL-zo-KKlvJ-LBHwPS70D7DoWU');
+  db=supabase.createClient('https://isbhflfmugfeqwhhqlkh.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzYmhmbGZtdWdmZXF3aGhxbGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDE0MzEsImV4cCI6MjA5MzA3NzQzMX0.TKMd_rSmJvoLiL5_1pFw9KqYHNne-eEdnGNR4zgZwFk');
 }catch(e){console.warn('Supabase init failed',e)}
 
 // NAV
+function toggleDropdown(e, menuId){
+  e.preventDefault(); e.stopPropagation();
+  document.querySelectorAll('.nav-dropdown-menu').forEach(m=>{if(m.id!==menuId)m.classList.remove('open');});
+  document.getElementById(menuId).classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  if(!e.target.closest('.nav-dropdown')){
+    document.querySelectorAll('.nav-dropdown-menu').forEach(m=>m.classList.remove('open'));
+  }
+});
 function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
 document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
 

@@ -216,6 +216,7 @@ tr:hover td{background:rgba(0,200,212,0.03)}
         </div>
         <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
           <button class="btn btn-ghost btn-sm" onclick="blockDateRange()">Block Date Range</button>
+          <button class="btn btn-ghost btn-sm" onclick="openModal('holiday-modal')">🗓 Manage Holidays</button>
           <button class="btn btn-primary btn-sm" onclick="openAddBooking()">+ New Booking</button>
         </div>
         <div class="cal-grid" id="cal-grid"></div>
@@ -271,6 +272,33 @@ tr:hover td{background:rgba(0,200,212,0.03)}
       </div>
     </div>
 
+  </div>
+</div>
+
+
+<!-- HOLIDAY MODAL -->
+<div class="modal-overlay" id="holiday-modal">
+  <div class="modal" style="max-width:560px">
+    <button class="modal-close" onclick="closeModal('holiday-modal')">✕</button>
+    <div class="modal-title">Holiday Management</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6">Holidays marked here will show as <span style="color:var(--pink);font-weight:700">Premium Day</span> on the public booking calendar, automatically enabling weekend-style slot options (any 2 consecutive slots) even on weekdays.</p>
+
+    <div class="section-label">Ontario Public Holidays 2026</div>
+    <div id="preset-holidays" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px"></div>
+
+    <div class="section-label">Custom Holiday / Special Date</div>
+    <div class="form-row">
+      <div class="form-group"><label>Date</label><input type="date" id="custom-holiday-date"/></div>
+      <div class="form-group"><label>Label (e.g. Long Weekend)</label><input type="text" id="custom-holiday-label" placeholder="Victoria Day Weekend"/></div>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="addCustomHoliday()">Add Custom Holiday</button>
+
+    <div class="section-label" style="margin-top:20px">Active Holidays</div>
+    <div id="active-holidays-list" style="font-size:13px;color:var(--muted)">Loading...</div>
+
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px">
+      <button class="btn btn-ghost" onclick="closeModal('holiday-modal')">Close</button>
+    </div>
   </div>
 </div>
 
@@ -440,6 +468,97 @@ let calYear = new Date().getFullYear(), calMonth = new Date().getMonth();
 let editingBookingId = null, editingClientId = null, editingTemplateId = null;
 let activeTab = 'dashboard';
 
+
+// ── HOLIDAYS ──────────────────────────────────────────────
+const ONTARIO_HOLIDAYS_2026 = [
+  {date:'2026-01-01', label:"New Year's Day"},
+  {date:'2026-02-16', label:'Family Day'},
+  {date:'2026-04-03', label:'Good Friday'},
+  {date:'2026-04-06', label:'Easter Monday'},
+  {date:'2026-05-18', label:'Victoria Day'},
+  {date:'2026-07-01', label:'Canada Day'},
+  {date:'2026-08-03', label:'Civic Holiday'},
+  {date:'2026-09-07', label:'Labour Day'},
+  {date:'2026-10-12', label:'Thanksgiving'},
+  {date:'2026-11-11', label:'Remembrance Day'},
+  {date:'2026-12-25', label:'Christmas Day'},
+  {date:'2026-12-26', label:'Boxing Day'},
+];
+
+let activeHolidays = [];
+
+async function loadHolidays(){
+  const {data} = await db.from('availability').select('*').eq('is_holiday', true);
+  activeHolidays = data || [];
+  renderActiveHolidays();
+  renderPresetHolidays();
+}
+
+function renderPresetHolidays(){
+  const el = document.getElementById('preset-holidays');
+  if(!el) return;
+  el.innerHTML = ONTARIO_HOLIDAYS_2026.map(h => {
+    const active = activeHolidays.some(a => a.date === h.date && a.is_holiday);
+    return `<label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:${active?'rgba(0,200,212,0.08)':'var(--bg)'};border:1px solid ${active?'var(--cyan)':'var(--border)'};cursor:pointer;font-size:13px">
+      <input type="checkbox" ${active?'checked':''} onchange="toggleHoliday('${h.date}','${h.label}',this.checked)" style="accent-color:var(--cyan)"/>
+      <span><strong>${h.label}</strong><br><span style="font-size:11px;color:var(--muted)">${fmtDate(h.date)}</span></span>
+    </label>`;
+  }).join('');
+}
+
+function renderActiveHolidays(){
+  const el = document.getElementById('active-holidays-list');
+  if(!el) return;
+  if(!activeHolidays.length){ el.innerHTML = 'No holidays set.'; return; }
+  el.innerHTML = activeHolidays.map(h => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg);border-radius:8px;margin-bottom:6px">
+      <span><strong>${h.holiday_label||'Holiday'}</strong> — ${fmtDate(h.date)}</span>
+      <button class="btn btn-danger btn-sm" onclick="removeHoliday('${h.id}')">Remove</button>
+    </div>`).join('');
+}
+
+async function toggleHoliday(date, label, checked){
+  if(checked){
+    const {data} = await db.from('availability').upsert(
+      {date, slot:'holiday_marker', is_blocked:false, is_holiday:true, holiday_label:label},
+      {onConflict:'date,slot'}
+    ).select().single();
+    if(data) activeHolidays.push(data);
+  } else {
+    await db.from('availability').delete().eq('date',date).eq('is_holiday',true);
+    activeHolidays = activeHolidays.filter(h=>h.date!==date);
+  }
+  renderActiveHolidays();
+  renderPresetHolidays();
+  renderCalendar();
+  toast(checked ? `${label} marked as holiday ✓` : `${label} removed`);
+}
+
+async function addCustomHoliday(){
+  const date = document.getElementById('custom-holiday-date').value;
+  const label = document.getElementById('custom-holiday-label').value.trim() || 'Holiday';
+  if(!date){ toast('Please select a date'); return; }
+  const {data} = await db.from('availability').upsert(
+    {date, slot:'holiday_marker', is_blocked:false, is_holiday:true, holiday_label:label},
+    {onConflict:'date,slot'}
+  ).select().single();
+  if(data) activeHolidays.push(data);
+  document.getElementById('custom-holiday-date').value='';
+  document.getElementById('custom-holiday-label').value='';
+  renderActiveHolidays();
+  renderCalendar();
+  toast(`${label} added as holiday ✓`);
+}
+
+async function removeHoliday(id){
+  await db.from('availability').delete().eq('id',id);
+  activeHolidays = activeHolidays.filter(h=>h.id!==id);
+  renderActiveHolidays();
+  renderPresetHolidays();
+  renderCalendar();
+  toast('Holiday removed');
+}
+
 // ── AUTH ──────────────────────────────────────────────────
 function doLogin(){
   const pw = document.getElementById('pw-input').value;
@@ -461,7 +580,7 @@ function doLogout(){
 
 // ── DATA LOAD ─────────────────────────────────────────────
 async function loadAll(){
-  await Promise.all([loadBookings(), loadClients(), loadAvailability(), loadTemplates()]);
+  await Promise.all([loadBookings(), loadClients(), loadAvailability(), loadTemplates(), loadHolidays()]);
   renderDashboard();
   renderCalendar();
   renderBookingsTable();

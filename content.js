@@ -113,6 +113,7 @@ const CONTENT = {
 
 
   // ── PRICING PAGE ─────────────────────────────────────
+  pricing_hero_sub:    "Boat, equipment, and expert coaching — all packages include everything.",
   pricing_hero_badge:   "All Inclusive · No Hidden Fees · Tax Included",
   pricing_hero_l1:      "Simple, transparent",
   pricing_hero_l3:      "pricing.",
