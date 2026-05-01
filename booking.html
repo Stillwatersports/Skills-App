@@ -60,6 +60,7 @@
 .pkg-card{padding:14px 16px;border:2px solid rgba(0,200,212,0.2);border-radius:12px;cursor:pointer;transition:all .15s;background:var(--yellow)}
 .pkg-card:hover{border-color:var(--cyan)}
 .pkg-card.selected{border-color:var(--cyan);background:rgba(0,200,212,0.08)}
+.pkg-unavailable{opacity:.4;cursor:not-allowed!important;pointer-events:none}
 .pkg-card-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
 .pkg-card-price{font-size:13px;color:var(--cyan);font-weight:600}
 .pkg-card-note{font-size:11px;color:var(--muted);margin-top:3px}
@@ -89,6 +90,7 @@
 .pkg-card{padding:14px 16px;border:2px solid rgba(0,200,212,0.2);border-radius:12px;cursor:pointer;transition:all .15s;background:var(--yellow)}
 .pkg-card:hover{border-color:var(--cyan)}
 .pkg-card.selected{border-color:var(--cyan);background:rgba(0,200,212,0.08)}
+.pkg-unavailable{opacity:.4;cursor:not-allowed!important;pointer-events:none}
 .pkg-card-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
 .pkg-card-price{font-size:13px;color:var(--cyan);font-weight:600}
 .pkg-card-note{font-size:11px;color:var(--muted);margin-top:3px}
@@ -187,22 +189,18 @@
             <div class="info-row"><div class="info-icon">📍</div><div><div class="info-key">We Come to You</div><div class="info-val">Your lake, your cottage — anywhere across Ontario cottage country</div></div></div>
           </div>
           <div class="info-card">
-            <h3>Session Pricing</h3>
-            <div class="price-row"><span class="price-label">Single Session (4 hrs)</span><span class="price-val hl">$600</span></div>
-            <div class="price-row"><span class="price-label">Full Day — Weekday</span><span class="price-val hl">$1,000</span></div>
-            <div class="price-row"><span class="price-label">Premium Day</span><span class="price-val hl">$1,250</span></div>
-            <div class="price-row"><span class="price-label">Double Weekday</span><span class="price-val hl">$1,750</span></div>
-            <div class="price-row"><span class="price-label">Full Weekend</span><span class="price-val hl">$2,100</span></div>
-            <div class="price-row"><span class="price-label">3 Day Work Week</span><span class="price-val hl">$2,500</span></div>
-            <div class="price-row"><span class="price-label">Holiday Weekend</span><span class="price-val hl">$3,000</span></div>
-            <div class="price-row"><span class="price-label">5 Day Week</span><span class="price-val hl">$4,500</span></div>
-            <div class="price-row" style="border-top:1px solid rgba(0,0,0,0.08);margin-top:4px;padding-top:12px"><span class="price-label">Deposit (non-refundable)</span><span class="price-val" style="color:var(--pink)">30%</span></div>
-            <a href="/pricing" style="display:block;text-align:center;font-size:12px;font-weight:600;color:var(--cyan);margin-top:12px;text-decoration:none">View Full Pricing →</a>
-          </div>
-          <div class="info-card">
             <h3>Season &amp; Policies</h3>
             <div class="info-row"><div class="info-icon">📅</div><div><div class="info-key">Season</div><div class="info-val">May through September — weekdays and weekends</div></div></div>
             <div class="info-row"><div class="info-icon">⛅</div><div><div class="info-key">Weather</div><div class="info-val">Light rain proceeds. Heavy rain or thunder = reschedule with full credit</div></div></div>
+            <div class="info-row"><div class="info-icon">📋</div><div><div class="info-key">Policies</div><div class="info-val" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px">
+              <a href="/policies#refunds" style="color:var(--cyan);font-weight:600;font-size:12px">Refund Policy</a>
+              <span style="color:var(--muted)">·</span>
+              <a href="/policies#waiver" style="color:var(--cyan);font-weight:600;font-size:12px">Liability Waiver</a>
+              <span style="color:var(--muted)">·</span>
+              <a href="/policies#terms" style="color:var(--cyan);font-weight:600;font-size:12px">Terms of Service</a>
+              <span style="color:var(--muted)">·</span>
+              <a href="/guidelines" style="color:var(--cyan);font-weight:600;font-size:12px">Session Guidelines</a>
+            </div></div></div>
             <div class="info-row"><div class="info-icon">🚗</div><div><div class="info-key">Distance</div><div class="info-val">+$100 (1.5–3hr) or +$200 (3–6hr) from Manotick, ON</div></div></div>
           </div>
         </div>
@@ -246,49 +244,8 @@
 
           <div style="margin-top:24px">
             <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">Select Package</div>
-            <div class="pkg-grid">
-              <div class="pkg-card" data-pkg="single" onclick="selectPackage('single')">
-                <div class="pkg-card-name">Single Session</div>
-                <div class="pkg-card-price">$600</div>
-                <div class="pkg-card-note">Any 1 slot · 4hrs</div>
-              </div>
-              <div class="pkg-card" data-pkg="full-weekday" onclick="selectPackage('full-weekday')">
-                <div class="pkg-card-name">Full Day — Weekday</div>
-                <div class="pkg-card-price">$1,000</div>
-                <div class="pkg-card-note">2 consecutive slots · Mon–Fri</div>
-              </div>
-              <div class="pkg-card" data-pkg="premium" onclick="selectPackage('premium')">
-                <div class="pkg-card-name">Premium Day</div>
-                <div class="pkg-card-price">$1,250</div>
-                <div class="pkg-card-note">Weekend · Holiday · Split Weekday</div>
-              </div>
-              <div class="pkg-card" data-pkg="double-weekday" onclick="selectPackage('double-weekday')">
-                <div class="pkg-card-name">Double Weekday</div>
-                <div class="pkg-card-price">$1,750</div>
-                <div class="pkg-card-note">2 consecutive weekdays</div>
-              </div>
-              <div class="pkg-card" data-pkg="full-weekend" onclick="selectPackage('full-weekend')">
-                <div class="pkg-card-name">Full Weekend</div>
-                <div class="pkg-card-price">$2,100</div>
-                <div class="pkg-card-note">Sat + Sun</div>
-              </div>
-              <div class="pkg-card" data-pkg="three-day-week" onclick="selectPackage('three-day-week')">
-                <div class="pkg-card-name">3 Day Work Week</div>
-                <div class="pkg-card-price">$2,500</div>
-                <div class="pkg-card-note">Any 3 weekdays · ★ Best Value</div>
-              </div>
-              <div class="pkg-card" data-pkg="holiday-weekend" onclick="selectPackage('holiday-weekend')">
-                <div class="pkg-card-name">Holiday Weekend</div>
-                <div class="pkg-card-price">$3,000</div>
-                <div class="pkg-card-note">3-day long weekend</div>
-              </div>
-              <div class="pkg-card" data-pkg="five-day" onclick="selectPackage('five-day')">
-                <div class="pkg-card-name">5 Day Week</div>
-                <div class="pkg-card-price">$4,500</div>
-                <div class="pkg-card-note">Any 5 days · 🔥 Huge Savings</div>
-              </div>
-            </div>
-            <div id="slot-picker" style="margin-top:12px"></div>
+            <div class="pkg-grid" id="pkg-grid-container"></div>
+              <div id="slot-picker" style="margin-top:12px"></div>
           </div>
         </div>
 
@@ -343,14 +300,7 @@
           </div>
         </div>
 
-        <div style="background:var(--white);border-radius:20px;padding:32px;border:1px solid rgba(0,0,0,0.07)" id="faqSection">
-          <div style="font-size:20px;font-weight:700;color:var(--text);margin-bottom:24px">Frequently Asked Questions</div>
-          <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">How far in advance should I book?</button><div class="faq-a">Summer weekends fill quickly. We recommend booking 2–3 weeks in advance for weekends. Weekdays are generally more available.</div></div>
-          <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What if it rains on my session day?</button><div class="faq-a">Light rain — we still go. Sessions are only cancelled for heavy rain, heavy wind, or thunder/lightning. If we cancel, you receive full credit to rebook or a full refund if no date is available before September 30.</div></div>
-          <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What ages are welcome?</button><div class="faq-a">Kids aged 6 and older are welcome. Children under 16 must be with a parent or guardian. We have equipment in all sizes.</div></div>
-          <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">Can we mix sports in one session?</button><div class="faq-a">Absolutely — that's common for family and group sessions. Just mention your interests in the notes and we'll plan accordingly.</div></div>
-          <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What is the deposit policy?</button><div class="faq-a">A 30% deposit is required to secure your date. Deposits are non-refundable. Full payment is due 48 hours before your session via a Square payment link.</div></div>
-          <div class="faq-item"><button class="faq-q" onclick="toggleFaq(this)">What should we bring?</button><div class="faq-a">Swimwear, sunscreen, water, snacks, and a towel. We provide everything else — PFDs, all equipment, and the boat.</div></div>
+        
         </div>
       </div>
     </div>
@@ -423,9 +373,60 @@ function selectPackage(pkg) {
 }
 
 function renderPackageCards() {
-  document.querySelectorAll('.pkg-card').forEach(c => {
-    c.classList.toggle('selected', c.dataset.pkg === selectedPackage);
+  const date = selectedDay ? new Date(calYear, calMonth, selectedDay) : null;
+  const dow = date ? date.getDay() : -1;
+  const isWD = dow >= 1 && dow <= 5;
+  const isWE = dow === 0 || dow === 6;
+  const isSat = dow === 6;
+  const isSun = dow === 0;
+
+  // Define which packages are valid for the selected day
+  const validPkgs = {
+    'single':         true,                         // any day
+    'full-weekday':   isWD,                         // Mon-Fri only
+    'premium':        true,                         // weekday split or weekend
+    'double-weekday': isWD,                         // starts on weekday
+    'full-weekend':   isSat,                        // must start Saturday
+    'three-day-week': isWD,                         // starts on weekday
+    'holiday-weekend': true,                        // any
+    'five-day':       true,                         // any
+  };
+
+  const container = document.getElementById('pkg-grid-container');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const pkgDefs = [
+    { key:'single',         name:'Single Session',      price:'$600',   note:'Any 1 slot · 4hrs' },
+    { key:'full-weekday',   name:'Full Day — Weekday',  price:'$1,000', note:'2 consecutive slots · Mon–Fri' },
+    { key:'premium',        name:'Premium Day',         price:'$1,250', note: isWD ? 'Morning + Evening split' : 'Weekend · any 2 slots' },
+    { key:'double-weekday', name:'Double Weekday',      price:'$1,750', note:'2 consecutive weekdays' },
+    { key:'full-weekend',   name:'Full Weekend',        price:'$2,100', note:'Sat + Sun' },
+    { key:'three-day-week', name:'3 Day Work Week',     price:'$2,500', note:'Any 3 weekdays · ★ Best Value' },
+    { key:'holiday-weekend',name:'Holiday Weekend',     price:'$3,000', note:'3-day long weekend' },
+    { key:'five-day',       name:'5 Day Week',          price:'$4,500', note:'Any 5 days · 🔥 Huge Savings' },
+  ];
+
+  pkgDefs.forEach(pkg => {
+    const available = !date || validPkgs[pkg.key];
+    const div = document.createElement('div');
+    div.className = 'pkg-card' + (selectedPackage===pkg.key?' selected':'') + (!available?' pkg-unavailable':'');
+    div.dataset.pkg = pkg.key;
+    if (available) div.onclick = () => selectPackage(pkg.key);
+    div.innerHTML = `
+      <div class="pkg-card-name">${pkg.name}${!available?'<span style="color:var(--muted);font-size:10px;font-weight:400"> — not available this day</span>':''}</div>
+      <div class="pkg-card-price">${pkg.price}</div>
+      <div class="pkg-card-note">${pkg.note}</div>`;
+    container.appendChild(div);
   });
+
+  // If selected package is no longer valid, clear it
+  if (selectedPackage && date && !validPkgs[selectedPackage]) {
+    selectedPackage = null;
+    selectedSlots = [];
+    document.getElementById('slot-picker').innerHTML = '<div class="rule-info">ℹ️ The previously selected package is not available on this day. Please choose a new package above.</div>';
+    updateSummary();
+  }
 }
 
 function isWeekday(date) {
@@ -660,6 +661,7 @@ function selectDay(d){
   const dateStr=MONTHS[calMonth]+' '+d+', '+calYear;
   document.getElementById('calSelectedDate').textContent=dateStr;
   document.getElementById('calSelected').style.display='block';
+  renderPackageCards();
   renderSlotPicker();
   updateSummary();
 }
@@ -690,7 +692,7 @@ function goToStep2(){
   const dateStr = MONTHS[calMonth]+' '+selectedDay+', '+calYear;
   document.getElementById('formDateLabel').textContent = dateStr;
   document.getElementById('step1').style.display='none';
-  document.getElementById('faqSection').style.display='none';
+  
   document.getElementById('step2').classList.add('visible');
   document.getElementById('s1').classList.remove('active');
   document.getElementById('s1').classList.add('done');
@@ -702,7 +704,7 @@ function goToStep2(){
 function goToStep1(){
   document.getElementById('step2').classList.remove('visible');
   document.getElementById('step1').style.display='block';
-  document.getElementById('faqSection').style.display='block';
+  
   document.getElementById('s1').classList.add('active');
   document.getElementById('s1').classList.remove('done');
   document.getElementById('s1').textContent='1';
@@ -796,6 +798,7 @@ function showToast(msg){ const t=document.getElementById('toast'); t.textContent
 
 renderCal();
 loadBookedDates();
+renderPackageCards();
 </script>
 
 
