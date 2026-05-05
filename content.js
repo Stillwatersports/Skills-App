@@ -505,6 +505,14 @@ const CONTENT = {
   faq_q20:             "What is the Stillwater Skills App?",
   faq_a20:             "A free skill tracking app for all Stillwater Sports students. Track your progression from Bronze through Gold certifications, submit video for coach approval, and use GPS session tracking. Complete Gold to unlock the secret Platinum level. Access at <a href='/stillwaterapp'>learnwatersports.ca/stillwaterapp</a>.",
 
+  faq_timing_cat:      "Timing & Group Planning",
+  faq_q21:             "How do I know how much time to book for my group?",
+  faq_a21:             "A good rule of thumb: each person gets 1–2 sets per block (a block is 4 hours — morning, afternoon, or evening). Each set is one person's full turn — about 20–30 minutes on the water including coaching stops. For a group of 6, a single block gives everyone at least 1 set; a full day (2 blocks) gives everyone 2 sets each. If you're unsure, <a href='/contact'>contact us</a> and we'll help you plan.",
+  faq_q22:             "What is a good group size?",
+  faq_a22:             "Ideal group sizes are <strong>4–8 people per block</strong>. Smaller than 4 means less rotation energy on the boat; larger than 8 and some riders might only get 1 short set. That said, we work with all group sizes — 1-on-1 sessions are just as welcome as groups of 10. If you have a smaller group of 1–3, see our <a href='/pricing'>Come to Us pricing</a> for the most affordable option, or <a href='/contact'>contact us</a> and we'll figure it out.",
+  faq_q23:             "What if we run over the allotted time slot?",
+  faq_a23:             "Waterskiing is a relaxed sport — we don't watch the clock obsessively. Start and finish times are reasonably flexible. What matters most is that everyone gets a fair turn and equal time on the water. We have guidelines to help with planning, but every group is different and we're happy to accommodate. If the session naturally runs a bit long, we'll work with you. Just communicate with the coach on the day.",
+
   faq_cta_eyebrow:     "Still have a question?",
   faq_cta_h3:          "We reply personally — usually same day.",
   faq_cta_desc:        "No question is too small. If something is stopping you from booking, just ask — we're happy to help.",
