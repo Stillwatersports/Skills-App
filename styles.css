@@ -261,7 +261,7 @@ nav{
 .timeline-line::before{content:'';position:absolute;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,var(--cyan),rgba(0,200,212,0.2));left:50%;transform:translateX(-50%)}
 .tl-dot{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--cyan);background:var(--yellow);display:flex;align-items:center;justify-content:center;position:relative;z-index:1;flex-shrink:0;margin:16px 0}
 .tl-dot::after{content:'●';font-size:7px;color:var(--cyan)}
-.step-num-big{font-size:80px;font-weight:800;color:rgba(0,200,212,0.18);line-height:1;letter-spacing:-.04em;margin-bottom:-16px}
+.step-num-big{font-size:80px;font-weight:800;color:rgba(0,200,212,0.35);line-height:1;letter-spacing:-.04em;margin-bottom:-16px}
 .step-title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:10px}
 .step-desc{font-size:14px;color:var(--muted);line-height:1.65}
 
