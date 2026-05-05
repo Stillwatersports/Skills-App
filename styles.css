@@ -5,8 +5,8 @@
   --cyan:#00C8D4;
   --pink:#E040A0;
   --yellow:#FFFeb4;
-  --dark:#1a2a2a;
-  --text:#1a2525;
+  --dark:#0a2828;
+  --text:#0f3535;
   --muted:#4a7a7a;
   --light-muted:#7aacac;
   --white:#ffffff;
@@ -336,6 +336,7 @@ nav{
 .cal-day-dot{width:5px;height:5px;border-radius:50%}
 .cal-day-dot.open{background:var(--cyan)}
 .cal-day-dot.limited{background:#f0a030}
+.cal-day-dot.holiday{background:var(--pink)}
 
 /* ── PRICING ── */
 .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start}
@@ -461,7 +462,11 @@ footer{background:var(--cyan);border-top:2px solid var(--pink);padding:80px 48px
   /* PRICING — stack all cards */
   .pricing-grid{grid-template-columns:1fr!important;justify-content:unset!important}
 
-  /* HERO */
+  /* HERO — taller on mobile so image isn't cropped */
+  .hero{min-height:56dvh}
+  .hero-short{min-height:56dvh}
+  .hero-mid{min-height:72dvh}
+  .hero-tall{min-height:92dvh}
   .hero h1{font-size:clamp(38px,10vw,64px)}
   .hero-sub{font-size:15px;max-width:100%}
   .hero-actions{flex-direction:column;align-items:flex-start}

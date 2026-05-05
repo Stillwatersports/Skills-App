@@ -184,19 +184,26 @@
       <div>
         <div class="sticky-sidebar">
           <div class="info-card">
-            <h3>What's Included</h3>
-            <div class="info-row"><div class="info-icon">🚤</div><div><div class="info-key">Boat</div><div class="info-val">Sanger DLX — professional ski/wake hybrid, fully fuelled</div></div></div>
-            <div class="info-row"><div class="info-icon">🎿</div><div><div class="info-key">All Equipment</div><div class="info-val">Waterskis, wakeboards, wakesurf, ropes, handles</div></div></div>
+            <h3 data-content="booking_gear_title">What's Included</h3>
+            <div class="info-row"><div class="info-icon">🚤</div><div><div class="info-key">Boat</div><div class="info-val" data-content="booking_gear_boat">Sanger DLX — professional ski/wake hybrid, fully fuelled</div></div></div>
+            <div class="info-row"><div class="info-icon">🎿</div><div><div class="info-key">All Equipment</div><div class="info-val" data-content="booking_gear_equip">Waterskis, wakeboards, wakesurf, ropes, handles</div></div></div>
             <div class="info-row"><div class="info-icon">🛟</div><div><div class="info-key">Safety Gear</div><div class="info-val">PFDs in all sizes — kids to adults</div></div></div>
-            <div class="info-row"><div class="info-icon">🎓</div><div><div class="info-key">Expert Coaching</div><div class="info-val">Christian Richards — top 100 worldwide barefoot, 15+ yrs coaching</div></div></div>
+            <div class="info-row"><div class="info-icon">🎓</div><div><div class="info-key">Expert Coaching</div><div class="info-val" data-content="booking_gear_coach">Christian Richards — top 100 worldwide barefoot, 15+ yrs coaching</div></div></div>
             <div class="info-row"><div class="info-icon">📍</div><div><div class="info-key">We Come to You</div><div class="info-val">Your lake, your cottage — anywhere across Ontario cottage country</div></div></div>
           </div>
           <div class="info-card">
-            <h3>Season &amp; Policies</h3>
-            <div class="info-row"><div class="info-icon">📅</div><div><div class="info-key">Season</div><div class="info-val">May through September — weekdays and weekends</div></div></div>
-            <div class="info-row"><div class="info-icon">⛅</div><div><div class="info-key">Weather</div><div class="info-val">Light rain proceeds. Heavy rain or thunder = reschedule with full credit</div></div></div>
-            
-            <div class="info-row"><div class="info-icon">🚗</div><div><div class="info-key">Distance</div><div class="info-val">+$100 (1.5–3hr) or +$200 (3–6hr) from Manotick, ON</div></div></div>
+            <h3 data-content="booking_info_season_title">Season &amp; Policies</h3>
+            <div class="info-row"><div class="info-icon">📅</div><div><div class="info-key">Season</div><div class="info-val" data-content="booking_info_season_val">May through September — weekdays and weekends</div></div></div>
+            <div class="info-row"><div class="info-icon">⛅</div><div><div class="info-key">Weather</div><div class="info-val" data-content="booking_info_weather_val">Light rain proceeds. Heavy rain or thunder = reschedule with full credit</div></div></div>
+            <div class="info-row"><div class="info-icon">🚗</div><div><div class="info-key">Distance</div><div class="info-val" data-content="booking_info_distance_val">+$100 (1.5–3hr) or +$200 (3–6hr) from Manotick, ON</div></div></div>
+            <div class="info-row"><div class="info-icon">💳</div><div><div class="info-key">Deposit</div><div class="info-val" data-content="booking_info_deposit_val">30% non-refundable deposit to secure your date</div></div></div>
+            <div class="info-row"><div class="info-icon">📆</div><div><div class="info-key">Payment</div><div class="info-val" data-content="booking_info_payment_val">Full balance due 48 hours before your session via Square</div></div></div>
+            <div style="border-top:1px solid rgba(0,200,212,0.15);margin-top:16px;padding-top:14px;display:flex;flex-wrap:wrap;gap:8px">
+              <a href="/policies#refunds" style="font-size:11px;font-weight:700;color:var(--cyan);background:rgba(0,200,212,0.08);border:1px solid rgba(0,200,212,0.2);border-radius:20px;padding:5px 12px;text-decoration:none;letter-spacing:.04em;text-transform:uppercase" data-content="booking_policy_refund">Refund Policy</a>
+              <a href="/policies#waiver" style="font-size:11px;font-weight:700;color:var(--cyan);background:rgba(0,200,212,0.08);border:1px solid rgba(0,200,212,0.2);border-radius:20px;padding:5px 12px;text-decoration:none;letter-spacing:.04em;text-transform:uppercase" data-content="booking_policy_waiver">Liability Waiver</a>
+              <a href="/policies#terms" style="font-size:11px;font-weight:700;color:var(--cyan);background:rgba(0,200,212,0.08);border:1px solid rgba(0,200,212,0.2);border-radius:20px;padding:5px 12px;text-decoration:none;letter-spacing:.04em;text-transform:uppercase" data-content="booking_policy_terms">Terms of Service</a>
+              <a href="/guidelines" style="font-size:11px;font-weight:700;color:var(--pink);background:rgba(224,64,160,0.06);border:1px solid rgba(224,64,160,0.2);border-radius:20px;padding:5px 12px;text-decoration:none;letter-spacing:.04em;text-transform:uppercase" data-content="booking_policy_guidelines">Guidelines</a>
+            </div>
           </div>
         </div>
       </div>
@@ -216,6 +223,7 @@
             <div style="display:flex;gap:12px;font-size:11px;color:var(--muted)">
               <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:var(--cyan)"></div>Open</div>
               <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:#f0a030"></div>Limited</div>
+              <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:var(--pink)"></div>Holiday</div>
               <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:#ddd"></div>Unavail.</div>
             </div>
           </div>
@@ -373,13 +381,14 @@ function renderPackageCards() {
   const isWD = dow >= 1 && dow <= 5;
   const isWE = dow === 0 || dow === 6;
   const isSat = dow === 6;
-  const isSun = dow === 0;
+
+  const isHol = selectedDay ? !!holidayDates[selectedDay] : false;
 
   // Define which packages are valid for the selected day
   const validPkgs = {
-    'single':         true,                         // any day
-    'full-weekday':   isWD,                         // Mon-Fri only
-    'premium':        true,                         // weekday split or weekend
+    'single':         !isHol,                      // any day EXCEPT holidays
+    'full-weekday':   isWD && !isHol,              // Mon-Fri, not holidays
+    'premium':        true,                         // weekday split or weekend or holiday
     'double-weekday': isWD,                         // starts on weekday
     'full-weekend':   isSat,                        // must start Saturday
     'three-day-week': isWD,                         // starts on weekday
@@ -451,12 +460,6 @@ function renderSlotPicker() {
     return;
   }
 
-  // Sunday — unavailable
-  if (dow === 0) {
-    el.innerHTML = `<div class="rule-error">⚠️ Sundays are not available for booking. Please choose another day.</div>`;
-    selectedSlots = [];
-    return;
-  }
 
   let html = '';
 
@@ -592,14 +595,17 @@ function changeMonth(dir){
   document.getElementById('calSelected').style.display='none';
   loadBookedDates();
 }
+let holidayDates = {}; // date string → label
+
 async function loadBookedDates(){
   const start=new Date(calYear,calMonth,1).toISOString().split('T')[0];
   const end=new Date(calYear,calMonth+1,0).toISOString().split('T')[0];
   if(!db){renderCal();return}
   const{data:bk}=await db.from('bookings').select('date,slot,status').gte('date',start).lte('date',end).in('status',['new','confirmed','deposit_paid']);
-  const{data:av}=await db.from('availability').select('date,slot,is_blocked').gte('date',start).lte('date',end).eq('is_blocked',true);
+  const{data:av}=await db.from('availability').select('date,slot,is_blocked,holiday_label').gte('date',start).lte('date',end);
   bookedDates={};
   blockedSlots={};
+  holidayDates={};
   if(bk) bk.forEach(r=>{
     const d=new Date(r.date+'T12:00:00').getDate();
     if(!bookedDates[d]) bookedDates[d]=[];
@@ -609,11 +615,19 @@ async function loadBookedDates(){
     blockedSlots[ds].push(r.slot);
   });
   if(av) av.forEach(r=>{
-    if(!blockedSlots[r.date]) blockedSlots[r.date]=[];
-    if(!blockedSlots[r.date].includes(r.slot)) blockedSlots[r.date].push(r.slot);
-    const d=new Date(r.date+'T12:00:00').getDate();
-    if(!bookedDates[d]) bookedDates[d]=[];
-    bookedDates[d].push('blocked');
+    // Track holidays
+    if(r.slot==='holiday_marker' && r.holiday_label){
+      const d=new Date(r.date+'T12:00:00').getDate();
+      holidayDates[d]=r.holiday_label;
+      return;
+    }
+    if(r.is_blocked){
+      if(!blockedSlots[r.date]) blockedSlots[r.date]=[];
+      if(!blockedSlots[r.date].includes(r.slot)) blockedSlots[r.date].push(r.slot);
+      const d=new Date(r.date+'T12:00:00').getDate();
+      if(!bookedDates[d]) bookedDates[d]=[];
+      bookedDates[d].push('blocked');
+    }
   });
   renderCal();
 }
@@ -630,19 +644,21 @@ function renderCal(){
     const cell=document.createElement('div');
     const dt=new Date(calYear,calMonth,d);
     const isPast=dt<new Date(today.getFullYear(),today.getMonth(),today.getDate());
-    const isSun=dt.getDay()===0;
+    const isHoliday=!!holidayDates[d];
     const b=bookedDates[d]||[];
     const allSlotsBlocked = b.filter(x=>x==='blocked'||x==='confirmed'||x==='deposit_paid').length>=3;
     let status='open';
-    if(isPast||isSun) status='unavailable';
+    if(isPast) status='unavailable';
     else if(allSlotsBlocked) status='unavailable';
+    else if(isHoliday) status='holiday';
     else if(b.some(x=>x==='new'||x==='limited')) status='limited';
     cell.className='cal-day'+(selectedDay===d?' selected':'');
     if(status==='unavailable') cell.style.opacity='.35';
     const num=document.createElement('span');num.textContent=d;cell.appendChild(num);
     if(status!=='unavailable'){
       const dot=document.createElement('div');
-      dot.className='cal-day-dot '+(status==='limited'?'limited':'open');
+      dot.className='cal-day-dot '+(status==='limited'?'limited':status==='holiday'?'holiday':'open');
+      if(status==='holiday') dot.title=holidayDates[d];
       cell.appendChild(dot);
       cell.onclick=()=>selectDay(d);
     }
