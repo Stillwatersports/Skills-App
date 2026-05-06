@@ -337,6 +337,7 @@ nav{
 .cal-day-dot.open{background:var(--cyan)}
 .cal-day-dot.limited{background:#f0a030}
 .cal-day-dot.holiday{background:var(--pink)}
+.cal-day-dot.dropin{background:#f5d800}
 
 /* ── PRICING ── */
 .pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:start}

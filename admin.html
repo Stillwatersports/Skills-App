@@ -73,6 +73,7 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--dark);min-
 .slot-blocked{background:rgba(229,57,53,0.12);color:var(--red)}
 .slot-booked{background:rgba(224,64,160,0.15);color:var(--pink)}
 .slot-pending{background:rgba(230,81,0,0.12);color:var(--orange)}
+.slot-dropin{background:rgba(245,216,0,0.2);color:#7a6200}
 
 /* BOOKINGS TABLE */
 .bookings-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
@@ -220,6 +221,7 @@ tr:hover td{background:rgba(0,200,212,0.03)}
         <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
           <button class="btn btn-ghost btn-sm" onclick="blockDateRange()">Block Date Range</button>
           <button class="btn btn-ghost btn-sm" onclick="openModal('holiday-modal')">🗓 Manage Holidays</button>
+          <button class="btn btn-ghost btn-sm" onclick="openModal('dropin-modal')" style="background:rgba(245,216,0,0.15);border-color:#c8a800;color:#7a6200">🟡 Manage Drop-Ins</button>
           <button class="btn btn-primary btn-sm" onclick="openAddBooking()">+ New Booking</button>
         </div>
         <div class="cal-grid" id="cal-grid"></div>
@@ -301,6 +303,64 @@ tr:hover td{background:rgba(0,200,212,0.03)}
 
     <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px">
       <button class="btn btn-ghost" onclick="closeModal('holiday-modal')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- DROP-IN MODAL -->
+<div class="modal-overlay" id="dropin-modal">
+  <div class="modal" style="max-width:620px">
+    <button class="modal-close" onclick="closeModal('dropin-modal')">✕</button>
+    <div class="modal-title">Drop-In Manager</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6">
+      Yellow dots on the public calendar. Rideau River open dates show automatically — use this to set the active launch location, or add travel drop-in slots for dates you're away from Manotick.
+    </p>
+
+    <div class="section-label">Active Rideau River Launch Location</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:10px">This location shows on all auto-generated Rideau drop-in dates. Change it whenever you're launching from a different spot.</p>
+    <div style="display:grid;gap:8px;margin-bottom:20px" id="rideau-location-picker">
+      <label style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;font-size:13px" id="loc-alfred_taylor">
+        <input type="radio" name="rideau-loc" value="alfred_taylor" onchange="setRideauLocation('alfred_taylor')" style="accent-color:var(--cyan)"/>
+        <span><strong>Alfred Taylor Recreation Area</strong><br><span style="font-size:11px;color:var(--muted)">1480 River Rd, Manotick · Free parking · boat ramp · washrooms</span></span>
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;font-size:13px" id="loc-eccolands">
+        <input type="radio" name="rideau-loc" value="eccolands" onchange="setRideauLocation('eccolands')" style="accent-color:var(--cyan)"/>
+        <span><strong>Eccolands Park</strong><br><span style="font-size:11px;color:var(--muted)">130 Rideau Valley Dr S, Manotick · Free parking · grassy launch</span></span>
+      </label>
+      <label style="display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:10px;border:1.5px solid var(--border);cursor:pointer;font-size:13px" id="loc-rideau_provincial">
+        <input type="radio" name="rideau-loc" value="rideau_provincial" onchange="setRideauLocation('rideau_provincial')" style="accent-color:var(--cyan)"/>
+        <span><strong>Rideau River Provincial Park</strong><br><span style="font-size:11px;color:var(--muted)">6335 Roger Stevens Dr · Day-use fee may apply · full facilities</span></span>
+      </label>
+    </div>
+
+    <div class="section-label">Add Travel Drop-In Slot</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:12px">Use when you're already travelling for a booking and have open sets available, or to flag a specific training day at a non-Rideau location.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+      <div class="form-group"><label>Date</label><input type="date" id="dropin-date"/></div>
+      <div class="form-group">
+        <label>Location Name</label>
+        <input type="text" id="dropin-location-label" placeholder="e.g. Calabogie · Centennial Park"/>
+      </div>
+      <div class="form-group">
+        <label>Tier Available</label>
+        <select id="dropin-tier">
+          <option value="both">Both ($50 Group + $60 Single)</option>
+          <option value="group">Group Only ($50/set · min $200)</option>
+          <option value="single">Single Only ($60/set)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Parking / Launch Note</label>
+        <input type="text" id="dropin-note" placeholder="e.g. Free parking at main lot"/>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="addDropinSlot()">Add Drop-In Slot →</button>
+
+    <div class="section-label" style="margin-top:24px">Active Travel Drop-In Slots</div>
+    <div id="active-dropin-list" style="font-size:13px;color:var(--muted)">Loading...</div>
+
+    <div style="margin-top:24px;display:flex;justify-content:flex-end">
+      <button class="btn btn-ghost" onclick="closeModal('dropin-modal')">Close</button>
     </div>
   </div>
 </div>
@@ -562,6 +622,98 @@ async function removeHoliday(id){
   toast('Holiday removed');
 }
 
+// ── DROP-IN MANAGER ───────────────────────────────────────
+const RIDEAU_LOCATION_LABELS = {
+  alfred_taylor:    'Alfred Taylor Recreation Area',
+  eccolands:        'Eccolands Park',
+  rideau_provincial:'Rideau River Provincial Park',
+};
+let activeRideauLocation = 'alfred_taylor';
+let activeDropins = [];
+
+async function loadDropins(){
+  // Load active rideau location preference from availability (stored as a settings marker)
+  const {data:setting} = await db.from('availability')
+    .select('*').eq('slot','rideau_location_setting').single();
+  if(setting?.location_key) activeRideauLocation = setting.location_key;
+
+  // Load manual travel drop-in slots
+  const {data} = await db.from('availability')
+    .select('*').eq('slot','dropin_marker').order('date');
+  activeDropins = (data||[]).filter(r=>r.location_key !== 'rideau_auto');
+
+  renderDropinModal();
+}
+
+function renderDropinModal(){
+  // Set radio
+  document.querySelectorAll('input[name="rideau-loc"]').forEach(r=>{
+    r.checked = r.value === activeRideauLocation;
+    const lbl = document.getElementById('loc-'+r.value);
+    if(lbl) lbl.style.borderColor = r.checked ? 'var(--cyan)' : 'var(--border)';
+  });
+
+  // Active slots list
+  const el = document.getElementById('active-dropin-list');
+  if(!el) return;
+  if(!activeDropins.length){ el.innerHTML='<div style="padding:8px 0;color:var(--muted)">No travel drop-in slots added yet. Rideau River dates show automatically.</div>'; return; }
+  el.innerHTML = activeDropins.map(d=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:rgba(245,216,0,0.08);border:1px solid rgba(245,216,0,0.3);border-radius:8px;margin-bottom:6px">
+      <div>
+        <strong>${fmtDate(d.date)}</strong> — ${d.location_label||'Unknown location'}
+        <span style="margin-left:8px;font-size:11px;background:rgba(0,200,212,0.1);color:var(--cyan);padding:2px 8px;border-radius:10px;font-weight:600">${d.holiday_label||'both'}</span>
+      </div>
+      <button class="btn btn-danger btn-sm" onclick="removeDropin('${d.id}')">Remove</button>
+    </div>`).join('');
+}
+
+async function setRideauLocation(key){
+  activeRideauLocation = key;
+  // Persist as a settings row
+  await db.from('availability').upsert(
+    {date:'2000-01-01', slot:'rideau_location_setting', is_blocked:false, location_key:key, location_label:RIDEAU_LOCATION_LABELS[key]},
+    {onConflict:'date,slot'}
+  );
+  renderDropinModal();
+  renderCalendar();
+  toast(`Active launch: ${RIDEAU_LOCATION_LABELS[key]} ✓`);
+}
+
+async function addDropinSlot(){
+  const date  = document.getElementById('dropin-date').value;
+  const label = document.getElementById('dropin-location-label').value.trim();
+  const tier  = document.getElementById('dropin-tier').value;
+  const note  = document.getElementById('dropin-note').value.trim();
+  if(!date||!label){ toast('Please enter a date and location name'); return; }
+
+  const {data} = await db.from('availability').insert({
+    date,
+    slot:'dropin_marker',
+    is_blocked: tier==='single', // reuse field: true=single only, false=both/group
+    location_label: label,
+    location_key:'travel',
+    holiday_label: tier,  // reuse holiday_label to store tier string
+  }).select().single();
+
+  if(data){
+    activeDropins.push(data);
+    document.getElementById('dropin-date').value='';
+    document.getElementById('dropin-location-label').value='';
+    document.getElementById('dropin-note').value='';
+    renderDropinModal();
+    renderCalendar();
+    toast(`Drop-in slot added: ${label} · ${fmtDate(date)} ✓`);
+  }
+}
+
+async function removeDropin(id){
+  await db.from('availability').delete().eq('id',id);
+  activeDropins = activeDropins.filter(d=>d.id!==id);
+  renderDropinModal();
+  renderCalendar();
+  toast('Drop-in slot removed');
+}
+
 // ── AUTH ──────────────────────────────────────────────────
 function doLogin(){
   const pw = document.getElementById('pw-input').value;
@@ -583,7 +735,7 @@ function doLogout(){
 
 // ── DATA LOAD ─────────────────────────────────────────────
 async function loadAll(){
-  await Promise.all([loadBookings(), loadClients(), loadAvailability(), loadTemplates(), loadHolidays()]);
+  await Promise.all([loadBookings(), loadClients(), loadAvailability(), loadTemplates(), loadHolidays(), loadDropins()]);
   renderDashboard();
   renderCalendar();
   renderBookingsTable();
