@@ -677,17 +677,18 @@ function renderSlotPicker() {
 
 function slotOptionHTML(id, label, sublabel, slots) {
   const blocked = slots.some(s => isSlotBlocked(selectedDay, s));
-  return `<div class="slot-opt${blocked?' slot-blocked-opt':''}" id="${id}" onclick="pickSlot(this, ${JSON.stringify(slots)})" data-slots='${JSON.stringify(slots)}'>
+  return `<div class="slot-opt${blocked?' slot-blocked-opt':''}" id="${id}" onclick="pickSlot(this)" data-slots='${JSON.stringify(slots)}'>
     <div class="slot-opt-label">${label}${blocked?` <span style="color:var(--red);font-size:11px">— Unavailable</span>`:''}</div>
     <div class="slot-opt-sub">${sublabel}</div>
   </div>`;
 }
 
-function pickSlot(el, slots) {
+function pickSlot(el) {
   if (el.classList.contains('slot-blocked-opt')) {
     showToast('That slot is not available on this date — please choose another');
     return;
   }
+  const slots = JSON.parse(el.dataset.slots || '[]');
   document.querySelectorAll('.slot-opt').forEach(o => o.classList.remove('active'));
   el.classList.add('active');
   selectedSlots = slots;
@@ -925,7 +926,7 @@ function goToStep2(){
 function goToStep1(){
   document.getElementById('step2').classList.remove('visible');
   document.getElementById('step1').style.display='block';
-  
+  window._dropinContext = null;
   document.getElementById('s1').classList.add('active');
   document.getElementById('s1').classList.remove('done');
   document.getElementById('s1').textContent='1';
@@ -935,8 +936,13 @@ function goToStep1(){
 
 // ── SUBMIT ────────────────────────────────────────────────
 async function submitBooking(){
-  if(!selectedPackage){ showToast('Please select a package'); return; }
-  if(!selectedSlots.length){ showToast('Please select a time slot for your package'); return; }
+  const isDropin = !!window._dropinContext;
+
+  if(!isDropin){
+    if(!selectedPackage){ showToast('Please select a package'); return; }
+    if(!selectedSlots.length){ showToast('Please select a time slot for your package'); return; }
+  }
+
   const name     = document.getElementById('b-name').value.trim();
   const email    = document.getElementById('b-email').value.trim();
   const phone    = document.getElementById('b-phone').value.trim();
@@ -952,23 +958,26 @@ async function submitBooking(){
 
   btn.disabled=true; btn.textContent='Sending...';
 
-  const pkgLabel = window._dropinContext
+  const pkgLabel = isDropin
     ? `Drop-In: ${window._dropinContext.tier}`
     : (PACKAGES[selectedPackage]?.label || '');
-  const requestedDate = window._dropinContext
+  const requestedDate = isDropin
     ? window._dropinContext.dateStr
     : new Date(calYear,calMonth,selectedDay).toISOString().split('T')[0];
-  const slotStr = window._dropinContext
+  const slotStr = isDropin
     ? `Drop-In @ ${window._dropinContext.loc}`
     : selectedSlots.map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(' + ');
+  const allDates = isDropin
+    ? [requestedDate]
+    : (selectedDates.length ? selectedDates.map(d=>d.toISOString().split('T')[0]) : [requestedDate]);
 
   // Write to Supabase
   if(db){
     try{
       const{data:bk}=await db.from('bookings').insert({
         date:requestedDate,
-        slot:selectedSlots[0],
-        package:pkg.label,
+        slot:isDropin?'dropin':(selectedSlots[0]||''),
+        package:pkgLabel,
         location,
         sport:sport||null,
         notes:(notes||'')+(allDates.length>1?'\nAll dates: '+allDates.join(', '):''),
@@ -991,7 +1000,7 @@ async function submitBooking(){
       headers:{'Content-Type':'application/json','Accept':'application/json'},
       body:JSON.stringify({
         name, email:email||'not provided', phone:phone||'not provided', location,
-        package:pkg.label,
+        package:pkgLabel,
         date:requestedDate,
         all_dates:allDates.join(', '),
         slots:slotStr,
@@ -999,7 +1008,7 @@ async function submitBooking(){
         skill_level:level||'not specified',
         sport:sport||'not specified',
         notes:notes||'none',
-        _subject:`New Booking Request — ${name} · ${requestedDate} · ${pkg.label.split('—')[0].trim()}`
+        _subject:`New Booking Request — ${name} · ${requestedDate} · ${pkgLabel.split('—')[0].trim()}`
       })
     });
   }catch(e){}
