@@ -183,7 +183,16 @@ const CONTENT = {
 
   pricing_cta_desc:        "Summer books up fast — especially weekends and holidays. Secure your date with a 30% deposit. No payment required to submit your request.",
 
-  // Come to Us — $60/set
+  // Come to Us — $50/set advance booking
+  pricing_dropin50_name:     "Book Ahead",
+  pricing_dropin50_badge:    "📅 Advance Booking",
+  pricing_dropin50_price:    "50",
+  pricing_dropin50_duration: "Min. $200 · 15 min per set",
+  pricing_dropin50_f1:       "Book a specific upcoming location in advance",
+  pricing_dropin50_f2:       "Guaranteed spot — no waiting for an open slot",
+  pricing_dropin50_f3:       "Ideal for small groups planning ahead",
+
+  // Come to Us — $60/set drop-in
   pricing_cometo_eyebrow:  "Local Area Sessions",
   pricing_cometo_h2_1:     "Drop in.",
   pricing_cometo_h2_2:     "Pay per set.",
