@@ -181,6 +181,28 @@ const CONTENT = {
   pricing_surcharge_dist1:  "+$100 flat — 1.5–3hr drive from Ottawa, ON.",
   pricing_surcharge_dist2:  "+$200 flat — 3–6hr drive from Ottawa, ON.",
 
+  pricing_cta_desc:        "Summer books up fast — especially weekends and holidays. Secure your date with a 30% deposit. No payment required to submit your request.",
+
+  // Come to Us — $60/set
+  pricing_cometo_eyebrow:  "Most Affordable",
+  pricing_cometo_h2_1:     "Come to us.",
+  pricing_cometo_h2_2:     "Pay per set.",
+  pricing_cometo_desc:     "Catch us on the Rideau River or join an open time slot while we're already in your area. The lowest-cost way to get on the water.",
+  pricing_cometo_name:     "Come to Us",
+  pricing_cometo_badge:    "💧 Most Affordable",
+  pricing_cometo_duration: "Min. $240 · 20–30 min per set",
+  pricing_cometo_f1:       "Boat is already on location — you come to us",
+  pricing_cometo_f2:       "Check the calendar or follow us on Instagram for location updates",
+  pricing_cometo_f3:       "Perfect for 2 people at $120 each (2 × 15 min turns)",
+  pricing_cometo_how_title:"How It Works",
+  pricing_cometo_how_text: "We post upcoming locations on Instagram and the booking calendar. When the boat is already on the water near you, join an open slot for the best rate available. Great for locals and anyone near the Rideau River.",
+  pricing_cometo_req_title:"Requirements",
+  pricing_cometo_req_f1:   "Boat must already be on location — no trailer travel included",
+  pricing_cometo_req_f2:   "$60 per person, per set (minimum $240 per booking)",
+  pricing_cometo_req_f3:   "Small groups of 2–4 work best for this format",
+  pricing_cometo_cta_title:"Not Sure?",
+  pricing_cometo_cta_text: "Contact us — we can often work something out even for very small groups.",
+
 
   // ── SPORTS PAGE ───────────────────────────────────────
   sports_hero_badge:   "All Disciplines · One Coach",
@@ -326,11 +348,36 @@ const CONTENT = {
   app_clubs_plan2:     "Club Plan — $49/mo",
   app_clubs_plan3:     "Pro Plan — $99/mo",
 
+  // App demo card
+  app_demo_label:      "Gold Skills · Waterski",
+  app_demo_skill1:     "Deep water start — both skis",
+  app_demo_skill2:     "One-ski drop at speed",
+  app_demo_skill3:     "Jump wake — both directions",
+  app_demo_skill4:     "Crossing all 6 wakes cleanly",
+  app_demo_skill5:     "Slalom course introduction",
+  app_demo_progress:   "3 of 5 Gold skills completed",
+
 
   // ── BOOKING HERO ──────────────────────────────────────
   booking_hero_badge:  "Live Availability · 24hr Confirmation",
   booking_hero_l1:     "Book your",
   booking_hero_l3:     "session.",
+
+  // Booking info cards
+  booking_gear_title:          "What's Included",
+  booking_gear_boat:           "Sanger DLX competition towboat — fully fuelled",
+  booking_gear_equip:          "Waterskis, wakeboards, wakesurf, ropes, handles",
+  booking_gear_coach:          "Christian Richards — top 100 worldwide barefoot, 15+ yrs coaching",
+  booking_info_season_title:   "Season & Policies",
+  booking_info_season_val:     "May through September — weekdays and weekends",
+  booking_info_weather_val:    "Light rain proceeds. Heavy rain or thunder = reschedule with full credit",
+  booking_info_distance_val:   "+$100 (1.5–3hr) or +$200 (3–6hr) from Manotick, ON",
+  booking_info_deposit_val:    "30% non-refundable deposit to secure your date",
+  booking_info_payment_val:    "Full balance due 48 hours before your session via Square",
+  booking_policy_refund:       "Refund Policy",
+  booking_policy_waiver:       "Liability Waiver",
+  booking_policy_terms:        "Terms of Service",
+  booking_policy_guidelines:   "Guidelines",
 
 
   // ── POLICIES HERO ─────────────────────────────────────
@@ -516,63 +563,6 @@ const CONTENT = {
   faq_cta_eyebrow:     "Still have a question?",
   faq_cta_h3:          "We reply personally — usually same day.",
   faq_cta_desc:        "No question is too small. If something is stopping you from booking, just ask — we're happy to help.",
-
-  // ── APP DEMO CARD ─────────────────────────────────────
-  app_demo_label:      "Gold Skills · Waterski",
-  app_demo_skill1:     "Deep water start — both skis",
-  app_demo_skill2:     "One-ski drop at speed",
-  app_demo_skill3:     "Jump wake — both directions",
-  app_demo_skill4:     "Crossing all 6 wakes cleanly",
-  app_demo_skill5:     "Slalom course introduction",
-  app_demo_progress:   "3 of 5 Gold skills completed",
-
-  // ── PRICING — SECTION HEADINGS ────────────────────────
-  pricing_base_eyebrow:    "Base Session Packages",
-  pricing_base_h2_1:       "Pick your",
-  pricing_base_h2_2:       "package.",
-  pricing_base_desc:       "All packages include boat, fuel, all equipment, life jackets, and coach time. We come to your lake.",
-  pricing_multi_eyebrow:   "Multi-Day Packages",
-  pricing_multi_h2_1:      "More days,",
-  pricing_multi_h2_2:      "more savings.",
-  pricing_multi_desc:      "Book multiple days and save. All multi-day packages include your choice of any 2 time slots per day.",
-  pricing_cta_desc:        "Summer books up fast — especially weekends and holidays. Secure your date with a 30% deposit. No payment required to submit your request.",
-
-  // ── PRICING — COME TO US ──────────────────────────────
-  pricing_cometo_eyebrow:  "Most Affordable",
-  pricing_cometo_h2_1:     "Come to us.",
-  pricing_cometo_h2_2:     "Pay per set.",
-  pricing_cometo_desc:     "Catch us on the Rideau River or join an open time slot while we're already in your area. The lowest-cost way to get on the water.",
-  pricing_cometo_name:     "Come to Us",
-  pricing_cometo_badge:    "💧 Most Affordable",
-  pricing_cometo_duration: "Min. $240 · 20–30 min per set",
-  pricing_cometo_f1:       "Boat is already on location — you come to us",
-  pricing_cometo_f2:       "Check the calendar or follow us on Instagram for location updates",
-  pricing_cometo_f3:       "Perfect for 2 people at $120 each (2 × 15 min turns)",
-  pricing_cometo_how_title:"How It Works",
-  pricing_cometo_how_text: "We post upcoming locations on Instagram and the booking calendar. When the boat is already on the water near you, join an open slot for the best rate available. Great for locals and anyone near the Rideau River.",
-  pricing_cometo_req_title:"Requirements",
-  pricing_cometo_req_f1:   "Boat must already be on location — no trailer travel included",
-  pricing_cometo_req_f2:   "$60 per person, per set (minimum $240 per booking)",
-  pricing_cometo_req_f3:   "Small groups of 2–4 work best for this format",
-  pricing_cometo_cta_title:"Not Sure?",
-  pricing_cometo_cta_text: "Contact us — we can often work something out even for very small groups.",
-
-  // ── BOOKING PAGE CARD TEXT ────────────────────────────
-  booking_info_season_title:   "Season & Policies",
-  booking_info_season_val:     "May through September — weekdays and weekends",
-  booking_info_weather_val:    "Light rain proceeds. Heavy rain or thunder = reschedule with full credit",
-  booking_info_distance_val:   "+$100 (1.5–3hr) or +$200 (3–6hr) from Manotick, ON",
-  booking_info_deposit_val:    "30% non-refundable deposit to secure your date",
-  booking_info_payment_val:    "Full balance due 48 hours before your session via Square",
-  booking_gear_title:          "What's Included",
-  booking_gear_boat:           "Sanger DLX competition towboat",
-  booking_gear_fuel:           "Fuel and all running costs",
-  booking_gear_equip:          "All skis, boards, ropes, handles, PFDs",
-  booking_gear_coach:          "Full coaching time with Christian",
-  booking_policy_refund:       "Refund Policy",
-  booking_policy_waiver:       "Liability Waiver",
-  booking_policy_terms:        "Terms of Service",
-  booking_policy_guidelines:   "Guidelines",
 
 };
 
