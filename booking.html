@@ -1015,6 +1015,14 @@ async function submitBooking(){
 
   // Move to step 3
   document.getElementById('step2').classList.remove('visible');
+  // Restore step1 as structural placeholder so layout doesn't collapse, but empty it
+  const s1el = document.getElementById('step1');
+  s1el.style.display = 'block';
+  s1el.style.minHeight = '0';
+  s1el.style.padding = '0';
+  s1el.style.border = 'none';
+  s1el.style.background = 'none';
+  s1el.innerHTML = '';
   document.getElementById('step3').classList.add('visible');
   document.getElementById('s2').classList.remove('active');
   document.getElementById('s2').classList.add('done');
@@ -1023,7 +1031,11 @@ async function submitBooking(){
   document.getElementById('s3').classList.add('active');
   document.getElementById('s3l').classList.add('active');
   btn.disabled=false; btn.textContent='Request This Date →';
-  window.scrollTo({top:0,behavior:'smooth'});
+  window._dropinContext = null;
+  requestAnimationFrame(()=>{
+    const el = document.getElementById('step3');
+    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  });
 }
 
 function toggleFaq(btn){ const a=btn.nextElementSibling; btn.classList.toggle('open'); a.classList.toggle('open'); }
