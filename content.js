@@ -118,6 +118,35 @@ const CONTENT = {
   pricing_hero_l1:      "Simple, transparent",
   pricing_hero_l3:      "pricing.",
 
+   // Come to Us — $50/set advance booking
+  pricing_dropin50_name:     "Book Ahead",
+  pricing_dropin50_badge:    "📅 Advance Booking",
+  pricing_dropin50_price:    "50",
+  pricing_dropin50_duration: "Min. $200 · 15 min per set",
+  pricing_dropin50_f1:       "Reserve a spot where we already are! ",
+  pricing_dropin50_f2:       "Guaranteed spot — no waiting for an open slot",
+  pricing_dropin50_f3:       "Ideal for small groups planning ahead",
+
+ // Come to Us — $60/set drop-in
+  pricing_cometo_eyebrow:  "Local Area Sessions",
+  pricing_cometo_h2_1:     "Drop in.",
+  pricing_cometo_h2_2:     "Pay per set.",
+  pricing_cometo_desc:     "Catch us on the Rideau River after our personal training session or join an open time slot while we're already in your local area after another group.",
+  pricing_cometo_name:     "Meet us while we are out.",
+  pricing_cometo_badge:    "💧 Most Affordable",
+  pricing_cometo_duration: "Minimum $180 · 15 min per set",
+  pricing_cometo_f1:       "Boat is already on location — you come to us",
+  pricing_cometo_f2:       "Check the calendar or follow us on Instagram for location updates",
+  pricing_cometo_f3:       "Perfect for 2 people at $120 each (2 × 15 min turns each)",
+  pricing_cometo_how_title:"How It Works",
+  pricing_cometo_how_text: "We post upcoming locations on Instagram and the booking calendar. When the boat is already on the water near you, join an open slot for the best rate available. Great for locals and anyone near the Rideau River.",
+  pricing_cometo_req_title:"Guidelines",
+  pricing_cometo_req_f1:   "Boat will be on location",
+  pricing_cometo_req_f2:   "$60 per person, per set (minimum $180 per booking)",
+  pricing_cometo_req_f3:   "Some experience required for drop in's",
+  pricing_cometo_cta_title:"Not Sure?",
+  pricing_cometo_cta_text: "Contact us — we can often work something out for anyone that wants to ride!",
+  
   pricing_base_eyebrow: "Base Session Packages",
   pricing_base_h2_1:    "Pick your",
   pricing_base_h2_2:    "package.",
@@ -183,34 +212,7 @@ const CONTENT = {
 
   pricing_cta_desc:        "Summer books up fast — especially weekends and holidays. Secure your date with a 30% deposit. No payment required to submit your request.",
 
-  // Come to Us — $50/set advance booking
-  pricing_dropin50_name:     "Book Ahead",
-  pricing_dropin50_badge:    "📅 Advance Booking",
-  pricing_dropin50_price:    "50",
-  pricing_dropin50_duration: "Min. $200 · 15 min per set",
-  pricing_dropin50_f1:       "Book a specific upcoming location in advance",
-  pricing_dropin50_f2:       "Guaranteed spot — no waiting for an open slot",
-  pricing_dropin50_f3:       "Ideal for small groups planning ahead",
-
-  // Come to Us — $60/set drop-in
-  pricing_cometo_eyebrow:  "Local Area Sessions",
-  pricing_cometo_h2_1:     "Drop in.",
-  pricing_cometo_h2_2:     "Pay per set.",
-  pricing_cometo_desc:     "Catch us on the Rideau River after our personal training session or join an open time slot while we're already in your local area after another group.",
-  pricing_cometo_name:     "Meet us while we are out.",
-  pricing_cometo_badge:    "💧 Most Affordable",
-  pricing_cometo_duration: "Minimum $180 · 15 min per set",
-  pricing_cometo_f1:       "Boat is already on location — you come to us",
-  pricing_cometo_f2:       "Check the calendar or follow us on Instagram for location updates",
-  pricing_cometo_f3:       "Perfect for 2 people at $120 each (2 × 15 min turns each)",
-  pricing_cometo_how_title:"How It Works",
-  pricing_cometo_how_text: "We post upcoming locations on Instagram and the booking calendar. When the boat is already on the water near you, join an open slot for the best rate available. Great for locals and anyone near the Rideau River.",
-  pricing_cometo_req_title:"Guidelines",
-  pricing_cometo_req_f1:   "Boat will be on location",
-  pricing_cometo_req_f2:   "$60 per person, per set (minimum $180 per booking)",
-  pricing_cometo_req_f3:   "Some experience required for drop in's",
-  pricing_cometo_cta_title:"Not Sure?",
-  pricing_cometo_cta_text: "Contact us — we can often work something out for anyone that wants to ride!",
+ 
 
 
   // ── SPORTS PAGE ───────────────────────────────────────
