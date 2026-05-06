@@ -180,7 +180,20 @@
 
 <section style="background:linear-gradient(135deg,var(--yellow) 0%,#f0ffd8 50%,#e8ffc8 100%);padding:80px 48px">
   <div style="max-width:1200px;margin:0 auto;overflow:hidden">
-    <div class="booking-layout">
+
+    <!-- Step indicator — sits above everything, always visible -->
+    <div class="step-indicator" id="stepIndicator" style="margin-bottom:32px">
+      <div class="step"><div class="step-num active" id="s1">1</div><span class="step-label active">Pick a Date</span></div>
+      <div class="step-divider"></div>
+      <div class="step"><div class="step-num" id="s2">2</div><span class="step-label" id="s2l">Your Details</span></div>
+      <div class="step-divider"></div>
+      <div class="step"><div class="step-num" id="s3">3</div><span class="step-label" id="s3l">Confirm</span></div>
+    </div>
+
+    <!-- Steps 1 + 2 inside the two-column grid -->
+    <div class="booking-layout" id="booking-grid">
+
+      <!-- LEFT: sticky sidebar -->
       <div>
         <div class="sticky-sidebar">
           <div class="info-card">
@@ -208,15 +221,10 @@
         </div>
       </div>
 
+      <!-- RIGHT: step 1 + step 2 -->
       <div>
-        <div class="step-indicator" id="stepIndicator">
-          <div class="step"><div class="step-num active" id="s1">1</div><span class="step-label active">Pick a Date</span></div>
-          <div class="step-divider"></div>
-          <div class="step"><div class="step-num" id="s2">2</div><span class="step-label" id="s2l">Your Details</span></div>
-          <div class="step-divider"></div>
-          <div class="step"><div class="step-num" id="s3">3</div><span class="step-label" id="s3l">Confirm</span></div>
-        </div>
 
+        <!-- STEP 1: Calendar -->
         <div class="cal-card-full" id="step1" style="overflow:hidden;min-width:0">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
             <div><div class="eyebrow" style="margin-bottom:4px">Step 1</div><div style="font-size:20px;font-weight:700;color:var(--text)">Select a Date</div></div>
@@ -228,7 +236,6 @@
               <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:#ddd"></div>Unavail.</div>
             </div>
           </div>
-          
           <div class="cal-nav">
             <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
             <div class="cal-month" id="calMonth"></div>
@@ -245,15 +252,16 @@
               </div>
               <button onclick="goToStep2()" class="btn-pink">Continue →</button>
             </div>
-
-          <div style="margin-top:24px">
-            <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">Select Package</div>
-            <div class="pkg-grid" id="pkg-grid-container"></div>
+            <div style="margin-top:24px">
+              <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">Select Package</div>
+              <div class="pkg-grid" id="pkg-grid-container"></div>
               <div id="slot-picker" style="margin-top:12px"></div>
               <div id="dropin-section"></div>
+            </div>
           </div>
         </div>
 
+        <!-- STEP 2: Details form -->
         <div class="form-section" id="step2">
           <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:24px">
             <div>
@@ -285,30 +293,30 @@
           </div>
         </div>
 
-        <div class="success-card" id="step3">
-          <div style="font-size:64px;margin-bottom:20px">🌊</div>
-          <div class="eyebrow" style="text-align:center;margin-bottom:8px">Request Received</div>
-          <h2 style="font-size:32px;font-weight:800;color:var(--cyan);margin-bottom:12px;letter-spacing:-.02em">You're on the water.</h2>
-          <p style="font-size:15px;color:var(--muted);line-height:1.7;max-width:480px;margin:0 auto 8px">We will be in touch within 24 hours to confirm your session and send a deposit link.</p>
-          <div style="background:rgba(0,200,212,0.06);border:1px solid rgba(0,200,212,0.15);border-radius:var(--rsm);padding:16px 20px;max-width:480px;margin:20px auto 0;text-align:left">
-            <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">What Happens Next</div>
-            <div style="font-size:13px;color:var(--muted);line-height:1.8">
-              ① We confirm within 24 hours<br>
-              ② 30% deposit link sent via Square<br>
-              ③ Full payment due 48hrs before session<br>
-              ④ We come to your lake — just show up
-            </div>
-          </div>
-          <div style="margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-            <a href="/" class="btn-outline">Back to Home</a>
-            <a href="/pricing" class="btn-pink">View Pricing →</a>
-          </div>
-        </div>
+      </div>
+    </div><!-- end booking-grid -->
 
-        
+    <!-- STEP 3 — outside the grid, always full width, never collapses -->
+    <div class="success-card" id="step3" style="max-width:680px;margin:0 auto">
+      <div style="font-size:64px;margin-bottom:20px">🌊</div>
+      <div class="eyebrow" style="text-align:center;margin-bottom:8px">Request Received</div>
+      <h2 style="font-size:32px;font-weight:800;color:var(--cyan);margin-bottom:12px;letter-spacing:-.02em">You're on the water.</h2>
+      <p style="font-size:15px;color:var(--muted);line-height:1.7;max-width:480px;margin:0 auto 8px">We will be in touch within 24 hours to confirm your session and send a deposit link.</p>
+      <div style="background:rgba(0,200,212,0.06);border:1px solid rgba(0,200,212,0.15);border-radius:var(--rsm);padding:16px 20px;max-width:480px;margin:20px auto 0;text-align:left">
+        <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">What Happens Next</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.8">
+          ① We confirm within 24 hours<br>
+          ② 30% deposit link sent via Square<br>
+          ③ Full payment due 48hrs before session<br>
+          ④ We come to your lake — just show up
         </div>
       </div>
+      <div style="margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <a href="/" class="btn-outline">Back to Home</a>
+        <a href="/pricing" class="btn-pink">View Pricing →</a>
+      </div>
     </div>
+
   </div>
 </section>
 <footer>
@@ -577,7 +585,12 @@ async function requestDropin(){
 
   // Move to step 2 pre-filling drop-in context
   document.getElementById('formDateLabel').textContent = MONTHS[calMonth]+' '+selectedDay+', '+calYear;
-  document.getElementById('step1').style.display='none';
+  const s1d = document.getElementById('step1');
+  s1d.style.visibility = 'hidden';
+  s1d.style.height = '0';
+  s1d.style.overflow = 'hidden';
+  s1d.style.padding = '0';
+  s1d.style.margin = '0';
   document.getElementById('step2').classList.add('visible');
   document.getElementById('s1').classList.remove('active');
   document.getElementById('s1').classList.add('done');
@@ -913,25 +926,41 @@ function goToStep2(){
   // Set summary for step 2 display
   const dateStr = MONTHS[calMonth]+' '+selectedDay+', '+calYear;
   document.getElementById('formDateLabel').textContent = dateStr;
-  document.getElementById('step1').style.display='none';
-  
+  // Hide step1 content but keep it as an invisible spacer so the grid column stays alive
+  const s1 = document.getElementById('step1');
+  s1.style.visibility = 'hidden';
+  s1.style.height = '0';
+  s1.style.overflow = 'hidden';
+  s1.style.padding = '0';
+  s1.style.margin = '0';
   document.getElementById('step2').classList.add('visible');
   document.getElementById('s1').classList.remove('active');
   document.getElementById('s1').classList.add('done');
   document.getElementById('s1').textContent='✓';
   document.getElementById('s2').classList.add('active');
   document.getElementById('s2l').classList.add('active');
-  window.scrollTo({top:document.getElementById('stepIndicator').offsetTop-100,behavior:'smooth'});
+  requestAnimationFrame(()=>{
+    document.getElementById('step2').scrollIntoView({behavior:'smooth', block:'start'});
+  });
 }
 function goToStep1(){
   document.getElementById('step2').classList.remove('visible');
-  document.getElementById('step1').style.display='block';
+  const s1 = document.getElementById('step1');
+  s1.style.visibility = '';
+  s1.style.height = '';
+  s1.style.overflow = '';
+  s1.style.padding = '';
+  s1.style.margin = '';
+  s1.style.display = 'block';
   window._dropinContext = null;
   document.getElementById('s1').classList.add('active');
   document.getElementById('s1').classList.remove('done');
   document.getElementById('s1').textContent='1';
   document.getElementById('s2').classList.remove('active');
   document.getElementById('s2l').classList.remove('active');
+  requestAnimationFrame(()=>{
+    document.getElementById('step1').scrollIntoView({behavior:'smooth', block:'start'});
+  });
 }
 
 // ── SUBMIT ────────────────────────────────────────────────
@@ -1013,28 +1042,21 @@ async function submitBooking(){
     });
   }catch(e){}
 
-  // Move to step 3
+  // Move to step 3 — hide the whole booking grid, show confirmation outside it
   document.getElementById('step2').classList.remove('visible');
-  // Restore step1 as structural placeholder so layout doesn't collapse, but empty it
-  const s1el = document.getElementById('step1');
-  s1el.style.display = 'block';
-  s1el.style.minHeight = '0';
-  s1el.style.padding = '0';
-  s1el.style.border = 'none';
-  s1el.style.background = 'none';
-  s1el.innerHTML = '';
+  document.getElementById('step1').style.display = 'none';
+  document.querySelector('.booking-layout').style.display = 'none';
   document.getElementById('step3').classList.add('visible');
   document.getElementById('s2').classList.remove('active');
   document.getElementById('s2').classList.add('done');
-  document.getElementById('s2').textContent='✓';
+  document.getElementById('s2').textContent = '✓';
   document.getElementById('s2l').classList.remove('active');
   document.getElementById('s3').classList.add('active');
   document.getElementById('s3l').classList.add('active');
-  btn.disabled=false; btn.textContent='Request This Date →';
+  btn.disabled = false; btn.textContent = 'Request This Date →';
   window._dropinContext = null;
   requestAnimationFrame(()=>{
-    const el = document.getElementById('step3');
-    if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    document.getElementById('step3').scrollIntoView({behavior:'smooth', block:'start'});
   });
 }
 
