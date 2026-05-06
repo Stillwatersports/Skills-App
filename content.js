@@ -526,6 +526,17 @@ const CONTENT = {
   app_demo_skill5:     "Slalom course introduction",
   app_demo_progress:   "3 of 5 Gold skills completed",
 
+  // ── PRICING — SECTION HEADINGS ────────────────────────
+  pricing_base_eyebrow:    "Base Session Packages",
+  pricing_base_h2_1:       "Pick your",
+  pricing_base_h2_2:       "package.",
+  pricing_base_desc:       "All packages include boat, fuel, all equipment, life jackets, and coach time. We come to your lake.",
+  pricing_multi_eyebrow:   "Multi-Day Packages",
+  pricing_multi_h2_1:      "More days,",
+  pricing_multi_h2_2:      "more savings.",
+  pricing_multi_desc:      "Book multiple days and save. All multi-day packages include your choice of any 2 time slots per day.",
+  pricing_cta_desc:        "Summer books up fast — especially weekends and holidays. Secure your date with a 30% deposit. No payment required to submit your request.",
+
   // ── PRICING — COME TO US ──────────────────────────────
   pricing_cometo_eyebrow:  "Most Affordable",
   pricing_cometo_h2_1:     "Come to us.",
