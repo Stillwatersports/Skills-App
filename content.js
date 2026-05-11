@@ -160,8 +160,8 @@ const CONTENT = {
   pricing_tier3_name:    "Multi-Day",
   pricing_tier3_desc:    "Book 2, 3, or 5 days and unlock real savings — up to $1,000 off. A group of 6 for a full weekend works out to around $87/person per day.",
 
-  pricing_tier4_eyebrow: "Drop-In · Rideau River",
-  pricing_tier4_name:    "Ride With Us",
+  pricing_tier4_eyebrow: "Come to Us Special · Rideau River",
+  pricing_tier4_name:    "Ride With Us · in Ottawa",
   pricing_tier4_desc:    "Join an open slot while we're already on the Rideau. 15–20 min turns, $50/person, $200 minimum. No boat travel — you come to us. Perfect for local riders and small groups.",
   pricing_tier4_cta:     "Check Availability →",
 
