@@ -75,13 +75,13 @@ const CONTENT = {
 
   // ── ABOUT PAGE ────────────────────────────────────────
   about_hero_badge:    "Coach · Athlete · Father",
-  about_hero_l1:       "Hooked on a feeling.",
-  about_hero_l3:       "Still riding.",
+  about_hero_l1:       "Passing the Handle",
+  about_hero_l3:       "To the Next Gen...",
 
   about_story_eyebrow: "The Story",
-  about_story_h2_1:    "Born on",
+  about_story_h2_1:    "Born for",
   about_story_h2_2:    "the water.",
-  about_story_p1:      "It all started for me at Hockey Opportunity Camp in South River, Ontario. I was six years old my first day of summer camp… I'm not sure if it was seeing the waterski coaches make a human pyramid, or sliding across the water on their bare feet… But I was hooked.",
+  about_story_p1:      "It all started for me at Hockey Opportunity Camp in South River, Ontario. Dont let the name fool you, yes they have a world class hockey program, but their waterski program has given rise to some world class competitors as well. I was six years old my first day of summer camp… I'm not sure if it was seeing the waterski coaches make a human pyramid on water skis, the flips on a wakeboard, or sliding across the water on their bare feet at crazy speeds … But I was hooked.",
   about_story_p2:      "Over the next decade and a half I would return to HOC as a camper, I wanted nothing more than to be a waterski coach. I went through Leader in Training and Counsellor in Training programs, National lifeguard certification, Canadian Waterski coaches certification and eventually spent three seasons as a waterski coach — passing the handle on to hundreds, if not thousands of kids.",
   about_story_p3:      "Today I compete and coach out of Ottawa, specializing in all three barefoot disciplines — slalom, trick, and jump. I train year-round and rank within the top 100 worldwide. I'm competitive by nature, but nothing is better than seeing someone new experience waterskiing for the first time!",
 
