@@ -251,8 +251,8 @@ const CONTENT = {
 
   // ── EQUIPMENT PAGE ────────────────────────────────────
   equip_hero_badge:    "Professional Grade · All Included",
-  equip_hero_l1:       "The right stuff.",
-  equip_hero_l3:       "",
+  equip_hero_l1:       "The Right Stuff.",
+  equip_hero_sub:       "Top Brands: Ronix, Phase 5, O'brien, Connelly, Barefoot International, Big Air and more... ",
 
   equip_boat_eyebrow:  "The Boat",
   equip_boat_h2:       "Sanger <em>DLX.</em>",
@@ -264,7 +264,7 @@ const CONTENT = {
   equip_feat2_title:   "Wakeboard Tower",
   equip_feat2_text:    "Full wakeboard tower for elevated rope attachment — creates a higher pull angle for easier starts and bigger air.",
   equip_feat3_title:   "The Boom",
-  equip_feat3_text:    "A solid bar extending out the driver's side of the boat. Originally designed for barefoot water-skiers, it quickly evolved into an excellent teaching tool for all disciplines. Height adjustable for all ages. Even the best waterskier in the world still hones their skills on the boom!",
+  equip_feat3_text:    " Originally designed for barefooting, a solid bar extending out the side of the boat, the boom creates a stable learning environment, right beside the coach in calm, flat water.  Height adjustable for all ages. Even the best waterskiers in the world still hone their skills on the boom!",
   equip_feat4_title:   "Super Fly High",
   equip_feat4_text:    "Extends the height of the wakeboard tower, primarily used for barefooting. The higher pull point allows for easier and faster progression of barefoot tricks.",
   equip_feat5_title:   "Surf Tabs",
