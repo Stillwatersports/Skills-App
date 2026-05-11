@@ -589,17 +589,17 @@ document.addEventListener('click',e=>{if(!e.target.closest('.nav-dropdown'))docu
 function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
 document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
 
-// ── CORE HELPERS (defined first so everything can use them) ──
+// ── HOLIDAYS (declared first — arrow functions below reference it) ─
+const HOLIDAYS = new Set(['2026-01-01','2026-02-16','2026-04-03','2026-04-06','2026-05-18','2026-07-01','2026-08-03','2026-09-07','2026-10-12','2026-12-25','2026-12-26']);
+const HOL_NAMES = {'2026-01-01':"New Year's Day",'2026-02-16':'Family Day','2026-04-03':'Good Friday','2026-04-06':'Easter Monday','2026-05-18':'Victoria Day','2026-07-01':'Canada Day','2026-08-03':'Civic Holiday','2026-09-07':'Labour Day','2026-10-12':'Thanksgiving','2026-12-25':'Christmas Day','2026-12-26':'Boxing Day'};
+
+// ── CORE HELPERS ──────────────────────────────────────────
 function ds(d){ return d.toISOString().split('T')[0] }
 const isWE  = d => d.getDay()===0 || d.getDay()===6;
 const isHol = d => HOLIDAYS.has(ds(d));
 const isWD  = d => !isWE(d);
 const isSat = d => d.getDay()===6;
 const isSun = d => d.getDay()===0;
-
-// ── HOLIDAYS ──────────────────────────────────────────────
-const HOLIDAYS = new Set(['2026-01-01','2026-02-16','2026-04-03','2026-04-06','2026-05-18','2026-07-01','2026-08-03','2026-09-07','2026-10-12','2026-12-25','2026-12-26']);
-const HOL_NAMES = {'2026-01-01':"New Year's Day",'2026-02-16':'Family Day','2026-04-03':'Good Friday','2026-04-06':'Easter Monday','2026-05-18':'Victoria Day','2026-07-01':'Canada Day','2026-08-03':'Civic Holiday','2026-09-07':'Labour Day','2026-10-12':'Thanksgiving','2026-12-25':'Christmas Day','2026-12-26':'Boxing Day'};
 
 // ── CARD TYPE STATE ───────────────────────────────────────
 let selectedCardType = 'halfday';
@@ -982,6 +982,8 @@ function renderResult({ppNum,ppLabel,total,pkg,lines,note,tip,gsNote,tubing,turn
   document.getElementById('res-note').textContent=note;
   document.getElementById('est-result').style.display='block';
   document.getElementById('tubing-check').style.display=tubing?'block':'none';
+}
+
 // ── REQUEST MODAL ─────────────────────────────────────────
 function openRequestModal(){
   // Build summary from current estimate state
