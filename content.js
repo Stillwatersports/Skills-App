@@ -25,7 +25,7 @@ const CONTENT = {
   business_bookings_email: "bookings@learnwatersports.ca",
   business_location:       "Ottawa ON",
   business_season:         "May through September",
-  footer_desc:             "Private water sports coaching across Ontario & Quebec cottage country. All disciplines, all skill levels, all equipment included.",
+  footer_desc:             "Private, All-Inclusive, and mobile water sports lessons across Ontario & Quebec cottage country. All disciplines, all skill levels, all equipment included.",
   footer_copy:             "© 2026 Christian Richards · Stillwater Sports · All rights reserved",
   footer_region:           "learnwatersports.ca",
   nav_book_btn:            "Book Now",
