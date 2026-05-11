@@ -14,7 +14,7 @@
 <style>
 .booking-layout{display:grid;grid-template-columns:1fr 1.8fr;gap:48px;align-items:start}
 .sticky-sidebar{position:sticky;top:88px}
-.info-card{background:var(--white);border-radius:var(--radius);padding:28px;border:1px solid rgba(0,0,0,0.07);margin-bottom:16px}
+.info-card{background:var(--white);border-radius:var(--radius);padding:28px;border:1.5px solid var(--cyan);margin-bottom:16px}
 .info-card h3{font-size:16px;font-weight:700;color:var(--text);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(0,0,0,0.07)}
 .info-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05)}
 .info-row:last-child{border:none;padding-bottom:0}
@@ -29,22 +29,22 @@
 .step-indicator{display:flex;gap:0;margin-bottom:28px}
 .step{display:flex;align-items:center;gap:8px;flex:1}
 .step-num{width:28px;height:28px;border-radius:50%;background:rgba(0,200,212,0.1);border:1.5px solid rgba(0,200,212,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);flex-shrink:0}
-.step-num.active{background:var(--cyan);border-color:var(--cyan);color:#fff}
+.step-num.active{background:var(--pink);border-color:var(--pink);color:var(--yellow)}
 .step-num.done{background:var(--cyan);border-color:var(--cyan);color:#fff}
 .step-label{font-size:12px;font-weight:600;color:var(--muted)}
 .step-label.active{color:var(--cyan)}
 .step-divider{flex:1;height:1px;background:rgba(0,200,212,0.2);margin:0 8px}
-.cal-card-full{background:var(--white);border-radius:20px;padding:32px;border:1px solid rgba(0,0,0,0.07);margin-bottom:24px}
-.form-section{background:var(--white);border-radius:20px;padding:32px;border:1px solid rgba(0,0,0,0.07);margin-bottom:24px;display:none}
+.cal-card-full{background:var(--white);border-radius:20px;padding:32px;border:1.5px solid var(--cyan);margin-bottom:24px}
+.form-section{background:var(--white);border-radius:20px;padding:32px;border:1.5px solid var(--cyan);margin-bottom:24px;display:none}
 .form-section.visible{display:block}
 .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .form-full{grid-column:1/-1}
 .form-field label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase}
-.form-field input,.form-field select,.form-field textarea{width:100%;padding:12px 16px;border:1.5px solid rgba(0,200,212,0.2);border-radius:10px;font-size:15px;font-family:'Outfit',sans-serif;outline:none;background:var(--yellow);color:var(--text);transition:border-color .15s}
+.form-field input,.form-field select,.form-field textarea{width:100%;padding:12px 16px;border:1.5px solid rgba(0,200,212,0.2);border-radius:10px;font-size:15px;font-family:'Outfit',sans-serif;outline:none;background:#fff;color:var(--text);transition:border-color .15s}
 .form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--cyan)}
 .form-field textarea{resize:vertical;min-height:80px;line-height:1.5}
 .form-field select{-webkit-appearance:none}
-.success-card{background:var(--white);border-radius:20px;padding:48px 32px;border:1px solid rgba(0,0,0,0.07);text-align:center;display:none}
+.success-card{background:var(--white);border-radius:20px;padding:48px 32px;border:1.5px solid var(--cyan);text-align:center;display:none}
 .success-card.visible{display:block}
 .faq-item{border-bottom:1px solid rgba(0,0,0,0.07)}
 .faq-item:last-child{border:none}
@@ -57,9 +57,9 @@
 
 /* ── PACKAGE CARDS ────────────────────────────────────── */
 .pkg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
-.pkg-card{padding:14px 16px;border:2px solid rgba(0,200,212,0.2);border-radius:12px;cursor:pointer;transition:all .15s;background:var(--yellow)}
+.pkg-card{padding:14px 16px;border:1.5px solid var(--cyan);border-radius:12px;cursor:pointer;transition:all .15s;background:#fff}
 .pkg-card:hover{border-color:var(--cyan)}
-.pkg-card.selected{border-color:var(--cyan);background:rgba(0,200,212,0.08)}
+.pkg-card.selected{border-color:var(--pink);background:rgba(0,200,212,0.04);box-shadow:0 2px 12px rgba(0,200,212,0.1)}
 .pkg-unavailable{opacity:.4;cursor:not-allowed!important;pointer-events:none}
 .pkg-card-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
 .pkg-card-price{font-size:13px;color:var(--cyan);font-weight:600}
@@ -67,9 +67,9 @@
 
 /* ── SLOT PICKER ──────────────────────────────────────── */
 .slot-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
-.slot-opt{padding:14px 18px;border:2px solid rgba(0,200,212,0.2);border-radius:12px;cursor:pointer;margin-bottom:8px;transition:all .15s;background:var(--yellow)}
+.slot-opt{padding:14px 18px;border:1.5px solid var(--cyan);border-radius:12px;cursor:pointer;margin-bottom:8px;transition:all .15s;background:#fff}
 .slot-opt:hover{border-color:var(--cyan)}
-.slot-opt.active{border-color:var(--cyan);background:rgba(0,200,212,0.08)}
+.slot-opt.active{border-color:var(--pink);background:rgba(0,200,212,0.04)}
 .slot-opt-label{font-size:14px;font-weight:700;color:var(--text)}
 .slot-opt-sub{font-size:12px;color:var(--muted);margin-top:2px}
 .slot-blocked-opt{opacity:.5;cursor:not-allowed}
@@ -87,9 +87,9 @@
 <style>img{pointer-events:none;user-select:none;-webkit-user-drag:none}body{-webkit-user-select:none;user-select:none}
 /* ── PACKAGE CARDS ────────────────────────────────────── */
 .pkg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
-.pkg-card{padding:14px 16px;border:2px solid rgba(0,200,212,0.2);border-radius:12px;cursor:pointer;transition:all .15s;background:var(--yellow)}
+.pkg-card{padding:14px 16px;border:1.5px solid var(--cyan);border-radius:12px;cursor:pointer;transition:all .15s;background:#fff}
 .pkg-card:hover{border-color:var(--cyan)}
-.pkg-card.selected{border-color:var(--cyan);background:rgba(0,200,212,0.08)}
+.pkg-card.selected{border-color:var(--pink);background:rgba(0,200,212,0.04);box-shadow:0 2px 12px rgba(0,200,212,0.1)}
 .pkg-unavailable{opacity:.4;cursor:not-allowed!important;pointer-events:none}
 .pkg-card-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
 .pkg-card-price{font-size:13px;color:var(--cyan);font-weight:600}
@@ -97,9 +97,9 @@
 
 /* ── SLOT PICKER ──────────────────────────────────────── */
 .slot-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
-.slot-opt{padding:14px 18px;border:2px solid rgba(0,200,212,0.2);border-radius:12px;cursor:pointer;margin-bottom:8px;transition:all .15s;background:var(--yellow)}
+.slot-opt{padding:14px 18px;border:1.5px solid var(--cyan);border-radius:12px;cursor:pointer;margin-bottom:8px;transition:all .15s;background:#fff}
 .slot-opt:hover{border-color:var(--cyan)}
-.slot-opt.active{border-color:var(--cyan);background:rgba(0,200,212,0.08)}
+.slot-opt.active{border-color:var(--pink);background:rgba(0,200,212,0.04)}
 .slot-opt-label{font-size:14px;font-weight:700;color:var(--text)}
 .slot-opt-sub{font-size:12px;color:var(--muted);margin-top:2px}
 .slot-blocked-opt{opacity:.5;cursor:not-allowed}
@@ -166,7 +166,7 @@
   <div class="hero-content" style="margin-left:auto;max-width:660px">
     <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)" data-content="booking_hero_badge"></div>
     <h1><span class="l1" data-content="booking_hero_l1"></span><span class="l3" data-content="booking_hero_l3"></span></h1>
-    <p class="hero-sub">Pick a date, fill in the details, and We will confirm within 24 hours. No payment required to request.</p>
+    <p class="hero-sub" data-content="booking_hero_sub"></p>
   </div>
   <div class="hero-bottom">
     <div class="hero-scroll">Select a Date Below</div>
@@ -178,7 +178,7 @@
   </div>
 </section>
 
-<section style="background:linear-gradient(135deg,var(--yellow) 0%,#f0ffd8 50%,#e8ffc8 100%);padding:80px 48px">
+<section style="background:var(--yellow);padding:80px 48px">
   <div style="max-width:1200px;margin:0 auto;overflow:hidden">
 
     <!-- Step indicator — sits above everything, always visible -->
@@ -227,7 +227,7 @@
         <!-- STEP 1: Calendar -->
         <div class="cal-card-full" id="step1" style="overflow:hidden;min-width:0">
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-            <div><div class="eyebrow" style="margin-bottom:4px">Step 1</div><div style="font-size:20px;font-weight:700;color:var(--text)">Select a Date</div></div>
+            <div><div class="eyebrow" style="margin-bottom:4px">Step 1</div><div style="font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.01em">Select a Date</div></div>
             <div style="display:flex;gap:12px;font-size:11px;color:var(--muted)">
               <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:var(--cyan)"></div>Open</div>
               <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:#f0a030"></div>Limited</div>
@@ -245,7 +245,7 @@
           <div id="calSelected" style="display:none;margin-top:20px">
             <div style="background:rgba(0,200,212,0.07);border:1.5px solid rgba(0,200,212,0.2);border-radius:12px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center">
               <div>
-                <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">Booking Summary</div>
+                <div style="font-size:11px;font-weight:700;color:var(--pink);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px">Your Booking Summary</div>
                 <div id="booking-summary"><div style="color:var(--muted);font-size:14px">Select a package and date to see your summary.</div></div>
                 <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;margin-top:16px">Selected Date</div>
                 <div style="font-size:18px;font-weight:700;color:var(--text)" id="calSelectedDate"></div>
@@ -253,7 +253,7 @@
               <button onclick="goToStep2()" class="btn-pink">Continue →</button>
             </div>
             <div style="margin-top:24px">
-              <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">Select Package</div>
+              <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px">Select Package</div>
               <div class="pkg-grid" id="pkg-grid-container"></div>
               <div id="slot-picker" style="margin-top:12px"></div>
               <div id="dropin-section"></div>
@@ -266,7 +266,7 @@
           <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:24px">
             <div>
               <div class="eyebrow" style="margin-bottom:4px">Step 2</div>
-              <div style="font-size:20px;font-weight:700;color:var(--text)">Your Details</div>
+              <div style="font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.01em">Your Details</div>
               <div style="font-size:13px;color:var(--muted);margin-top:4px">Booking for <span id="formDateLabel" style="color:var(--cyan);font-weight:700"></span></div>
             </div>
             <button onclick="goToStep1()" style="background:none;border:1.5px solid rgba(0,200,212,0.3);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Outfit',sans-serif">← Change Date</button>
@@ -300,7 +300,7 @@
     <div class="success-card" id="step3" style="max-width:680px;margin:0 auto">
       <div style="font-size:64px;margin-bottom:20px">🌊</div>
       <div class="eyebrow" style="text-align:center;margin-bottom:8px">Request Received</div>
-      <h2 style="font-size:32px;font-weight:800;color:var(--cyan);margin-bottom:12px;letter-spacing:-.02em">You're on the water.</h2>
+      <h2 style="font-size:32px;font-weight:800;color:var(--pink);margin-bottom:12px;letter-spacing:-.02em">You're on the water.</h2>
       <p style="font-size:15px;color:var(--muted);line-height:1.7;max-width:480px;margin:0 auto 8px">We will be in touch within 24 hours to confirm your session and send a deposit link.</p>
       <div style="background:rgba(0,200,212,0.06);border:1px solid rgba(0,200,212,0.15);border-radius:var(--rsm);padding:16px 20px;max-width:480px;margin:20px auto 0;text-align:left">
         <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">What Happens Next</div>
@@ -355,10 +355,16 @@ const DAYS=['SU','MO','TU','WE','TH','FR','SA'];
 
 // ── PACKAGE RULES ─────────────────────────────────────────
 const PACKAGES = {
-  'single':         { label:'Single Session — $600',         days:1, slotMode:'pick1',       weekdayOnly:false },
-  'full-weekday':   { label:'Full Day — Weekday — $1,000',   days:1, slotMode:'consecutive', weekdayOnly:true  },
-  'premium':        { label:'Premium Day — $1,250',          days:1, slotMode:'premium',     weekdayOnly:false },
-  'double-weekday': { label:'Double Weekday — $1,750',       days:2, slotMode:'consecutive', weekdayOnly:true, multiStart:true },
+  // Single day packages — aligned with pricing page
+  'half-day':       { label:'Half Day — $600',               days:1, slotMode:'pick1',       weekdayOnly:false },
+  // Full Day weekday ($1,000) — consecutive slots only, no split
+  'full-day':       { label:'Full Day — $1,000',             days:1, slotMode:'fullday',     weekdayOnly:true  },
+  // Full Day weekend/holiday ($1,250) — any 2 slots
+  'full-day-wknd':  { label:'Full Day — $1,250',             days:1, slotMode:'any2-single', weekdayOnly:false, weekendOnly:true },
+  // Full Day Split weekday ($1,250) — morning + evening only, not on holidays (included free)
+  'full-day-split': { label:'Full Day Split — $1,250',       days:1, slotMode:'split',       weekdayOnly:true  },
+  // Multi-day packages
+  'double-weekday': { label:'Double Weekday — $1,750',       days:2, slotMode:'any2',        weekdayOnly:true, multiStart:true },
   'full-weekend':   { label:'Full Weekend — $2,100',         days:2, slotMode:'any2',        weekdayOnly:false, multiStart:true, forceWeekend:true },
   'three-day-week': { label:'3 Day Work Week — $2,500',      days:3, slotMode:'any2',        weekdayOnly:true, multiStart:true },
   'holiday-weekend':{ label:'Holiday Weekend — $3,000',      days:3, slotMode:'any2',        weekdayOnly:false, multiStart:true },
@@ -366,10 +372,11 @@ const PACKAGES = {
 };
 
 // slotMode meanings:
-// pick1       → choose any 1 slot
-// consecutive → morning+afternoon OR afternoon+evening (no split)
-// premium     → if weekday: morning+evening only | if weekend: any 2
-// any2        → any 2 slots (multi-day each day)
+// pick1       → choose any 1 of 3 slots (Half Day)
+// fullday     → morning+afternoon OR afternoon+evening (weekday Full Day — no split)
+// any2-single → any 2 slots for single-day weekend/holiday Full Day
+// split       → morning+evening only (weekday split, +$250 vs consecutive)
+// any2        → any 2 slots per day (multi-day packages)
 
 let selectedPackage = null;
 let selectedSlots   = [];   // for single-day: ['morning','evening'] etc
@@ -396,14 +403,20 @@ function renderPackageCards() {
 
   // Define which packages are valid for the selected day
   const validPkgs = {
-    'single':         !isHol,                      // any day EXCEPT holidays
-    'full-weekday':   isWD && !isHol,              // Mon-Fri, not holidays
-    'premium':        true,                         // weekday split or weekend or holiday
-    'double-weekday': isWD,                         // starts on weekday
-    'full-weekend':   isSat,                        // must start Saturday
-    'three-day-week': isWD,                         // starts on weekday
-    'holiday-weekend': true,                        // any
-    'five-day':       true,                         // any
+    // Half Day: weekday only — no weekend half day
+    'half-day':       isWD && !isHol,
+    // Full Day weekday ($1,000): Mon–Fri only, not holidays
+    'full-day':       isWD && !isHol,
+    // Full Day weekend/holiday ($1,250): weekends and holidays only
+    'full-day-wknd':  isWE || isHol,
+    // Full Day Split ($1,250): weekday only, not holidays
+    'full-day-split': isWD && !isHol,
+    // Multi-day
+    'double-weekday': isWD,
+    'full-weekend':   isSat,
+    'three-day-week': isWD,
+    'holiday-weekend':true,
+    'five-day':       true,
   };
 
   const container = document.getElementById('pkg-grid-container');
@@ -411,14 +424,17 @@ function renderPackageCards() {
   container.innerHTML = '';
 
   const pkgDefs = [
-    { key:'single',         name:'Single Session',      price:'$600',   note:'Any 1 slot · 4hrs' },
-    { key:'full-weekday',   name:'Full Day — Weekday',  price:'$1,000', note:'2 consecutive slots · Mon–Fri' },
-    { key:'premium',        name:'Premium Day',         price:'$1,250', note: isWD ? 'Morning + Evening split' : 'Weekend · any 2 slots' },
-    { key:'double-weekday', name:'Double Weekday',      price:'$1,750', note:'2 consecutive weekdays' },
-    { key:'full-weekend',   name:'Full Weekend',        price:'$2,100', note:'Sat + Sun' },
-    { key:'three-day-week', name:'3 Day Work Week',     price:'$2,500', note:'Any 3 weekdays · ★ Best Value' },
-    { key:'holiday-weekend',name:'Holiday Weekend',     price:'$3,000', note:'3-day long weekend' },
-    { key:'five-day',       name:'5 Day Week',          price:'$4,500', note:'Any 5 days · 🔥 Huge Savings' },
+    // Single day
+    { key:'half-day',       name:'Half Day',                    price:'$600',   note:'Any 1 block · morning, afternoon, or evening · Mon–Fri only' },
+    { key:'full-day',       name:'Full Day',                    price:'$1,000', note:'2 consecutive blocks · Mon–Fri only' },
+    { key:'full-day-wknd',  name:'Full Day',                    price:'$1,250', note: isHol ? 'Holiday · any 2 blocks · split included free' : 'Weekend · any 2 blocks' },
+    { key:'full-day-split', name:'Full Day — Split ⭐',         price:'$1,250', note:'Morning + Evening · best water conditions · weekday only' },
+    // Multi-day
+    { key:'double-weekday', name:'Double Weekday',              price:'$1,750', note:'2 consecutive weekdays · save $250' },
+    { key:'full-weekend',   name:'Full Weekend',                price:'$2,100', note:'Sat + Sun · save $400' },
+    { key:'three-day-week', name:'3 Day Work Week',             price:'$2,500', note:'Any 3 weekdays · save $500' },
+    { key:'holiday-weekend',name:'Holiday Weekend',             price:'$3,000', note:'3-day long weekend · Fri/Mon + Sat + Sun' },
+    { key:'five-day',       name:'5 Day Week 🔥',               price:'$4,500', note:'Any 5 of 7 days · biggest savings' },
   ];
 
   pkgDefs.forEach(pkg => {
@@ -658,27 +674,32 @@ function renderSlotPicker() {
     html += `<p style="font-size:13px;color:var(--muted);margin-top:8px;line-height:1.6">Same slot selection applies to all days in your package. If you need different slots on different days, let us know in the notes.</p>`;
 
   } else if (pkg.slotMode === 'pick1') {
-    html += `<div class="slot-label">Choose Your Time Slot</div>`;
-    html += slotOptionHTML('slot-morn', 'Morning', '~8am–12pm', ['morning']);
-    html += slotOptionHTML('slot-aft',  'Afternoon','~12pm–4pm', ['afternoon']);
-    html += slotOptionHTML('slot-eve',  'Evening',  '~4pm–8pm',  ['evening']);
+    // Half Day — pick any one 4-hr block
+    html += `<div class="slot-label">Choose Your Block</div>`;
+    html += slotOptionHTML('slot-morn', 'Morning',   '~8am–12pm', ['morning']);
+    html += slotOptionHTML('slot-aft',  'Afternoon', '~12pm–4pm', ['afternoon']);
+    html += slotOptionHTML('slot-eve',  'Evening',   '~4pm–8pm',  ['evening']);
 
-  } else if (pkg.slotMode === 'consecutive') {
-    html += `<div class="slot-label">Choose Your Day Format</div>`;
-    html += slotOptionHTML('consec-am', 'Morning + Afternoon', '~8am–4pm', ['morning','afternoon']);
-    html += slotOptionHTML('consec-pm', 'Afternoon + Evening', '~12pm–8pm', ['afternoon','evening']);
+  } else if (pkg.slotMode === 'fullday') {
+    // Full Day weekday — 2 consecutive blocks only (no split)
+    html += `<div class="slot-label">Choose Your 2 Blocks</div>`;
+    html += `<div class="rule-info">ℹ️ Full Day is any 2 consecutive blocks. For Morning + Evening (split), select <strong>Full Day Split</strong> above (+$250).</div>`;
+    html += slotOptionHTML('consec-am', 'Morning + Afternoon', '~8am–4pm',   ['morning','afternoon']);
+    html += slotOptionHTML('consec-pm', 'Afternoon + Evening', '~12pm–8pm',  ['afternoon','evening']);
 
-  } else if (pkg.slotMode === 'premium') {
-    html += `<div class="slot-label">Choose Your Day Format</div>`;
-    if (isWD) {
-      // Weekday premium = split only
-      html += `<div class="rule-info">ℹ️ For a weekday Premium Day, sessions run <strong>Morning + Evening</strong> (split day).</div>`;
-      html += slotOptionHTML('prem-split', 'Morning + Evening (Split Day)', '~8am–12pm & ~4pm–8pm', ['morning','evening']);
-    } else {
-      // Weekend = any 2
-      html += slotOptionHTML('prem-ma', 'Morning + Afternoon', '~8am–4pm', ['morning','afternoon']);
-      html += slotOptionHTML('prem-ae', 'Afternoon + Evening', '~12pm–8pm', ['afternoon','evening']);
-    }
+  } else if (pkg.slotMode === 'any2-single') {
+    // Full Day weekend/holiday — any 2 blocks including split (no extra charge)
+    html += `<div class="slot-label">Choose Your 2 Blocks</div>`;
+    if (isHol) html += `<div class="rule-info">⭐ Holiday booking — Morning + Evening split is included at no extra charge.</div>`;
+    html += slotOptionHTML('wknd-ma',    'Morning + Afternoon',        '~8am–4pm',             ['morning','afternoon']);
+    html += slotOptionHTML('wknd-ae',    'Afternoon + Evening',        '~12pm–8pm',            ['afternoon','evening']);
+    html += slotOptionHTML('wknd-split', 'Morning + Evening (Split)',  '~8am–12pm & ~4pm–8pm', ['morning','evening']);
+
+  } else if (pkg.slotMode === 'split') {
+    // Full Day Split weekday — morning + evening only
+    html += `<div class="slot-label">Your Blocks</div>`;
+    html += `<div class="rule-info">⭐ <strong>Best water conditions</strong> — morning and evening have the least boat traffic and smoothest water.</div>`;
+    html += slotOptionHTML('split-me', 'Morning + Evening', '~8am–12pm & ~4pm–8pm', ['morning','evening']);
   }
 
   el.innerHTML = html;
@@ -735,11 +756,33 @@ function isSlotBlocked(day, slot) {
   return !!(blockedSlots[dateStr] && blockedSlots[dateStr].includes(slot));
 }
 
+function getPkgPrice(pkgKey) {
+  // Returns the actual price integer for a given package and selected day
+  const date = selectedDay ? new Date(calYear, calMonth, selectedDay) : null;
+  const dow  = date ? date.getDay() : -1;
+  const isWE = dow===0||dow===6;
+  const isHol = selectedDay ? !!holidayDates[selectedDay] : false;
+  const prices = {
+    'half-day':        600,
+    'full-day':        1000,
+    'full-day-wknd':   1250,
+    'full-day-split':  1250,
+    'double-weekday':  1750,
+    'full-weekend':    2100,
+    'three-day-week':  2500,
+    'holiday-weekend': 3000,
+    'five-day':        4500,
+  };
+  return prices[pkgKey] || 0;
+}
+
 function updateSummary() {
   const el = document.getElementById('booking-summary');
   if (!el) return;
   if (!selectedPackage || !selectedDay) { el.innerHTML = '<div style="color:var(--muted);font-size:14px">Select a package and date to see your summary.</div>'; return; }
   const pkg = PACKAGES[selectedPackage];
+  const price = getPkgPrice(selectedPackage);
+  const deposit = Math.round(price * 0.3);
   const dateStr = MONTHS[calMonth]+' '+selectedDay+', '+calYear;
   const slotStr = selectedSlots.length ? selectedSlots.map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(' + ') : '—';
   const dates = selectedDates.length
@@ -748,9 +791,10 @@ function updateSummary() {
   el.innerHTML = `
     <div class="sum-row"><span>Package</span><strong>${pkg.label}</strong></div>
     <div class="sum-row"><span>${selectedDates.length>1?'Dates':'Date'}</span><strong>${dates}</strong></div>
-    <div class="sum-row"><span>Slots</span><strong>${slotStr}</strong></div>
+    <div class="sum-row"><span>Blocks</span><strong>${slotStr}</strong></div>
+    <div class="sum-row"><span>Total</span><strong>$${price.toLocaleString()}</strong></div>
     <div class="sum-divider"></div>
-    <div class="sum-row"><span>Deposit (30%)</span><strong>$${Math.round(parseInt(pkg.label.match(/\$[\d,]+/)?.[0].replace(/[\$,]/g,'')||'0')*0.3).toLocaleString()}</strong></div>
+    <div class="sum-row"><span>Deposit (30%)</span><strong>$${deposit.toLocaleString()}</strong></div>
     <div style="font-size:11px;color:var(--muted);margin-top:4px">Non-refundable · Full payment due 48hrs before</div>`;
 }
 
@@ -915,9 +959,9 @@ function goToStep2(){
     showToast('That package is weekdays only — please pick a weekday');
     return;
   }
-  if(pkg.slotMode==='consecutive' && !pkg.multiStart){
-    const invalid = JSON.stringify(selectedSlots)===JSON.stringify(['morning','evening']);
-    if(invalid){ showToast('Full Day Weekday requires consecutive slots — try Premium Day for a split day'); return; }
+  if(pkg.slotMode==='fullday'){
+    const isSplit = JSON.stringify(selectedSlots)===JSON.stringify(['morning','evening']);
+    if(isSplit){ showToast('Full Day uses consecutive blocks — select Full Day Split for morning + evening'); return; }
   }
   if(selectedPackage==='full-weekend'){
     if(!isWeekend(date)){ showToast('Full Weekend must start on a Saturday'); return; }
@@ -990,6 +1034,10 @@ async function submitBooking(){
   const pkgLabel = isDropin
     ? `Drop-In: ${window._dropinContext.tier}`
     : (PACKAGES[selectedPackage]?.label || '');
+  const pkgPrice = isDropin
+    ? window._dropinContext.pricePerSet * (window._dropinContext.sets||1) + ' (drop-in)'
+    : '$' + getPkgPrice(selectedPackage).toLocaleString();
+  const pkgDeposit = isDropin ? 'Full payment required' : '$' + Math.round(getPkgPrice(selectedPackage)*0.3).toLocaleString() + ' (30% deposit)';
   const requestedDate = isDropin
     ? window._dropinContext.dateStr
     : new Date(calYear,calMonth,selectedDay).toISOString().split('T')[0];
@@ -1030,6 +1078,8 @@ async function submitBooking(){
       body:JSON.stringify({
         name, email:email||'not provided', phone:phone||'not provided', location,
         package:pkgLabel,
+        price:pkgPrice,
+        deposit_required:pkgDeposit,
         date:requestedDate,
         all_dates:allDates.join(', '),
         slots:slotStr,
