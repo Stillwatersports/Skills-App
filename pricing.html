@@ -344,6 +344,10 @@ body{-webkit-user-select:none;user-select:none}
             </div>
             <hr class="result-divider"/>
             <div id="res-breakdown"></div>
+            <div id="turns-card" style="display:none;margin-top:16px;background:rgba(0,200,212,0.06);border:1px solid rgba(0,200,212,0.15);border-radius:10px;padding:14px 16px">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px">⏱ Estimated time on the water</div>
+              <div id="turns-card-content" style="font-size:13px;color:var(--muted);line-height:1.8"></div>
+            </div>
             <div class="res-note" id="res-note"></div>
             <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
               <a href="/booking" class="btn-pink">Request This Date →</a>
@@ -729,7 +733,7 @@ function runEstimate(){
       note:'Estimate based on 2 turns per person. $200 minimum. Rideau River — Manotick area.',
       tip:(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_local)||'<strong>Rideau River only</strong> — available when the boat is already out locally. Check the booking calendar or follow us on Instagram.',
       gsNote:groupSizeNote(riders),
-      tubing:false,
+      tubing:false, turns:null, sessionType:'local',
     });
     document.getElementById('nudge-section').style.display='none';
     return;
@@ -779,18 +783,76 @@ function runEstimate(){
   if(db===-1&&loc.length>1) noteLines.push("Distance TBC — confirmed in our reply.");
   noteLines.push('Estimate assumes one full session per date. 30% deposit secures your date.');
 
+  const turns = calcTurns(riders, selectedCardType, dates.length);
+
   renderResult({
     ppNum:Math.round(base/riders),
     ppLabel:`per person · ${riders} rider${riders>1?'s':''} · ${pkg}`,
-    total:base, pkg,lines,
+    total:base, pkg, lines,
     note:noteLines.join(' '),
     tip, gsNote:groupSizeNote(riders), tubing:true,
+    turns, sessionType:selectedCardType,
   });
   renderNudges(res,riders);
 }
 
+// ── TURN CALCULATOR ───────────────────────────────────────
+// 2.5 turns/hour × 4hr block = 10 turns available per block
+const TURNS_PER_BLOCK = 10;
+
+function calcTurns(riders, sessionType, numDays){
+  if(!riders || riders < 1) return null;
+  const r = Math.min(riders, 9); // cap for calc purposes
+
+  if(sessionType === 'local'){
+    return null; // drop-in is explicitly booked per turn
+  }
+
+  const blocksPerDay = sessionType === 'halfday' ? 1 : 2;
+  const totalBlocks  = blocksPerDay * (numDays || 1);
+  const turnsPerBlock = Math.max(1, Math.floor(TURNS_PER_BLOCK / r));
+  const totalTurns   = turnsPerBlock * totalBlocks;
+  const minMins      = totalTurns * 20;
+  const maxMins      = totalTurns * 30;
+
+  return {
+    turnsPerBlock,
+    totalBlocks,
+    totalTurns,
+    blocksPerDay,
+    numDays: numDays || 1,
+    minMins,
+    maxMins,
+    riders: r,
+  };
+}
+
+function formatTurnsCard(t, sessionType){
+  if(!t) return null;
+  const dayWord  = t.numDays === 1 ? '1 day' : `${t.numDays} days`;
+  const blkWord  = sessionType === 'halfday' ? '1 block/day' : '2 blocks/day';
+  const turnWord = t.totalTurns === 1 ? 'turn' : 'turns';
+  const hrs      = t.minMins >= 60
+    ? `${Math.round(t.minMins/60*10)/10}–${Math.round(t.maxMins/60*10)/10} hrs`
+    : `${t.minMins}–${t.maxMins} min`;
+
+  let html = `<strong>${t.riders} rider${t.riders>1?'s':''}</strong> · ${dayWord} · ${blkWord}`;
+  html += `<br>→ <strong>~${t.turnsPerBlock} turn${t.turnsPerBlock>1?'s':''} each per block</strong>`;
+  if(t.totalBlocks > 1) html += ` · <strong>~${t.totalTurns} turns total</strong> per person`;
+  html += `<br>→ Each turn is 20–30 min on the water`;
+  html += `<br>→ Total water time per person: <strong>~${hrs}</strong>`;
+
+  if(t.riders >= 7){
+    html += `<br><span style="color:var(--pink)">⚠️ Large group — turns rotate quickly. Consider booking an extra block.</span>`;
+  } else if(t.turnsPerBlock === 1 && t.totalBlocks === 1){
+    html += `<br><span style="color:var(--cyan)">💡 Adding more riders or another block increases everyone's time on the water.</span>`;
+  }
+
+  return html;
+}
+
 // ── RENDER RESULT ─────────────────────────────────────────
-function renderResult({ppNum,ppLabel,total,pkg,lines,note,tip,gsNote,tubing}){
+function renderResult({ppNum,ppLabel,total,pkg,lines,note,tip,gsNote,tubing,turns,sessionType}){
   document.getElementById('res-pp-num').textContent=ppNum.toLocaleString();
   document.getElementById('res-pp-lbl').textContent=ppLabel;
   document.getElementById('res-total-num').textContent='$'+total.toLocaleString();
@@ -802,6 +864,13 @@ function renderResult({ppNum,ppLabel,total,pkg,lines,note,tip,gsNote,tubing}){
     return `<div class="res-line${cls}"><span class="lbl">${l.l}</span><span class="val">${v}</span></div>`;
   }).join('')+`<div class="res-line total"><span class="lbl">Total <em style="font-weight:400;font-size:12px">(tax incl.)</em></span><span class="val">$${total.toLocaleString()}</span></div>`;
   document.getElementById('res-breakdown').innerHTML=bk;
+
+  // Turns card
+  const turnsEl = document.getElementById('turns-card');
+  const turnsContent = document.getElementById('turns-card-content');
+  const turnsHtml = turns ? formatTurnsCard(turns, sessionType) : null;
+  if(turnsHtml){ turnsContent.innerHTML=turnsHtml; turnsEl.style.display='block'; }
+  else turnsEl.style.display='none';
 
   const tipEl=document.getElementById('upsell-tip');
   const fullTip=[tip,gsNote].filter(Boolean).join('<br><br>');
