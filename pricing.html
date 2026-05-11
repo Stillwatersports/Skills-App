@@ -866,11 +866,23 @@ function runEstimate(){
       :[{l:`${dates.length} full days`,v:base}];
   }
 
-  // Split day premium
+  // Split day premium — only on single day full day bookings
+  // On multi-day packages, morning + evening is already included at no extra charge
   if(selectedCardType==='fullday'&&splitDaySelected){
-    base+=P.split*dates.length;
-    lines.push({l:`Morning + Evening split (×${dates.length})`,v:P.split*dates.length,t:'charge'});
-    tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_splitday)||'<strong>Best conditions:</strong> Morning + evening gives you glassy water both times.';
+    if(dates.length===1){
+      base+=P.split;
+      lines.push({l:'Morning + Evening split day upgrade',v:P.split,t:'charge'});
+      tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_splitday)||'<strong>Best conditions:</strong> Morning + evening gives you glassy water both times.';
+    } else {
+      // Multi-day — split is included, show as a saving note
+      lines.push({l:'Morning + Evening split — included in multi-day rate',v:0,t:'note'});
+      tip='<strong>Included free on multi-day bookings:</strong> Morning + evening split is built into the package rate — no extra charge.';
+    }
+  }
+
+  // On multi-day, always note that split day is included
+  if(selectedCardType==='multiday'&&!tip){
+    tip='💡 <strong>Split day included:</strong> Morning + evening combinations are built into multi-day package rates — no extra charge. Great conditions both times of day.';
   }
 
   // Distance
