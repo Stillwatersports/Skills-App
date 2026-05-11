@@ -334,6 +334,14 @@ body{-webkit-user-select:none;user-select:none}
           <div class="nudge-cards" id="nudge-cards"></div>
         </div>
 
+        <!-- Tubing (shown after dates selected, before result) -->
+        <div id="tubing-check" style="display:none">
+          <label style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);cursor:pointer;padding:12px 14px;background:rgba(0,200,212,0.04);border:1px solid rgba(0,200,212,0.15);border-radius:10px">
+            <input type="checkbox" id="est-tubing" onchange="runEstimate()" style="accent-color:var(--cyan);width:16px;height:16px;cursor:pointer;flex-shrink:0"/>
+            <span data-content="pricing_est_tubing_label"></span>
+          </label>
+        </div>
+
         <!-- Result -->
         <div id="est-result" style="display:none">
           <div class="est-label" data-content="pricing_est_result_label"></div>
@@ -371,14 +379,6 @@ body{-webkit-user-select:none;user-select:none}
           </div>
         </div>
 
-        <!-- Tubing -->
-        <div id="tubing-check" style="display:none;margin-top:16px">
-          <label style="display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);cursor:pointer">
-            <input type="checkbox" id="est-tubing" onchange="runEstimate()" style="accent-color:var(--cyan);width:16px;height:16px;cursor:pointer"/>
-            <span data-content="pricing_est_tubing_label"></span>
-          </label>
-        </div>
-
       </div>
     </div>
   </div>
@@ -388,15 +388,15 @@ body{-webkit-user-select:none;user-select:none}
 <section style="background:var(--yellow);padding-top:0">
   <div class="s">
     <div style="background:#fff;border-radius:24px;padding:40px;border:1.5px solid rgba(0,200,212,0.15)">
-      <div class="eyebrow">Transparent Pricing </div>
+      <div class="eyebrow">Full Pricing Reference</div>
       <h2 class="big-title" style="margin-bottom:8px">All packages<br><em>at a glance.</em></h2>
-      <p style="font-size:14px;color:var(--muted);line-height:1.7;max-width:560px;margin-bottom:28px"> Our pricing is varied based on peak times - there are some nuances such as increased costs for holidays or weekends. We have tried to keep our pricing accessible and comparable to other premium activites, such as horseback riding, private swim lessons, or private hockey coaching for example. Every group is different, and shares costs differently. The above calculator will help you imagine the level of activity, based on your group size and, cost per person in your group to assist you in planning and budgeting. Please see below for the full breakdown of our pricing. All packages include boat, fuel, all equipment, PFDs, and full coaching time. Prices in CAD, tax included. If you have any questions at all please reach out through our contact page, or by email to - Christian@learnwatersports.ca - See you on the water!</p>
+      <p style="font-size:14px;color:var(--muted);line-height:1.7;max-width:760px;margin-bottom:28px">Our pricing varies based on peak times — weekends and holidays have increased costs. We've kept pricing accessible and comparable to other premium activities. Every group shares costs differently; the calculator above will help you plan based on your group size. All packages include boat, fuel, equipment, PFDs, and full coaching time. Prices in CAD, tax included. Questions? <a href="/contact" style="color:var(--cyan);font-weight:600">Contact us</a> or email <a href="mailto:christian@learnwatersports.ca" style="color:var(--cyan);font-weight:600">christian@learnwatersports.ca</a> — see you on the water!</p>
       <!-- COME TO US -->
       <div style="margin-bottom:28px">
         <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);margin-bottom:12px">Come to Us · Rideau River · Ottawa · Manotick · Kemptville</div>
         <div style="display:grid;grid-template-columns:1fr;gap:8px">
           <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,200,212,0.05);border-radius:12px;border:1px solid rgba(0,200,212,0.15);flex-wrap:wrap;gap:12px">
-            <div><div class="pkg-name">Pay Per Turn</div><div class="pkg-when">Tons of great spots to stage from, boat launches, public parks! </div></div>
+            <div><div class="pkg-name">Pay Per Turn</div><div class="pkg-when">Tons of great spots — boat launches and public parks along the Rideau River</div></div>
             <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
               <div style="text-align:right"><div class="pkg-price pkg-local">$50<span style="font-size:12px;font-weight:500;color:var(--muted)">/person/turn</span></div><div style="font-size:11px;color:var(--muted)">$200 minimum</div></div>
               <a href="/booking" class="btn-outline" style="font-size:12px;padding:6px 16px;white-space:nowrap">Book →</a>
@@ -412,29 +412,22 @@ body{-webkit-user-select:none;user-select:none}
           <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1px solid rgba(0,200,212,0.15)">
             <div class="pkg-name">Half Day</div>
             <div class="pkg-when" style="margin-bottom:10px">Morning, Afternoon, or Evening</div>
-            <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:8px">
-              <div><div class="pkg-price">$600</div>
-           
-            </div>
+            <div class="pkg-price">$600</div>
           </div>
-         
-            </div>
+          <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1px solid rgba(0,200,212,0.15)">
+            <div class="pkg-name">Half Day <span style="font-size:11px;font-weight:500;color:var(--pink)">Weekend / Holiday</span></div>
+            <div class="pkg-when" style="margin-bottom:10px">Morning, Afternoon, or Evening</div>
+            <div class="pkg-price">$850</div>
           </div>
           <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1px solid rgba(0,200,212,0.15)">
             <div class="pkg-name">Full Day</div>
-            <div class="pkg-when" style="margin-bottom:10px">[Morning + Afternoon] OR [ Afternoon + Evening ]</div>
-            <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:8px">
-              <div><div class="pkg-price">$1,000</div></div>
-            
-            </div>
+            <div class="pkg-when" style="margin-bottom:10px">[Morning + Afternoon] OR [Afternoon + Evening]</div>
+            <div class="pkg-price">$1,000</div>
           </div>
           <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan)">
             <div class="pkg-name">Full Day — Split ⭐</div>
-            <div class="pkg-when" style="margin-bottom:10px">[ Morning + Evening ] · Best Conditions · Afternoon Break </div>
-            <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:8px">
-              <div><div class="pkg-price">$1,250</div></div>
-          
-            </div>
+            <div class="pkg-when" style="margin-bottom:10px">[Morning + Evening] · Best Conditions · Afternoon Break</div>
+            <div class="pkg-price">$1,250</div>
           </div>
         </div>
       </div>
@@ -447,7 +440,7 @@ body{-webkit-user-select:none;user-select:none}
             <div class="pkg-name">Double Weekday</div>
             <div class="pkg-when" style="margin-bottom:10px">2 Consecutive Weekdays</div>
             <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:8px">
-              <div><div class="pkg-price">$1,750</div></div>
+              <div class="pkg-price">$1,750</div>
               <span class="pkg-save">Save $250</span>
             </div>
           </div>
@@ -455,39 +448,36 @@ body{-webkit-user-select:none;user-select:none}
             <div class="pkg-name">Full Weekend</div>
             <div class="pkg-when" style="margin-bottom:10px">Saturday + Sunday</div>
             <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:8px">
-              <div><div class="pkg-price">$2,100</div></div>
+              <div class="pkg-price">$2,100</div>
               <span class="pkg-save">Save $400</span>
             </div>
           </div>
           <div style="padding:16px 20px;background:rgba(0,200,212,0.04);border-radius:12px;border:1px solid rgba(0,200,212,0.15)">
             <div class="pkg-name">3 Day Work Week</div>
-            <div class="pkg-when" style="margin-bottom:10px">Any 3 weekdays · Mon-Fri </div>
+            <div class="pkg-when" style="margin-bottom:10px">Any 3 Weekdays · e.g. Mon, Wed, Fri — rest Tue &amp; Thu</div>
             <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:8px">
-              <div><div class="pkg-price">$2,500</div><div style="font-size:11px;color:var(--muted)"> Ex Ski: Mon, Wed, Fri - Rest: Tues & Thurs </div></div>
+              <div class="pkg-price">$2,500</div>
               <span class="pkg-save">Save $500</span>
             </div>
           </div>
           <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1px solid rgba(0,200,212,0.15)">
             <div class="pkg-name">Holiday Weekend</div>
-            <div class="pkg-when" style="margin-bottom:10px"> Holiday Fri or Mon + [ Sat + Sun ]</div>
-            <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:8px">
-              <div><div class="pkg-price">$3,000</div><div style="font-size:11px;color:var(--muted)">The Perfect Long weekend!</div></div>
-              <a href="/booking" class="btn-outline" style="font-size:12px;padding:6px 16px">Book →</a>
-            </div>
+            <div class="pkg-when" style="margin-bottom:10px">Holiday Fri or Mon + [Sat + Sun] — The Perfect Long Weekend!</div>
+            <div class="pkg-price">$3,000</div>
           </div>
           <div style="padding:16px 20px;background:rgba(0,200,212,0.04);border-radius:12px;border:1.5px solid var(--cyan);grid-column:span 2">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-              <div><div class="pkg-name">🔥 5 Day Week 🔥</div><div class="pkg-when">Any 5 of 8 days · Weekends Too </div></div>
+              <div><div class="pkg-name">🔥 5 Day Week 🔥</div><div class="pkg-when">Any 5 of 7 days · Weekends too</div></div>
               <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
-                <div style="text-align:right"><div class="pkg-price">$4,500</div><div style="font-size:11px;color:var(--muted)"></div></div>
-                <span class="pkg-save" style="font-size:12px;padding:5px 12px">Huge Savings! No extra charge for premium days · Weekends · Holidays · Split days · All Included!</span>
+                <div class="pkg-price">$4,500</div>
+                <span class="pkg-save" style="font-size:12px;padding:5px 12px">Huge Savings! Weekends · Holidays · Split days — all included!</span>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div style="margin-top:20px;font-size:12px;color:var(--muted);line-height:1.8">
-        <strong>Distance surcharges from Ottawa:</strong> +$100 (1.5–3hr) · +$200 (3–6hr) &nbsp;·&nbsp;
+        <strong>Distance surcharges:</strong> +$100 (1.5–3hr from Manotick) · +$200 (3–6hr) &nbsp;·&nbsp;
         <strong>Deposit:</strong> 30% non-refundable to secure your date &nbsp;·&nbsp;
         <strong>Balance:</strong> due 48hrs before your session
       </div>
@@ -495,8 +485,24 @@ body{-webkit-user-select:none;user-select:none}
   </div>
 </section>
 
-<!-- WHAT'S INCLUDED - Deleted-->
-
+<!-- WHAT'S INCLUDED -->
+<div class="highlight-band">
+  <div class="highlight-band-inner">
+    <div>
+      <div class="eyebrow" style="color:#5a8a8a" data-content="pricing_incl_eyebrow"></div>
+      <h2><span data-content="pricing_incl_h2_1"></span><br><em data-content="pricing_incl_h2_2"></em></h2>
+    </div>
+    <div>
+      <div class="tag-list">
+        <span class="tag">Sanger DLX Towboat</span><span class="tag">Fuel</span><span class="tag">All Skis &amp; Boards</span>
+        <span class="tag">Ropes &amp; Handles</span><span class="tag">PFDs — All Sizes</span>
+        <span class="tag">Full Coaching Time</span><span class="tag">We Come to Your Lake</span>
+      </div>
+      <p style="color:rgba(255,255,231,0.7);font-size:14px;line-height:1.7;margin-top:16px" data-content="pricing_incl_desc"></p>
+      <a href="/booking" class="btn-pink" style="margin-top:20px;display:inline-flex" data-content="pricing_incl_cta"></a>
+    </div>
+  </div>
+</div>
 
 <div id="request-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:999;align-items:center;justify-content:center;padding:20px">
   <div style="background:#fff;border-radius:24px;padding:36px;max-width:520px;width:100%;position:relative;max-height:90vh;overflow-y:auto">
