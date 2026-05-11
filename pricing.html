@@ -338,29 +338,35 @@ body{-webkit-user-select:none;user-select:none}
         <div id="est-result" style="display:none">
           <div class="est-label" data-content="pricing_est_result_label"></div>
           <div class="result-card">
+
+            <!-- Per person + total -->
             <div style="display:flex;align-items:flex-start;gap:32px;flex-wrap:wrap;margin-bottom:20px">
               <div style="text-align:center">
-                <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Per Person</div>
+                <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px" data-content="pricing_result_pp_label"></div>
                 <div class="result-pp"><sup>$</sup><span id="res-pp-num">—</span></div>
                 <div class="result-pp-lbl" id="res-pp-lbl">estimated</div>
               </div>
               <div style="text-align:center">
-                <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Group Total</div>
+                <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px" data-content="pricing_result_total_label"></div>
                 <div style="font-size:40px;font-weight:900;color:var(--text);line-height:1;letter-spacing:-.02em" id="res-total-num">—</div>
-                <div style="font-size:12px;color:var(--muted);margin-top:4px">tax included</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:4px" data-content="pricing_result_tax_note"></div>
               </div>
               <div id="upsell-tip" class="upsell-tip" style="display:none;flex:1;min-width:200px;align-self:center"></div>
             </div>
+
+            <!-- Time on the water — sits between prices and breakdown -->
+            <div id="turns-card" style="display:none;margin-bottom:20px;background:rgba(0,200,212,0.06);border:1px solid rgba(0,200,212,0.15);border-radius:12px;padding:16px 20px">
+              <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--cyan);margin-bottom:12px" data-content="pricing_turns_title"></div>
+              <div id="turns-card-content"></div>
+            </div>
+
             <hr class="result-divider"/>
             <div id="res-breakdown"></div>
-            <div id="turns-card" style="display:none;margin-top:16px;background:rgba(0,200,212,0.06);border:1px solid rgba(0,200,212,0.15);border-radius:10px;padding:14px 16px">
-              <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px">⏱ Estimated time on the water</div>
-              <div id="turns-card-content" style="font-size:13px;color:var(--muted);line-height:1.8"></div>
-            </div>
             <div class="res-note" id="res-note"></div>
+
             <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
-              <a href="/booking" class="btn-pink">Request This Date →</a>
-              <a href="/contact" class="btn-outline">Ask a Question →</a>
+              <button class="btn-pink" onclick="openRequestModal()" style="border:none;cursor:pointer" data-content="pricing_request_btn"></button>
+              <a href="/contact" class="btn-outline" data-content="pricing_question_btn"></a>
             </div>
           </div>
         </div>
@@ -509,6 +515,47 @@ body{-webkit-user-select:none;user-select:none}
       </div>
       <p style="color:rgba(255,255,231,0.7);font-size:14px;line-height:1.7;margin-top:16px" data-content="pricing_incl_desc"></p>
       <a href="/booking" class="btn-pink" style="margin-top:20px;display:inline-flex" data-content="pricing_incl_cta"></a>
+    </div>
+  </div>
+</div>
+
+<div id="request-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.55);z-index:999;align-items:center;justify-content:center;padding:20px">
+  <div style="background:#fff;border-radius:24px;padding:36px;max-width:520px;width:100%;position:relative;max-height:90vh;overflow-y:auto">
+    <button onclick="closeRequestModal()" style="position:absolute;top:16px;right:16px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--muted)">✕</button>
+    <div id="req-form-view">
+      <div class="eyebrow" style="margin-bottom:6px" data-content="pricing_modal_eyebrow"></div>
+      <h3 style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:4px" data-content="pricing_modal_h3"></h3>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6" id="req-summary-line"></p>
+
+      <div style="display:grid;gap:14px">
+        <div>
+          <label style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:6px" data-content="pricing_modal_name_label"></label>
+          <input id="req-name" type="text" placeholder="First and last name" style="width:100%;padding:12px 14px;border:1.5px solid rgba(0,200,212,0.25);border-radius:10px;font-size:15px;font-family:'Outfit',sans-serif;outline:none;box-sizing:border-box" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='rgba(0,200,212,0.25)'"/>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div>
+            <label style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:6px" data-content="pricing_modal_email_label"></label>
+            <input id="req-email" type="email" placeholder="you@email.com" style="width:100%;padding:12px 14px;border:1.5px solid rgba(0,200,212,0.25);border-radius:10px;font-size:15px;font-family:'Outfit',sans-serif;outline:none;box-sizing:border-box" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='rgba(0,200,212,0.25)'"/>
+          </div>
+          <div>
+            <label style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:6px" data-content="pricing_modal_phone_label"></label>
+            <input id="req-phone" type="tel" placeholder="613-555-0100" style="width:100%;padding:12px 14px;border:1.5px solid rgba(0,200,212,0.25);border-radius:10px;font-size:15px;font-family:'Outfit',sans-serif;outline:none;box-sizing:border-box" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='rgba(0,200,212,0.25)'"/>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;display:block;margin-bottom:6px" data-content="pricing_modal_notes_label"></label>
+          <textarea id="req-notes" rows="3" placeholder="Anything else we should know..." style="width:100%;padding:12px 14px;border:1.5px solid rgba(0,200,212,0.25);border-radius:10px;font-size:15px;font-family:'Outfit',sans-serif;outline:none;resize:vertical;box-sizing:border-box" onfocus="this.style.borderColor='var(--cyan)'" onblur="this.style.borderColor='rgba(0,200,212,0.25)'"></textarea>
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--muted);margin-top:10px" data-content="pricing_modal_disclaimer"></p>
+      <button id="req-submit-btn" onclick="submitRequest()" class="btn-pink" style="width:100%;justify-content:center;font-size:16px;padding:16px;border:none;cursor:pointer;margin-top:16px" data-content="pricing_modal_submit"></button>
+    </div>
+
+    <div id="req-success-view" style="display:none;text-align:center;padding:20px 0">
+      <div style="font-size:56px;margin-bottom:16px">🌊</div>
+      <h3 style="font-size:24px;font-weight:800;color:var(--cyan);margin-bottom:10px" data-content="pricing_modal_success_h3"></h3>
+      <p style="font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:24px" data-content="pricing_modal_success_p"></p>
+      <button onclick="closeRequestModal()" class="btn-outline" data-content="pricing_modal_success_btn"></button>
     </div>
   </div>
 </div>
@@ -662,8 +709,11 @@ function calcPackage(dates){
     if(anyHol&&hasSat&&hasSun){ pkg='Holiday Weekend'; base=P.hol_wkd; lines=[{l:'Holiday weekend — Fri/Mon + Sat + Sun',v:P.hol_wkd}]; }
     else if(wdDays===3){ pkg='3 Day Work Week'; base=P.tri_wk; lines=[{l:'3 weekday full days (3 × $1,000)',v:3000},{l:'Multi-day saving',v:P.tri_wk-3000,t:'saving'}]; }
     else { pkg='3-Day Session'; const comp=wdDays*P.full+weDays*(P.full+P.wknd); base=Math.min(comp,P.tri_wk+(weDays*P.wknd)); lines=[{l:`${wdDays} weekday + ${weDays} weekend day(s)`,v:comp}]; if(base<comp) lines.push({l:'Multi-day saving',v:base-comp,t:'saving'}); }
-  } else if(n>=4&&n<=5&&spanDays<=7){
-    pkg='5-Day Week'; base=P.five; const comp=wdDays*P.full+weDays*(P.full+P.wknd); lines=[{l:`${n} full days`,v:comp},{l:'Multi-day saving',v:-(comp-P.five),t:'saving'}];
+  } else if(n>=5&&spanDays<=7){
+    // Any 5-7 days within a week = 5 Day Week rate
+    pkg='5-Day Week'; base=P.five;
+    const comp=wdDays*P.full+weDays*(P.full+P.wknd);
+    lines=[{l:`${n} days within a 7-day window`,v:comp},{l:'5 Day Week rate',v:-(comp-P.five),t:'saving'}];
   } else {
     pkg=`${n}-Day Custom`; const wdC=sorted.filter(d=>isWD(d)).length; const weC=n-wdC; base=wdC*P.full+weC*(P.full+P.wknd);
     if(wdC) lines.push({l:`${wdC} weekday session${wdC>1?'s':''}`,v:wdC*P.full});
@@ -726,7 +776,7 @@ function renderNudges(res,riders){
   if(n===1) nudges.push({name:'Add a second day',sub:'2 weekdays = Double Weekday $1,750 — save $250 vs. booking separately',badge:'save',badgeText:'Save $250'});
   if(n===2&&pkg==='Double Weekday') nudges.push({name:'Add a 3rd weekday',sub:'3 Day Work Week — $2,500 total · only $750 more for a full extra day',badge:'save',badgeText:'Best per-day value'});
   if(n===2&&pkg==='Full Weekend') nudges.push({name:'Add Friday or Monday',sub:'Holiday Weekend — $3,000 for 3 full days',badge:'best',badgeText:'Holiday Weekend'});
-  if(n>=3&&n<5){const pp=riders?'~$'+Math.round(4500/riders).toLocaleString()+'/person':'';nudges.push({name:'Go for 5 days',sub:`5 Day Week — $4,500 ${pp} · save $1,000`,badge:'best',badgeText:'🔥 Save $1,000'});}
+  if(n>=3&&n<5){const pp=riders?'~$'+Math.round(4500/riders).toLocaleString()+'/person':'';nudges.push({name:'Go for 5 days',sub:`5 Day Week — $4,500 ${pp} · save $1,000 vs. individual pricing`,badge:'best',badgeText:'🔥 Save $1,000'});}
   const sec=document.getElementById('nudge-section');
   const cards=document.getElementById('nudge-cards');
   if(!nudges.length){sec.style.display='none';return;}
@@ -874,26 +924,33 @@ function calcTurns(riders, sessionType, numDays){
   };
 }
 
-function formatTurnsCard(t, sessionType){
+function formatTurnsCard(t){
   if(!t) return null;
-  const dayWord  = t.numDays === 1 ? '1 day' : `${t.numDays} days`;
-  const blkWord  = sessionType === 'halfday' ? '1 block/day' : '2 blocks/day';
-  const turnWord = t.totalTurns === 1 ? 'turn' : 'turns';
-  const hrs      = t.minMins >= 60
-    ? `${Math.round(t.minMins/60*10)/10}–${Math.round(t.maxMins/60*10)/10} hrs`
-    : `${t.minMins}–${t.maxMins} min`;
+  const hoursMin = (t.minMins/60).toFixed(1);
+  const hoursMax = (t.maxMins/60).toFixed(1);
+  const hoursStr = parseFloat(hoursMin)===parseFloat(hoursMax) ? `~${hoursMin}hrs` : `~${hoursMin}–${hoursMax}hrs`;
 
-  let html = `<strong>${t.riders} rider${t.riders>1?'s':''}</strong> · ${dayWord} · ${blkWord}`;
-  html += `<br>→ <strong>~${t.turnsPerBlock} turn${t.turnsPerBlock>1?'s':''} each per block</strong>`;
-  if(t.totalBlocks > 1) html += ` · <strong>~${t.totalTurns} turns total</strong> per person`;
-  html += `<br>→ Each turn is 20–30 min on the water`;
-  html += `<br>→ Total water time per person: <strong>~${hrs}</strong>`;
+  let html = `<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:12px">`;
+  // Rider count
+  html += `<div style="text-align:center;min-width:60px"><div style="font-size:32px;font-weight:900;color:var(--text);line-height:1">${t.riders}</div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">rider${t.riders>1?'s':''}</div></div>`;
+  html += `<div style="font-size:20px;color:rgba(0,200,212,0.3)">→</div>`;
+  // Turns
+  html += `<div style="text-align:center;min-width:80px"><div style="font-size:32px;font-weight:900;color:var(--cyan);line-height:1">~${t.totalTurns}</div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">turn${t.totalTurns!==1?'s':''} each</div></div>`;
+  html += `<div style="font-size:20px;color:rgba(0,200,212,0.3)">·</div>`;
+  // Time
+  html += `<div><div style="font-size:13px;font-weight:700;color:var(--muted)">25 min per turn</div><div style="font-size:12px;color:var(--muted);margin-top:2px">${hoursStr} on the water per person</div></div>`;
+  html += `</div>`;
 
-  if(t.riders >= 7){
-    html += `<br><span style="color:var(--pink)">⚠️ Large group — turns rotate quickly. Consider booking an extra block.</span>`;
-  } else if(t.turnsPerBlock === 1 && t.totalBlocks === 1){
-    html += `<br><span style="color:var(--cyan)">💡 Adding more riders or another block increases everyone's time on the water.</span>`;
+  // Block breakdown
+  if(t.totalBlocks>1){
+    html += `<div style="font-size:12px;color:var(--muted);padding-top:10px;border-top:1px solid rgba(0,200,212,0.1)">`;
+    html += `~${t.turnsPerBlock} turn${t.turnsPerBlock!==1?'s':''} per block × ${t.totalBlocks} blocks`;
+    if(t.numDays>1) html += ` × ${t.numDays} days`;
+    html += `</div>`;
   }
+
+  if(t.riders>=7) html += `<div style="font-size:12px;color:var(--pink);font-weight:600;margin-top:8px">⚠️ Large group — turns rotate quickly. Consider an extra block.</div>`;
+  else if(t.totalTurns===1) html += `<div style="font-size:12px;color:var(--cyan);margin-top:8px">💡 A second block doubles everyone's time on the water.</div>`;
 
   return html;
 }
@@ -912,10 +969,9 @@ function renderResult({ppNum,ppLabel,total,pkg,lines,note,tip,gsNote,tubing,turn
   }).join('')+`<div class="res-line total"><span class="lbl">Total <em style="font-weight:400;font-size:12px">(tax incl.)</em></span><span class="val">$${total.toLocaleString()}</span></div>`;
   document.getElementById('res-breakdown').innerHTML=bk;
 
-  // Turns card
   const turnsEl = document.getElementById('turns-card');
   const turnsContent = document.getElementById('turns-card-content');
-  const turnsHtml = turns ? formatTurnsCard(turns, sessionType) : null;
+  const turnsHtml = turns ? formatTurnsCard(turns) : null;
   if(turnsHtml){ turnsContent.innerHTML=turnsHtml; turnsEl.style.display='block'; }
   else turnsEl.style.display='none';
 
@@ -926,6 +982,84 @@ function renderResult({ppNum,ppLabel,total,pkg,lines,note,tip,gsNote,tubing,turn
   document.getElementById('res-note').textContent=note;
   document.getElementById('est-result').style.display='block';
   document.getElementById('tubing-check').style.display=tubing?'block':'none';
+// ── REQUEST MODAL ─────────────────────────────────────────
+function openRequestModal(){
+  // Build summary from current estimate state
+  const riders = parseInt(document.getElementById('est-riders')?.value)||0;
+  const dates  = getSelectedDates();
+  const pkg    = document.getElementById('res-pp-lbl')?.textContent||'';
+  const total  = document.getElementById('res-total-num')?.textContent||'';
+  const pp     = document.getElementById('res-pp-num')?.textContent||'';
+  let summary  = '';
+  if(dates.length) summary += dates[0].toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric',year:'numeric'});
+  if(dates.length>1) summary += ` – ${dates[dates.length-1].toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric'})}`;
+  if(riders) summary += ` · ${riders} rider${riders>1?'s':''}`;
+  if(total)  summary += ` · Total ${total} · $${pp}/person`;
+  document.getElementById('req-summary-line').textContent = summary || pkg;
+  // Store for submission
+  window._reqSummary = {riders,dates:dates.map(d=>d.toISOString().split('T')[0]),pkg,total,pp,loc:document.getElementById('est-location')?.value||''};
+  // Reset form
+  document.getElementById('req-name').value='';
+  document.getElementById('req-email').value='';
+  document.getElementById('req-phone').value='';
+  document.getElementById('req-notes').value='';
+  document.getElementById('req-form-view').style.display='block';
+  document.getElementById('req-success-view').style.display='none';
+  const modal = document.getElementById('request-modal');
+  modal.style.display='flex';
+  document.body.style.overflow='hidden';
+}
+
+function closeRequestModal(){
+  document.getElementById('request-modal').style.display='none';
+  document.body.style.overflow='';
+}
+
+document.getElementById('request-modal').addEventListener('click',function(e){
+  if(e.target===this) closeRequestModal();
+});
+
+async function submitRequest(){
+  const name  = document.getElementById('req-name').value.trim();
+  const email = document.getElementById('req-email').value.trim();
+  const phone = document.getElementById('req-phone').value.trim();
+  const notes = document.getElementById('req-notes').value.trim();
+  const btn   = document.getElementById('req-submit-btn');
+
+  if(!name){alert('Please enter your name.');return;}
+  if(!email&&!phone){alert('Please enter an email or phone number.');return;}
+
+  btn.disabled=true; btn.textContent='Sending...';
+
+  const s = window._reqSummary||{};
+  const body = {
+    name, email, phone, notes,
+    package: s.pkg||'',
+    dates: (s.dates||[]).join(', '),
+    riders: s.riders||'',
+    location: s.loc||'',
+    total: s.total||'',
+    per_person: '$'+s.pp+'/person',
+    _subject: `Pricing Inquiry — ${name} · ${(s.dates||[])[0]||'TBD'} · ${s.total||''}`,
+  };
+
+  try {
+    const res = await fetch('https://formspree.io/f/mwvwzdwj',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify(body),
+    });
+    if(res.ok){
+      document.getElementById('req-form-view').style.display='none';
+      document.getElementById('req-success-view').style.display='block';
+    } else {
+      btn.disabled=false; btn.textContent='Send Request →';
+      alert('Something went wrong. Please try again or email us directly at bookings@learnwatersports.ca');
+    }
+  } catch(e){
+    btn.disabled=false; btn.textContent='Send Request →';
+    alert('Network error. Please email us at bookings@learnwatersports.ca');
+  }
 }
 </script>
 </body>
