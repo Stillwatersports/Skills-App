@@ -84,19 +84,45 @@ body{-webkit-user-select:none;user-select:none}
 .upsell-tip{background:rgba(224,64,160,0.06);border:1px solid rgba(224,64,160,0.2);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--muted);line-height:1.6;margin-top:12px}
 .upsell-tip strong{color:var(--pink)}
 
-/* tier cards */
-.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
-.tier-card{background:#fff;border-radius:20px;padding:28px 24px;border:1.5px solid rgba(0,200,212,0.15);display:flex;flex-direction:column;gap:10px}
+/* card type selector */
+.card-type-btn{padding:10px 8px;border-radius:10px;border:1.5px solid rgba(0,200,212,0.2);background:#fff;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s;text-align:center;line-height:1.4}
+.card-type-btn small{font-size:10px;font-weight:500;display:block;margin-top:2px}
+.card-type-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.card-type-btn.active{background:var(--cyan);color:#fff;border-color:var(--cyan)}
+.card-type-btn.local{border-color:rgba(245,216,0,0.5)}
+.card-type-btn.local.active{background:#c8a800;border-color:#c8a800;color:#fff}
+.tier-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.tier-card{background:#fff;border-radius:20px;padding:24px 20px;border:1.5px solid rgba(0,200,212,0.15);display:flex;flex-direction:column;gap:10px}
 .tier-card.featured{border-color:var(--cyan);box-shadow:0 4px 28px rgba(0,200,212,0.12)}
+.tier-card.local{border-color:rgba(245,216,0,0.5);background:rgba(245,216,0,0.04)}
 .tier-eyebrow{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--cyan)}
-.tier-price{font-size:44px;font-weight:900;color:var(--text);line-height:1;letter-spacing:-.02em}
-.tier-price sup{font-size:18px;vertical-align:top;margin-top:10px;font-weight:700}
-.tier-price small{font-size:14px;font-weight:500;color:var(--muted)}
-.tier-name{font-size:17px;font-weight:800;color:var(--text)}
+.tier-price{font-size:40px;font-weight:900;color:var(--text);line-height:1;letter-spacing:-.02em}
+.tier-price sup{font-size:16px;vertical-align:top;margin-top:8px;font-weight:700}
+.tier-price small{font-size:12px;font-weight:500;color:var(--muted)}
+.tier-name{font-size:16px;font-weight:800;color:var(--text)}
 .tier-desc{font-size:13px;color:var(--muted);line-height:1.75;flex:1}
 
-@media(max-width:768px){
+/* slot bubbles */
+.slot-bubbles{display:flex;gap:6px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(0,200,212,0.1)}
+.slot-bub{flex:1;padding:5px 4px;border-radius:8px;font-size:10px;font-weight:700;text-align:center;letter-spacing:.03em;text-transform:uppercase;border:1.5px solid rgba(0,200,212,0.15);color:var(--muted);background:rgba(0,200,212,0.04)}
+.slot-bub.active{background:var(--cyan);color:#fff;border-color:var(--cyan)}
+.slot-bub.active-alt{background:var(--pink);color:#fff;border-color:var(--pink)}
+
+/* group size block */
+.group-size-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:32px}
+.gs-card{background:#fff;border-radius:14px;padding:16px;border:1.5px solid rgba(0,200,212,0.12);text-align:center}
+.gs-num{font-size:28px;font-weight:900;color:var(--cyan);line-height:1}
+.gs-label{font-size:11px;font-weight:700;color:var(--text);margin:4px 0 6px;letter-spacing:.02em}
+.gs-desc{font-size:11px;color:var(--muted);line-height:1.6}
+.gs-tip{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--pink);margin-top:6px}
+
+@media(max-width:960px){
+  .tier-grid{grid-template-columns:1fr 1fr}
+  .group-size-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:680px){
   .tier-grid{grid-template-columns:1fr}
+  .group-size-grid{grid-template-columns:1fr 1fr}
   .est-row{grid-template-columns:1fr}
   .date-cell{font-size:11px}
 }
@@ -166,6 +192,35 @@ body{-webkit-user-select:none;user-select:none}
   </div>
 </section>
 
+<!-- PASS / TURN / BLOCK -->
+<section style="background:var(--yellow)">
+  <div class="s">
+    <div class="eyebrow" data-content="pricing_ptb_eyebrow"></div>
+    <h2 class="big-title" style="margin-bottom:40px"><span data-content="pricing_ptb_h2_1"></span><br><em data-content="pricing_ptb_h2_2"></em></h2>
+    <div class="content-grid-3" style="margin-bottom:0">
+
+      <div class="content-card" style="border-top:4px solid var(--cyan);padding-top:28px">
+        <div style="font-size:40px;font-weight:900;color:rgba(0,200,212,0.45);line-height:1;margin-bottom:4px" data-content="pricing_ptb_pass_num"></div>
+        <h3 style="color:var(--cyan);font-size:18px;margin-bottom:10px" data-content="pricing_ptb_pass_title"></h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8" data-content="pricing_ptb_pass_desc"></p>
+      </div>
+
+      <div class="content-card" style="border-top:4px solid var(--pink);padding-top:28px">
+        <div style="font-size:40px;font-weight:900;color:rgba(224,64,160,0.40);line-height:1;margin-bottom:4px" data-content="pricing_ptb_turn_num"></div>
+        <h3 style="color:var(--pink);font-size:18px;margin-bottom:10px" data-content="pricing_ptb_turn_title"></h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8" data-content="pricing_ptb_turn_desc"></p>
+      </div>
+
+      <div class="content-card" style="border-top:4px solid var(--dark);padding-top:28px">
+        <div style="font-size:40px;font-weight:900;color:rgba(0,0,0,0.22);line-height:1;margin-bottom:4px" data-content="pricing_ptb_block_num"></div>
+        <h3 style="font-size:18px;margin-bottom:10px" data-content="pricing_ptb_block_title"></h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8" data-content="pricing_ptb_block_desc"></p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <!-- THREE TIERS -->
 <section style="background:var(--yellow)">
   <div class="s">
@@ -174,30 +229,101 @@ body{-webkit-user-select:none;user-select:none}
     <p class="section-desc" style="margin-bottom:48px" data-content="pricing_tiers_desc"></p>
     <div class="tier-grid">
 
-      <div class="tier-card">
+      <!-- CARD 1: HALF DAY -->
+      <div class="tier-card" data-card="halfday">
         <div class="tier-eyebrow" data-content="pricing_tier1_eyebrow"></div>
-        <div class="tier-price"><sup>$</sup><span data-content="pricing_tier1_price"></span><small data-content="pricing_tier1_unit"></small></div>
         <div class="tier-name" data-content="pricing_tier1_name"></div>
         <div class="tier-desc" data-content="pricing_tier1_desc"></div>
-        <a href="#estimator" class="btn-outline" style="text-align:center;justify-content:center" data-content="pricing_tier_cta"></a>
+        <div class="slot-bubbles">
+          <div class="slot-bub active">Morn</div>
+          <div class="slot-bub">Aft</div>
+          <div class="slot-bub">Eve</div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px">Choose any one 4-hr block</div>
+        <a href="#estimator" class="btn-outline" style="text-align:center;justify-content:center;margin-top:4px" data-content="pricing_tier_cta"></a>
       </div>
 
-      <div class="tier-card featured">
+      <!-- CARD 2: FULL DAY -->
+      <div class="tier-card featured" data-card="fullday">
         <div class="tier-eyebrow" data-content="pricing_tier2_eyebrow"></div>
-        <div class="tier-price"><sup>$</sup><span data-content="pricing_tier2_price"></span><small data-content="pricing_tier2_unit"></small></div>
         <div class="tier-name" data-content="pricing_tier2_name"></div>
         <div class="tier-desc" data-content="pricing_tier2_desc"></div>
-        <a href="#estimator" class="btn-pink" style="text-align:center;justify-content:center" data-content="pricing_tier_cta"></a>
+        <!-- Split day checkbox -->
+        <label id="split-day-toggle" style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;padding:10px 12px;background:rgba(0,200,212,0.06);border:1px solid rgba(0,200,212,0.2);border-radius:10px;margin-top:4px">
+          <input type="checkbox" id="split-day-check" onchange="toggleSplitDay(this)" style="accent-color:var(--cyan);margin-top:2px;flex-shrink:0"/>
+          <span style="font-size:12px;color:var(--muted);line-height:1.5" data-content="pricing_tier2_split_label"></span>
+        </label>
+        <div id="split-day-tip" style="display:none;font-size:11px;color:var(--cyan);font-weight:600;padding:6px 10px;background:rgba(0,200,212,0.06);border-radius:8px" data-content="pricing_tier2_split_tip"></div>
+        <div class="slot-bubbles" id="fullday-bubbles">
+          <div class="slot-bub active">Morn</div>
+          <div class="slot-bub active">Aft</div>
+          <div class="slot-bub">Eve</div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px" id="fullday-slot-note">Any 2 blocks — or upgrade to split day (Morn+Eve, +$250)</div>
+        <a href="#estimator" class="btn-pink" style="text-align:center;justify-content:center;margin-top:4px" data-content="pricing_tier_cta"></a>
       </div>
 
-      <div class="tier-card">
+      <!-- CARD 3: MULTI DAY -->
+      <div class="tier-card" data-card="multiday">
         <div class="tier-eyebrow" data-content="pricing_tier3_eyebrow"></div>
-        <div class="tier-price"><sup>$</sup><span data-content="pricing_tier3_price"></span><small data-content="pricing_tier3_unit"></small></div>
         <div class="tier-name" data-content="pricing_tier3_name"></div>
         <div class="tier-desc" data-content="pricing_tier3_desc"></div>
-        <a href="#estimator" class="btn-outline" style="text-align:center;justify-content:center" data-content="pricing_tier_cta"></a>
+        <div class="slot-bubbles">
+          <div class="slot-bub active">Morn</div>
+          <div class="slot-bub active">Aft</div>
+          <div class="slot-bub active-alt">Eve</div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px">2 blocks per day · save more as you add days</div>
+        <a href="#estimator" class="btn-outline" style="text-align:center;justify-content:center;margin-top:4px" data-content="pricing_tier_cta"></a>
       </div>
 
+      <!-- CARD 4: LOCAL / DROP-IN -->
+      <div class="tier-card local" data-card="local">
+        <div class="tier-eyebrow" data-content="pricing_tier4_eyebrow"></div>
+        <div class="tier-name" data-content="pricing_tier4_name"></div>
+        <div class="tier-desc" data-content="pricing_tier4_desc"></div>
+        <div class="slot-bubbles" style="border-color:rgba(245,216,0,0.3)">
+          <div class="slot-bub" style="border-color:rgba(245,216,0,0.4);background:rgba(245,216,0,0.15);color:#7a6200">Turn 1</div>
+          <div class="slot-bub" style="border-color:rgba(245,216,0,0.4);background:rgba(245,216,0,0.15);color:#7a6200">Turn 2</div>
+          <div class="slot-bub" style="border-color:rgba(245,216,0,0.3);color:#bbb">Turn 3+</div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px">15–20 min per turn · $50/person · min $200</div>
+        <a href="/booking" class="btn-outline" style="text-align:center;justify-content:center;margin-top:4px;border-color:#c8a800;color:#7a6200" data-content="pricing_tier4_cta"></a>
+      </div>
+
+    </div>
+
+    <!-- GROUP SIZE EXPLAINER -->
+    <div style="margin-top:48px;padding-top:48px;border-top:1px solid rgba(0,200,212,0.12)">
+      <div class="eyebrow" data-content="pricing_group_eyebrow"></div>
+      <h3 style="font-size:22px;font-weight:800;color:var(--text);margin-bottom:8px" data-content="pricing_group_h3"></h3>
+      <p style="font-size:14px;color:var(--muted);line-height:1.7;max-width:600px;margin-bottom:24px" data-content="pricing_group_desc"></p>
+      <div class="group-size-grid">
+        <div class="gs-card">
+          <div class="gs-num">1–2</div>
+          <div class="gs-label" data-content="pricing_gs1_label"></div>
+          <div class="gs-desc" data-content="pricing_gs1_desc"></div>
+          <div class="gs-tip" data-content="pricing_gs1_tip"></div>
+        </div>
+        <div class="gs-card" style="border-color:rgba(0,200,212,0.3)">
+          <div class="gs-num">3–4</div>
+          <div class="gs-label" data-content="pricing_gs2_label"></div>
+          <div class="gs-desc" data-content="pricing_gs2_desc"></div>
+          <div class="gs-tip" data-content="pricing_gs2_tip"></div>
+        </div>
+        <div class="gs-card" style="border-color:var(--cyan);box-shadow:0 2px 12px rgba(0,200,212,0.1)">
+          <div class="gs-num" style="color:var(--pink)">5–6</div>
+          <div class="gs-label" data-content="pricing_gs3_label"></div>
+          <div class="gs-desc" data-content="pricing_gs3_desc"></div>
+          <div class="gs-tip" data-content="pricing_gs3_tip"></div>
+        </div>
+        <div class="gs-card">
+          <div class="gs-num">7–8</div>
+          <div class="gs-label" data-content="pricing_gs4_label"></div>
+          <div class="gs-desc" data-content="pricing_gs4_desc"></div>
+          <div class="gs-tip" data-content="pricing_gs4_tip"></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -215,7 +341,16 @@ body{-webkit-user-select:none;user-select:none}
 
       <div class="est-wrap">
 
-        <!-- Riders + Location -->
+        <!-- Card type selector -->
+        <div class="est-section">
+          <div class="est-label">What type of session?</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px" id="card-type-selector">
+            <button class="card-type-btn active" data-type="halfday" onclick="selectCardType('halfday',this)">Half Day<br><small>1 slot · $600</small></button>
+            <button class="card-type-btn" data-type="fullday" onclick="selectCardType('fullday',this)">Full Day<br><small>2 slots · $1,000+</small></button>
+            <button class="card-type-btn" data-type="multiday" onclick="selectCardType('multiday',this)">Multi-Day<br><small>2+ days · save more</small></button>
+            <button class="card-type-btn local" data-type="local" onclick="selectCardType('local',this)">Drop-In<br><small>$50/set · Rideau</small></button>
+          </div>
+        </div>
         <div class="est-section">
           <div class="est-label" data-content="pricing_est_step1_label"></div>
           <div class="est-row">
@@ -385,6 +520,76 @@ function getDistBracket(loc){
   if(mid.some(c=>low.includes(c))) return 1;
   if(far.some(c=>low.includes(c))) return 2;
   return -1;
+}
+
+// ── SPLIT DAY ────────────────────────────────────────────
+let splitDaySelected = false;
+
+function toggleSplitDay(checkbox){
+  splitDaySelected = checkbox.checked;
+  const tip = document.getElementById('split-day-tip');
+  const bubbles = document.getElementById('fullday-bubbles');
+  const note = document.getElementById('fullday-slot-note');
+  if(splitDaySelected){
+    tip.style.display='block';
+    // Update bubbles to show Morn + Eve
+    if(bubbles){
+      bubbles.innerHTML='<div class="slot-bub active">Morn</div><div class="slot-bub">Aft</div><div class="slot-bub active-alt">Eve</div>';
+    }
+    if(note) note.textContent='Morning + Evening split — best conditions on the water';
+  } else {
+    tip.style.display='none';
+    if(bubbles){
+      bubbles.innerHTML='<div class="slot-bub active">Morn</div><div class="slot-bub active">Aft</div><div class="slot-bub">Eve</div>';
+    }
+    if(note) note.textContent='Any 2 blocks — or upgrade to split day (Morn+Eve, +$250)';
+  }
+  runEstimate();
+}
+
+// ── GROUP SIZE NUDGE (reads from CONTENT when available) ─
+function groupSizeNote(riders){
+  const C = typeof CONTENT !== 'undefined' ? CONTENT : {};
+  if(riders===1) return C.pricing_gs_solo   || '💡 <strong>Solo rider:</strong> Drop-In ($50/turn) is your best option.';
+  if(riders===2) return C.pricing_gs_pair   || '💡 <strong>Two riders:</strong> Drop-In or split a half day at $300 each.';
+  if(riders===3) return C.pricing_gs_small  || '✅ <strong>Good size:</strong> Half day splits to $200/person.';
+  if(riders===4) return C.pricing_gs_good   || '✅ <strong>Great group:</strong> $150/person for a half day.';
+  if(riders>=5&&riders<=6) return C.pricing_gs_ideal || '🎯 <strong>Ideal group size:</strong> Sweet spot for value and time on the water.';
+  return C.pricing_gs_large || '⚠️ <strong>Large group:</strong> Consider booking 2 blocks.';
+}
+
+// ── CARD TYPE ────────────────────────────────────────────
+let selectedCardType = 'halfday';
+
+function selectCardType(type, btn){
+  selectedCardType = type;
+  document.querySelectorAll('.card-type-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  // Show/hide date picker based on type
+  const dateSection = document.getElementById('date-section');
+  const riderSection = document.getElementById('rider-section');
+  if(type==='local'){
+    if(dateSection) dateSection.style.display='none';
+    if(riderSection) riderSection.style.display='block';
+  } else {
+    if(dateSection) dateSection.style.display='block';
+    if(riderSection) riderSection.style.display='block';
+  }
+  selDates=[];
+  renderCal();
+  renderPills();
+  runEstimate();
+}
+
+// ── GROUP SIZE NUDGE ──────────────────────────────────────
+function groupSizeNote(riders){
+  if(riders===1) return '💡 <strong>Solo rider:</strong> Drop-In ($60/set) is your best option — no minimum and no need to fill the boat.';
+  if(riders===2) return '💡 <strong>Two riders:</strong> Drop-In works great at $50/set ($200 min). Or book a half day and split $600 — $300 each.';
+  if(riders===3) return '✅ <strong>Good size:</strong> A half day at $600 splits to $200/person. Adding a 4th person drops it to $150.';
+  if(riders===4) return '✅ <strong>Great group:</strong> $150/person for a half day. A full day at $1,000 is $250/person — solid value.';
+  if(riders===5||riders===6) return '🎯 <strong>Ideal group size:</strong> This is the sweet spot. A full day splits to $167–$200/person with everyone getting solid time on the water.';
+  if(riders>=7) return '⚠️ <strong>Large group:</strong> Everyone still gets a great session but sets will rotate faster. Consider booking 2 blocks (morning + afternoon) so no one waits long.';
+  return '';
 }
 
 // ── PRICING CONSTANTS ────────────────────────────────────
@@ -598,17 +803,69 @@ function renderNudges(res,riders){
 function runEstimate(){
   const riders=parseInt(document.getElementById('est-riders').value)||0;
   const loc=document.getElementById('est-location').value.trim();
-  if(!selDates.length||!riders){
+
+  if(!riders){
     document.getElementById('est-result').style.display='none';
     document.getElementById('nudge-section').style.display='none';
     document.getElementById('tubing-check').style.display='none';
     return;
   }
-  const dates=selDates.map(d=>new Date(d+'T12:00:00'));
-  const res=calcPackage(dates);
-  if(!res) return;
 
+  // ── LOCAL DROP-IN CARD ────────────────────────────────
+  if(selectedCardType==='local'){
+    const setsPerPerson=2;
+    const pricePerSet=50;
+    const totalSets=riders*setsPerPerson;
+    const base=Math.max(200,totalSets*pricePerSet);
+    const pp=Math.round(base/riders);
+    document.getElementById('res-pp-num').textContent=pp.toLocaleString();
+    document.getElementById('res-pp-lbl').textContent=`per person \u00b7 ${riders} rider${riders>1?'s':''} \u00b7 Drop-In (est. ${setsPerPerson} sets each)`;
+    let bk=`<div class="res-line"><span class="lbl">$50/person per set \u00d7 ${totalSets} sets</span><span class="val">$${(totalSets*pricePerSet).toLocaleString()}</span></div>`;
+    if(base>totalSets*pricePerSet) bk+=`<div class="res-line charge"><span class="lbl">Minimum booking applied</span><span class="val">$200 min</span></div>`;
+    bk+=`<div class="res-line total"><span class="lbl">Total (estimated)</span><span class="val">$${base.toLocaleString()}</span></div>`;
+    document.getElementById('res-breakdown').innerHTML=bk;
+    const tipEl=document.getElementById('upsell-tip');
+    const gsNote=groupSizeNote(riders);
+    const localTip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_local)||'<strong>Rideau River only</strong> — Drop-In is available when the boat is already out locally. Check the booking calendar or follow us on Instagram.';
+    tipEl.innerHTML=localTip+(gsNote?'<br><br>'+gsNote:'');
+    tipEl.style.display='block';
+    document.getElementById('res-note').textContent='Estimate based on 2 sets per person. $200 minimum applies. Location: Rideau River — Manotick area.';
+    document.getElementById('est-result').style.display='block';
+    document.getElementById('tubing-check').style.display='none';
+    document.getElementById('nudge-section').style.display='none';
+    return;
+  }
+
+  // ── DATE-BASED CARDS ─────────────────────────────────
+  if(!selDates.length){
+    document.getElementById('est-result').style.display='none';
+    document.getElementById('nudge-section').style.display='none';
+    document.getElementById('tubing-check').style.display='none';
+    return;
+  }
+
+  const dates=selDates.map(d=>new Date(d+'T12:00:00'));
+  let res=calcPackage(dates);
+  if(!res) return;
   let {pkg,base,lines,tip,anyHol}=res;
+
+  // Half day override — single session pricing per date
+  if(selectedCardType==='halfday'){
+    pkg=dates.length===1?(isWE(dates[0])||isHol(dates[0])?'Single Session (Weekend/Holiday)':'Single Session'):`${dates.length} x Single Session`;
+    base=dates.reduce((sum,d)=>sum+(isWE(d)||isHol(d)?P.single+P.wknd:P.single),0);
+    lines=dates.length===1
+      ?[{l:'Single session — 1 time slot (morning, afternoon, or evening)',v:P.single},...(isWE(dates[0])||isHol(dates[0])?[{l:'Weekend/Holiday premium',v:P.wknd,t:'charge'}]:[]) ]
+      :[{l:`${dates.length} half-day sessions`,v:base}];
+    tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_halfday)||'<strong>Tip:</strong> Upgrading to a full day is only +$400 and gives everyone twice the time on the water.';
+  }
+
+  // Full day split day premium
+  if(selectedCardType==='fullday'&&splitDaySelected){
+    const splitCount=dates.length;
+    base+=P.split*splitCount;
+    lines.push({l:`Morning + Evening split premium (×${splitCount})`,v:P.split*splitCount,t:'charge'});
+    tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_splitday)||'<strong>Best conditions tip:</strong> Morning + evening gives you glassy water both times.';
+  }
 
   // Distance
   const db=getDistBracket(loc);
@@ -618,7 +875,6 @@ function runEstimate(){
   else if(db===0){lines.push({l:dlabel,v:0,t:'note'});}
   else if(loc.length>1&&db===-1){lines.push({l:'Travel surcharge: TBC — will confirm when we reply',v:0,t:'note'});}
 
-  // Holiday note
   if(anyHol){
     const holNames=selDates.filter(d=>HOLIDAYS.has(d)).map(d=>HOL_NAMES[d]||'Holiday').join(', ');
     lines.push({l:`Includes: ${holNames}`,v:0,t:'note'});
@@ -627,30 +883,29 @@ function runEstimate(){
   const total=base;
   const pp=Math.round(total/riders);
 
-  // Breakdown HTML
   const bk=lines.map(l=>{
-    if(l.t==='note') return `<div class="res-line"><span class="lbl" style="color:var(--pink)">★ ${l.l}</span><span></span></div>`;
+    if(l.t==='note') return `<div class="res-line"><span class="lbl" style="color:var(--pink)">\u2605 ${l.l}</span><span></span></div>`;
     const cls=l.t==='saving'?' saving':l.t==='charge'?' charge':'';
-    const valStr=l.v===0?'':l.t==='saving'?`−$${Math.abs(l.v).toLocaleString()}`:l.t==='charge'?`+$${l.v.toLocaleString()}`:`$${l.v.toLocaleString()}`;
+    const valStr=l.v===0?'':l.t==='saving'?`\u2212$${Math.abs(l.v).toLocaleString()}`:l.t==='charge'?`+$${l.v.toLocaleString()}`:`$${l.v.toLocaleString()}`;
     return `<div class="res-line${cls}"><span class="lbl">${l.l}</span><span class="val">${valStr}</span></div>`;
-  }).join('');
-  document.getElementById('res-breakdown').innerHTML=bk+
-    `<div class="res-line total"><span class="lbl">Total</span><span class="val">$${total.toLocaleString()}</span></div>`;
+  }).join('')+`<div class="res-line total"><span class="lbl">Total</span><span class="val">$${total.toLocaleString()}</span></div>`;
+  document.getElementById('res-breakdown').innerHTML=bk;
 
   document.getElementById('res-pp-num').textContent=pp.toLocaleString();
-  document.getElementById('res-pp-lbl').textContent=`per person · ${riders} rider${riders>1?'s':''} · ${pkg}`;
+  document.getElementById('res-pp-lbl').textContent=`per person \u00b7 ${riders} rider${riders>1?'s':''} \u00b7 ${pkg}`;
 
   const tipEl=document.getElementById('upsell-tip');
-  if(tip){tipEl.innerHTML=tip;tipEl.style.display='block';}else tipEl.style.display='none';
+  const gsNote=groupSizeNote(riders);
+  const fullTip=[tip,gsNote].filter(Boolean).join('<br><br>');
+  if(fullTip){tipEl.innerHTML=fullTip;tipEl.style.display='block';}else tipEl.style.display='none';
 
   const noteLines=[];
-  if(db===-1&&loc.length>1) noteLines.push('Distance surcharge TBC — we\'ll confirm the exact amount in our reply.');
-  noteLines.push('Estimate assumes one full day per date selected. Final price confirmed on booking. 30% deposit secures your date.');
+  if(db===-1&&loc.length>1) noteLines.push("Distance surcharge TBC — we'll confirm in our reply.");
+  noteLines.push('Estimate assumes one session per date. Final price confirmed on booking. 30% deposit secures your date.');
   document.getElementById('res-note').textContent=noteLines.join(' ');
 
   document.getElementById('est-result').style.display='block';
   document.getElementById('tubing-check').style.display='block';
-
   renderNudges(res,riders);
 }
 
