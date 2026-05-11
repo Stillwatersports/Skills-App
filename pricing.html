@@ -866,15 +866,17 @@ function runEstimate(){
       :[{l:`${dates.length} full days`,v:base}];
   }
 
-  // Split day premium — only on single day full day bookings
-  // On multi-day packages, morning + evening is already included at no extra charge
+  // Split day premium — only on single day weekday full day (not holidays, not multi-day)
   if(selectedCardType==='fullday'&&splitDaySelected){
-    if(dates.length===1){
+    const dateIsHoliday = dates.length===1 && isHol(dates[0]);
+    if(dates.length===1 && !dateIsHoliday){
       base+=P.split;
       lines.push({l:'Morning + Evening split day upgrade',v:P.split,t:'charge'});
       tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_splitday)||'<strong>Best conditions:</strong> Morning + evening gives you glassy water both times.';
+    } else if(dateIsHoliday){
+      lines.push({l:'Morning + Evening split — included on holiday bookings',v:0,t:'note'});
+      tip='<strong>Included:</strong> Split day (morning + evening) is built into holiday pricing — no extra charge.';
     } else {
-      // Multi-day — split is included, show as a saving note
       lines.push({l:'Morning + Evening split — included in multi-day rate',v:0,t:'note'});
       tip='<strong>Included free on multi-day bookings:</strong> Morning + evening split is built into the package rate — no extra charge.';
     }
