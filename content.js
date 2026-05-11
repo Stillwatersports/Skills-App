@@ -197,6 +197,27 @@ const CONTENT = {
   pricing_est_result_label:         "Your estimate",
   pricing_est_tubing_label:         "We might want to include tubing — good to know, I'll follow up about this.",
 
+  // Result card labels
+  pricing_result_pp_label:          "Per Person",
+  pricing_result_total_label:       "Group Total",
+  pricing_result_tax_note:          "tax included",
+  pricing_turns_title:              "Time on the Water",
+  pricing_request_btn:              "Request This Date →",
+  pricing_question_btn:             "Ask a Question →",
+
+  // Request modal
+  pricing_modal_eyebrow:            "Almost there",
+  pricing_modal_h3:                 "Tell us a bit about your group.",
+  pricing_modal_name_label:         "Your Name",
+  pricing_modal_email_label:        "Email",
+  pricing_modal_phone_label:        "Phone",
+  pricing_modal_notes_label:        "Anything Else?",
+  pricing_modal_disclaimer:         "No payment required. We'll reply within 24 hours to confirm availability and send a deposit link.",
+  pricing_modal_submit:             "Send Request →",
+  pricing_modal_success_h3:         "Request received!",
+  pricing_modal_success_p:          "We'll be in touch within 24 hours to confirm your session and send a deposit link. Check your inbox.",
+  pricing_modal_success_btn:        "Back to Pricing",
+
   // Estimator logic text (group size suggestions & tips)
   pricing_gs_solo:   "💡 <strong>Solo rider:</strong> Drop-In ($50/turn) is your best option — no minimum and no need to fill the boat.",
   pricing_gs_pair:   "💡 <strong>Two riders:</strong> Drop-In works great at $50/turn ($200 min). Or book a half day and split $600 — $300 each.",
