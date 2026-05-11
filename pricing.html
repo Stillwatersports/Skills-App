@@ -5,35 +5,120 @@
 <meta charset="UTF-8"/>
 <meta name="google-site-verification" content="_ymjlW_Dw-AhwY4WSTsuzvuAlaIJYNpKvLNRo2aS4Js"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="Stillwater Sports pricing — waterski and wakeboard coaching packages. Ontario cottage country."/>
+<meta name="description" content="Stillwater Sports pricing — estimate your per-person cost for waterski and wakeboard coaching across Ontario cottage country."/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="Stillwater Sports"/>
+<meta property="og:url" content="https://learnwatersports.ca/pricing"/>
+<meta property="og:title" content="Pricing — Stillwater Sports"/>
+<meta property="og:description" content="Private waterski, wakeboard, wakesurf and more across Ontario cottage country. Boat and all equipment included. We come to your lake."/>
+<meta property="og:image" content="https://learnwatersports.ca/og-image.jpg"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta name="twitter:card" content="summary_large_image"/>
 <title>Pricing — Stillwater Sports</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="./styles.css"/>
+<style>
+img{pointer-events:none;user-select:none;-webkit-user-drag:none}
+body{-webkit-user-select:none;user-select:none}
 
-<style>img{pointer-events:none;user-select:none;-webkit-user-drag:none}body{-webkit-user-select:none;user-select:none}</style>
+/* ── ESTIMATOR ───────────────────────────────────── */
+.est-wrap{max-width:860px;margin:0 auto}
+.est-section{margin-bottom:32px}
+.est-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+.est-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.est-input{width:100%;padding:13px 16px;border:1.5px solid rgba(0,200,212,0.25);border-radius:12px;font-size:15px;font-family:'Outfit',sans-serif;color:var(--text);background:#fff;outline:none;transition:border-color .15s;box-sizing:border-box}
+.est-input:focus{border-color:var(--cyan)}
+.est-select{-webkit-appearance:none;appearance:none}
+
+/* calendar */
+.date-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px}
+.date-hdr{font-size:10px;font-weight:700;text-align:center;color:var(--muted);padding:4px 0;text-transform:uppercase;letter-spacing:.05em}
+.date-cell{aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:all .12s;position:relative;flex-direction:column;gap:1px}
+.date-cell:hover:not(.date-past):not(.date-empty){background:rgba(0,200,212,0.1);border-color:rgba(0,200,212,0.3)}
+.date-cell.date-past{opacity:.3;cursor:default}
+.date-cell.date-empty{cursor:default}
+.date-cell.date-selected{background:var(--cyan);color:#fff;border-color:var(--cyan)}
+.date-cell.date-holiday{border-color:rgba(224,64,160,0.4)}
+.date-cell.date-holiday.date-selected{background:var(--pink);border-color:var(--pink)}
+.holiday-pip{width:4px;height:4px;border-radius:50%;background:var(--pink);flex-shrink:0}
+.date-cell.date-selected .holiday-pip{background:#fff}
+.date-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.date-nav-btn{background:none;border:1.5px solid rgba(0,200,212,0.3);border-radius:8px;width:32px;height:32px;cursor:pointer;font-size:16px;color:var(--cyan);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.date-nav-btn:hover{background:rgba(0,200,212,0.1)}
+.date-nav-month{font-size:15px;font-weight:700;color:var(--text)}
+
+/* pills */
+.sel-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;min-height:24px}
+.sel-pill{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;background:var(--cyan);color:#fff;display:inline-flex;align-items:center;gap:4px}
+.sel-pill.hol{background:var(--pink)}
+.sel-pill button{background:none;border:none;color:#fff;cursor:pointer;font-size:12px;line-height:1;padding:0;opacity:.7}
+.sel-pill button:hover{opacity:1}
+
+/* nudge cards */
+.nudge-cards{display:grid;gap:8px;margin-top:4px}
+.nudge-card{padding:14px 18px;border-radius:12px;border:1.5px solid rgba(0,200,212,0.2);background:rgba(0,200,212,0.04);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.nudge-card.best-val{border-color:rgba(224,64,160,0.3);background:rgba(224,64,160,0.04)}
+.nudge-name{font-size:14px;font-weight:700;color:var(--text)}
+.nudge-sub{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5}
+.nudge-badge{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.nudge-badge.save{background:rgba(0,200,212,0.15);color:var(--cyan)}
+.nudge-badge.best{background:rgba(224,64,160,0.15);color:var(--pink)}
+
+/* results */
+.result-card{background:#fff;border-radius:16px;border:1.5px solid rgba(0,200,212,0.2);padding:28px;margin-top:4px}
+.result-pp{font-size:56px;font-weight:900;color:var(--cyan);line-height:1;letter-spacing:-.03em}
+.result-pp sup{font-size:22px;vertical-align:top;margin-top:12px;font-weight:700}
+.result-pp-lbl{font-size:13px;color:var(--muted);font-weight:600;margin-top:6px}
+.result-divider{border:none;border-top:1px solid rgba(0,200,212,0.12);margin:20px 0}
+.res-line{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;font-size:14px}
+.res-line .lbl{color:var(--muted)}
+.res-line .val{font-weight:700;color:var(--text)}
+.res-line.saving .lbl,.res-line.saving .val{color:#2a9a2a}
+.res-line.charge .val{color:var(--pink)}
+.res-line.total{font-size:16px;border-top:2px solid rgba(0,200,212,0.15);margin-top:8px;padding-top:14px}
+.res-line.total .lbl{font-weight:800;color:var(--text)}
+.res-line.total .val{font-size:20px;color:var(--cyan)}
+.res-note{font-size:12px;color:var(--muted);line-height:1.7;margin-top:16px;padding:12px 14px;background:rgba(0,200,212,0.04);border-radius:8px}
+.upsell-tip{background:rgba(224,64,160,0.06);border:1px solid rgba(224,64,160,0.2);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--muted);line-height:1.6;margin-top:12px}
+.upsell-tip strong{color:var(--pink)}
+
+/* tier cards */
+.tier-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.tier-card{background:#fff;border-radius:20px;padding:28px 24px;border:1.5px solid rgba(0,200,212,0.15);display:flex;flex-direction:column;gap:10px}
+.tier-card.featured{border-color:var(--cyan);box-shadow:0 4px 28px rgba(0,200,212,0.12)}
+.tier-eyebrow{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--cyan)}
+.tier-price{font-size:44px;font-weight:900;color:var(--text);line-height:1;letter-spacing:-.02em}
+.tier-price sup{font-size:18px;vertical-align:top;margin-top:10px;font-weight:700}
+.tier-price small{font-size:14px;font-weight:500;color:var(--muted)}
+.tier-name{font-size:17px;font-weight:800;color:var(--text)}
+.tier-desc{font-size:13px;color:var(--muted);line-height:1.75;flex:1}
+
+@media(max-width:768px){
+  .tier-grid{grid-template-columns:1fr}
+  .est-row{grid-template-columns:1fr}
+  .date-cell{font-size:11px}
+}
+</style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9Z296M7ZLP"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-9Z296M7ZLP');</script>
 </head>
-<body><nav>
+<body>
+<nav>
   <a href="/" class="nav-brand"><img src="./Sports_clear_bg.png" alt="Stillwater Sports" style="height:116px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.3))"/></a>
   <div class="nav-links">
     <div class="nav-dropdown">
-      <a href="javascript:void(0)" class="nav-link-top " onclick="toggleDropdown(event,'about-menu')">About ▾</a>
+      <a href="javascript:void(0)" class="nav-link-top" onclick="toggleDropdown(event,'about-menu')">About ▾</a>
       <div class="nav-dropdown-menu" id="about-menu">
-        <a href="/about">Meet the Coach</a>
-        <a href="/sports">Sports</a>
-        <a href="/equipment">Equipment</a>
-        <a href="/policies">Policies</a>
+        <a href="/about">Meet the Coach</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/policies">Policies</a>
       </div>
     </div>
     <div class="nav-dropdown">
-      <a href="javascript:void(0)" class="nav-link-top " onclick="toggleDropdown(event,'hiw-menu')">How It Works ▾</a>
+      <a href="javascript:void(0)" class="nav-link-top" onclick="toggleDropdown(event,'hiw-menu')">How It Works ▾</a>
       <div class="nav-dropdown-menu" id="hiw-menu">
-        <a href="/how-it-works">What to Expect</a>
-        <a href="/guidelines">Guidelines</a>
-        <a href="/faq">FAQ</a>
+        <a href="/how-it-works">What to Expect</a><a href="/guidelines">Guidelines</a><a href="/faq">FAQ</a>
       </div>
     </div>
     <a href="/pricing" class="active">Pricing</a>
@@ -58,195 +143,187 @@
   <a href="/policies" onclick="toggleMenu()">Policies</a>
 </div>
 
+<!-- HERO -->
 <section class="hero hero-short">
-  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 100%),url('./pricing-hero.jpeg') center/cover no-repeat;background-color:var(--cyan)"></div>
+  <div class="hero-bg" style="background:url('./pricing-hero.jpeg') center/cover no-repeat;background-color:var(--cyan)"></div>
   <div class="hero-coords">N 45°<br>OTTAWA</div>
   <div class="hero-content" style="margin-left:auto;max-width:660px">
     <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)" data-content="pricing_hero_badge"></div>
-    <h1><span class="l1" data-content="pricing_hero_l1"></span><span class="l3" data-content="pricing_hero_l3"></span></h1>
-    <p class="hero-sub" style="color:var(--yellow);opacity:0.9" data-content="pricing_hero_sub"></p>
-    
+    <h1>
+      <span class="l1" data-content="pricing_hero_l1"></span>
+      <span class="l3" data-content="pricing_hero_l3"></span>
+    </h1>
+    <p class="hero-sub" style="color:var(--yellow);opacity:.9" data-content="pricing_hero_sub"></p>
   </div>
   <div class="hero-bottom">
-    <div class="hero-scroll">See Packages</div>
+    <div class="hero-scroll" data-content="pricing_hero_scroll"></div>
     <div class="hero-stats-mini">
-      <div class="hero-stat-mini"><div class="hero-stat-mini-num">30%</div><div class="hero-stat-mini-lbl">Deposit to Book</div></div>
-      <div class="hero-stat-mini"><div class="hero-stat-mini-num">100%</div><div class="hero-stat-mini-lbl">Gear Included</div></div>
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num" data-content="pricing_stat1_num"></div><div class="hero-stat-mini-lbl" data-content="pricing_stat1_lbl"></div></div>
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num" data-content="pricing_stat2_num"></div><div class="hero-stat-mini-lbl" data-content="pricing_stat2_lbl"></div></div>
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num" data-content="pricing_stat3_num"></div><div class="hero-stat-mini-lbl" data-content="pricing_stat3_lbl"></div></div>
     </div>
     <a href="mailto:christian@learnwatersports.ca" class="hero-contact-link">Stillwater Sports · Coach</a>
   </div>
 </section>
 
+<!-- THREE TIERS -->
 <section style="background:var(--yellow)">
   <div class="s">
-    <div class="eyebrow" data-content="pricing_cometo_eyebrow"></div>
-    <h2 class="big-title" style="margin-bottom:12px"><span data-content="pricing_cometo_h2_1"></span><br><em data-content="pricing_cometo_h2_2"></em></h2>
-    <p class="section-desc" style="margin-bottom:48px" data-content="pricing_cometo_desc"></p>
+    <div class="eyebrow" data-content="pricing_tiers_eyebrow"></div>
+    <h2 class="big-title" style="margin-bottom:12px"><span data-content="pricing_tiers_h2_1"></span><br><em data-content="pricing_tiers_h2_2"></em></h2>
+    <p class="section-desc" style="margin-bottom:48px" data-content="pricing_tiers_desc"></p>
+    <div class="tier-grid">
 
-    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;align-items:start">
-
-      <!-- $50 ADVANCE BOOKING CARD -->
-      <div class="pricing-card">
-        <div class="pricing-package" data-content="pricing_dropin50_name"></div>
-        <div style="display:inline-block;margin-bottom:10px;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--cyan);color:#fff" data-content="pricing_dropin50_badge"></div>
-        <div class="pricing-price"><sup>$</sup><span data-content="pricing_dropin50_price"></span><span style="font-size:18px;font-weight:600;color:var(--muted)">/person · per set</span></div>
-        <div class="pricing-duration" data-content="pricing_dropin50_duration"></div>
-        <ul class="pricing-features">
-          <li data-content="pricing_dropin50_f1"></li>
-          <li data-content="pricing_dropin50_f2"></li>
-          <li data-content="pricing_dropin50_f3"></li>
-        </ul>
-        <a href="/booking" class="btn-outline" style="width:100%;justify-content:center">Check Calendar →</a>
+      <div class="tier-card">
+        <div class="tier-eyebrow" data-content="pricing_tier1_eyebrow"></div>
+        <div class="tier-price"><sup>$</sup><span data-content="pricing_tier1_price"></span><small data-content="pricing_tier1_unit"></small></div>
+        <div class="tier-name" data-content="pricing_tier1_name"></div>
+        <div class="tier-desc" data-content="pricing_tier1_desc"></div>
+        <a href="#estimator" class="btn-outline" style="text-align:center;justify-content:center" data-content="pricing_tier_cta"></a>
       </div>
 
-      <!-- $60 DROP-IN CARD -->
-      <div class="pricing-card featured">
-        <div class="pricing-package" data-content="pricing_cometo_name"></div>
-        <div style="display:inline-block;margin-bottom:10px;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--cyan);color:#fff" data-content="pricing_cometo_badge"></div>
-        <div class="pricing-price"><sup>$</sup>60<span style="font-size:18px;font-weight:600;color:var(--muted)">/person · per set</span></div>
-        <div class="pricing-duration" data-content="pricing_cometo_duration"></div>
-        <ul class="pricing-features">
-          <li data-content="pricing_cometo_f1"></li>
-          <li data-content="pricing_cometo_f2"></li>
-          <li data-content="pricing_cometo_f3"></li>
-        </ul>
-        <a href="/booking" class="btn-pink" style="width:100%;justify-content:center">Check Availability →</a>
+      <div class="tier-card featured">
+        <div class="tier-eyebrow" data-content="pricing_tier2_eyebrow"></div>
+        <div class="tier-price"><sup>$</sup><span data-content="pricing_tier2_price"></span><small data-content="pricing_tier2_unit"></small></div>
+        <div class="tier-name" data-content="pricing_tier2_name"></div>
+        <div class="tier-desc" data-content="pricing_tier2_desc"></div>
+        <a href="#estimator" class="btn-pink" style="text-align:center;justify-content:center" data-content="pricing_tier_cta"></a>
       </div>
 
-      <!-- INFO CARDS COLUMN -->
-      <div style="display:grid;gap:16px">
-        <div class="content-card" style="background:#fff">
-          <h3 style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--cyan);margin-bottom:8px" data-content="pricing_cometo_how_title"></h3>
-          <p style="font-size:14px;color:var(--muted);line-height:1.7;margin:0" data-content="pricing_cometo_how_text"></p>
-        </div>
-        <div class="content-card" style="background:#fff">
-          <h3 style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--pink);margin-bottom:8px" data-content="pricing_cometo_req_title"></h3>
-          <ul style="font-size:14px;color:var(--muted);line-height:1.8;margin:0;padding-left:18px">
-            <li data-content="pricing_cometo_req_f1"></li>
-            <li data-content="pricing_cometo_req_f2"></li>
-            <li data-content="pricing_cometo_req_f3"></li>
-          </ul>
-        </div>
-        <div class="content-card" style="background:#fff">
-          <h3 style="font-size:14px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:8px" data-content="pricing_cometo_cta_title"></h3>
-          <p style="font-size:14px;color:var(--muted);line-height:1.7;margin:0 0 12px" data-content="pricing_cometo_cta_text"></p>
-          <a href="/contact" class="btn-outline" style="font-size:13px;padding:8px 16px">Contact Us →</a>
-        </div>
+      <div class="tier-card">
+        <div class="tier-eyebrow" data-content="pricing_tier3_eyebrow"></div>
+        <div class="tier-price"><sup>$</sup><span data-content="pricing_tier3_price"></span><small data-content="pricing_tier3_unit"></small></div>
+        <div class="tier-name" data-content="pricing_tier3_name"></div>
+        <div class="tier-desc" data-content="pricing_tier3_desc"></div>
+        <a href="#estimator" class="btn-outline" style="text-align:center;justify-content:center" data-content="pricing_tier_cta"></a>
       </div>
 
     </div>
   </div>
 </section>
 
-<section style="background:var(--yellow)">
-  <div class="s" style="padding-top:60px">
-    <div class="eyebrow" data-content="pricing_base_eyebrow"></div>
-    <h2 class="big-title" style="margin-bottom:12px"><span data-content="pricing_base_h2_1"></span><br><em data-content="pricing_base_h2_2"></em></h2>
-    <p class="section-desc" style="margin-bottom:48px" data-content="pricing_base_desc"></p>
-    <div class="pricing-grid">
-      <div class="pricing-card featured">
-        <div class="pricing-package" data-content="pricing_pkg1_name"></div>
-        <div style="display:inline-block;margin-bottom:10px;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--pink);color:#fff">★ Special Offer</div>
-        <div class="pricing-price"><sup>$</sup>600</div>
-        <div class="pricing-duration" data-content="pricing_pkg1_duration"></div>
-        <ul class="pricing-features">
-          <li data-content="pricing_pkg1_f1"></li>
-          <li data-content="pricing_pkg1_f2"></li>
-        </ul>
-        <a href="/booking" class="btn-pink" style="width:100%;justify-content:center">Book This →</a>
+<!-- PRICE ESTIMATOR -->
+<section id="estimator" style="background:var(--yellow);padding-top:0">
+  <div class="s">
+    <div style="background:#fff;border-radius:24px;padding:40px;border:1.5px solid rgba(0,200,212,0.15);box-shadow:0 8px 48px rgba(0,200,212,0.07)">
+
+      <div style="margin-bottom:32px">
+        <div class="eyebrow" data-content="pricing_est_eyebrow"></div>
+        <h2 class="big-title" style="margin-bottom:8px"><span data-content="pricing_est_h2_1"></span><br><em data-content="pricing_est_h2_2"></em></h2>
+        <p style="font-size:14px;color:var(--muted);line-height:1.7;max-width:560px" data-content="pricing_est_desc"></p>
       </div>
-      <div class="pricing-card">
-        <div class="pricing-package" data-content="pricing_pkg2_name"></div>
-        <div class="pricing-price"><sup>$</sup>1,000</div>
-        <div class="pricing-duration" data-content="pricing_pkg2_duration"></div>
-        <ul class="pricing-features">
-          <li data-content="pricing_pkg2_f1"></li>
-          <li data-content="pricing_pkg2_f2"></li>
-        </ul>
-        <a href="/booking" class="btn-outline" style="width:100%;justify-content:center">Book This →</a>
-      </div>
-      <div class="pricing-card">
-        <div class="pricing-package" data-content="pricing_pkg3_name"></div>
-        <div class="pricing-price"><sup>$</sup>1,250</div>
-        <div class="pricing-duration" data-content="pricing_pkg3_duration"></div>
-        <ul class="pricing-features">
-          <li data-content="pricing_pkg3_f1"></li>
-          <li data-content="pricing_pkg3_f2"></li>
-        </ul>
-        <a href="/booking" class="btn-pink" style="width:100%;justify-content:center">Book This →</a>
+
+      <div class="est-wrap">
+
+        <!-- Riders + Location -->
+        <div class="est-section">
+          <div class="est-label" data-content="pricing_est_step1_label"></div>
+          <div class="est-row">
+            <div>
+              <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px" data-content="pricing_est_riders_label"></label>
+              <select id="est-riders" class="est-input est-select" onchange="runEstimate()">
+                <option value="">Select riders...</option>
+                <option value="1">1 rider</option>
+                <option value="2">2 riders</option>
+                <option value="3">3 riders</option>
+                <option value="4">4 riders</option>
+                <option value="5">5 riders</option>
+                <option value="6">6 riders</option>
+                <option value="7">7 riders</option>
+                <option value="8">8 riders</option>
+                <option value="9">9+ riders — contact us</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px" data-content="pricing_est_location_label"></label>
+              <input type="text" id="est-location" class="est-input" data-content-placeholder="pricing_est_location_placeholder" placeholder="e.g. Calabogie or K7H 3C3" oninput="runEstimate()"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Date Picker -->
+        <div class="est-section">
+          <div class="est-label" data-content="pricing_est_step2_label"></div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:12px" data-content="pricing_est_date_hint"></p>
+          <div style="background:rgba(0,200,212,0.04);border:1.5px solid rgba(0,200,212,0.12);border-radius:16px;padding:20px">
+            <div class="date-nav">
+              <button class="date-nav-btn" onclick="changeEstMonth(-1)">‹</button>
+              <div class="date-nav-month" id="est-month-label"></div>
+              <button class="date-nav-btn" onclick="changeEstMonth(1)">›</button>
+            </div>
+            <div class="date-grid">
+              <div class="date-hdr">Sun</div><div class="date-hdr">Mon</div><div class="date-hdr">Tue</div>
+              <div class="date-hdr">Wed</div><div class="date-hdr">Thu</div><div class="date-hdr">Fri</div>
+              <div class="date-hdr">Sat</div>
+            </div>
+            <div class="date-grid" id="est-cal-grid"></div>
+            <div style="margin-top:12px;display:flex;gap:16px;flex-wrap:wrap;font-size:11px;color:var(--muted)">
+              <div style="display:flex;align-items:center;gap:5px"><div style="width:8px;height:8px;border-radius:50%;background:var(--cyan)"></div>Selected</div>
+              <div style="display:flex;align-items:center;gap:5px"><div style="width:8px;height:8px;border-radius:50%;background:var(--pink)"></div>Public Holiday</div>
+            </div>
+          </div>
+          <div class="sel-pills" id="sel-pills"></div>
+        </div>
+
+        <!-- Nudges -->
+        <div id="nudge-section" style="display:none" class="est-section">
+          <div class="est-label" data-content="pricing_est_nudge_label"></div>
+          <div class="nudge-cards" id="nudge-cards"></div>
+        </div>
+
+        <!-- Result -->
+        <div id="est-result" style="display:none">
+          <div class="est-label" data-content="pricing_est_result_label"></div>
+          <div class="result-card">
+            <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
+              <div>
+                <div class="result-pp"><sup>$</sup><span id="res-pp-num">—</span></div>
+                <div class="result-pp-lbl" id="res-pp-lbl">per person · estimated</div>
+              </div>
+              <div id="upsell-tip" class="upsell-tip" style="display:none;flex:1;min-width:200px"></div>
+            </div>
+            <hr class="result-divider"/>
+            <div id="res-breakdown"></div>
+            <div class="res-note" id="res-note"></div>
+            <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+              <a href="/booking" class="btn-pink">Request This Date →</a>
+              <a href="/contact" class="btn-outline">Ask a Question →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tubing -->
+        <div id="tubing-check" style="display:none;margin-top:16px">
+          <label style="display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);cursor:pointer">
+            <input type="checkbox" id="est-tubing" onchange="runEstimate()" style="accent-color:var(--cyan);width:16px;height:16px;cursor:pointer"/>
+            <span data-content="pricing_est_tubing_label"></span>
+          </label>
+        </div>
+
       </div>
     </div>
   </div>
 </section>
 
-<section style="background:var(--yellow)">
-  <div class="s" style="padding-top:60px">
-    <div class="eyebrow" data-content="pricing_multi_eyebrow"></div>
-    <h2 class="big-title" style="margin-bottom:12px"><span data-content="pricing_multi_h2_1"></span><br><em data-content="pricing_multi_h2_2"></em></h2>
-    <p class="section-desc" style="margin-bottom:48px" data-content="pricing_multi_desc"></p>
-    <div class="pricing-grid" style="align-items:start">
-      <div class="pricing-card">
-        <div class="pricing-package" data-content="pricing_multi1_name"></div>
-        <div class="pricing-price"><sup>$</sup>1,750</div>
-        <div class="pricing-duration" data-content="pricing_multi1_dur"></div>
-        <ul class="pricing-features">
-          <li>Great value · booked back to back</li>
-          <li>Pick any 2 time slots each day</li>
-        </ul>
-        <a href="/booking" class="btn-outline" style="width:100%;justify-content:center">Book This →</a>
-      </div>
-      <div class="pricing-card">
-        <div class="pricing-package" data-content="pricing_multi3_name"></div>
-        <div class="pricing-price"><sup>$</sup>2,100</div>
-        <div class="pricing-duration" data-content="pricing_multi3_dur"></div>
-        <ul class="pricing-features">
-          <li>Best cottage weekend package</li>
-          <li>Pick any 2 slots each day</li>
-        </ul>
-        <a href="/booking" class="btn-outline" style="width:100%;justify-content:center">Book This →</a>
-      </div>
-      <div class="pricing-card featured">
-        <div class="pricing-package" data-content="pricing_multi2_name"></div>
-        <div style="display:inline-block;margin-bottom:10px;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--pink);color:#fff">★ Best Value</div>
-        <div class="pricing-price"><sup>$</sup>2,500</div>
-        <div class="pricing-duration" data-content="pricing_multi2_dur"></div>
-        <ul class="pricing-features">
-          <li>Monday to Friday · best value</li>
-          <li>Keep the kids busy all week</li>
-        </ul>
-        <a href="/booking" class="btn-pink" style="width:100%;justify-content:center">Book This →</a>
-      </div>
-      <div class="pricing-card">
-        <div class="pricing-package" data-content="pricing_multi5_name"></div>
-        <div class="pricing-price"><sup>$</sup>3,000</div>
-        <div class="pricing-duration" data-content="pricing_multi5_dur"></div>
-        <ul class="pricing-features">
-          <li>Full 3-day long weekend</li>
-          <li>Pick any 2 slots each day</li>
-        </ul>
-        <a href="/booking" class="btn-outline" style="width:100%;justify-content:center">Book This →</a>
-      </div>
-      <div class="pricing-card featured">
-        <div class="pricing-package" data-content="pricing_multi4_name"></div>
-        <div style="display:inline-block;margin-bottom:10px;padding:4px 12px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--pink);color:#fff">🔥 Huge Savings</div>
-        <div class="pricing-price"><sup>$</sup>4,500</div>
-        <div class="pricing-duration" data-content="pricing_multi4_dur"></div>
-        <ul class="pricing-features">
-          <li>Perfect for a week at the cottage!</li>
-          <li><strong>$1,000 savings</strong> vs individual days</li>
-        </ul>
-        <a href="/booking" class="btn-pink" style="width:100%;justify-content:center">Book This →</a>
-      </div>
-    </div>
-  </div>
-</section>
-
+<!-- WHAT'S INCLUDED -->
 <div class="highlight-band">
   <div class="highlight-band-inner">
-    <div><div class="eyebrow" style="color:#5a8a8a">Ready?</div><h2>Book your session<br><em>today.</em></h2></div>
-    <div><p data-content="pricing_cta_desc"></p><a href="/booking" class="btn-pink">Book Now →</a></div>
+    <div>
+      <div class="eyebrow" style="color:#5a8a8a" data-content="pricing_incl_eyebrow"></div>
+      <h2><span data-content="pricing_incl_h2_1"></span><br><em data-content="pricing_incl_h2_2"></em></h2>
+    </div>
+    <div>
+      <div class="tag-list">
+        <span class="tag">Sanger DLX Towboat</span><span class="tag">Fuel</span><span class="tag">All Skis &amp; Boards</span>
+        <span class="tag">Ropes &amp; Handles</span><span class="tag">PFDs — All Sizes</span>
+        <span class="tag">Full Coaching Time</span><span class="tag">We Come to Your Lake</span>
+      </div>
+      <p style="color:rgba(255,255,231,0.7);font-size:14px;line-height:1.7;margin-top:16px" data-content="pricing_incl_desc"></p>
+      <a href="/booking" class="btn-pink" style="margin-top:20px;display:inline-flex" data-content="pricing_incl_cta"></a>
+    </div>
   </div>
 </div>
+
 <footer>
   <div class="footer-watermark">LEARNWATERSPORTS</div>
   <div class="footer-inner">
@@ -259,7 +336,7 @@
       <div class="footer-col"><h4>Explore</h4><a href="/about">About</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/pricing">Pricing</a><a href="/contact">Contact</a></div>
       <div class="footer-col"><h4>How It Works</h4><a href="/how-it-works">What to Expect</a><a href="/guidelines">Guidelines</a><a href="/faq">FAQ</a></div>
       <div class="footer-col"><h4>Stillwater Skills</h4><a href="/stillwaterapp">Open the App</a><a href="/app">For Clubs &amp; Schools</a></div>
-      <div class="footer-col"><h4>Legal</h4><a href="/policies">Privacy Policy</a><a href="/policies#terms">Terms of Service</a><a href="/policies#waiver">Waiver</a><a href="/policies#refunds">Refund Policy</a><a href="/requirements">Requirements</a></div>
+      <div class="footer-col"><h4>Legal</h4><a href="/policies">Privacy Policy</a><a href="/policies#terms">Terms of Service</a><a href="/policies#waiver">Waiver</a><a href="/policies#refunds">Refund Policy</a></div>
     </div>
     <div class="footer-bottom">
       <span class="footer-copy">© 2026 Christian Richards · Stillwater Sports · All rights reserved</span>
@@ -268,34 +345,316 @@
   </div>
 </footer>
 <div id="toast"></div>
-
-
 <script src="./content.js"></script>
-
-
 <script>
-function toggleDropdown(e, menuId){
-  e.preventDefault();
-  e.stopPropagation();
-  document.querySelectorAll('.nav-dropdown-menu').forEach(m => {
-    if(m.id !== menuId) m.classList.remove('open');
-  });
-  document.getElementById(menuId).classList.toggle('open');
-}
-document.addEventListener('click',function(e){
-  if(!e.target.closest('.nav-dropdown')){
-    document.querySelectorAll('.nav-dropdown-menu').forEach(m=>m.classList.remove('open'));
+// ── NAV ──────────────────────────────────────────────────
+function toggleDropdown(e,id){e.preventDefault();e.stopPropagation();document.querySelectorAll('.nav-dropdown-menu').forEach(m=>{if(m.id!==id)m.classList.remove('open')});document.getElementById(id).classList.toggle('open')}
+document.addEventListener('click',e=>{if(!e.target.closest('.nav-dropdown'))document.querySelectorAll('.nav-dropdown-menu').forEach(m=>m.classList.remove('open'))});
+function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
+document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
+
+// ── HOLIDAYS 2026 ────────────────────────────────────────
+const HOLIDAYS = new Set(['2026-01-01','2026-02-16','2026-04-03','2026-04-06','2026-05-18','2026-07-01','2026-08-03','2026-09-07','2026-10-12','2026-12-25','2026-12-26']);
+const HOL_NAMES = {'2026-01-01':"New Year's Day",'2026-02-16':'Family Day','2026-04-03':'Good Friday','2026-04-06':'Easter Monday','2026-05-18':'Victoria Day','2026-07-01':'Canada Day','2026-08-03':'Civic Holiday','2026-09-07':'Labour Day','2026-10-12':'Thanksgiving','2026-12-25':'Christmas Day','2026-12-26':'Boxing Day'};
+
+// ── POSTAL / CITY → DISTANCE BRACKET ────────────────────
+// 0=local(Ottawa/Manotick area), 1=1.5-3hr(+$100), 2=3-6hr(+$200)
+function getDistBracket(loc){
+  if(!loc||loc.trim().length<2) return -1;
+  const up=loc.toUpperCase().replace(/\s/g,'');
+  const fsa=up.match(/^([A-Z]\d[A-Z])/)?.[1]||up.match(/([A-Z]\d[A-Z])/)?.[1];
+  if(fsa){
+    // K0A-K9Z = Eastern Ontario (Ottawa valley region) → mostly local/mid
+    const first=fsa[0];
+    if(first==='K'){
+      const num=parseInt(fsa[1]);
+      if(num<=4) return 0; // Ottawa, Rideau Valley, Smiths Falls area
+      return 1;            // Kingston, Renfrew, further east
+    }
+    if(first==='L') return 1; // GTA, cottage country, Kawarthas
+    if(first==='M') return 1; // Toronto metro
+    if(first==='N'||first==='P') return 2; // Northern/Western Ontario
+    return 1;
   }
-});
-function toggleMenu(){
-  const m=document.getElementById('mobileMenu');
-  m.classList.toggle('open');
-  document.body.style.overflow=m.classList.contains('open')?'hidden':'';
+  // City name fallback
+  const low=loc.toLowerCase();
+  const near=['manotick','ottawa','kanata','nepean','barrhaven','gloucester','stittsville','richmond hill','carleton place','smiths falls','perth','almonte','arnprior','embrun','rockland','vars','metcalfe','osgoode','greely'];
+  const mid=['kingston','belleville','brockville','cornwall','prescott','gananoque','picton','trenton','cobourg','port hope','peterborough','kawartha','haliburton','huntsville','renfrew','pembroke','petawawa','bancroft','minden','barry','calabogie','white lake','lanark','merrickville','westport','rideau lakes','kemptville'];
+  const far=['sudbury','sault','thunder bay','north bay','timmins','kenora','dryden','parry sound','barrie','collingwood','owen sound','tobermory','toronto','mississauga','brampton','hamilton','london','windsor'];
+  if(near.some(c=>low.includes(c))) return 0;
+  if(mid.some(c=>low.includes(c))) return 1;
+  if(far.some(c=>low.includes(c))) return 2;
+  return -1;
 }
-document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{
-  document.getElementById('mobileMenu').classList.remove('open');
-  document.body.style.overflow='';
-}));
+
+// ── PRICING CONSTANTS ────────────────────────────────────
+const P = {
+  single:   600,   // 1 slot
+  full:     1000,  // 2 consecutive slots
+  split:    250,   // morn+eve premium
+  wknd:     250,   // per weekend/holiday day premium
+  dbl_wkd:  1750,  // 2 weekdays (save $250 vs 2×$1000)
+  full_wkd: 2100,  // Sat+Sun (save $400 vs 2×$1250)
+  tri_wk:   2500,  // any 3 weekdays
+  hol_wkd:  3000,  // fri/mon + sat + sun
+  five:     4500,  // any 5 in 7 days (save ~$1000)
+  dist_mid: 100,
+  dist_far: 200,
+};
+
+function ds(d){ return d.toISOString().split('T')[0] }
+const isWE  = d=>d.getDay()===0||d.getDay()===6;
+const isHol = d=>HOLIDAYS.has(ds(d));
+const isWD  = d=>!isWE(d);
+const isSat = d=>d.getDay()===6;
+const isSun = d=>d.getDay()===0;
+
+function calcPackage(dates){
+  const sorted=[...dates].sort((a,b)=>a-b);
+  const n=sorted.length;
+  if(!n) return null;
+  const weDays=sorted.filter(d=>isWE(d)).length;
+  const holDays=sorted.filter(d=>isHol(d)).length;
+  const wdDays=sorted.filter(d=>isWD(d)).length;
+  const hasSat=sorted.some(d=>isSat(d));
+  const hasSun=sorted.some(d=>isSun(d));
+  const spanDays=Math.round((sorted[n-1]-sorted[0])/86400000)+1;
+  const anyHol=holDays>0;
+
+  let pkg='',base=0,lines=[],tip='';
+
+  if(n===1){
+    const d=sorted[0];
+    const isSpecial=isWE(d)||isHol(d);
+    if(isSpecial){
+      pkg='Single Session (Weekend/Holiday)';
+      base=P.single+P.wknd;
+      lines=[{l:'Single session',v:P.single},{l:isHol(d)?`Holiday premium (${HOL_NAMES[ds(d)]||'Holiday'})`:'Weekend premium',v:P.wknd,t:'charge'}];
+    } else {
+      pkg='Single Session';
+      base=P.single;
+      lines=[{l:'Single session — 1 time slot (morning, afternoon, or evening)',v:P.single}];
+    }
+    tip='<strong>Best conditions tip:</strong> Ask about a morning + evening split-day — the water is glassy in the early morning and evening, giving you the best skiing of the day. A split day adds $250 but is worth every penny.';
+
+  } else if(n===2){
+    if(anyHol&&(hasSat||hasSun)){
+      // Holiday weekend territory
+      pkg='Holiday Weekend (2 days)';
+      const rate=Math.round(P.hol_wkd*2/3);
+      base=rate;
+      lines=[{l:'2-day holiday weekend rate',v:rate}];
+    } else if(hasSat&&hasSun){
+      pkg='Full Weekend';
+      base=P.full_wkd;
+      const comparison=(P.full+P.wknd)*2;
+      lines=[{l:'2 weekend full days (2 × $1,250)',v:comparison},{l:'Multi-day saving',v:P.full_wkd-comparison,t:'saving'}];
+    } else if(wdDays===2){
+      pkg='Double Weekday';
+      base=P.dbl_wkd;
+      lines=[{l:'2 weekday full days (2 × $1,000)',v:2000},{l:'Multi-day saving',v:P.dbl_wkd-2000,t:'saving'}];
+    } else {
+      // 1 weekday + 1 weekend
+      pkg='2-Day Session';
+      base=P.full+(P.full+P.wknd);
+      lines=[{l:'Weekday full day',v:P.full},{l:'Weekend full day',v:P.full+P.wknd}];
+    }
+
+  } else if(n===3){
+    if(anyHol&&hasSat&&hasSun){
+      pkg='Holiday Weekend';
+      base=P.hol_wkd;
+      lines=[{l:'Holiday weekend — Fri/Mon + Sat + Sun',v:P.hol_wkd}];
+    } else if(wdDays===3){
+      pkg='3 Day Work Week';
+      base=P.tri_wk;
+      lines=[{l:'3 weekday full days (3 × $1,000)',v:3000},{l:'Multi-day saving',v:P.tri_wk-3000,t:'saving'}];
+    } else {
+      // Mixed
+      pkg='3-Day Session';
+      const comparison=wdDays*P.full+weDays*(P.full+P.wknd);
+      base=P.tri_wk+(weDays>0?weDays*P.wknd:0);
+      lines=[{l:`${wdDays} weekday + ${weDays} weekend day(s)`,v:comparison}];
+      if(base<comparison) lines.push({l:'Multi-day saving',v:base-comparison,t:'saving'});
+      else base=comparison;
+    }
+
+  } else if(n>=4&&n<=5&&spanDays<=7){
+    pkg='5-Day Week';
+    base=P.five;
+    const comparison=wdDays*P.full+weDays*(P.full+P.wknd);
+    const saving=comparison-P.five;
+    lines=[{l:`${n} full days`,v:comparison},{l:'Multi-day saving',v:-saving,t:'saving'}];
+
+  } else {
+    // Custom — day by day
+    pkg=`${n}-Day Custom`;
+    base=0;
+    let sub=[];
+    sorted.forEach(d=>{
+      const day=isWE(d)||isHol(d)?P.full+P.wknd:P.full;
+      base+=day;
+      sub.push(isWE(d)||isHol(d)?'Weekend/Holiday':'Weekday');
+    });
+    const wdCount=sub.filter(s=>s==='Weekday').length;
+    const weCount=sub.filter(s=>s!=='Weekday').length;
+    if(wdCount) lines.push({l:`${wdCount} weekday session${wdCount>1?'s':''}`,v:wdCount*P.full});
+    if(weCount) lines.push({l:`${weCount} weekend/holiday session${weCount>1?'s':''}`,v:weCount*(P.full+P.wknd)});
+  }
+
+  return {pkg,base,lines,tip,anyHol,holDays,sorted,n,weDays,wdDays};
+}
+
+// ── CALENDAR ─────────────────────────────────────────────
+let estY=new Date().getFullYear(), estM=new Date().getMonth();
+let selDates=[];
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+function changeEstMonth(d){
+  estM+=d;
+  if(estM>11){estM=0;estY++;}
+  if(estM<0){estM=11;estY--;}
+  renderCal();
+}
+
+function renderCal(){
+  document.getElementById('est-month-label').textContent=MONTHS[estM]+' '+estY;
+  const grid=document.getElementById('est-cal-grid');
+  grid.innerHTML='';
+  const first=new Date(estY,estM,1).getDay();
+  const total=new Date(estY,estM+1,0).getDate();
+  const today=new Date(); today.setHours(0,0,0,0);
+  for(let i=0;i<first;i++){const e=document.createElement('div');e.className='date-cell date-empty';grid.appendChild(e);}
+  for(let d=1;d<=total;d++){
+    const dt=new Date(estY,estM,d);
+    const dstr=`${estY}-${String(estM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const past=dt<today;
+    const sel=selDates.includes(dstr);
+    const hol=HOLIDAYS.has(dstr);
+    const cell=document.createElement('div');
+    let cls='date-cell';
+    if(past) cls+=' date-past';
+    if(sel) cls+=' date-selected';
+    if(hol&&!past) cls+=' date-holiday';
+    cell.className=cls;
+    const num=document.createElement('span');num.textContent=d;cell.appendChild(num);
+    if(hol&&!past){const pip=document.createElement('div');pip.className='holiday-pip';cell.appendChild(pip);}
+    if(!past) cell.onclick=()=>toggleDate(dstr);
+    grid.appendChild(cell);
+  }
+}
+
+function toggleDate(dstr){
+  const i=selDates.indexOf(dstr);
+  if(i>-1) selDates.splice(i,1);
+  else selDates.push(dstr);
+  selDates.sort();
+  renderCal();
+  renderPills();
+  runEstimate();
+}
+
+function removeDate(dstr){
+  selDates=selDates.filter(d=>d!==dstr);
+  renderCal();renderPills();runEstimate();
+}
+
+function renderPills(){
+  const el=document.getElementById('sel-pills');
+  if(!selDates.length){el.innerHTML='';return;}
+  el.innerHTML=selDates.map(dstr=>{
+    const d=new Date(dstr+'T12:00:00');
+    const label=d.toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric'});
+    const hol=HOLIDAYS.has(dstr);
+    return `<span class="sel-pill${hol?' hol':''}">${label}${hol?' ★':''}<button onclick="removeDate('${dstr}')" title="Remove">✕</button></span>`;
+  }).join('');
+}
+
+// ── NUDGES ───────────────────────────────────────────────
+function renderNudges(res,riders){
+  const {n,pkg,wdDays}=res;
+  const nudges=[];
+  if(n===1){
+    nudges.push({name:'Add a second day',sub:'2 weekdays = Double Weekday $1,750 — save $250 vs. booking separately',badge:'save',badgeText:'Save $250'});
+  }
+  if(n===2&&pkg==='Double Weekday'){
+    nudges.push({name:'Add a 3rd weekday',sub:'3 Day Work Week — $2,500 total · only $750 more for a full extra day on the water',badge:'save',badgeText:'Best per-day value'});
+  }
+  if(n===2&&pkg==='Full Weekend'){
+    nudges.push({name:'Add Friday or Monday',sub:'Turn your weekend into a Holiday Weekend — $3,000 for 3 full days',badge:'best',badgeText:'Holiday Weekend'});
+  }
+  if(n>=3&&n<5){
+    const pp=riders?Math.round(4500/riders):'';
+    nudges.push({name:'Go for 5 days',sub:`5 Day Week — $4,500 for any 5 days${pp?' · ~$'+pp.toLocaleString()+'/person total':''} · save $1,000 vs. individual pricing`,badge:'best',badgeText:'🔥 Save $1,000'});
+  }
+  const sec=document.getElementById('nudge-section');
+  const cards=document.getElementById('nudge-cards');
+  if(!nudges.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  cards.innerHTML=nudges.map(n=>`<div class="nudge-card${n.badge==='best'?' best-val':''}"><div><div class="nudge-name">${n.name}</div><div class="nudge-sub">${n.sub}</div></div><div class="nudge-badge ${n.badge}">${n.badgeText}</div></div>`).join('');
+}
+
+// ── MAIN RUNNER ──────────────────────────────────────────
+function runEstimate(){
+  const riders=parseInt(document.getElementById('est-riders').value)||0;
+  const loc=document.getElementById('est-location').value.trim();
+  if(!selDates.length||!riders){
+    document.getElementById('est-result').style.display='none';
+    document.getElementById('nudge-section').style.display='none';
+    document.getElementById('tubing-check').style.display='none';
+    return;
+  }
+  const dates=selDates.map(d=>new Date(d+'T12:00:00'));
+  const res=calcPackage(dates);
+  if(!res) return;
+
+  let {pkg,base,lines,tip,anyHol}=res;
+
+  // Distance
+  const db=getDistBracket(loc);
+  const dc=db===0?0:db===1?P.dist_mid:db===2?P.dist_far:0;
+  const dlabel=db===0?'Local — no travel surcharge':db===1?'Travel surcharge (1.5–3 hr from Manotick)':db===2?'Travel surcharge (3–6 hr from Manotick)':'Travel surcharge (TBC — confirmed on inquiry)';
+  if(dc>0){lines.push({l:dlabel,v:dc,t:'charge'});base+=dc;}
+  else if(db===0){lines.push({l:dlabel,v:0,t:'note'});}
+  else if(loc.length>1&&db===-1){lines.push({l:'Travel surcharge: TBC — will confirm when we reply',v:0,t:'note'});}
+
+  // Holiday note
+  if(anyHol){
+    const holNames=selDates.filter(d=>HOLIDAYS.has(d)).map(d=>HOL_NAMES[d]||'Holiday').join(', ');
+    lines.push({l:`Includes: ${holNames}`,v:0,t:'note'});
+  }
+
+  const total=base;
+  const pp=Math.round(total/riders);
+
+  // Breakdown HTML
+  const bk=lines.map(l=>{
+    if(l.t==='note') return `<div class="res-line"><span class="lbl" style="color:var(--pink)">★ ${l.l}</span><span></span></div>`;
+    const cls=l.t==='saving'?' saving':l.t==='charge'?' charge':'';
+    const valStr=l.v===0?'':l.t==='saving'?`−$${Math.abs(l.v).toLocaleString()}`:l.t==='charge'?`+$${l.v.toLocaleString()}`:`$${l.v.toLocaleString()}`;
+    return `<div class="res-line${cls}"><span class="lbl">${l.l}</span><span class="val">${valStr}</span></div>`;
+  }).join('');
+  document.getElementById('res-breakdown').innerHTML=bk+
+    `<div class="res-line total"><span class="lbl">Total</span><span class="val">$${total.toLocaleString()}</span></div>`;
+
+  document.getElementById('res-pp-num').textContent=pp.toLocaleString();
+  document.getElementById('res-pp-lbl').textContent=`per person · ${riders} rider${riders>1?'s':''} · ${pkg}`;
+
+  const tipEl=document.getElementById('upsell-tip');
+  if(tip){tipEl.innerHTML=tip;tipEl.style.display='block';}else tipEl.style.display='none';
+
+  const noteLines=[];
+  if(db===-1&&loc.length>1) noteLines.push('Distance surcharge TBC — we\'ll confirm the exact amount in our reply.');
+  noteLines.push('Estimate assumes one full day per date selected. Final price confirmed on booking. 30% deposit secures your date.');
+  document.getElementById('res-note').textContent=noteLines.join(' ');
+
+  document.getElementById('est-result').style.display='block';
+  document.getElementById('tubing-check').style.display='block';
+
+  renderNudges(res,riders);
+}
+
+renderCal();
 </script>
 </body>
 </html>
