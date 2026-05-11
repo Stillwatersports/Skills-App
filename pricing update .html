@@ -1,0 +1,787 @@
+<!-- © 2026 Christian Richards / Stillwater Sports. All rights reserved. Unauthorized copying or reproduction of this code or content is prohibited. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="google-site-verification" content="_ymjlW_Dw-AhwY4WSTsuzvuAlaIJYNpKvLNRo2aS4Js"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Stillwater Sports pricing — estimate your per-person cost for waterski and wakeboard coaching across Ontario cottage country."/>
+<meta property="og:type" content="website"/>
+<meta property="og:site_name" content="Stillwater Sports"/>
+<meta property="og:url" content="https://learnwatersports.ca/pricing"/>
+<meta property="og:title" content="Pricing — Stillwater Sports"/>
+<meta property="og:description" content="Private waterski, wakeboard, wakesurf and more across Ontario cottage country. Boat and all equipment included. We come to your lake."/>
+<meta property="og:image" content="https://learnwatersports.ca/og-image.jpg"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<title>Pricing — Stillwater Sports</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="./styles.css"/>
+<style>
+img{pointer-events:none;user-select:none;-webkit-user-drag:none}
+body{-webkit-user-select:none;user-select:none}
+
+/* ── ESTIMATOR ───────────────────────────────────── */
+.est-wrap{max-width:860px;margin:0 auto}
+.est-section{margin-bottom:32px}
+.est-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+.est-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.est-input{width:100%;padding:13px 16px;border:1.5px solid rgba(0,200,212,0.25);border-radius:12px;font-size:15px;font-family:'Outfit',sans-serif;color:var(--text);background:#fff;outline:none;transition:border-color .15s;box-sizing:border-box}
+.est-input:focus{border-color:var(--cyan)}
+.est-select{-webkit-appearance:none;appearance:none}
+
+/* nudge cards */
+.nudge-cards{display:grid;gap:8px;margin-top:4px}
+.nudge-card{padding:14px 18px;border-radius:12px;border:1.5px solid rgba(0,200,212,0.2);background:rgba(0,200,212,0.04);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.nudge-card.best-val{border-color:rgba(224,64,160,0.3);background:rgba(224,64,160,0.04)}
+.nudge-name{font-size:14px;font-weight:700;color:var(--text)}
+.nudge-sub{font-size:12px;color:var(--muted);margin-top:2px;line-height:1.5}
+.nudge-badge{font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.nudge-badge.save{background:rgba(0,200,212,0.15);color:var(--cyan)}
+.nudge-badge.best{background:rgba(224,64,160,0.15);color:var(--pink)}
+
+/* results */
+.result-card{background:#fff;border-radius:16px;border:1.5px solid rgba(0,200,212,0.2);padding:28px;margin-top:4px}
+.result-pp{font-size:56px;font-weight:900;color:var(--cyan);line-height:1;letter-spacing:-.03em}
+.result-pp sup{font-size:22px;vertical-align:top;margin-top:12px;font-weight:700}
+.result-pp-lbl{font-size:13px;color:var(--muted);font-weight:600;margin-top:6px}
+.result-divider{border:none;border-top:1px solid rgba(0,200,212,0.12);margin:20px 0}
+.res-line{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0;font-size:14px}
+.res-line .lbl{color:var(--muted)}
+.res-line .val{font-weight:700;color:var(--text)}
+.res-line.saving .lbl,.res-line.saving .val{color:#2a9a2a}
+.res-line.charge .val{color:var(--pink)}
+.res-line.total{font-size:16px;border-top:2px solid rgba(0,200,212,0.15);margin-top:8px;padding-top:14px}
+.res-line.total .lbl{font-weight:800;color:var(--text)}
+.res-line.total .val{font-size:20px;color:var(--cyan)}
+.res-note{font-size:12px;color:var(--muted);line-height:1.7;margin-top:16px;padding:12px 14px;background:rgba(0,200,212,0.04);border-radius:8px}
+.upsell-tip{background:rgba(224,64,160,0.06);border:1px solid rgba(224,64,160,0.2);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--muted);line-height:1.6;margin-top:12px}
+.upsell-tip strong{color:var(--pink)}
+
+/* card type selector */
+.card-type-btn{padding:10px 8px;border-radius:10px;border:1.5px solid rgba(0,200,212,0.2);background:#fff;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s;text-align:center;line-height:1.4}
+.card-type-btn small{font-size:10px;font-weight:500;display:block;margin-top:2px}
+.card-type-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.card-type-btn.active{background:var(--cyan);color:#fff;border-color:var(--cyan)}
+.card-type-btn.local{border-color:rgba(245,216,0,0.5)}
+.card-type-btn.local.active{background:#c8a800;border-color:#c8a800;color:#fff}
+.tier-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.tier-card{background:#fff;border-radius:20px;padding:24px 20px;border:1.5px solid rgba(0,200,212,0.15);display:flex;flex-direction:column;gap:10px}
+.tier-card.featured{border-color:var(--cyan);box-shadow:0 4px 28px rgba(0,200,212,0.12)}
+.tier-card.local{border-color:rgba(245,216,0,0.5);background:rgba(245,216,0,0.04)}
+.tier-eyebrow{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--cyan)}
+.tier-price{font-size:40px;font-weight:900;color:var(--text);line-height:1;letter-spacing:-.02em}
+.tier-price sup{font-size:16px;vertical-align:top;margin-top:8px;font-weight:700}
+.tier-price small{font-size:12px;font-weight:500;color:var(--muted)}
+.tier-name{font-size:16px;font-weight:800;color:var(--text)}
+.tier-desc{font-size:13px;color:var(--muted);line-height:1.75;flex:1}
+
+/* slot bubbles */
+.slot-bubbles{display:flex;gap:6px;margin-top:8px;padding-top:12px;border-top:1px solid rgba(0,200,212,0.1)}
+.slot-bub{flex:1;padding:5px 4px;border-radius:8px;font-size:10px;font-weight:700;text-align:center;letter-spacing:.03em;text-transform:uppercase;border:1.5px solid rgba(0,200,212,0.15);color:var(--muted);background:rgba(0,200,212,0.04)}
+.slot-bub.active{background:var(--cyan);color:#fff;border-color:var(--cyan)}
+.slot-bub.active-alt{background:var(--pink);color:#fff;border-color:var(--pink)}
+
+/* group size block */
+.group-size-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:32px}
+.gs-card{background:#fff;border-radius:14px;padding:16px;border:1.5px solid rgba(0,200,212,0.12);text-align:center}
+.gs-num{font-size:28px;font-weight:900;color:var(--cyan);line-height:1}
+.gs-label{font-size:11px;font-weight:700;color:var(--text);margin:4px 0 6px;letter-spacing:.02em}
+.gs-desc{font-size:11px;color:var(--muted);line-height:1.6}
+.gs-tip{font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--pink);margin-top:6px}
+
+@media(max-width:960px){
+  .tier-grid{grid-template-columns:1fr 1fr}
+  .group-size-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:680px){
+  .tier-grid{grid-template-columns:1fr}
+  .group-size-grid{grid-template-columns:1fr 1fr}
+  .est-row{grid-template-columns:1fr}
+  .date-cell{font-size:11px}
+}
+</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9Z296M7ZLP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-9Z296M7ZLP');</script>
+</head>
+<body>
+<nav>
+  <a href="/" class="nav-brand"><img src="./Sports_clear_bg.png" alt="Stillwater Sports" style="height:116px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.3))"/></a>
+  <div class="nav-links">
+    <div class="nav-dropdown">
+      <a href="javascript:void(0)" class="nav-link-top" onclick="toggleDropdown(event,'about-menu')">About ▾</a>
+      <div class="nav-dropdown-menu" id="about-menu">
+        <a href="/about">Meet the Coach</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/policies">Policies</a>
+      </div>
+    </div>
+    <div class="nav-dropdown">
+      <a href="javascript:void(0)" class="nav-link-top" onclick="toggleDropdown(event,'hiw-menu')">How It Works ▾</a>
+      <div class="nav-dropdown-menu" id="hiw-menu">
+        <a href="/how-it-works">What to Expect</a><a href="/guidelines">Guidelines</a><a href="/faq">FAQ</a>
+      </div>
+    </div>
+    <a href="/pricing" class="active">Pricing</a>
+    <a href="/booking">Booking</a>
+    <a href="/contact">Contact</a>
+    <a href="/app">Stillwater Skills App</a>
+  </div>
+  <a href="/booking" class="nav-book">Book Now</a>
+  <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+</nav>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="/about" onclick="toggleMenu()">Meet the Coach</a>
+  <a href="/sports" onclick="toggleMenu()">Sports</a>
+  <a href="/equipment" onclick="toggleMenu()">Equipment</a>
+  <a href="/how-it-works" onclick="toggleMenu()">What to Expect</a>
+  <a href="/guidelines" onclick="toggleMenu()">Guidelines</a>
+  <a href="/faq" onclick="toggleMenu()">FAQ</a>
+  <a href="/pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="/booking" onclick="toggleMenu()">Booking</a>
+  <a href="/contact" onclick="toggleMenu()">Contact</a>
+  <a href="/app" onclick="toggleMenu()">Stillwater Skills App</a>
+  <a href="/policies" onclick="toggleMenu()">Policies</a>
+</div>
+
+<!-- HERO -->
+<section class="hero hero-short">
+  <div class="hero-bg" style="background:url('./pricing-hero.jpeg') center/cover no-repeat;background-color:var(--cyan)"></div>
+  <div class="hero-coords">N 45°<br>OTTAWA</div>
+  <div class="hero-content" style="margin-left:auto;max-width:660px">
+    <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)" data-content="pricing_hero_badge"></div>
+    <h1>
+      <span class="l1" data-content="pricing_hero_l1"></span>
+      <span class="l3" data-content="pricing_hero_l3"></span>
+    </h1>
+    <p class="hero-sub" style="color:var(--yellow);opacity:.9" data-content="pricing_hero_sub"></p>
+  </div>
+  <div class="hero-bottom">
+    <div class="hero-scroll" data-content="pricing_hero_scroll"></div>
+    <div class="hero-stats-mini">
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num" data-content="pricing_stat1_num"></div><div class="hero-stat-mini-lbl" data-content="pricing_stat1_lbl"></div></div>
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num" data-content="pricing_stat2_num"></div><div class="hero-stat-mini-lbl" data-content="pricing_stat2_lbl"></div></div>
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num" data-content="pricing_stat3_num"></div><div class="hero-stat-mini-lbl" data-content="pricing_stat3_lbl"></div></div>
+    </div>
+    <a href="mailto:christian@learnwatersports.ca" class="hero-contact-link">Stillwater Sports · Coach</a>
+  </div>
+</section>
+
+<!-- PASS / TURN / BLOCK -->
+<section style="background:var(--yellow)">
+  <div class="s">
+    <div class="eyebrow" data-content="pricing_ptb_eyebrow"></div>
+    <h2 class="big-title" style="margin-bottom:40px"><span data-content="pricing_ptb_h2_1"></span><br><em data-content="pricing_ptb_h2_2"></em></h2>
+    <div class="content-grid-3" style="margin-bottom:0">
+
+      <div class="content-card" style="border-top:4px solid var(--cyan);padding-top:28px">
+        <div style="font-size:40px;font-weight:900;color:rgba(0,200,212,0.45);line-height:1;margin-bottom:4px" data-content="pricing_ptb_pass_num"></div>
+        <h3 style="color:var(--cyan);font-size:18px;margin-bottom:10px" data-content="pricing_ptb_pass_title"></h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8" data-content="pricing_ptb_pass_desc"></p>
+      </div>
+
+      <div class="content-card" style="border-top:4px solid var(--pink);padding-top:28px">
+        <div style="font-size:40px;font-weight:900;color:rgba(224,64,160,0.40);line-height:1;margin-bottom:4px" data-content="pricing_ptb_turn_num"></div>
+        <h3 style="color:var(--pink);font-size:18px;margin-bottom:10px" data-content="pricing_ptb_turn_title"></h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8" data-content="pricing_ptb_turn_desc"></p>
+      </div>
+
+      <div class="content-card" style="border-top:4px solid var(--dark);padding-top:28px">
+        <div style="font-size:40px;font-weight:900;color:rgba(0,0,0,0.22);line-height:1;margin-bottom:4px" data-content="pricing_ptb_block_num"></div>
+        <h3 style="font-size:18px;margin-bottom:10px" data-content="pricing_ptb_block_title"></h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8" data-content="pricing_ptb_block_desc"></p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- THREE TIERS -->
+<section style="background:var(--yellow)">
+  <div class="s">
+    <div class="eyebrow" data-content="pricing_tiers_eyebrow"></div>
+    <h2 class="big-title" style="margin-bottom:12px"><span data-content="pricing_tiers_h2_1"></span><br><em data-content="pricing_tiers_h2_2"></em></h2>
+    <p class="section-desc" style="margin-bottom:48px" data-content="pricing_tiers_desc"></p>
+    <div class="tier-grid">
+
+      <!-- CARD 1: HALF DAY -->
+      <div class="tier-card" data-card="halfday">
+        <div class="tier-eyebrow" data-content="pricing_tier1_eyebrow"></div>
+        <div class="tier-name" data-content="pricing_tier1_name"></div>
+        <div class="tier-desc" data-content="pricing_tier1_desc"></div>
+        <a href="#estimator" class="btn-outline" style="text-align:center;justify-content:center;margin-top:auto" data-content="pricing_tier_cta"></a>
+      </div>
+
+      <!-- CARD 2: FULL DAY -->
+      <div class="tier-card featured" data-card="fullday">
+        <div class="tier-eyebrow" data-content="pricing_tier2_eyebrow"></div>
+        <div class="tier-name" data-content="pricing_tier2_name"></div>
+        <div class="tier-desc" data-content="pricing_tier2_desc"></div>
+        <a href="#estimator" class="btn-pink" style="text-align:center;justify-content:center;margin-top:auto" data-content="pricing_tier_cta"></a>
+      </div>
+
+      <!-- CARD 3: MULTI DAY -->
+      <div class="tier-card" data-card="multiday">
+        <div class="tier-eyebrow" data-content="pricing_tier3_eyebrow"></div>
+        <div class="tier-name" data-content="pricing_tier3_name"></div>
+        <div class="tier-desc" data-content="pricing_tier3_desc"></div>
+        <a href="#estimator" class="btn-outline" style="text-align:center;justify-content:center;margin-top:auto" data-content="pricing_tier_cta"></a>
+      </div>
+
+      <!-- CARD 4: LOCAL / DROP-IN (cyan bg, pink border) -->
+      <div class="tier-card local" data-card="local">
+        <div class="tier-eyebrow" data-content="pricing_tier4_eyebrow"></div>
+        <div class="tier-name" data-content="pricing_tier4_name"></div>
+        <div class="tier-desc" data-content="pricing_tier4_desc"></div>
+        <a href="/booking" style="display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;border-radius:50px;border:2px solid #fff;color:#fff;font-weight:700;font-size:14px;text-decoration:none;margin-top:auto;text-align:center" data-content="pricing_tier4_cta"></a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- PRICE ESTIMATOR -->
+<section id="estimator" style="background:var(--yellow);padding-top:0">
+  <div class="s">
+    <div style="background:#fff;border-radius:24px;padding:40px;border:1.5px solid rgba(0,200,212,0.15);box-shadow:0 8px 48px rgba(0,200,212,0.07)">
+
+      <div style="margin-bottom:32px">
+        <div class="eyebrow" data-content="pricing_est_eyebrow"></div>
+        <h2 class="big-title" style="margin-bottom:8px"><span data-content="pricing_est_h2_1"></span><br><em data-content="pricing_est_h2_2"></em></h2>
+        <p style="font-size:14px;color:var(--muted);line-height:1.7;max-width:560px" data-content="pricing_est_desc"></p>
+      </div>
+
+      <div class="est-wrap">
+
+        <!-- Card type selector -->
+        <div class="est-section">
+          <div class="est-label">What type of session?</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px" id="card-type-selector">
+            <button class="card-type-btn active" data-type="halfday" onclick="selectCardType('halfday',this)">Half Day<br><small>1 slot · $600</small></button>
+            <button class="card-type-btn" data-type="fullday" onclick="selectCardType('fullday',this)">Full Day<br><small>2 slots · $1,000+</small></button>
+            <button class="card-type-btn" data-type="multiday" onclick="selectCardType('multiday',this)">Multi-Day<br><small>2+ days · save more</small></button>
+            <button class="card-type-btn local" data-type="local" onclick="selectCardType('local',this)">Drop-In<br><small>$50/set · Rideau</small></button>
+          </div>
+        </div>
+        <div class="est-section">
+          <div class="est-label" data-content="pricing_est_step1_label"></div>
+          <div class="est-row">
+            <div>
+              <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px" data-content="pricing_est_riders_label"></label>
+              <select id="est-riders" class="est-input est-select" onchange="runEstimate()">
+                <option value="">Select riders...</option>
+                <option value="1">1 rider</option>
+                <option value="2">2 riders</option>
+                <option value="3">3 riders</option>
+                <option value="4">4 riders</option>
+                <option value="5">5 riders</option>
+                <option value="6">6 riders</option>
+                <option value="7">7 riders</option>
+                <option value="8">8 riders</option>
+                <option value="9">9+ riders — contact us</option>
+              </select>
+            </div>
+            <div>
+              <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px" data-content="pricing_est_location_label"></label>
+              <input type="text" id="est-location" class="est-input" data-content-placeholder="pricing_est_location_placeholder" placeholder="e.g. Calabogie or K7H 3C3" oninput="runEstimate()"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- Date Range + Split Day -->
+        <div class="est-section" id="date-range-section">
+          <div class="est-label">Step 2 — Your Dates</div>
+          <div class="date-range-row">
+            <div>
+              <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px">Start Date</label>
+              <input type="date" id="est-date-start" class="date-range-input" onchange="runEstimate()" min="2026-05-01"/>
+            </div>
+            <div>
+              <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px">End Date <span style="font-weight:400;color:var(--muted)">(same as start for 1 day)</span></label>
+              <input type="date" id="est-date-end" class="date-range-input" onchange="runEstimate()" min="2026-05-01"/>
+            </div>
+          </div>
+          <div class="date-range-summary" id="date-range-summary"></div>
+        </div>
+
+        <!-- Split Day option (fullday only) -->
+        <div id="split-day-ui" style="display:none" class="est-section">
+          <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;padding:14px 16px;background:rgba(0,200,212,0.06);border:1.5px solid rgba(0,200,212,0.2);border-radius:12px">
+            <input type="checkbox" id="split-day-check" onchange="runEstimate()" style="accent-color:var(--cyan);margin-top:2px;flex-shrink:0;width:16px;height:16px"/>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--text)" data-content="pricing_tier2_split_label"></div>
+              <div style="font-size:12px;color:var(--cyan);margin-top:4px" data-content="pricing_tier2_split_tip"></div>
+            </div>
+          </label>
+        </div>
+
+        <!-- Nudges -->
+        <div id="nudge-section" style="display:none" class="est-section">
+          <div class="est-label" data-content="pricing_est_nudge_label"></div>
+          <div class="nudge-cards" id="nudge-cards"></div>
+        </div>
+
+        <!-- Result -->
+        <div id="est-result" style="display:none">
+          <div class="est-label" data-content="pricing_est_result_label"></div>
+          <div class="result-card">
+            <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
+              <div>
+                <div class="result-pp"><sup>$</sup><span id="res-pp-num">—</span></div>
+                <div class="result-pp-lbl" id="res-pp-lbl">per person · estimated</div>
+              </div>
+              <div id="upsell-tip" class="upsell-tip" style="display:none;flex:1;min-width:200px"></div>
+            </div>
+            <hr class="result-divider"/>
+            <div id="res-breakdown"></div>
+            <div class="res-note" id="res-note"></div>
+            <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
+              <a href="/booking" class="btn-pink">Request This Date →</a>
+              <a href="/contact" class="btn-outline">Ask a Question →</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tubing -->
+        <div id="tubing-check" style="display:none;margin-top:16px">
+          <label style="display:inline-flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);cursor:pointer">
+            <input type="checkbox" id="est-tubing" onchange="runEstimate()" style="accent-color:var(--cyan);width:16px;height:16px;cursor:pointer"/>
+            <span data-content="pricing_est_tubing_label"></span>
+          </label>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING TABLE -->
+<section style="background:var(--yellow);padding-top:0">
+  <div class="s">
+    <div style="background:#fff;border-radius:24px;padding:40px;border:1.5px solid rgba(0,200,212,0.15)">
+      <div class="eyebrow">Full Pricing Reference</div>
+      <h2 class="big-title" style="margin-bottom:8px">All packages<br><em>at a glance.</em></h2>
+      <p style="font-size:14px;color:var(--muted);line-height:1.7;max-width:560px;margin-bottom:28px">All packages include boat, fuel, all equipment, PFDs, and full coaching time. Prices in CAD, tax included.</p>
+      <div class="price-table-wrap">
+        <table class="price-table">
+          <thead>
+            <tr>
+              <th>Package</th>
+              <th>When</th>
+              <th>Price</th>
+              <th>Per person <span style="font-weight:400">(6 riders)</span></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="pkg-name">Drop-In</div><div class="pkg-when">Rideau River · you come to us</div></td>
+              <td>Open slots · any day</td>
+              <td class="pkg-price pkg-local">$50<span style="font-size:12px;font-weight:500;color:var(--muted)">/person/turn</span></td>
+              <td style="color:var(--muted)">$200 minimum</td>
+              <td><a href="/booking" class="btn-outline" style="font-size:12px;padding:6px 14px;white-space:nowrap">Book →</a></td>
+            </tr>
+            <tr>
+              <td><div class="pkg-name">Single Session</div><div class="pkg-when">Morning, Afternoon, or Evening</div></td>
+              <td>Any weekday</td>
+              <td class="pkg-price">$600</td>
+              <td style="color:var(--muted)">~$100/person</td>
+              <td><a href="/booking" class="btn-outline" style="font-size:12px;padding:6px 14px;white-space:nowrap">Book →</a></td>
+            </tr>
+            <tr>
+              <td><div class="pkg-name">Single Session</div><div class="pkg-when">Morning, Afternoon, or Evening</div></td>
+              <td>Weekends &amp; holidays</td>
+              <td class="pkg-price">$850</td>
+              <td style="color:var(--muted)">~$142/person</td>
+              <td><a href="/booking" class="btn-outline" style="font-size:12px;padding:6px 14px;white-space:nowrap">Book →</a></td>
+            </tr>
+            <tr>
+              <td><div class="pkg-name">Full Day</div><div class="pkg-when">Any 2 consecutive blocks</div></td>
+              <td>Any weekday</td>
+              <td class="pkg-price">$1,000</td>
+              <td style="color:var(--muted)">~$167/person</td>
+              <td><a href="/booking" class="btn-outline" style="font-size:12px;padding:6px 14px;white-space:nowrap">Book →</a></td>
+            </tr>
+            <tr>
+              <td><div class="pkg-name">Full Day — Split</div><div class="pkg-when">Morning + Evening (best conditions)</div></td>
+              <td>Any weekday</td>
+              <td class="pkg-price">$1,250</td>
+              <td style="color:var(--muted)">~$208/person</td>
+              <td><a href="/booking" class="btn-outline" style="font-size:12px;padding:6px 14px;white-space:nowrap">Book →</a></td>
+            </tr>
+            <tr>
+              <td><div class="pkg-name">Full Day</div><div class="pkg-when">Any 2 consecutive blocks</div></td>
+              <td>Weekends &amp; holidays</td>
+              <td class="pkg-price">$1,250</td>
+              <td style="color:var(--muted)">~$208/person</td>
+              <td><a href="/booking" class="btn-outline" style="font-size:12px;padding:6px 14px;white-space:nowrap">Book →</a></td>
+            </tr>
+            <tr style="background:rgba(0,200,212,0.04)">
+              <td><div class="pkg-name">Double Weekday</div><div class="pkg-when">2 consecutive weekdays</div></td>
+              <td>Mon–Fri</td>
+              <td class="pkg-price">$1,750</td>
+              <td style="color:var(--muted)">~$292/person</td>
+              <td><span class="pkg-save">Save $250</span></td>
+            </tr>
+            <tr style="background:rgba(0,200,212,0.04)">
+              <td><div class="pkg-name">Full Weekend</div><div class="pkg-when">Saturday + Sunday</div></td>
+              <td>Sat + Sun</td>
+              <td class="pkg-price">$2,100</td>
+              <td style="color:var(--muted)">~$350/person</td>
+              <td><span class="pkg-save">Save $400</span></td>
+            </tr>
+            <tr style="background:rgba(0,200,212,0.04)">
+              <td><div class="pkg-name">3 Day Work Week</div><div class="pkg-when">Any 3 weekdays</div></td>
+              <td>Mon–Fri</td>
+              <td class="pkg-price">$2,500</td>
+              <td style="color:var(--muted)">~$417/person</td>
+              <td><span class="pkg-save">Save $500</span></td>
+            </tr>
+            <tr>
+              <td><div class="pkg-name">Holiday Weekend</div><div class="pkg-when">Fri or Mon + Sat + Sun</div></td>
+              <td>Long weekends</td>
+              <td class="pkg-price">$3,000</td>
+              <td style="color:var(--muted)">~$500/person</td>
+              <td><a href="/booking" class="btn-outline" style="font-size:12px;padding:6px 14px;white-space:nowrap">Book →</a></td>
+            </tr>
+            <tr style="background:rgba(0,200,212,0.04)">
+              <td><div class="pkg-name">5 Day Week</div><div class="pkg-when">Any 5 days incl. weekends</div></td>
+              <td>Any 5 of 7 days</td>
+              <td class="pkg-price">$4,500</td>
+              <td style="color:var(--muted)">~$750/person</td>
+              <td><span class="pkg-save">Save $1,000</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:20px;font-size:12px;color:var(--muted);line-height:1.8">
+        <strong>Distance surcharges:</strong> +$100 (1.5–3hr from Manotick) · +$200 (3–6hr) &nbsp;·&nbsp;
+        <strong>Deposit:</strong> 30% non-refundable to secure your date &nbsp;·&nbsp;
+        <strong>Balance:</strong> due 48hrs before your session
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT'S INCLUDED -->
+<div class="highlight-band">
+  <div class="highlight-band-inner">
+    <div>
+      <div class="eyebrow" style="color:#5a8a8a" data-content="pricing_incl_eyebrow"></div>
+      <h2><span data-content="pricing_incl_h2_1"></span><br><em data-content="pricing_incl_h2_2"></em></h2>
+    </div>
+    <div>
+      <div class="tag-list">
+        <span class="tag">Sanger DLX Towboat</span><span class="tag">Fuel</span><span class="tag">All Skis &amp; Boards</span>
+        <span class="tag">Ropes &amp; Handles</span><span class="tag">PFDs — All Sizes</span>
+        <span class="tag">Full Coaching Time</span><span class="tag">We Come to Your Lake</span>
+      </div>
+      <p style="color:rgba(255,255,231,0.7);font-size:14px;line-height:1.7;margin-top:16px" data-content="pricing_incl_desc"></p>
+      <a href="/booking" class="btn-pink" style="margin-top:20px;display:inline-flex" data-content="pricing_incl_cta"></a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-watermark">LEARNWATERSPORTS</div>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.png" alt="Stillwater Sports" style="height:44px;width:auto;object-fit:contain;border-radius:6px"/></div>
+        <p class="footer-desc">Private water sports coaching across Ontario cottage country. Six disciplines, all skill levels, all equipment included.</p>
+        <div class="footer-social"><a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a><a href="#" class="footer-social-btn">⊙</a></div>
+      </div>
+      <div class="footer-col"><h4>Explore</h4><a href="/about">About</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/pricing">Pricing</a><a href="/contact">Contact</a></div>
+      <div class="footer-col"><h4>How It Works</h4><a href="/how-it-works">What to Expect</a><a href="/guidelines">Guidelines</a><a href="/faq">FAQ</a></div>
+      <div class="footer-col"><h4>Stillwater Skills</h4><a href="/stillwaterapp">Open the App</a><a href="/app">For Clubs &amp; Schools</a></div>
+      <div class="footer-col"><h4>Legal</h4><a href="/policies">Privacy Policy</a><a href="/policies#terms">Terms of Service</a><a href="/policies#waiver">Waiver</a><a href="/policies#refunds">Refund Policy</a></div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2026 Christian Richards · Stillwater Sports · All rights reserved</span>
+      <span class="footer-dot">Ontario Cottage Country · learnwatersports.ca</span>
+    </div>
+  </div>
+</footer>
+<div id="toast"></div>
+<script src="./content.js"></script>
+<script>
+// ── NAV ──────────────────────────────────────────────────
+function toggleDropdown(e,id){e.preventDefault();e.stopPropagation();document.querySelectorAll('.nav-dropdown-menu').forEach(m=>{if(m.id!==id)m.classList.remove('open')});document.getElementById(id).classList.toggle('open')}
+document.addEventListener('click',e=>{if(!e.target.closest('.nav-dropdown'))document.querySelectorAll('.nav-dropdown-menu').forEach(m=>m.classList.remove('open'))});
+function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
+document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
+
+// ── HOLIDAYS ──────────────────────────────────────────────
+const HOLIDAYS = new Set(['2026-01-01','2026-02-16','2026-04-03','2026-04-06','2026-05-18','2026-07-01','2026-08-03','2026-09-07','2026-10-12','2026-12-25','2026-12-26']);
+const HOL_NAMES = {'2026-01-01':"New Year's Day",'2026-02-16':'Family Day','2026-04-03':'Good Friday','2026-04-06':'Easter Monday','2026-05-18':'Victoria Day','2026-07-01':'Canada Day','2026-08-03':'Civic Holiday','2026-09-07':'Labour Day','2026-10-12':'Thanksgiving','2026-12-25':'Christmas Day','2026-12-26':'Boxing Day'};
+
+// ── DATE RANGE ────────────────────────────────────────────
+function getSelectedDates(){
+  const startVal = document.getElementById('est-date-start')?.value;
+  const endVal   = document.getElementById('est-date-end')?.value;
+  if(!startVal) return [];
+  const start = new Date(startVal+'T12:00:00');
+  const end   = endVal ? new Date(endVal+'T12:00:00') : start;
+  if(end < start) return [start];
+  const dates = [];
+  for(let d=new Date(start); d<=end; d.setDate(d.getDate()+1)){
+    dates.push(new Date(d));
+  }
+  return dates;
+}
+
+function updateDateSummary(){
+  const dates = getSelectedDates();
+  const el = document.getElementById('date-range-summary');
+  if(!el) return;
+  if(!dates.length){ el.innerHTML=''; return; }
+  const n = dates.length;
+  const holDays = dates.filter(d=>HOLIDAYS.has(ds(d)));
+  const weDays  = dates.filter(d=>isWE(d)).length;
+  let txt = `<strong>${n} day${n>1?'s':''}</strong> selected`;
+  if(weDays>0) txt += ` · ${weDays} weekend day${weDays>1?'s':''}`;
+  if(holDays.length) txt += ` · includes <span style="color:var(--pink)">${holDays.map(d=>HOL_NAMES[ds(d)]||'Holiday').join(', ')}</span>`;
+  el.innerHTML = txt;
+}
+
+// ── PRICING CONSTANTS ─────────────────────────────────────
+const P = {
+  single:600,full:1000,split:250,wknd:250,
+  dbl_wkd:1750,full_wkd:2100,tri_wk:2500,hol_wkd:3000,five:4500,
+  dist_mid:100,dist_far:200,
+};
+
+function ds(d){ return d.toISOString().split('T')[0] }
+const isWE  = d=>d.getDay()===0||d.getDay()===6;
+const isHol = d=>HOLIDAYS.has(ds(d));
+const isWD  = d=>!isWE(d);
+const isSat = d=>d.getDay()===6;
+const isSun = d=>d.getDay()===0;
+
+function calcPackage(dates){
+  const sorted=[...dates].sort((a,b)=>a-b);
+  const n=sorted.length;
+  if(!n) return null;
+  const weDays=sorted.filter(d=>isWE(d)).length;
+  const holDays=sorted.filter(d=>isHol(d)).length;
+  const wdDays=sorted.filter(d=>isWD(d)).length;
+  const hasSat=sorted.some(d=>isSat(d));
+  const hasSun=sorted.some(d=>isSun(d));
+  const spanDays=Math.round((sorted[n-1]-sorted[0])/86400000)+1;
+  const anyHol=holDays>0;
+  let pkg='',base=0,lines=[],tip='';
+
+  if(n===1){
+    const d=sorted[0];
+    const isSpecial=isWE(d)||isHol(d);
+    if(isSpecial){
+      pkg='Single Session (Weekend/Holiday)';
+      base=P.single+P.wknd;
+      lines=[{l:'Single session',v:P.single},{l:isHol(d)?`Holiday premium (${HOL_NAMES[ds(d)]||'Holiday'})`:'Weekend premium',v:P.wknd,t:'charge'}];
+    } else {
+      pkg='Single Session';base=P.single;
+      lines=[{l:'Single session — 1 time slot',v:P.single}];
+    }
+    tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_halfday)||'<strong>Tip:</strong> Upgrading to a full day is only +$400 and gives everyone twice the time on the water.';
+  } else if(n===2){
+    if(anyHol&&(hasSat||hasSun)){
+      pkg='Holiday Weekend (2 days)';base=Math.round(P.hol_wkd*2/3);
+      lines=[{l:'2-day holiday weekend rate',v:base}];
+    } else if(hasSat&&hasSun){
+      pkg='Full Weekend';base=P.full_wkd;
+      const comp=(P.full+P.wknd)*2;
+      lines=[{l:'2 weekend full days (2 × $1,250)',v:comp},{l:'Multi-day saving',v:P.full_wkd-comp,t:'saving'}];
+    } else if(wdDays===2){
+      pkg='Double Weekday';base=P.dbl_wkd;
+      lines=[{l:'2 weekday full days (2 × $1,000)',v:2000},{l:'Multi-day saving',v:P.dbl_wkd-2000,t:'saving'}];
+    } else {
+      pkg='2-Day Session';base=P.full+(P.full+P.wknd);
+      lines=[{l:'Weekday full day',v:P.full},{l:'Weekend full day',v:P.full+P.wknd}];
+    }
+  } else if(n===3){
+    if(anyHol&&hasSat&&hasSun){
+      pkg='Holiday Weekend';base=P.hol_wkd;
+      lines=[{l:'Holiday weekend — Fri/Mon + Sat + Sun',v:P.hol_wkd}];
+    } else if(wdDays===3){
+      pkg='3 Day Work Week';base=P.tri_wk;
+      lines=[{l:'3 weekday full days (3 × $1,000)',v:3000},{l:'Multi-day saving',v:P.tri_wk-3000,t:'saving'}];
+    } else {
+      pkg='3-Day Session';
+      const comp=wdDays*P.full+weDays*(P.full+P.wknd);
+      base=P.tri_wk+(weDays>0?weDays*P.wknd:0);
+      lines=[{l:`${wdDays} weekday + ${weDays} weekend day(s)`,v:comp}];
+      if(base<comp) lines.push({l:'Multi-day saving',v:base-comp,t:'saving'});
+      else base=comp;
+    }
+  } else if(n>=4&&n<=5&&spanDays<=7){
+    pkg='5-Day Week';base=P.five;
+    const comp=wdDays*P.full+weDays*(P.full+P.wknd);
+    lines=[{l:`${n} full days`,v:comp},{l:'Multi-day saving',v:-(comp-P.five),t:'saving'}];
+  } else {
+    pkg=`${n}-Day Custom`;base=0;
+    const wdC=sorted.filter(d=>isWD(d)).length;
+    const weC=sorted.filter(d=>isWE(d)||isHol(d)).length;
+    if(wdC) lines.push({l:`${wdC} weekday session${wdC>1?'s':''}`,v:wdC*P.full});
+    if(weC) lines.push({l:`${weC} weekend/holiday session${weC>1?'s':''}`,v:weC*(P.full+P.wknd)});
+    base=wdC*P.full+weC*(P.full+P.wknd);
+  }
+  return {pkg,base,lines,tip,anyHol,holDays,sorted,n,weDays,wdDays};
+}
+
+// ── POSTAL / CITY → DISTANCE ──────────────────────────────
+function getDistBracket(loc){
+  if(!loc||loc.trim().length<2) return -1;
+  const up=loc.toUpperCase().replace(/\s/g,'');
+  const fsa=up.match(/^([A-Z]\d[A-Z])/)?.[1]||up.match(/([A-Z]\d[A-Z])/)?.[1];
+  if(fsa){
+    const first=fsa[0];
+    if(first==='K'){return parseInt(fsa[1])<=4?0:1;}
+    if(first==='L'||first==='M') return 1;
+    if(first==='N'||first==='P') return 2;
+    return 1;
+  }
+  const low=loc.toLowerCase();
+  const near=['manotick','ottawa','kanata','nepean','barrhaven','gloucester','stittsville','richmond','carleton place','smiths falls','perth','almonte','arnprior','embrun','rockland','kemptville','osgoode','greely','metcalfe'];
+  const mid=['kingston','belleville','brockville','cornwall','prescott','gananoque','picton','trenton','cobourg','port hope','peterborough','kawartha','haliburton','huntsville','renfrew','pembroke','petawawa','bancroft','minden','calabogie','white lake','lanark','merrickville','westport','rideau lakes'];
+  const far=['sudbury','sault','thunder bay','north bay','timmins','kenora','parry sound','barrie','collingwood','owen sound','toronto','mississauga','brampton','hamilton','london','windsor'];
+  if(near.some(c=>low.includes(c))) return 0;
+  if(mid.some(c=>low.includes(c))) return 1;
+  if(far.some(c=>low.includes(c))) return 2;
+  return -1;
+}
+
+// ── NUDGES ────────────────────────────────────────────────
+function renderNudges(res,riders){
+  const {n,pkg}=res;
+  const nudges=[];
+  if(n===1) nudges.push({name:'Add a second day',sub:'2 weekdays = Double Weekday $1,750 — save $250 vs. booking separately',badge:'save',badgeText:'Save $250'});
+  if(n===2&&pkg==='Double Weekday') nudges.push({name:'Add a 3rd weekday',sub:'3 Day Work Week — $2,500 total · only $750 more for a full extra day',badge:'save',badgeText:'Best per-day value'});
+  if(n===2&&pkg==='Full Weekend') nudges.push({name:'Add Friday or Monday',sub:'Holiday Weekend — $3,000 for 3 full days',badge:'best',badgeText:'Holiday Weekend'});
+  if(n>=3&&n<5){const pp=riders?Math.round(4500/riders):'';nudges.push({name:'Go for 5 days',sub:`5 Day Week — $4,500${pp?' · ~$'+pp.toLocaleString()+'/person total':''} · save $1,000`,badge:'best',badgeText:'🔥 Save $1,000'});}
+  const sec=document.getElementById('nudge-section');
+  const cards=document.getElementById('nudge-cards');
+  if(!nudges.length){sec.style.display='none';return;}
+  sec.style.display='block';
+  cards.innerHTML=nudges.map(n=>`<div class="nudge-card${n.badge==='best'?' best-val':''}"><div><div class="nudge-name">${n.name}</div><div class="nudge-sub">${n.sub}</div></div><div class="nudge-badge ${n.badge}">${n.badgeText}</div></div>`).join('');
+}
+
+// ── MAIN RUNNER ───────────────────────────────────────────
+function runEstimate(){
+  updateDateSummary();
+  const splitCheck = document.getElementById('split-day-check');
+  splitDaySelected = splitCheck ? splitCheck.checked : false;
+
+  const riders=parseInt(document.getElementById('est-riders')?.value)||0;
+  const loc=document.getElementById('est-location')?.value.trim()||'';
+
+  // Show split day UI when fullday selected
+  const splitUI=document.getElementById('split-day-ui');
+  if(splitUI) splitUI.style.display=selectedCardType==='fullday'?'block':'none';
+
+  if(!riders){
+    document.getElementById('est-result').style.display='none';
+    document.getElementById('nudge-section').style.display='none';
+    document.getElementById('tubing-check').style.display='none';
+    return;
+  }
+
+  // ── LOCAL DROP-IN ─────────────────────────────────────
+  if(selectedCardType==='local'){
+    const setsPerPerson=2,pricePerSet=50;
+    const totalSets=riders*setsPerPerson;
+    const base=Math.max(200,totalSets*pricePerSet);
+    const pp=Math.round(base/riders);
+    document.getElementById('res-pp-num').textContent=pp.toLocaleString();
+    document.getElementById('res-pp-lbl').textContent=`per person · ${riders} rider${riders>1?'s':''} · Drop-In (est. ${setsPerPerson} turns each)`;
+    let bk=`<div class="res-line"><span class="lbl">$50/person per turn × ${totalSets} turns</span><span class="val">$${(totalSets*pricePerSet).toLocaleString()}</span></div>`;
+    if(base>totalSets*pricePerSet) bk+=`<div class="res-line charge"><span class="lbl">Minimum booking applied</span><span class="val">$200 min</span></div>`;
+    bk+=`<div class="res-line total"><span class="lbl">Total (estimated)</span><span class="val">$${base.toLocaleString()}</span></div>`;
+    document.getElementById('res-breakdown').innerHTML=bk;
+    const tipEl=document.getElementById('upsell-tip');
+    const localTip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_local)||'<strong>Rideau River only</strong> — available when the boat is already out locally.';
+    const gsNote=groupSizeNote(riders);
+    tipEl.innerHTML=localTip+(gsNote?'<br><br>'+gsNote:'');
+    tipEl.style.display='block';
+    document.getElementById('res-note').textContent='Estimate based on 2 turns per person. $200 minimum applies. Location: Rideau River — Manotick area.';
+    document.getElementById('est-result').style.display='block';
+    document.getElementById('tubing-check').style.display='none';
+    document.getElementById('nudge-section').style.display='none';
+    return;
+  }
+
+  // ── DATE-BASED CARDS ──────────────────────────────────
+  const dates=getSelectedDates();
+  if(!dates.length){
+    document.getElementById('est-result').style.display='none';
+    document.getElementById('nudge-section').style.display='none';
+    document.getElementById('tubing-check').style.display='none';
+    return;
+  }
+
+  let res=calcPackage(dates);
+  if(!res) return;
+  let {pkg,base,lines,tip,anyHol}=res;
+
+  // Half day override
+  if(selectedCardType==='halfday'){
+    pkg=dates.length===1?(isWE(dates[0])||isHol(dates[0])?'Single Session (Weekend/Holiday)':'Single Session'):`${dates.length} × Single Session`;
+    base=dates.reduce((sum,d)=>sum+(isWE(d)||isHol(d)?P.single+P.wknd:P.single),0);
+    lines=dates.length===1
+      ?[{l:'Single session — 1 time slot',v:P.single},...(isWE(dates[0])||isHol(dates[0])?[{l:'Weekend/Holiday premium',v:P.wknd,t:'charge'}]:[])]
+      :[{l:`${dates.length} half-day sessions`,v:base}];
+    tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_halfday)||'<strong>Tip:</strong> Upgrading to a full day is only +$400 and gives everyone twice the time on the water.';
+  }
+
+  // Full day split day premium
+  if(selectedCardType==='fullday'&&splitDaySelected){
+    const splitCount=dates.length;
+    base+=P.split*splitCount;
+    lines.push({l:`Morning + Evening split premium (×${splitCount})`,v:P.split*splitCount,t:'charge'});
+    tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_splitday)||'<strong>Best conditions tip:</strong> Morning + evening gives you glassy water both times.';
+  }
+
+  // Distance
+  const db=getDistBracket(loc);
+  const dc=db===0?0:db===1?P.dist_mid:db===2?P.dist_far:0;
+  const dlabel=db===0?'Local — no travel surcharge':db===1?'Travel surcharge (1.5–3hr from Manotick)':db===2?'Travel surcharge (3–6hr from Manotick)':'Travel surcharge (TBC — confirmed on inquiry)';
+  if(dc>0){lines.push({l:dlabel,v:dc,t:'charge'});base+=dc;}
+  else if(db===0) lines.push({l:dlabel,v:0,t:'note'});
+  else if(loc.length>1&&db===-1) lines.push({l:'Travel surcharge: TBC — confirmed when we reply',v:0,t:'note'});
+
+  if(anyHol){
+    const holNames=dates.filter(d=>isHol(d)).map(d=>HOL_NAMES[ds(d)]||'Holiday').join(', ');
+    lines.push({l:`Includes: ${holNames}`,v:0,t:'note'});
+  }
+
+  const total=base;
+  const pp=Math.round(total/riders);
+
+  const bk=lines.map(l=>{
+    if(l.t==='note') return `<div class="res-line"><span class="lbl" style="color:var(--pink)">★ ${l.l}</span><span></span></div>`;
+    const cls=l.t==='saving'?' saving':l.t==='charge'?' charge':'';
+    const valStr=l.v===0?'':l.t==='saving'?`−$${Math.abs(l.v).toLocaleString()}`:l.t==='charge'?`+$${l.v.toLocaleString()}`:`$${l.v.toLocaleString()}`;
+    return `<div class="res-line${cls}"><span class="lbl">${l.l}</span><span class="val">${valStr}</span></div>`;
+  }).join('')+`<div class="res-line total"><span class="lbl">Total</span><span class="val">$${total.toLocaleString()}</span></div>`;
+  document.getElementById('res-breakdown').innerHTML=bk;
+
+  document.getElementById('res-pp-num').textContent=pp.toLocaleString();
+  document.getElementById('res-pp-lbl').textContent=`per person · ${riders} rider${riders>1?'s':''} · ${pkg}`;
+
+  const tipEl=document.getElementById('upsell-tip');
+  const gsNote=groupSizeNote(riders);
+  const fullTip=[tip,gsNote].filter(Boolean).join('<br><br>');
+  if(fullTip){tipEl.innerHTML=fullTip;tipEl.style.display='block';}else tipEl.style.display='none';
+
+  const noteLines=[];
+  if(db===-1&&loc.length>1) noteLines.push("Distance surcharge TBC — we'll confirm in our reply.");
+  noteLines.push('Estimate assumes one full session per date. Final price confirmed on booking. 30% deposit secures your date.');
+  document.getElementById('res-note').textContent=noteLines.join(' ');
+
+  document.getElementById('est-result').style.display='block';
+  document.getElementById('tubing-check').style.display='block';
+  renderNudges(res,riders);
+}
+</script>
+</body>
+</html>
