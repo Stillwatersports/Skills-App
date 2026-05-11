@@ -65,12 +65,15 @@ body{-webkit-user-select:none;user-select:none}
 .card-type-btn small{font-size:10px;font-weight:500;display:block;margin-top:2px}
 .card-type-btn:hover{border-color:var(--cyan);color:var(--cyan)}
 .card-type-btn.active{background:var(--cyan);color:#fff;border-color:var(--cyan)}
-.card-type-btn.local{border-color:rgba(245,216,0,0.5)}
-.card-type-btn.local.active{background:#c8a800;border-color:#c8a800;color:#fff}
+.card-type-btn.local{border-color:var(--pink)}
+.card-type-btn.local.active{background:var(--cyan);border-color:var(--pink);color:#fff}
 .tier-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.tier-card{background:#fff;border-radius:20px;padding:24px 20px;border:1.5px solid rgba(0,200,212,0.15);display:flex;flex-direction:column;gap:10px}
-.tier-card.featured{border-color:var(--cyan);box-shadow:0 4px 28px rgba(0,200,212,0.12)}
-.tier-card.local{border-color:rgba(245,216,0,0.5);background:rgba(245,216,0,0.04)}
+.tier-card{background:#fff;border-radius:20px;padding:24px 20px;border:1.5px solid var(--cyan);display:flex;flex-direction:column;gap:10px}
+.tier-card.featured{box-shadow:0 4px 28px rgba(0,200,212,0.15)}
+.tier-card.local{border-color:var(--pink)!important;background:var(--cyan)}
+.tier-card.local .tier-eyebrow{color:rgba(255,255,231,0.75)}
+.tier-card.local .tier-name{color:#fff}
+.tier-card.local .tier-desc{color:rgba(255,255,231,0.88)}
 .tier-eyebrow{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--cyan)}
 .tier-price{font-size:40px;font-weight:900;color:var(--text);line-height:1;letter-spacing:-.02em}
 .tier-price sup{font-size:16px;vertical-align:top;margin-top:8px;font-weight:700}
@@ -202,7 +205,7 @@ body{-webkit-user-select:none;user-select:none}
   <div class="s">
     <div class="eyebrow" data-content="pricing_tiers_eyebrow"></div>
     <h2 class="big-title" style="margin-bottom:12px"><span data-content="pricing_tiers_h2_1"></span><br><em data-content="pricing_tiers_h2_2"></em></h2>
-    <p class="section-desc" style="margin-bottom:48px" data-content="pricing_tiers_desc"></p>
+    <p class="section-desc" style="margin-bottom:48px">Every booking includes the boat, all equipment, fuel, and full coaching time. Use the calculator below to break down the pricing for your group.</p>
     <div class="tier-grid">
 
       <!-- CARD 1: HALF DAY -->
@@ -210,7 +213,7 @@ body{-webkit-user-select:none;user-select:none}
         <div class="tier-eyebrow" data-content="pricing_tier1_eyebrow"></div>
         <div class="tier-name" data-content="pricing_tier1_name"></div>
         <div class="tier-desc" data-content="pricing_tier1_desc"></div>
-        <a href="#estimator" class="btn-outline" style="text-align:center;justify-content:center;margin-top:auto" data-content="pricing_tier_cta"></a>
+        <button class="btn-outline" style="text-align:center;justify-content:center;margin-top:auto;width:100%;border:none;cursor:pointer" onclick="goToEstimator('halfday')">Check Pricing →</button>
       </div>
 
       <!-- CARD 2: FULL DAY -->
@@ -218,7 +221,7 @@ body{-webkit-user-select:none;user-select:none}
         <div class="tier-eyebrow" data-content="pricing_tier2_eyebrow"></div>
         <div class="tier-name" data-content="pricing_tier2_name"></div>
         <div class="tier-desc" data-content="pricing_tier2_desc"></div>
-        <a href="#estimator" class="btn-pink" style="text-align:center;justify-content:center;margin-top:auto" data-content="pricing_tier_cta"></a>
+        <button class="btn-pink" style="text-align:center;justify-content:center;margin-top:auto;width:100%;border:none;cursor:pointer" onclick="goToEstimator('fullday')">Check Pricing →</button>
       </div>
 
       <!-- CARD 3: MULTI DAY -->
@@ -226,7 +229,7 @@ body{-webkit-user-select:none;user-select:none}
         <div class="tier-eyebrow" data-content="pricing_tier3_eyebrow"></div>
         <div class="tier-name" data-content="pricing_tier3_name"></div>
         <div class="tier-desc" data-content="pricing_tier3_desc"></div>
-        <a href="#estimator" class="btn-outline" style="text-align:center;justify-content:center;margin-top:auto" data-content="pricing_tier_cta"></a>
+        <button class="btn-outline" style="text-align:center;justify-content:center;margin-top:auto;width:100%;border:none;cursor:pointer" onclick="goToEstimator('multiday')">Check Pricing →</button>
       </div>
 
       <!-- CARD 4: LOCAL / DROP-IN (cyan bg, pink border) -->
@@ -234,7 +237,7 @@ body{-webkit-user-select:none;user-select:none}
         <div class="tier-eyebrow" data-content="pricing_tier4_eyebrow"></div>
         <div class="tier-name" data-content="pricing_tier4_name"></div>
         <div class="tier-desc" data-content="pricing_tier4_desc"></div>
-        <a href="/booking" style="display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;border-radius:50px;border:2px solid #fff;color:#fff;font-weight:700;font-size:14px;text-decoration:none;margin-top:auto;text-align:center" data-content="pricing_tier4_cta"></a>
+        <button style="display:inline-flex;align-items:center;justify-content:center;padding:12px 20px;border-radius:50px;border:2px solid #fff;color:#fff;font-weight:700;font-size:14px;background:none;cursor:pointer;margin-top:auto;width:100%" onclick="goToEstimator('local')">Check Pricing →</button>
       </div>
 
     </div>
@@ -326,12 +329,18 @@ body{-webkit-user-select:none;user-select:none}
         <div id="est-result" style="display:none">
           <div class="est-label" data-content="pricing_est_result_label"></div>
           <div class="result-card">
-            <div style="display:flex;align-items:flex-start;gap:24px;flex-wrap:wrap">
-              <div>
+            <div style="display:flex;align-items:flex-start;gap:32px;flex-wrap:wrap;margin-bottom:20px">
+              <div style="text-align:center">
+                <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Per Person</div>
                 <div class="result-pp"><sup>$</sup><span id="res-pp-num">—</span></div>
-                <div class="result-pp-lbl" id="res-pp-lbl">per person · estimated</div>
+                <div class="result-pp-lbl" id="res-pp-lbl">estimated</div>
               </div>
-              <div id="upsell-tip" class="upsell-tip" style="display:none;flex:1;min-width:200px"></div>
+              <div style="text-align:center">
+                <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px">Group Total</div>
+                <div style="font-size:40px;font-weight:900;color:var(--text);line-height:1;letter-spacing:-.02em" id="res-total-num">—</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:4px">tax included</div>
+              </div>
+              <div id="upsell-tip" class="upsell-tip" style="display:none;flex:1;min-width:200px;align-self:center"></div>
             </div>
             <hr class="result-divider"/>
             <div id="res-breakdown"></div>
@@ -512,60 +521,83 @@ document.addEventListener('click',e=>{if(!e.target.closest('.nav-dropdown'))docu
 function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
 document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
 
+// ── CORE HELPERS (defined first so everything can use them) ──
+function ds(d){ return d.toISOString().split('T')[0] }
+const isWE  = d => d.getDay()===0 || d.getDay()===6;
+const isHol = d => HOLIDAYS.has(ds(d));
+const isWD  = d => !isWE(d);
+const isSat = d => d.getDay()===6;
+const isSun = d => d.getDay()===0;
+
 // ── HOLIDAYS ──────────────────────────────────────────────
 const HOLIDAYS = new Set(['2026-01-01','2026-02-16','2026-04-03','2026-04-06','2026-05-18','2026-07-01','2026-08-03','2026-09-07','2026-10-12','2026-12-25','2026-12-26']);
 const HOL_NAMES = {'2026-01-01':"New Year's Day",'2026-02-16':'Family Day','2026-04-03':'Good Friday','2026-04-06':'Easter Monday','2026-05-18':'Victoria Day','2026-07-01':'Canada Day','2026-08-03':'Civic Holiday','2026-09-07':'Labour Day','2026-10-12':'Thanksgiving','2026-12-25':'Christmas Day','2026-12-26':'Boxing Day'};
 
-// ── DATE RANGE ────────────────────────────────────────────
-function getSelectedDates(){
-  const startVal = document.getElementById('est-date-start')?.value;
-  const endVal   = document.getElementById('est-date-end')?.value;
-  if(!startVal) return [];
-  const start = new Date(startVal+'T12:00:00');
-  const end   = endVal ? new Date(endVal+'T12:00:00') : start;
-  if(end < start) return [start];
-  const dates = [];
-  for(let d=new Date(start); d<=end; d.setDate(d.getDate()+1)){
-    dates.push(new Date(d));
-  }
-  return dates;
+// ── CARD TYPE STATE ───────────────────────────────────────
+let selectedCardType = 'halfday';
+let splitDaySelected = false;
+
+function goToEstimator(type){
+  // Activate the matching button in the estimator
+  document.querySelectorAll('.card-type-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.type===type);
+  });
+  selectedCardType = type;
+  splitDaySelected = false;
+  const splitCheck = document.getElementById('split-day-check');
+  if(splitCheck) splitCheck.checked = false;
+
+  const splitUI = document.getElementById('split-day-ui');
+  if(splitUI) splitUI.style.display = type==='fullday' ? 'block' : 'none';
+  const dateSection = document.getElementById('date-range-section');
+  if(dateSection) dateSection.style.display = type==='local' ? 'none' : 'block';
+
+  // Scroll to estimator
+  const el = document.getElementById('estimator');
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+
+  // Focus first empty field in order: riders → location → dates
+  setTimeout(()=>{
+    const riders = document.getElementById('est-riders');
+    const loc    = document.getElementById('est-location');
+    const start  = document.getElementById('est-date-start');
+    if(riders && !riders.value) riders.focus();
+    else if(loc && !loc.value) loc.focus();
+    else if(start && !start.value && type!=='local') start.focus();
+  }, 500);
+
+  runEstimate();
 }
 
-function updateDateSummary(){
-  const dates = getSelectedDates();
-  const el = document.getElementById('date-range-summary');
-  if(!el) return;
-  if(!dates.length){ el.innerHTML=''; return; }
-  const n = dates.length;
-  const holDays = dates.filter(d=>HOLIDAYS.has(ds(d)));
-  const weDays  = dates.filter(d=>isWE(d)).length;
-  let txt = `<strong>${n} day${n>1?'s':''}</strong> selected`;
-  if(weDays>0) txt += ` · ${weDays} weekend day${weDays>1?'s':''}`;
-  if(holDays.length) txt += ` · includes <span style="color:var(--pink)">${holDays.map(d=>HOL_NAMES[ds(d)]||'Holiday').join(', ')}</span>`;
-  el.innerHTML = txt;
+function selectCardType(type, btn){
+  selectedCardType = type;
+  splitDaySelected = false;
+  const splitCheck = document.getElementById('split-day-check');
+  if(splitCheck) splitCheck.checked = false;
+  document.querySelectorAll('.card-type-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const splitUI = document.getElementById('split-day-ui');
+  if(splitUI) splitUI.style.display = type==='fullday' ? 'block' : 'none';
+  const dateSection = document.getElementById('date-range-section');
+  if(dateSection) dateSection.style.display = type==='local' ? 'none' : 'block';
+  runEstimate();
 }
 
 // ── PRICING CONSTANTS ─────────────────────────────────────
 const P = {
-  single:600,full:1000,split:250,wknd:250,
-  dbl_wkd:1750,full_wkd:2100,tri_wk:2500,hol_wkd:3000,five:4500,
-  dist_mid:100,dist_far:200,
+  single:600, full:1000, split:250, wknd:250,
+  dbl_wkd:1750, full_wkd:2100, tri_wk:2500, hol_wkd:3000, five:4500,
+  dist_mid:100, dist_far:200,
 };
 
-function ds(d){ return d.toISOString().split('T')[0] }
-const isWE  = d=>d.getDay()===0||d.getDay()===6;
-const isHol = d=>HOLIDAYS.has(ds(d));
-const isWD  = d=>!isWE(d);
-const isSat = d=>d.getDay()===6;
-const isSun = d=>d.getDay()===0;
-
+// ── PACKAGE CALCULATION ───────────────────────────────────
 function calcPackage(dates){
   const sorted=[...dates].sort((a,b)=>a-b);
   const n=sorted.length;
   if(!n) return null;
   const weDays=sorted.filter(d=>isWE(d)).length;
   const holDays=sorted.filter(d=>isHol(d)).length;
-  const wdDays=sorted.filter(d=>isWD(d)).length;
+  const wdDays=n-weDays;
   const hasSat=sorted.some(d=>isSat(d));
   const hasSun=sorted.some(d=>isSun(d));
   const spanDays=Math.round((sorted[n-1]-sorted[0])/86400000)+1;
@@ -573,82 +605,67 @@ function calcPackage(dates){
   let pkg='',base=0,lines=[],tip='';
 
   if(n===1){
-    const d=sorted[0];
-    const isSpecial=isWE(d)||isHol(d);
-    if(isSpecial){
-      pkg='Single Session (Weekend/Holiday)';
-      base=P.single+P.wknd;
-      lines=[{l:'Single session',v:P.single},{l:isHol(d)?`Holiday premium (${HOL_NAMES[ds(d)]||'Holiday'})`:'Weekend premium',v:P.wknd,t:'charge'}];
-    } else {
-      pkg='Single Session';base=P.single;
-      lines=[{l:'Single session — 1 time slot',v:P.single}];
-    }
+    const d=sorted[0]; const isSpecial=isWE(d)||isHol(d);
+    if(isSpecial){ pkg='Single Session (Weekend/Holiday)'; base=P.single+P.wknd; lines=[{l:'Single session',v:P.single},{l:isHol(d)?`Holiday premium (${HOL_NAMES[ds(d)]||'Holiday'})`:'Weekend premium',v:P.wknd,t:'charge'}]; }
+    else { pkg='Single Session'; base=P.single; lines=[{l:'Single session — 1 time slot',v:P.single}]; }
     tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_halfday)||'<strong>Tip:</strong> Upgrading to a full day is only +$400 and gives everyone twice the time on the water.';
   } else if(n===2){
-    if(anyHol&&(hasSat||hasSun)){
-      pkg='Holiday Weekend (2 days)';base=Math.round(P.hol_wkd*2/3);
-      lines=[{l:'2-day holiday weekend rate',v:base}];
-    } else if(hasSat&&hasSun){
-      pkg='Full Weekend';base=P.full_wkd;
-      const comp=(P.full+P.wknd)*2;
-      lines=[{l:'2 weekend full days (2 × $1,250)',v:comp},{l:'Multi-day saving',v:P.full_wkd-comp,t:'saving'}];
-    } else if(wdDays===2){
-      pkg='Double Weekday';base=P.dbl_wkd;
-      lines=[{l:'2 weekday full days (2 × $1,000)',v:2000},{l:'Multi-day saving',v:P.dbl_wkd-2000,t:'saving'}];
-    } else {
-      pkg='2-Day Session';base=P.full+(P.full+P.wknd);
-      lines=[{l:'Weekday full day',v:P.full},{l:'Weekend full day',v:P.full+P.wknd}];
-    }
+    if(anyHol&&(hasSat||hasSun)){ pkg='Holiday Weekend (2 days)'; base=Math.round(P.hol_wkd*2/3); lines=[{l:'2-day holiday weekend rate',v:base}]; }
+    else if(hasSat&&hasSun){ pkg='Full Weekend'; base=P.full_wkd; const comp=(P.full+P.wknd)*2; lines=[{l:'2 weekend full days (2 × $1,250)',v:comp},{l:'Multi-day saving',v:P.full_wkd-comp,t:'saving'}]; }
+    else if(wdDays===2){ pkg='Double Weekday'; base=P.dbl_wkd; lines=[{l:'2 weekday full days (2 × $1,000)',v:2000},{l:'Multi-day saving',v:P.dbl_wkd-2000,t:'saving'}]; }
+    else { pkg='2-Day Session'; base=P.full+(P.full+P.wknd); lines=[{l:'Weekday full day',v:P.full},{l:'Weekend full day',v:P.full+P.wknd}]; }
   } else if(n===3){
-    if(anyHol&&hasSat&&hasSun){
-      pkg='Holiday Weekend';base=P.hol_wkd;
-      lines=[{l:'Holiday weekend — Fri/Mon + Sat + Sun',v:P.hol_wkd}];
-    } else if(wdDays===3){
-      pkg='3 Day Work Week';base=P.tri_wk;
-      lines=[{l:'3 weekday full days (3 × $1,000)',v:3000},{l:'Multi-day saving',v:P.tri_wk-3000,t:'saving'}];
-    } else {
-      pkg='3-Day Session';
-      const comp=wdDays*P.full+weDays*(P.full+P.wknd);
-      base=P.tri_wk+(weDays>0?weDays*P.wknd:0);
-      lines=[{l:`${wdDays} weekday + ${weDays} weekend day(s)`,v:comp}];
-      if(base<comp) lines.push({l:'Multi-day saving',v:base-comp,t:'saving'});
-      else base=comp;
-    }
+    if(anyHol&&hasSat&&hasSun){ pkg='Holiday Weekend'; base=P.hol_wkd; lines=[{l:'Holiday weekend — Fri/Mon + Sat + Sun',v:P.hol_wkd}]; }
+    else if(wdDays===3){ pkg='3 Day Work Week'; base=P.tri_wk; lines=[{l:'3 weekday full days (3 × $1,000)',v:3000},{l:'Multi-day saving',v:P.tri_wk-3000,t:'saving'}]; }
+    else { pkg='3-Day Session'; const comp=wdDays*P.full+weDays*(P.full+P.wknd); base=Math.min(comp,P.tri_wk+(weDays*P.wknd)); lines=[{l:`${wdDays} weekday + ${weDays} weekend day(s)`,v:comp}]; if(base<comp) lines.push({l:'Multi-day saving',v:base-comp,t:'saving'}); }
   } else if(n>=4&&n<=5&&spanDays<=7){
-    pkg='5-Day Week';base=P.five;
-    const comp=wdDays*P.full+weDays*(P.full+P.wknd);
-    lines=[{l:`${n} full days`,v:comp},{l:'Multi-day saving',v:-(comp-P.five),t:'saving'}];
+    pkg='5-Day Week'; base=P.five; const comp=wdDays*P.full+weDays*(P.full+P.wknd); lines=[{l:`${n} full days`,v:comp},{l:'Multi-day saving',v:-(comp-P.five),t:'saving'}];
   } else {
-    pkg=`${n}-Day Custom`;base=0;
-    const wdC=sorted.filter(d=>isWD(d)).length;
-    const weC=sorted.filter(d=>isWE(d)||isHol(d)).length;
+    pkg=`${n}-Day Custom`; const wdC=sorted.filter(d=>isWD(d)).length; const weC=n-wdC; base=wdC*P.full+weC*(P.full+P.wknd);
     if(wdC) lines.push({l:`${wdC} weekday session${wdC>1?'s':''}`,v:wdC*P.full});
     if(weC) lines.push({l:`${weC} weekend/holiday session${weC>1?'s':''}`,v:weC*(P.full+P.wknd)});
-    base=wdC*P.full+weC*(P.full+P.wknd);
   }
   return {pkg,base,lines,tip,anyHol,holDays,sorted,n,weDays,wdDays};
 }
 
-// ── POSTAL / CITY → DISTANCE ──────────────────────────────
+// ── DISTANCE LOOKUP ───────────────────────────────────────
 function getDistBracket(loc){
   if(!loc||loc.trim().length<2) return -1;
   const up=loc.toUpperCase().replace(/\s/g,'');
-  const fsa=up.match(/^([A-Z]\d[A-Z])/)?.[1]||up.match(/([A-Z]\d[A-Z])/)?.[1];
-  if(fsa){
-    const first=fsa[0];
-    if(first==='K'){return parseInt(fsa[1])<=4?0:1;}
-    if(first==='L'||first==='M') return 1;
-    if(first==='N'||first==='P') return 2;
-    return 1;
-  }
+  const fsa=(up.match(/^([A-Z]\d[A-Z])/)||up.match(/([A-Z]\d[A-Z])/))?.[1];
+  if(fsa){ const f=fsa[0]; if(f==='K') return parseInt(fsa[1])<=4?0:1; if(f==='L'||f==='M') return 1; if(f==='N'||f==='P') return 2; return 1; }
   const low=loc.toLowerCase();
-  const near=['manotick','ottawa','kanata','nepean','barrhaven','gloucester','stittsville','richmond','carleton place','smiths falls','perth','almonte','arnprior','embrun','rockland','kemptville','osgoode','greely','metcalfe'];
-  const mid=['kingston','belleville','brockville','cornwall','prescott','gananoque','picton','trenton','cobourg','port hope','peterborough','kawartha','haliburton','huntsville','renfrew','pembroke','petawawa','bancroft','minden','calabogie','white lake','lanark','merrickville','westport','rideau lakes'];
-  const far=['sudbury','sault','thunder bay','north bay','timmins','kenora','parry sound','barrie','collingwood','owen sound','toronto','mississauga','brampton','hamilton','london','windsor'];
-  if(near.some(c=>low.includes(c))) return 0;
-  if(mid.some(c=>low.includes(c))) return 1;
-  if(far.some(c=>low.includes(c))) return 2;
+  if(['manotick','ottawa','kanata','nepean','barrhaven','gloucester','stittsville','richmond','carleton place','smiths falls','perth','almonte','arnprior','embrun','rockland','kemptville','osgoode','greely','metcalfe'].some(c=>low.includes(c))) return 0;
+  if(['kingston','belleville','brockville','cornwall','prescott','gananoque','picton','trenton','cobourg','port hope','peterborough','kawartha','haliburton','huntsville','renfrew','pembroke','petawawa','bancroft','minden','calabogie','white lake','lanark','merrickville','westport','rideau lakes'].some(c=>low.includes(c))) return 1;
+  if(['sudbury','sault','thunder bay','north bay','timmins','kenora','parry sound','barrie','collingwood','owen sound','toronto','mississauga','brampton','hamilton','london','windsor'].some(c=>low.includes(c))) return 2;
   return -1;
+}
+
+// ── DATE RANGE ────────────────────────────────────────────
+function getSelectedDates(){
+  const startVal=document.getElementById('est-date-start')?.value;
+  const endVal=document.getElementById('est-date-end')?.value;
+  if(!startVal) return [];
+  const start=new Date(startVal+'T12:00:00');
+  const end=endVal?new Date(endVal+'T12:00:00'):start;
+  if(end<start) return [start];
+  const dates=[];
+  for(let d=new Date(start);d<=end;d.setDate(d.getDate()+1)) dates.push(new Date(d));
+  return dates;
+}
+
+function updateDateSummary(){
+  const dates=getSelectedDates();
+  const el=document.getElementById('date-range-summary');
+  if(!el) return;
+  if(!dates.length){el.innerHTML='';return;}
+  const n=dates.length;
+  const holDays=dates.filter(d=>isHol(d));
+  const weDays=dates.filter(d=>isWE(d)).length;
+  let txt=`<strong>${n} day${n>1?'s':''}</strong> selected`;
+  if(weDays>0) txt+=` · ${weDays} weekend day${weDays>1?'s':''}`;
+  if(holDays.length) txt+=` · includes <span style="color:var(--pink);font-weight:700">${holDays.map(d=>HOL_NAMES[ds(d)]||'Holiday').join(', ')}</span>`;
+  el.innerHTML=txt;
 }
 
 // ── NUDGES ────────────────────────────────────────────────
@@ -658,7 +675,7 @@ function renderNudges(res,riders){
   if(n===1) nudges.push({name:'Add a second day',sub:'2 weekdays = Double Weekday $1,750 — save $250 vs. booking separately',badge:'save',badgeText:'Save $250'});
   if(n===2&&pkg==='Double Weekday') nudges.push({name:'Add a 3rd weekday',sub:'3 Day Work Week — $2,500 total · only $750 more for a full extra day',badge:'save',badgeText:'Best per-day value'});
   if(n===2&&pkg==='Full Weekend') nudges.push({name:'Add Friday or Monday',sub:'Holiday Weekend — $3,000 for 3 full days',badge:'best',badgeText:'Holiday Weekend'});
-  if(n>=3&&n<5){const pp=riders?Math.round(4500/riders):'';nudges.push({name:'Go for 5 days',sub:`5 Day Week — $4,500${pp?' · ~$'+pp.toLocaleString()+'/person total':''} · save $1,000`,badge:'best',badgeText:'🔥 Save $1,000'});}
+  if(n>=3&&n<5){const pp=riders?'~$'+Math.round(4500/riders).toLocaleString()+'/person':'';nudges.push({name:'Go for 5 days',sub:`5 Day Week — $4,500 ${pp} · save $1,000`,badge:'best',badgeText:'🔥 Save $1,000'});}
   const sec=document.getElementById('nudge-section');
   const cards=document.getElementById('nudge-cards');
   if(!nudges.length){sec.style.display='none';return;}
@@ -666,18 +683,29 @@ function renderNudges(res,riders){
   cards.innerHTML=nudges.map(n=>`<div class="nudge-card${n.badge==='best'?' best-val':''}"><div><div class="nudge-name">${n.name}</div><div class="nudge-sub">${n.sub}</div></div><div class="nudge-badge ${n.badge}">${n.badgeText}</div></div>`).join('');
 }
 
+// ── GROUP SIZE TIP ────────────────────────────────────────
+function groupSizeNote(riders){
+  const C=typeof CONTENT!=='undefined'?CONTENT:{};
+  if(riders===1) return C.pricing_gs_solo||'💡 <strong>Solo rider:</strong> Drop-In ($50/turn) is your best option.';
+  if(riders===2) return C.pricing_gs_pair||'💡 <strong>Two riders:</strong> Drop-In or split a half day at $300 each.';
+  if(riders===3) return C.pricing_gs_small||'✅ <strong>Good size:</strong> Half day splits to $200/person.';
+  if(riders===4) return C.pricing_gs_good||'✅ <strong>Great group:</strong> $150/person for a half day.';
+  if(riders>=5&&riders<=6) return C.pricing_gs_ideal||'🎯 <strong>Ideal group size:</strong> Sweet spot for value and time on the water.';
+  return C.pricing_gs_large||'⚠️ <strong>Large group:</strong> Consider booking 2 blocks.';
+}
+
 // ── MAIN RUNNER ───────────────────────────────────────────
 function runEstimate(){
   updateDateSummary();
-  const splitCheck = document.getElementById('split-day-check');
-  splitDaySelected = splitCheck ? splitCheck.checked : false;
+
+  const splitCheck=document.getElementById('split-day-check');
+  splitDaySelected=splitCheck?splitCheck.checked:false;
+
+  const splitUI=document.getElementById('split-day-ui');
+  if(splitUI) splitUI.style.display=selectedCardType==='fullday'?'block':'none';
 
   const riders=parseInt(document.getElementById('est-riders')?.value)||0;
   const loc=document.getElementById('est-location')?.value.trim()||'';
-
-  // Show split day UI when fullday selected
-  const splitUI=document.getElementById('split-day-ui');
-  if(splitUI) splitUI.style.display=selectedCardType==='fullday'?'block':'none';
 
   if(!riders){
     document.getElementById('est-result').style.display='none';
@@ -686,26 +714,23 @@ function runEstimate(){
     return;
   }
 
-  // ── LOCAL DROP-IN ─────────────────────────────────────
+  // ── LOCAL DROP-IN ────────────────────────────────────
   if(selectedCardType==='local'){
-    const setsPerPerson=2,pricePerSet=50;
-    const totalSets=riders*setsPerPerson;
-    const base=Math.max(200,totalSets*pricePerSet);
-    const pp=Math.round(base/riders);
-    document.getElementById('res-pp-num').textContent=pp.toLocaleString();
-    document.getElementById('res-pp-lbl').textContent=`per person · ${riders} rider${riders>1?'s':''} · Drop-In (est. ${setsPerPerson} turns each)`;
-    let bk=`<div class="res-line"><span class="lbl">$50/person per turn × ${totalSets} turns</span><span class="val">$${(totalSets*pricePerSet).toLocaleString()}</span></div>`;
-    if(base>totalSets*pricePerSet) bk+=`<div class="res-line charge"><span class="lbl">Minimum booking applied</span><span class="val">$200 min</span></div>`;
-    bk+=`<div class="res-line total"><span class="lbl">Total (estimated)</span><span class="val">$${base.toLocaleString()}</span></div>`;
-    document.getElementById('res-breakdown').innerHTML=bk;
-    const tipEl=document.getElementById('upsell-tip');
-    const localTip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_local)||'<strong>Rideau River only</strong> — available when the boat is already out locally.';
-    const gsNote=groupSizeNote(riders);
-    tipEl.innerHTML=localTip+(gsNote?'<br><br>'+gsNote:'');
-    tipEl.style.display='block';
-    document.getElementById('res-note').textContent='Estimate based on 2 turns per person. $200 minimum applies. Location: Rideau River — Manotick area.';
-    document.getElementById('est-result').style.display='block';
-    document.getElementById('tubing-check').style.display='none';
+    const turnsEach=2,price=50;
+    const total=Math.max(200,riders*turnsEach*price);
+    const pp=Math.round(total/riders);
+    renderResult({
+      ppNum:pp, ppLabel:`per person · ${riders} rider${riders>1?'s':''} · Drop-In (est. ${turnsEach} turns each)`,
+      total, pkg:'Drop-In',
+      lines:[
+        {l:`$50/person per turn × ${riders*turnsEach} turns`,v:riders*turnsEach*price},
+        ...(total>riders*turnsEach*price?[{l:'Minimum booking applied',v:0,t:'note'}]:[]),
+      ],
+      note:'Estimate based on 2 turns per person. $200 minimum. Rideau River — Manotick area.',
+      tip:(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_local)||'<strong>Rideau River only</strong> — available when the boat is already out locally. Check the booking calendar or follow us on Instagram.',
+      gsNote:groupSizeNote(riders),
+      tubing:false,
+    });
     document.getElementById('nudge-section').style.display='none';
     return;
   }
@@ -726,61 +751,65 @@ function runEstimate(){
   // Half day override
   if(selectedCardType==='halfday'){
     pkg=dates.length===1?(isWE(dates[0])||isHol(dates[0])?'Single Session (Weekend/Holiday)':'Single Session'):`${dates.length} × Single Session`;
-    base=dates.reduce((sum,d)=>sum+(isWE(d)||isHol(d)?P.single+P.wknd:P.single),0);
-    lines=dates.length===1
-      ?[{l:'Single session — 1 time slot',v:P.single},...(isWE(dates[0])||isHol(dates[0])?[{l:'Weekend/Holiday premium',v:P.wknd,t:'charge'}]:[])]
-      :[{l:`${dates.length} half-day sessions`,v:base}];
-    tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_halfday)||'<strong>Tip:</strong> Upgrading to a full day is only +$400 and gives everyone twice the time on the water.';
+    base=dates.reduce((s,d)=>s+(isWE(d)||isHol(d)?P.single+P.wknd:P.single),0);
+    lines=dates.length===1?[{l:'Single session — 1 time slot',v:P.single},...(isWE(dates[0])||isHol(dates[0])?[{l:'Weekend/Holiday premium',v:P.wknd,t:'charge'}]:[])]:[{l:`${dates.length} half-day sessions`,v:base}];
+    tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_halfday)||'<strong>Tip:</strong> Upgrading to a full day is only +$400 and gives everyone twice the time.';
   }
 
-  // Full day split day premium
+  // Split day premium
   if(selectedCardType==='fullday'&&splitDaySelected){
-    const splitCount=dates.length;
-    base+=P.split*splitCount;
-    lines.push({l:`Morning + Evening split premium (×${splitCount})`,v:P.split*splitCount,t:'charge'});
-    tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_splitday)||'<strong>Best conditions tip:</strong> Morning + evening gives you glassy water both times.';
+    base+=P.split*dates.length;
+    lines.push({l:`Morning + Evening split (×${dates.length})`,v:P.split*dates.length,t:'charge'});
+    tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_splitday)||'<strong>Best conditions:</strong> Morning + evening gives you glassy water both times.';
   }
 
   // Distance
   const db=getDistBracket(loc);
   const dc=db===0?0:db===1?P.dist_mid:db===2?P.dist_far:0;
-  const dlabel=db===0?'Local — no travel surcharge':db===1?'Travel surcharge (1.5–3hr from Manotick)':db===2?'Travel surcharge (3–6hr from Manotick)':'Travel surcharge (TBC — confirmed on inquiry)';
-  if(dc>0){lines.push({l:dlabel,v:dc,t:'charge'});base+=dc;}
-  else if(db===0) lines.push({l:dlabel,v:0,t:'note'});
+  if(dc>0){lines.push({l:db===1?'Travel surcharge (1.5–3hr from Manotick)':'Travel surcharge (3–6hr from Manotick)',v:dc,t:'charge'});base+=dc;}
+  else if(db===0) lines.push({l:'Local — no travel surcharge',v:0,t:'note'});
   else if(loc.length>1&&db===-1) lines.push({l:'Travel surcharge: TBC — confirmed when we reply',v:0,t:'note'});
 
   if(anyHol){
-    const holNames=dates.filter(d=>isHol(d)).map(d=>HOL_NAMES[ds(d)]||'Holiday').join(', ');
-    lines.push({l:`Includes: ${holNames}`,v:0,t:'note'});
+    const hNames=dates.filter(d=>isHol(d)).map(d=>HOL_NAMES[ds(d)]||'Holiday').join(', ');
+    lines.push({l:`Includes: ${hNames}`,v:0,t:'note'});
   }
 
-  const total=base;
-  const pp=Math.round(total/riders);
+  const noteLines=[];
+  if(db===-1&&loc.length>1) noteLines.push("Distance TBC — confirmed in our reply.");
+  noteLines.push('Estimate assumes one full session per date. 30% deposit secures your date.');
+
+  renderResult({
+    ppNum:Math.round(base/riders),
+    ppLabel:`per person · ${riders} rider${riders>1?'s':''} · ${pkg}`,
+    total:base, pkg,lines,
+    note:noteLines.join(' '),
+    tip, gsNote:groupSizeNote(riders), tubing:true,
+  });
+  renderNudges(res,riders);
+}
+
+// ── RENDER RESULT ─────────────────────────────────────────
+function renderResult({ppNum,ppLabel,total,pkg,lines,note,tip,gsNote,tubing}){
+  document.getElementById('res-pp-num').textContent=ppNum.toLocaleString();
+  document.getElementById('res-pp-lbl').textContent=ppLabel;
+  document.getElementById('res-total-num').textContent='$'+total.toLocaleString();
 
   const bk=lines.map(l=>{
     if(l.t==='note') return `<div class="res-line"><span class="lbl" style="color:var(--pink)">★ ${l.l}</span><span></span></div>`;
     const cls=l.t==='saving'?' saving':l.t==='charge'?' charge':'';
-    const valStr=l.v===0?'':l.t==='saving'?`−$${Math.abs(l.v).toLocaleString()}`:l.t==='charge'?`+$${l.v.toLocaleString()}`:`$${l.v.toLocaleString()}`;
-    return `<div class="res-line${cls}"><span class="lbl">${l.l}</span><span class="val">${valStr}</span></div>`;
-  }).join('')+`<div class="res-line total"><span class="lbl">Total</span><span class="val">$${total.toLocaleString()}</span></div>`;
+    const v=l.v===0?'':l.t==='saving'?`−$${Math.abs(l.v).toLocaleString()}`:l.t==='charge'?`+$${l.v.toLocaleString()}`:`$${l.v.toLocaleString()}`;
+    return `<div class="res-line${cls}"><span class="lbl">${l.l}</span><span class="val">${v}</span></div>`;
+  }).join('')+`<div class="res-line total"><span class="lbl">Total <em style="font-weight:400;font-size:12px">(tax incl.)</em></span><span class="val">$${total.toLocaleString()}</span></div>`;
   document.getElementById('res-breakdown').innerHTML=bk;
 
-  document.getElementById('res-pp-num').textContent=pp.toLocaleString();
-  document.getElementById('res-pp-lbl').textContent=`per person · ${riders} rider${riders>1?'s':''} · ${pkg}`;
-
   const tipEl=document.getElementById('upsell-tip');
-  const gsNote=groupSizeNote(riders);
   const fullTip=[tip,gsNote].filter(Boolean).join('<br><br>');
   if(fullTip){tipEl.innerHTML=fullTip;tipEl.style.display='block';}else tipEl.style.display='none';
 
-  const noteLines=[];
-  if(db===-1&&loc.length>1) noteLines.push("Distance surcharge TBC — we'll confirm in our reply.");
-  noteLines.push('Estimate assumes one full session per date. Final price confirmed on booking. 30% deposit secures your date.');
-  document.getElementById('res-note').textContent=noteLines.join(' ');
-
+  document.getElementById('res-note').textContent=note;
   document.getElementById('est-result').style.display='block';
-  document.getElementById('tubing-check').style.display='block';
-  renderNudges(res,riders);
+  document.getElementById('tubing-check').style.display=tubing?'block':'none';
 }
 </script>
 </body>
