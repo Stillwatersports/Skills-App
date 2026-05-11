@@ -126,34 +126,34 @@ const CONTENT = {
   pricing_stat3_lbl:    "Gear included",
 
   // Pass / Turn / Block explainer
-  pricing_ptb_eyebrow:  "A Day in the Life of a Waterskier",
-  pricing_ptb_h2_1:     "Time Management",
-  pricing_ptb_h2_2:     " ",
+  pricing_ptb_eyebrow:   "A Day in the Life of a Waterskier",
+  pricing_ptb_h2_1:      "Time Management",
+  pricing_ptb_h2_2:      " ",
   pricing_ptb_pass_num:  "01",
   pricing_ptb_pass_title:"Pass",
-  pricing_ptb_pass_desc: "Typically 3 to 4 minutes. A complete <i>Turn</i> is made up of 6–8 <I>Passes</I>, giving each rider a chance to practice, progress, rest, receive feedback, and go again before wrapping up their <i>Turn.</i>",
+  pricing_ptb_pass_desc: "Typically 3 to 4 minutes. A complete <i>Turn</i> is made up of 6–8 <i>Passes</i>, giving each rider a chance to practice, progress, rest, receive feedback, and go again before wrapping up their <i>Turn.</i>",
   pricing_ptb_turn_num:  "02",
   pricing_ptb_turn_title:"Turn",
-  pricing_ptb_turn_desc: "20-30 minutes on water including occasional stops for coaching notes and to catch your breath. 2-4 turns in a day is <i> A Lot </i> of action! Caution: muscles may be sore the next day!.",
+  pricing_ptb_turn_desc: "20-30 minutes on water including occasional stops for coaching notes and to catch your breath. 2-4 turns in a day is <i>A Lot</i> of action! Caution: muscles may be sore the next day!",
   pricing_ptb_block_num: "03",
   pricing_ptb_block_title:"Block",
-  pricing_ptb_block_desc:" 4 Hours - Morning, Afternoon, or Evening. We can run 2–3 turns per hour. We offer 2 out of 3 blocks per day with a 1 hour break between consecutive time blocks i.e [ afternoon + evening ]",
+  pricing_ptb_block_desc:"4 Hours — Morning, Afternoon, or Evening. We can run 2–3 turns per hour. We offer 2 out of 3 blocks per day with a 1 hour break between consecutive time blocks i.e. [afternoon + evening]",
 
   // Four tier cards
   pricing_tiers_eyebrow: "Flexible Booking Options",
   pricing_tiers_h2_1:    "All Inclusive,",
-  pricing_tiers_h2_2:    "Learn to Ride, or Improve Your Skills - Guaranteed",
+  pricing_tiers_h2_2:    "Learn to Ride, or Improve Your Skills — Guaranteed",
   pricing_tiers_desc:    "Every booking includes the boat, all equipment, fuel, and full coaching time. Use the calculator below to plan for your group.",
   pricing_tier_cta:      "Check Pricing →",
 
   pricing_tier1_eyebrow: "Single Session · 4 hours",
   pricing_tier1_name:    "Half Day",
-  pricing_tier1_desc:    "Single 4-hour block — morning, afternoon, or evening. Perfect first experience for a group of friends or family. Everyone gets solid time on the water. 10% off your next booking",
+  pricing_tier1_desc:    "Single 4-hour block — morning, afternoon, or evening. Perfect first experience for a group of friends or family. Everyone gets solid time on the water. 10% off your next booking.",
 
-  pricing_tier2_eyebrow: "2 x 4 hour sessions ",
+  pricing_tier2_eyebrow: "2 × 4 hour sessions",
   pricing_tier2_name:    "Full Day",
-  pricing_tier2_desc:    "Pick: [Morning + afternoon] , [afternoon + evening] , or upgrade to ride in the [morning + evening] for the best water conditions!",
-  pricing_tier2_split_label: "Split the days sessions (morning + evening) +$250",
+  pricing_tier2_desc:    "Pick: [Morning + afternoon], [afternoon + evening], or upgrade to ride in the [morning + evening] for the best water conditions!",
+  pricing_tier2_split_label: "Split the day's sessions (morning + evening) +$250",
   pricing_tier2_split_tip:   "⭐ Best conditions — water is calm and boat traffic is low in the early morning and evening. Worth every penny.",
 
   pricing_tier3_eyebrow: "Multi-Day · Best value",
@@ -165,9 +165,8 @@ const CONTENT = {
   pricing_tier4_desc:    "A great value option! We are near Manotick. Visit us locally for 15–20 min turns, $50/person, $200 minimum. You come to us. Perfect for local riders and small groups.",
   pricing_tier4_cta:     "Check Availability →",
 
-
   // Estimator UI labels
-  pricing_est_eyebrow:              "Price Calculator ",
+  pricing_est_eyebrow:              "Price Calculator",
   pricing_est_h2_1:                 "See Exactly What",
   pricing_est_h2_2:                 "You Get.",
   pricing_est_desc:                 "Select your session type, # of riders, and dates — we'll calculate your best-fit package and full breakdown.",
@@ -176,7 +175,7 @@ const CONTENT = {
   pricing_est_location_label:       "Your city or postal code",
   pricing_est_location_placeholder: "e.g. Calabogie or K7H 3C3",
   pricing_est_step2_label:          "Step 2 — Select your date(s)",
-  pricing_est_date_hint:            "Tap a date to add it, tap again to remove. Select multiple dates for multi-day packages.",
+  pricing_est_date_hint:            "Select a date to get your estimate.",
   pricing_est_nudge_label:          "💡 You might save more",
   pricing_est_result_label:         "Your estimate",
   pricing_est_tubing_label:         "We might want to include tubing — good to know, I'll follow up about this.",
@@ -199,16 +198,16 @@ const CONTENT = {
   pricing_modal_disclaimer:         "No payment required, yet. We'll reply within 24 hours to confirm details.",
   pricing_modal_submit:             "Send Request →",
   pricing_modal_success_h3:         "Request received!",
-  pricing_modal_success_p:          "We'll be in touch within 24 hours to confirm your session and send a deposit link. Check your inbox, and spam incase you dont see our email!.",
+  pricing_modal_success_p:          "We'll be in touch within 24 hours to confirm your session and send a deposit link. Check your inbox — and spam just in case!",
   pricing_modal_success_btn:        "Back to Pricing",
 
-  // Estimator logic text (group size suggestions & tips)
-  pricing_gs_solo:   "💡 <strong>Solo rider:</strong> Drop-In ($50/turn) is your best option — no minimum and no need to fill the boat.",
-  pricing_gs_pair:   "💡 <strong>Two riders:</strong> Drop-In works great at $50/turn ($200 min). Or book a half day and split $600 — $300 each.",
-  pricing_gs_small:  "✅ <strong>Good size:</strong> A half day at $600 splits to $200/person. Adding a 4th drops it to $150.",
-  pricing_gs_good:   "✅ <strong>Great group:</strong> $150/person for a half day. A full day at $1,000 is $250/person — solid value.",
-  pricing_gs_ideal:  "🎯 <strong>Ideal group size:</strong> Sweet spot for value and time on the water. Full day splits to $167–$200/person.",
-  pricing_gs_large:  "⚠️ <strong>Large group:</strong> Consider booking 2 blocks so turns stay frequent and no one waits long.",
+  // Estimator logic tips (used in JS — edit these to change suggestion text)
+  pricing_gs_solo:      "💡 <strong>Solo rider:</strong> Drop-In ($50/turn) is your best option — no minimum and no need to fill the boat.",
+  pricing_gs_pair:      "💡 <strong>Two riders:</strong> Drop-In works great at $50/turn ($200 min). Or book a half day and split $600 — $300 each.",
+  pricing_gs_small:     "✅ <strong>Good size:</strong> A half day at $600 splits to $200/person. Adding a 4th drops it to $150.",
+  pricing_gs_good:      "✅ <strong>Great group:</strong> $150/person for a half day. A full day at $1,000 is $250/person — solid value.",
+  pricing_gs_ideal:     "🎯 <strong>Ideal group size:</strong> Sweet spot for value and time on the water. Full day splits to $167–$200/person.",
+  pricing_gs_large:     "⚠️ <strong>Large group:</strong> Consider booking 2 blocks so turns stay frequent and no one waits long.",
   pricing_tip_halfday:  "<strong>Tip:</strong> Upgrading to a full day (2 blocks) is only +$400 and gives everyone twice the time on the water.",
   pricing_tip_splitday: "<strong>Best conditions tip:</strong> Morning + evening split gives you glassy water both times. Adds $250 but worth it.",
   pricing_tip_local:    "<strong>Rideau River only</strong> — Drop-In is available when the boat is already out locally. Check the booking calendar or follow us on Instagram for open slots.",
@@ -219,7 +218,6 @@ const CONTENT = {
   pricing_incl_h2_2:    "Just show up.",
   pricing_incl_desc:    "30% deposit secures your date. Full balance due 48 hours before your session. No payment required to submit a request.",
   pricing_incl_cta:     "Book a Session →",
-
 
   // ── SPORTS PAGE ───────────────────────────────────────
   sports_hero_badge:   "All Disciplines · One Coach",
