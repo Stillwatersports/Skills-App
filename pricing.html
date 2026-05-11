@@ -43,7 +43,7 @@ body{-webkit-user-select:none;user-select:none}
 .nudge-badge.best{background:rgba(224,64,160,0.15);color:var(--pink)}
 
 /* results */
-.result-card{background:#fff;border-radius:16px;border:1.5px solid rgba(0,200,212,0.2);padding:28px;margin-top:4px}
+.result-card{background:#fff;border-radius:16px;border:1.5px solid var(--pink);padding:28px;margin-top:4px}
 .result-pp{font-size:56px;font-weight:900;color:var(--cyan);line-height:1;letter-spacing:-.03em}
 .result-pp sup{font-size:22px;vertical-align:top;margin-top:12px;font-weight:700}
 .result-pp-lbl{font-size:13px;color:var(--muted);font-weight:600;margin-top:6px}
@@ -857,6 +857,15 @@ function runEstimate(){
     tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_halfday)||'<strong>Tip:</strong> Upgrading to a full day is only +$400 and gives everyone twice the time.';
   }
 
+  // Full day override — force full day pricing (2 blocks) per date
+  if(selectedCardType==='fullday'){
+    pkg=dates.length===1?(isWE(dates[0])||isHol(dates[0])?'Full Day (Weekend/Holiday)':'Full Day'):`${dates.length} × Full Day`;
+    base=dates.reduce((s,d)=>s+(isWE(d)||isHol(d)?P.full+P.wknd:P.full),0);
+    lines=dates.length===1
+      ?[{l:'Full day — any 2 time blocks (morning, afternoon, or evening)',v:P.full},...(isWE(dates[0])||isHol(dates[0])?[{l:'Weekend/Holiday premium',v:P.wknd,t:'charge'}]:[])]
+      :[{l:`${dates.length} full days`,v:base}];
+  }
+
   // Split day premium
   if(selectedCardType==='fullday'&&splitDaySelected){
     base+=P.split*dates.length;
@@ -895,62 +904,58 @@ function runEstimate(){
 
 // ── TURN CALCULATOR ───────────────────────────────────────
 // 2.5 turns/hour × 4hr block = 10 turns available per block
-const TURNS_PER_BLOCK = 10;
+const TURNS_PER_BLOCK_MIN = 8;  // 2 turns/hr × 4hr block
+const TURNS_PER_BLOCK_MAX = 12; // 3 turns/hr × 4hr block
 
 function calcTurns(riders, sessionType, numDays){
   if(!riders || riders < 1) return null;
-  const r = Math.min(riders, 9); // cap for calc purposes
+  if(sessionType === 'local') return null;
 
-  if(sessionType === 'local'){
-    return null; // drop-in is explicitly booked per turn
-  }
-
+  const r = Math.min(riders, 9);
   const blocksPerDay = sessionType === 'halfday' ? 1 : 2;
   const totalBlocks  = blocksPerDay * (numDays || 1);
-  const turnsPerBlock = Math.max(1, Math.floor(TURNS_PER_BLOCK / r));
-  const totalTurns   = turnsPerBlock * totalBlocks;
-  const minMins      = totalTurns * 20;
-  const maxMins      = totalTurns * 30;
+
+  const turnsPerBlockMin = Math.max(1, Math.floor(TURNS_PER_BLOCK_MIN / r));
+  const turnsPerBlockMax = Math.max(1, Math.floor(TURNS_PER_BLOCK_MAX / r));
+  const totalTurnsMin    = turnsPerBlockMin * totalBlocks;
+  const totalTurnsMax    = turnsPerBlockMax * totalBlocks;
+  // 25 min per turn
+  const minMins = totalTurnsMin * 25;
+  const maxMins = totalTurnsMax * 25;
 
   return {
-    turnsPerBlock,
-    totalBlocks,
-    totalTurns,
-    blocksPerDay,
-    numDays: numDays || 1,
-    minMins,
-    maxMins,
-    riders: r,
+    turnsPerBlockMin, turnsPerBlockMax,
+    totalBlocks, totalTurnsMin, totalTurnsMax,
+    blocksPerDay, numDays: numDays || 1,
+    minMins, maxMins, riders: r,
   };
 }
 
 function formatTurnsCard(t){
   if(!t) return null;
-  const hoursMin = (t.minMins/60).toFixed(1);
-  const hoursMax = (t.maxMins/60).toFixed(1);
-  const hoursStr = parseFloat(hoursMin)===parseFloat(hoursMax) ? `~${hoursMin}hrs` : `~${hoursMin}–${hoursMax}hrs`;
+  const turnsPerBlock = Math.round((t.turnsPerBlockMin + t.turnsPerBlockMax) / 2);
+  const totalTurns    = Math.round((t.totalTurnsMin + t.totalTurnsMax) / 2);
+  const avgMins       = Math.round((t.minMins + t.maxMins) / 2);
+  const hoursStr      = avgMins >= 60 ? `~${(avgMins/60).toFixed(1)}hrs` : `~${avgMins}min`;
 
   let html = `<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:12px">`;
-  // Rider count
   html += `<div style="text-align:center;min-width:60px"><div style="font-size:32px;font-weight:900;color:var(--text);line-height:1">${t.riders}</div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">rider${t.riders>1?'s':''}</div></div>`;
   html += `<div style="font-size:20px;color:rgba(0,200,212,0.3)">→</div>`;
-  // Turns
-  html += `<div style="text-align:center;min-width:80px"><div style="font-size:32px;font-weight:900;color:var(--cyan);line-height:1">~${t.totalTurns}</div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">turn${t.totalTurns!==1?'s':''} each</div></div>`;
+  html += `<div style="text-align:center;min-width:80px"><div style="font-size:32px;font-weight:900;color:var(--cyan);line-height:1">~${totalTurns}</div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted)">turn${totalTurns!==1?'s':''} each</div></div>`;
   html += `<div style="font-size:20px;color:rgba(0,200,212,0.3)">·</div>`;
-  // Time
   html += `<div><div style="font-size:13px;font-weight:700;color:var(--muted)">25 min per turn</div><div style="font-size:12px;color:var(--muted);margin-top:2px">${hoursStr} on the water per person</div></div>`;
   html += `</div>`;
 
-  // Block breakdown
   if(t.totalBlocks>1){
     html += `<div style="font-size:12px;color:var(--muted);padding-top:10px;border-top:1px solid rgba(0,200,212,0.1)">`;
-    html += `~${t.turnsPerBlock} turn${t.turnsPerBlock!==1?'s':''} per block × ${t.totalBlocks} blocks`;
+    html += `~${turnsPerBlock} turns per block × ${t.totalBlocks} blocks`;
     if(t.numDays>1) html += ` × ${t.numDays} days`;
+    html += ` (avg 2.5 turns/hr × 4hr block)`;
     html += `</div>`;
   }
 
   if(t.riders>=7) html += `<div style="font-size:12px;color:var(--pink);font-weight:600;margin-top:8px">⚠️ Large group — turns rotate quickly. Consider an extra block.</div>`;
-  else if(t.totalTurns===1) html += `<div style="font-size:12px;color:var(--cyan);margin-top:8px">💡 A second block doubles everyone's time on the water.</div>`;
+  else if(t.totalTurnsMax===1) html += `<div style="font-size:12px;color:var(--cyan);margin-top:8px">💡 A second block doubles everyone's time on the water.</div>`;
 
   return html;
 }
