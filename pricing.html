@@ -417,12 +417,17 @@ body{-webkit-user-select:none;user-select:none}
           <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1px solid rgba(0,200,212,0.15)">
             <div class="pkg-name">Half Day <span style="font-size:11px;font-weight:500;color:var(--pink)">Weekend / Holiday</span></div>
             <div class="pkg-when" style="margin-bottom:10px">Morning, Afternoon, or Evening</div>
-            <div class="pkg-price">$850</div>
+            <div class="pkg-price">$750</div>
           </div>
           <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1px solid rgba(0,200,212,0.15)">
             <div class="pkg-name">Full Day</div>
             <div class="pkg-when" style="margin-bottom:10px">[Morning + Afternoon] OR [Afternoon + Evening]</div>
             <div class="pkg-price">$1,000</div>
+          </div>
+          <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1px solid rgba(0,200,212,0.15)">
+            <div class="pkg-name">Full Day <span style="font-size:11px;font-weight:500;color:var(--pink)">Weekend / Holiday</span></div>
+            <div class="pkg-when" style="margin-bottom:10px">Any 2 blocks incl. split — one premium covers all</div>
+            <div class="pkg-price">$1,250</div>
           </div>
           <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan)">
             <div class="pkg-name">Full Day — Split ⭐</div>
@@ -661,7 +666,7 @@ function selectCardType(type, btn){
 
 // ── PRICING CONSTANTS ─────────────────────────────────────
 const P = {
-  single:600, full:1000, split:250, wknd:250,
+  single:600, full:1000, split:250, wknd:250, half_wknd:150,
   dbl_wkd:1750, full_wkd:2100, tri_wk:2500, hol_wkd:3000, five:4500,
   dist_mid:100, dist_far:200,
 };
@@ -682,7 +687,7 @@ function calcPackage(dates){
 
   if(n===1){
     const d=sorted[0]; const isSpecial=isWE(d)||isHol(d);
-    if(isSpecial){ pkg='Single Session (Weekend/Holiday)'; base=P.single+P.wknd; lines=[{l:'Single session',v:P.single},{l:isHol(d)?`Holiday premium (${HOL_NAMES[ds(d)]||'Holiday'})`:'Weekend premium',v:P.wknd,t:'charge'}]; }
+    if(isSpecial){ pkg='Single Session (Weekend/Holiday)'; base=P.single+P.half_wknd; lines=[{l:'Single session',v:P.single},{l:isHol(d)?`Holiday premium (${HOL_NAMES[ds(d)]||'Holiday'})`:'Weekend premium (+$150)',v:P.half_wknd,t:'charge'}]; }
     else { pkg='Single Session'; base=P.single; lines=[{l:'Single session — 1 time slot',v:P.single}]; }
     tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_halfday)||'<strong>Tip:</strong> Upgrading to a full day is only +$400 and gives everyone twice the time on the water.';
   } else if(n===2){
@@ -837,7 +842,7 @@ function runEstimate(){
   // Half day override
   if(selectedCardType==='halfday'){
     pkg=dates.length===1?(isWE(dates[0])||isHol(dates[0])?'Single Session (Weekend/Holiday)':'Single Session'):`${dates.length} × Single Session`;
-    base=dates.reduce((s,d)=>s+(isWE(d)||isHol(d)?P.single+P.wknd:P.single),0);
+    base=dates.reduce((s,d)=>s+(isWE(d)||isHol(d)?P.single+P.half_wknd:P.single),0);
     lines=dates.length===1?[{l:'Single session — 1 time slot',v:P.single},...(isWE(dates[0])||isHol(dates[0])?[{l:'Weekend/Holiday premium',v:P.wknd,t:'charge'}]:[])]:[{l:`${dates.length} half-day sessions`,v:base}];
     tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_halfday)||'<strong>Tip:</strong> Upgrading to a full day is only +$400 and gives everyone twice the time.';
   }
