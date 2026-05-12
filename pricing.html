@@ -150,9 +150,9 @@ body{-webkit-user-select:none;user-select:none}
 
 <!-- HERO -->
 <section class="hero hero-short">
-  <div class="hero-bg" style="background:url('./pricing-hero.jpeg') center/cover no-repeat;background-color:var(--cyan)"></div>
+  <div class="hero-bg" style="background:url('./pricing-hero.jpeg') 60% center/cover no-repeat;background-color:var(--cyan)"></div>
   <div class="hero-coords">N 45°<br>OTTAWA</div>
-  <div class="hero-content" style="margin-left:auto;max-width:660px">
+  <div class="hero-content">
     <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)" data-content="pricing_hero_badge"></div>
     <h1>
       <span class="l1" data-content="pricing_hero_l1"></span>
@@ -410,30 +410,28 @@ body{-webkit-user-select:none;user-select:none}
         <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);margin-bottom:12px">Single Day · We come to you</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
           <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan)">
-            <div class="pkg-name">Half Day</div>
-            <div class="pkg-when" style="margin-bottom:10px">Morning, Afternoon, or Evening</div>
-            <div class="pkg-price">$600</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Half Day</div><div class="pkg-price">$600</div></div>
+            <div class="pkg-when">Morning, Afternoon, or Evening</div>
           </div>
           <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan)">
-            <div class="pkg-name">Half Day <span style="font-size:11px;font-weight:500;color:var(--pink)">Weekend / Holiday</span></div>
-            <div class="pkg-when" style="margin-bottom:10px">Morning, Afternoon, or Evening</div>
-            <div class="pkg-price">$750</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Half Day <span style="font-size:11px;font-weight:500;color:var(--pink)">Wknd/Hol</span></div><div class="pkg-price">$750</div></div>
+            <div class="pkg-when">Morning, Afternoon, or Evening</div>
           </div>
           <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan)">
-            <div class="pkg-name">Full Day</div>
-            <div class="pkg-when" style="margin-bottom:10px">[Morning + Afternoon] OR [Afternoon + Evening]</div>
-            <div class="pkg-price">$1,000</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Full Day</div><div class="pkg-price">$1,000</div></div>
+            <div class="pkg-when">[Morning + Afternoon] OR [Afternoon + Evening]</div>
           </div>
           <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan)">
-            <div class="pkg-name">Full Day <span style="font-size:11px;font-weight:500;color:var(--pink)">Weekend / Holiday</span></div>
-            <div class="pkg-when" style="margin-bottom:10px">Any 2 blocks incl. split — one premium covers all</div>
-            <div class="pkg-price">$1,250</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Full Day <span style="font-size:11px;font-weight:500;color:var(--pink)">Wknd/Hol</span></div><div class="pkg-price">$1,250</div></div>
+            <div class="pkg-when">Any 2 blocks incl. split — one premium covers all</div>
           </div>
-          <div style="padding:16px 20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan)" style="position:relative;padding:16px 20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan)">
-            <div style="position:absolute;top:-10px;left:16px;background:var(--cyan);color:var(--dark);font-size:9px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border-radius:20px">Most Popular</div>
-            <div class="pkg-name" style="color:var(--yellow);text-shadow:-1px -1px 0 var(--cyan),1px -1px 0 var(--cyan),-1px 1px 0 var(--cyan),1px 1px 0 var(--cyan)">Full Day — Split ⭐</div>
-            <div class="pkg-when" style="margin-bottom:10px;color:rgba(255,255,231,0.8)">[Morning + Evening] · Best Conditions · Afternoon Break</div>
-            <div class="pkg-price" style="color:var(--yellow);text-shadow:-1px -1px 0 var(--cyan),1px -1px 0 var(--cyan),-1px 1px 0 var(--cyan),1px 1px 0 var(--cyan)">$1,250</div>
+          <div style="padding:20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan)">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+              <div class="pkg-name" style="color:var(--cyan)">Full Day — Split</div>
+              <div class="pkg-price" style="color:var(--yellow);font-size:20px;font-weight:900;line-height:1">$1,250</div>
+            </div>
+            <div class="pkg-when" style="margin-bottom:12px;color:rgba(255,255,231,0.8)">[Morning + Evening] · Best Conditions · Afternoon Break</div>
+            <div style="display:inline-flex;align-items:center;gap:6px;background:var(--cyan);color:var(--dark);font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:5px 14px;border-radius:20px">⭐ Most Popular ⭐</div>
           </div>
         </div>
       </div>
@@ -458,26 +456,26 @@ body{-webkit-user-select:none;user-select:none}
               <span class="pkg-save">Save $400</span>
             </div>
           </div>
-          <div style="padding:16px 20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan)">
-            <div class="pkg-name" style="color:var(--yellow);text-shadow:-1px -1px 0 var(--cyan),1px -1px 0 var(--cyan),-1px 1px 0 var(--cyan),1px 1px 0 var(--cyan)">3 Day Work Week</div>
-            <div class="pkg-when" style="margin-bottom:10px;color:rgba(255,255,231,0.8)">Any 3 Weekdays · e.g. Mon, Wed, Fri — rest Tue &amp; Thu</div>
-            <div style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:8px">
-              <div class="pkg-price" style="color:var(--yellow);text-shadow:-1px -1px 0 var(--cyan),1px -1px 0 var(--cyan),-1px 1px 0 var(--cyan),1px 1px 0 var(--cyan)">$2,500</div>
-              <span class="pkg-save">Save $500</span>
+          <div style="padding:20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan)">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+              <div class="pkg-name" style="color:var(--cyan)">3 Day Work Week</div>
+              <div class="pkg-price" style="color:var(--yellow);font-size:20px;font-weight:900;line-height:1">$2,500</div>
             </div>
+            <div class="pkg-when" style="margin-bottom:12px;color:rgba(255,255,231,0.8)">Any 3 Weekdays · e.g. Mon, Wed, Fri — rest Tue &amp; Thu</div>
+            <div style="display:inline-flex;align-items:center;gap:6px;background:var(--cyan);color:var(--dark);font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:5px 14px;border-radius:20px">💰 Best Value 💰</div>
           </div>
           <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan)">
-            <div class="pkg-name">Holiday Weekend</div>
-            <div class="pkg-when" style="margin-bottom:10px">Holiday Fri or Mon + [Sat + Sun] — The Perfect Long Weekend!</div>
-            <div class="pkg-price">$3,000</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Holiday Weekend</div><div class="pkg-price">$3,000</div></div>
+            <div class="pkg-when">Holiday Fri or Mon + [Sat + Sun] — The Perfect Long Weekend!</div>
           </div>
-          <div style="position:relative;padding:16px 20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan);grid-column:span 2">
-            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
-              <div><div class="pkg-name" style="color:var(--yellow);text-shadow:-1px -1px 0 var(--cyan),1px -1px 0 var(--cyan),-1px 1px 0 var(--cyan),1px 1px 0 var(--cyan)">🔥 5 Day Week 🔥</div><div class="pkg-when" style="color:rgba(255,255,231,0.8)">Any 5 of 8 days · Weekends too</div></div>
-              <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
-                <div class="pkg-price" style="color:var(--yellow);text-shadow:-1px -1px 0 var(--cyan),1px -1px 0 var(--cyan),-1px 1px 0 var(--cyan),1px 1px 0 var(--cyan)">$4,500</div>
-                <span style="font-size:11px;font-weight:700;color:var(--yellow);background:rgba(0,0,0,0.15);padding:5px 12px;border-radius:20px">Huge Savings! Weekends · Holidays · Split days — all included!</span>
-              </div>
+          <div style="padding:24px 20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan);grid-column:span 2">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+              <div class="pkg-name" style="color:var(--cyan)">5 Day Week</div>
+              <div class="pkg-price" style="color:var(--yellow);font-size:24px;font-weight:900;line-height:1">$4,500</div>
+            </div>
+            <div class="pkg-when" style="margin-bottom:14px;color:rgba(255,255,231,0.8)">Any 5 of 8 days · Weekends too</div>
+            <div style="display:flex;justify-content:center">
+              <div style="display:inline-flex;align-items:center;gap:8px;background:var(--cyan);color:var(--dark);font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:7px 20px;border-radius:20px">🔥 Huge Savings · Weekends · Holidays · Split Days All Included 🔥</div>
             </div>
           </div>
         </div>
@@ -556,7 +554,7 @@ body{-webkit-user-select:none;user-select:none}
   <div class="footer-inner">
     <div class="footer-top">
       <div>
-        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.png" alt="Stillwater Sports" style="height:44px;width:auto;object-fit:contain;border-radius:6px"/></div>
+        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.png" alt="Stillwater Sports"/></div>
         <p class="footer-desc">Private water sports coaching across Ontario cottage country. Six disciplines, all skill levels, all equipment included.</p>
         <div class="footer-social"><a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a><a href="#" class="footer-social-btn">⊙</a></div>
       </div>
