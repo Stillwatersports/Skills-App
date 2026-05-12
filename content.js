@@ -131,7 +131,7 @@ const CONTENT = {
   pricing_ptb_h2_2:      " ",
   pricing_ptb_pass_num:  "01",
   pricing_ptb_pass_title:"Pass",
-  pricing_ptb_pass_desc: "Typically 3 to 4 minutes. A complete <i>Turn</i> is made up of 6–8 <i>Passes</i>, giving each rider a chance to practice, progress, rest, receive feedback, and go again before wrapping up their <i>Turn.</i>",
+  pricing_ptb_pass_desc: "3 to 4 minutes. A complete <i>Turn</i> is made up of 6–8 <i>Passes</i>, giving the rider a chance to practice, progress, rest, receive feedback, and go again before wrapping up their <i>Turn.</i>",
   pricing_ptb_turn_num:  "02",
   pricing_ptb_turn_title:"Turn",
   pricing_ptb_turn_desc: "20-30 minutes on water including occasional stops for coaching notes and to catch your breath. 2-4 turns in a day is <i>A Lot</i> of action! Caution: muscles may be sore the next day!",
@@ -140,8 +140,8 @@ const CONTENT = {
   pricing_ptb_block_desc:"4 Hours — Morning, Afternoon, or Evening. We can run 2–3 turns per hour. We offer 2 out of 3 blocks per day with a 1 hour break between consecutive time blocks i.e. [afternoon + evening]",
 
   // Four tier cards
-  pricing_tiers_eyebrow: "Flexible Booking Options",
-  pricing_tiers_h2_1:    "All Inclusive,",
+  pricing_tiers_eyebrow: "Flexible Options",
+  pricing_tiers_h2_1:    "All Inclusive",
   pricing_tiers_h2_2:    "Learn to Ride, or Improve Your Skills — Guaranteed",
   pricing_tiers_desc:    "Every booking includes the boat, all equipment, fuel, and full coaching time. Use the calculator below to plan for your group.",
   pricing_tier_cta:      "Check Pricing →",
@@ -160,9 +160,9 @@ const CONTENT = {
   pricing_tier3_name:    "Multi-Day",
   pricing_tier3_desc:    "Book 2, 3, or 5 day packages and unlock real savings — up to $1,000 off!",
 
-  pricing_tier4_eyebrow: "Come to Us Special · Rideau River",
+  pricing_tier4_eyebrow: "Come to Us · Rideau River",
   pricing_tier4_name:    "Ride With Us · in Ottawa",
-  pricing_tier4_desc:    "A great value option! We are near Manotick. Visit us locally for 15–20 min turns, $50/person, $200 minimum. You come to us. Perfect for local riders and small groups.",
+  pricing_tier4_desc:    "A great value option! Visit us locally for 15–20 min turns, $50/person, $200 minimum. You come to us. Perfect for local riders and small groups.",
   pricing_tier4_cta:     "Check Availability →",
 
   // Estimator UI labels
