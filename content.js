@@ -29,7 +29,7 @@ const CONTENT = {
   footer_copy:             "© 2026 Christian Richards · Stillwater Sports · All rights reserved",
   footer_region:           "learnwatersports.ca",
   nav_book_btn:            "Book Now",
-  deposit_note:            "30% deposit required. <strong>Non-refundable.</strong> Full payment due 48 hours before session.",
+  deposit_note:            "30% deposit required to reserve dates. <strong>Non-refundable.</strong> Full payment due 48 hours before session.",
 
 
   // ── HOME PAGE ──────────────────────────────────────────
@@ -45,15 +45,15 @@ const CONTENT = {
   home_offers_desc:     "Every session is private, tailored to your group, and built around real progression. Our system guarantees everyone gets up the first run.",
 
   home_offer1_title:    "Boat & Equipment Included",
-  home_offer1_text:     "Professional Sanger DLX ski boat, wakeboards, waterskis, tubes, ropes and life jackets. Show up — everything else is handled.",
+  home_offer1_text:     "World Competition level boat, wakeboards, surfboards, skis, tubes, ropes and life jackets. Show up — everything else is handled.",
   home_offer2_title:    "Beginner to Advanced",
-  home_offer2_text:     "First time on the water to Barefoot skiing and Wakeboard Backflips — every lesson is built around where you are right now.",
+  home_offer2_text:     "First time on the water to Barefoot skiing and Wakeboard Backflips — Thousands of kids and adults learned to ski with us.",
   home_offer3_title:    "Family & Group Sessions",
   home_offer3_text:     "Half-day and full-day options for the whole family. Kids welcome. Safe, structured, and a lot of fun.",
-  home_offer4_title:    "Private Coaching",
-  home_offer4_text:     "Focused one-on-one sessions for slalom, trick skiing, wakeboard and wakesurf with structured progression and video analysis.",
+  home_offer4_title:    "Private Lessons",
+  home_offer4_text:     "Focused one-on-one sessions for learning to ski, slalom, trick ski, wakeboard and wakesurf with structured progression and video analysis.",
   home_offer5_title:    "We Come to Your Lake",
-  home_offer5_text:     "No marina, no trailering your own boat. We load up and drive to you — Calabogie, Rideau Lakes, White Lake, Perth, and beyond.",
+  home_offer5_text:     "No marina, no boat maintenance. We load up and drive to you — Calabogie, Rideau Lakes, White Lake, Perth, Mont Tremblant, Montebello and beyond.",
   home_offer6_title:    "Skills Tracking Included",
   home_offer6_text:     "All students get access to the Stillwater Skills app — earn Bronze to Gold badges and track progress all season long.",
 
