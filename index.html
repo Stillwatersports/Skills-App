@@ -27,7 +27,25 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-9Z296M7ZLP');</script>
 </head>
 <body>
+<!-- INTRO OVERLAY — paste at very top of <body> -->
+<div id="sw-outro" style="position:fixed;inset:0;background:#0a2828;z-index:9998;pointer-events:none;opacity:0;transition:opacity .5s"></div>
 
+<div id="sw-intro" style="position:fixed;inset:0;background:#0a2828;z-index:9999;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden" onclick="swEnter()">
+  <!-- paste the full inner content here -->
+</div>
+
+<script>
+function swEnter(){
+  document.getElementById('sw-outro').style.opacity='1';
+  const i=document.getElementById('sw-intro');
+  i.style.transition='opacity .4s';i.style.opacity='0';
+  setTimeout(()=>i.style.display='none',500);
+}
+setTimeout(swEnter,8000); // auto-skip after 8s
+// Skip on second visit
+if(sessionStorage.getItem('sw-seen')){swEnter()}
+sessionStorage.setItem('sw-seen','1');
+</script>
 <nav>
   <a href="/" class="nav-brand"><img src="./Sports_clear_bg.png" alt="Stillwater Sports" style="height:116px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.3))"/></a>
   <div class="nav-links">
