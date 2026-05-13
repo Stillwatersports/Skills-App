@@ -75,8 +75,8 @@ const CONTENT = {
 
   // ── ABOUT PAGE ────────────────────────────────────────
   about_hero_badge:    "Coach · Athlete · Father",
-  about_hero_l1:       "Passing the Handle",
-  about_hero_l3:       "To the Next Gen...",
+  about_hero_l1:       "Passing",
+  about_hero_l3:       "The Handle",
 
   about_story_eyebrow: "The Story",
   about_story_h2_1:    "Born for",
