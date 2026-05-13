@@ -185,7 +185,7 @@ nav{
 .btn-yellow:hover{opacity:.88}
 
 /* ── SHARED SECTION ── */
-.s{padding:100px 48px;max-width:1200px;margin:0 auto}
+.s{padding:58px 48px;max-width:1200px;margin:0 auto}
 .eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--pink);margin-bottom:16px}
 .big-title{font-size:clamp(32px,4.5vw,64px);font-weight:800;line-height:1.05;letter-spacing:-.03em;color:var(--text)}
 .big-title em{font-style:italic;color:var(--cyan)}
@@ -270,7 +270,7 @@ nav{
 .step-desc{font-size:14px;color:var(--muted);line-height:1.65}
 
 /* ── APP SECTION ── */
-.app-section{background:var(--cyan);padding:100px 48px;position:relative;overflow:hidden}
+.app-section{background:var(--cyan);padding:64px 48px;position:relative;overflow:hidden}
 .app-section::before{content:'';position:absolute;bottom:-40px;right:-40px;width:500px;height:500px;border-radius:50%;background:rgba(0,160,180,0.3);pointer-events:none}
 .app-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;position:relative;z-index:1}
 .app-card{background:var(--white);border-radius:20px;padding:28px;box-shadow:0 24px 80px rgba(0,0,0,0.15)}
@@ -433,8 +433,8 @@ footer{background:var(--cyan);border-top:2px solid var(--pink);padding:80px 48px
   .s{padding:56px 20px}
   .book-section{padding:56px 20px}
   .app-section{padding:64px 20px}
-  .highlight-band{padding:56px 20px}
-  footer{padding:56px 20px 28px}
+  .highlight-band{padding:40px 20px}
+  footer{padding:48px 20px 28px}
 
   /* GRIDS */
   .section-header,.content-grid-2,.app-inner,.book-layout,.highlight-band-inner{grid-template-columns:1fr}
@@ -492,7 +492,7 @@ footer{background:var(--cyan);border-top:2px solid var(--pink);padding:80px 48px
   /* SECTIONS */
   .s{padding:48px 16px}
   .book-section,.app-section,.highlight-band{padding-left:16px;padding-right:16px}
-  footer{padding:48px 16px 24px}
+  footer{padding:32px 16px 24px}
 
   /* PRICING */
   .pricing-price{font-size:42px}
