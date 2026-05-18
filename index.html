@@ -261,9 +261,9 @@
   <div class="s">
     <div class="eyebrow" style="color:var(--cyan)">What Clients Say</div>
     <h2 style="font-size:clamp(32px,5vw,56px);font-weight:800;line-height:1.05;letter-spacing:-.03em;color:var(--yellow);margin-bottom:48px">Real families.<br><em style="color:var(--cyan)">Real sessions.</em></h2>
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
+    <div style="display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;padding-bottom:12px;scrollbar-width:none" class="testimonials-scroll">
 
-      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:16px">
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:16px;min-width:min(420px,85vw);flex-shrink:0;scroll-snap-align:start">
         <div style="color:#f5a623;font-size:15px;letter-spacing:2px">★★★★★</div>
         <p style="font-size:15px;color:rgba(255,255,231,0.85);line-height:1.75;font-style:italic;margin:0">"Christian had our three kids up on skis within the first hour. The patience and encouragement he showed was incredible. We'll absolutely be booking again next summer."</p>
         <div style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.08);padding-top:16px">
@@ -272,7 +272,7 @@
         </div>
       </div>
 
-      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:16px">
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:16px;min-width:min(420px,85vw);flex-shrink:0;scroll-snap-align:start">
         <div style="color:#f5a623;font-size:15px;letter-spacing:2px">★★★★★</div>
         <p style="font-size:15px;color:rgba(255,255,231,0.85);line-height:1.75;font-style:italic;margin:0">"Best cottage experience we've had. Christian showed up on time, had everything ready, and coached each person at their own level. My husband finally got up on one ski!"</p>
         <div style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.08);padding-top:16px">
@@ -281,7 +281,7 @@
         </div>
       </div>
 
-      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:16px">
+      <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:16px;min-width:min(420px,85vw);flex-shrink:0;scroll-snap-align:start">
         <div style="color:#f5a623;font-size:15px;letter-spacing:2px">★★★★★</div>
         <p style="font-size:15px;color:rgba(255,255,231,0.85);line-height:1.75;font-style:italic;margin:0">"We booked the 3 Day Work Week and it was worth every penny. Our group of 6 got so much time on the water. Christian's knowledge of barefoot skiing is unmatched."</p>
         <div style="margin-top:auto;border-top:1px solid rgba(255,255,255,0.08);padding-top:16px">
@@ -425,5 +425,34 @@ document.querySelectorAll('.fade-up').forEach(el=>obs.observe(el));
 // CALENDAR
 ;
 </script>
+
+<!-- ══ PROMO BANNER ══ -->
+<div id="promo-banner" role="alert">
+  <span id="promo-banner-text"></span>
+  <a id="promo-banner-cta" href="/booking" style="display:none"></a>
+  <button id="promo-banner-close" onclick="closeBanner()" aria-label="Close">✕</button>
+</div>
+<script>
+(function(){
+  var cfg = window.PROMO_CONFIG;
+  if(!cfg || !cfg.active) return;
+  var dismissed = sessionStorage.getItem('promo-dismissed-'+cfg.id);
+  if(dismissed) return;
+  document.getElementById('promo-banner-text').textContent = cfg.text;
+  if(cfg.cta_text && cfg.cta_url){
+    var a = document.getElementById('promo-banner-cta');
+    a.textContent = cfg.cta_text;
+    a.href = cfg.cta_url;
+    a.style.display = 'inline';
+  }
+  setTimeout(function(){ document.getElementById('promo-banner').classList.add('visible'); }, 800);
+})();
+function closeBanner(){
+  var cfg = window.PROMO_CONFIG;
+  if(cfg) sessionStorage.setItem('promo-dismissed-'+cfg.id, '1');
+  document.getElementById('promo-banner').classList.remove('visible');
+}
+</script>
+<!-- ══ /PROMO BANNER ══ -->
 </body>
 </html>

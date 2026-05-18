@@ -1,3 +1,16 @@
+
+// ── PROMO BANNER CONFIG ──────────────────────────────────────────────────
+// Edit here to update the banner on all pages.
+// Set active:false to hide it. Change id when you start a new promo.
+window.PROMO_CONFIG = {
+  id:       'summer2026-10off',      // unique ID — change when promo changes
+  active:   true,                    // true = show banner, false = hide
+  text:     '🎉 10% off your first session — book before June 15',
+  cta_text: 'Book Now →',
+  cta_url:  '/booking'
+};
+// ── /PROMO BANNER CONFIG ─────────────────────────────────────────────────
+
 // © 2026 Christian Richards / Stillwater Sports. All rights reserved.
 /**
  * ============================================================
@@ -133,11 +146,11 @@ const CONTENT = {
   pricing_ptb_pass_title:"Pass",
   pricing_ptb_pass_desc: "3 to 4 minutes. A complete <i>Turn</i> is made up of 6–8 <i>Passes</i>, giving the rider a chance to practice, progress, rest, receive feedback, and go again before wrapping up their <i>Turn.</i>",
   pricing_ptb_turn_num:  "02",
-  pricing_ptb_turn_title:"Turn",
+  pricing_ptb_turn_title:"Set",
   pricing_ptb_turn_desc: "20-30 minutes on water including occasional stops for coaching notes and to catch your breath. 2-4 turns in a day is <i>A Lot</i> of action! Caution: muscles may be sore the next day!",
   pricing_ptb_block_num: "03",
   pricing_ptb_block_title:"Block",
-  pricing_ptb_block_desc:"4 Hours — Morning, Afternoon, or Evening. We can run 2–3 turns per hour. We offer 2 out of 3 blocks per day with a 1 hour break between consecutive time blocks i.e. [afternoon + evening]",
+  pricing_ptb_block_desc:"4 Hours — Morning, Afternoon, or Evening. We can run 2–3 sets per hour. We offer 2 out of 3 blocks per day with a 1 hour break between consecutive time blocks i.e. [afternoon + evening]",
 
   // Four tier cards
   pricing_tiers_eyebrow: "Flexible Options",
@@ -148,7 +161,7 @@ const CONTENT = {
 
   pricing_tier1_eyebrow: "Single Session · 4 hours",
   pricing_tier1_name:    "Half Day",
-  pricing_tier1_desc:    "Single 4-hour block — morning, afternoon, or evening. Perfect first experience for a group of friends or family. Everyone gets solid time on the water. 10% off your next booking.",
+  pricing_tier1_desc:    "Single 4-hour block — morning, afternoon, or evening. Perfect first experience for a group of friends or family. Everyone gets solid time on the water.",
 
   pricing_tier2_eyebrow: "2 × 4 hour sessions",
   pricing_tier2_name:    "Full Day",
@@ -162,7 +175,7 @@ const CONTENT = {
 
   pricing_tier4_eyebrow: "Come to Us · Rideau River",
   pricing_tier4_name:    "Ride With Us · in Ottawa",
-  pricing_tier4_desc:    "A great value option! Visit us locally for 15–20 min turns, $50/person, $200 minimum. You come to us. Perfect for local riders and small groups.",
+  pricing_tier4_desc:    "A great value option! Visit us locally for 15–20 min sets, $50/person, $200 minimum. You come to us. Perfect for local riders and small groups.",
   pricing_tier4_cta:     "Check Availability →",
 
   // Estimator UI labels
@@ -202,12 +215,12 @@ const CONTENT = {
   pricing_modal_success_btn:        "Back to Pricing",
 
   // Estimator logic tips (used in JS — edit these to change suggestion text)
-  pricing_gs_solo:      "💡 <strong>Solo rider:</strong> Drop-In ($50/turn) is your best option — no minimum and no need to fill the boat.",
-  pricing_gs_pair:      "💡 <strong>Two riders:</strong> Drop-In works great at $50/turn ($200 min). Or book a half day and split $600 — $300 each.",
+  pricing_gs_solo:      "💡 <strong>Solo rider:</strong> Drop-In ($50/set) is your best option — no minimum and no need to fill the boat.",
+  pricing_gs_pair:      "💡 <strong>Two riders:</strong> Drop-In works great at $50/set ($200 min). Or book a half day and split $600 — $300 each.",
   pricing_gs_small:     "✅ <strong>Good size:</strong> A half day at $600 splits to $200/person. Adding a 4th drops it to $150.",
   pricing_gs_good:      "✅ <strong>Great group:</strong> $150/person for a half day. A full day at $1,000 is $250/person — solid value.",
   pricing_gs_ideal:     "🎯 <strong>Ideal group size:</strong> Sweet spot for value and time on the water. Full day splits to $167–$200/person.",
-  pricing_gs_large:     "⚠️ <strong>Large group:</strong> Consider booking 2 blocks so turns stay frequent and no one waits long.",
+  pricing_gs_large:     "⚠️ <strong>Large group:</strong> Consider booking 2 blocks so sets stay frequent and no one waits long.",
   pricing_tip_halfday:  "<strong>Tip:</strong> Upgrading to a full day (2 blocks) is only +$400 and gives everyone twice the time on the water.",
   pricing_tip_splitday: "<strong>Best conditions tip:</strong> Morning + evening split gives you glassy water both times. Adds $250 but worth it.",
   pricing_tip_local:    "<strong>Rideau River only</strong> — Drop-In is available when the boat is already out locally. Check the booking calendar or follow us on Instagram for open slots.",
@@ -549,7 +562,7 @@ const CONTENT = {
   faq_q12:             "Does my child need to know how to swim?",
   faq_a12:             "Basic swimming ability is required for all participants entering the water. All riders wear a properly fitting PFD at all times in the water — safety is our top priority. If you have concerns, <a href='/contact'>contact us</a> before booking.",
   faq_q13:             "How many people can come?",
-  faq_a13:             "Groups of all sizes are welcome. The Sanger DLX accommodates up to 8 passengers comfortably. As a general guideline, plan for approximately 30 minutes per rider per session including setup — 1–2 turns each is plenty. Large groups can rotate riders throughout the day. There's no extra charge per person.",
+  faq_a13:             "Groups of all sizes are welcome. The Sanger DLX accommodates up to 8 passengers comfortably. As a general guideline, plan for approximately 30 minutes per rider per session including setup — 1–2 sets each is plenty. Large groups can rotate riders throughout the day. There's no extra charge per person.",
   faq_q14:             "Are waivers required?",
   faq_a14:             "Yes — a signed liability waiver is required for every participant before entering the boat or water. Waivers for minors must be signed by a parent or legal guardian. Waivers will be sent upon booking confirmation. If a minor's parents will not be present, additional written consent is required in advance.",
   faq_q15:             "Can we use our own equipment?",
@@ -569,11 +582,11 @@ const CONTENT = {
 
   faq_timing_cat:      "Timing & Group Planning",
   faq_q21:             "How do I know how much time to book for my group?",
-  faq_a21:             "A good rule of thumb: each person gets 1–2 sets per block (a block is 4 hours — morning, afternoon, or evening). Each set is one person's full turn — about 20–30 minutes on the water including coaching stops. For a group of 6, a single block gives everyone at least 1 set; a full day (2 blocks) gives everyone 2 sets each. If you're unsure, <a href='/contact'>contact us</a> and we'll help you plan.",
+  faq_a21:             "A good rule of thumb: each person gets 1–2 sets per block (a block is 4 hours — morning, afternoon, or evening). Each set is one person's full set — about 20–30 minutes on the water including coaching stops. For a group of 6, a single block gives everyone at least 1 set; a full day (2 blocks) gives everyone 2 sets each. If you're unsure, <a href='/contact'>contact us</a> and we'll help you plan.",
   faq_q22:             "What is a good group size?",
   faq_a22:             "Ideal group sizes are <strong>4–8 people per block</strong>. Smaller than 4 means less rotation energy on the boat; larger than 8 and some riders might only get 1 short set. That said, we work with all group sizes — 1-on-1 sessions are just as welcome as groups of 10. If you have a smaller group of 1–3, see our <a href='/pricing'>Come to Us pricing</a> for the most affordable option, or <a href='/contact'>contact us</a> and we'll figure it out.",
   faq_q23:             "What if we run over the allotted time slot?",
-  faq_a23:             "Waterskiing is a relaxed sport — we don't watch the clock obsessively. Start and finish times are reasonably flexible. What matters most is that everyone gets a fair turn and equal time on the water. We have guidelines to help with planning, but every group is different and we're happy to accommodate. If the session naturally runs a bit long, we'll work with you. Just communicate with the coach on the day.",
+  faq_a23:             "Waterskiing is a relaxed sport — we don't watch the clock obsessively. Start and finish times are reasonably flexible. What matters most is that everyone gets a fair set and equal time on the water. We have guidelines to help with planning, but every group is different and we're happy to accommodate. If the session naturally runs a bit long, we'll work with you. Just communicate with the coach on the day.",
 
   faq_cta_eyebrow:     "Still have a question?",
   faq_cta_h3:          "We reply personally — usually same day.",

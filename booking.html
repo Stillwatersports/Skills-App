@@ -53,6 +53,7 @@
 .faq-a{font-size:13px;color:var(--muted);line-height:1.7;padding-bottom:16px;display:none}
 .faq-a.open{display:block}
 @media(max-width:960px){.booking-layout{grid-template-columns:1fr}.sticky-sidebar{position:static}.form-grid{grid-template-columns:1fr}}
+@media(max-width:960px){.booking-outer-section{padding:56px 16px!important}}
 
 /* ── PACKAGE CARDS ────────────────────────────────────── */
 .pkg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
@@ -177,7 +178,7 @@
   </div>
 </section>
 
-<section style="background:var(--yellow);padding:80px 48px">
+<section style="background:var(--yellow);padding:80px 48px" class="booking-outer-section">
   <div style="max-width:1200px;margin:0 auto;overflow:hidden">
 
     <!-- Step indicator — sits above everything, always visible -->
@@ -997,5 +998,34 @@ document.addEventListener('click',function(e){
 function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
 document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
 </script>
+
+<!-- ══ PROMO BANNER ══ -->
+<div id="promo-banner" role="alert">
+  <span id="promo-banner-text"></span>
+  <a id="promo-banner-cta" href="/booking" style="display:none"></a>
+  <button id="promo-banner-close" onclick="closeBanner()" aria-label="Close">✕</button>
+</div>
+<script>
+(function(){
+  var cfg = window.PROMO_CONFIG;
+  if(!cfg || !cfg.active) return;
+  var dismissed = sessionStorage.getItem('promo-dismissed-'+cfg.id);
+  if(dismissed) return;
+  document.getElementById('promo-banner-text').textContent = cfg.text;
+  if(cfg.cta_text && cfg.cta_url){
+    var a = document.getElementById('promo-banner-cta');
+    a.textContent = cfg.cta_text;
+    a.href = cfg.cta_url;
+    a.style.display = 'inline';
+  }
+  setTimeout(function(){ document.getElementById('promo-banner').classList.add('visible'); }, 800);
+})();
+function closeBanner(){
+  var cfg = window.PROMO_CONFIG;
+  if(cfg) sessionStorage.setItem('promo-dismissed-'+cfg.id, '1');
+  document.getElementById('promo-banner').classList.remove('visible');
+}
+</script>
+<!-- ══ /PROMO BANNER ══ -->
 </body>
 </html>
