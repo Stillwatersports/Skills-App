@@ -151,6 +151,9 @@ const CONTENT = {
   pricing_ptb_block_num: "03",
   pricing_ptb_block_title:"Block",
   pricing_ptb_block_desc:"4 Hours — Morning, Afternoon, or Evening. We can run 2–3 sets per hour. We offer 2 out of 3 blocks per day with a 1 hour break between consecutive time blocks i.e. [afternoon + evening]",
+  pricing_ptb_primetime_num:  "04",
+  pricing_ptb_primetime_title:"Primetime",
+  pricing_ptb_primetime_desc: "<strong>Morning + Evening on the same weekday.</strong> The glassiest, calmest water of the day with a midday break in between. Adds $250 to a weekday Full Day. Already included free on weekends, holidays, and all Multi-Day packages.",
 
   // Four tier cards
   pricing_tiers_eyebrow: "Flexible Options",
@@ -166,7 +169,7 @@ const CONTENT = {
   pricing_tier2_eyebrow: "2 × 4 hour sessions",
   pricing_tier2_name:    "Full Day",
   pricing_tier2_desc:    "Pick: [Morning + afternoon], [afternoon + evening], or upgrade to ride in the [morning + evening] for the best water conditions!",
-  pricing_tier2_split_label: "Split the day's sessions (morning + evening) +$250",
+  pricing_tier2_split_label: "Primetime — Morning + Evening +$250",
   pricing_tier2_split_tip:   "⭐ Best conditions — water is calm and boat traffic is low in the early morning and evening. Worth every penny.",
 
   pricing_tier3_eyebrow: "Multi-Day · Best value",
@@ -222,7 +225,7 @@ const CONTENT = {
   pricing_gs_ideal:     "🎯 <strong>Ideal group size:</strong> Sweet spot for value and time on the water. Full day splits to $167–$200/person.",
   pricing_gs_large:     "⚠️ <strong>Large group:</strong> Consider booking 2 blocks so sets stay frequent and no one waits long.",
   pricing_tip_halfday:  "<strong>Tip:</strong> Upgrading to a full day (2 blocks) is only +$400 and gives everyone twice the time on the water.",
-  pricing_tip_splitday: "<strong>Best conditions tip:</strong> Morning + evening split gives you glassy water both times. Adds $250 but worth it.",
+  pricing_tip_splitday: "<strong>Primetime tip:</strong> Morning + evening gives you glassy water both times. Adds $250 but worth it.",
   pricing_tip_local:    "<strong>Rideau River only</strong> — Drop-In is available when the boat is already out locally. Check the booking calendar or follow us on Instagram for open slots.",
 
   // Included band
@@ -296,7 +299,7 @@ const CONTENT = {
   how_step1_eyebrow:   "Planning and Booking Your Session",
   how_step1_h2_1:      "Request a date",
   how_step1_h2_2:      "online.",
-  how_step1_p1:        "Available times are blocked by morning, afternoon, and evening. Morning and evening blocks often offer great conditions as wind and boat traffic is typically lower than mid-day. For a Single Day during the week we offer the option of either morning + afternoon or afternoon + evening. A Premium Day is a weekend, holiday or a split weekday, which allows you to book morning and evening on a single day during the week. All Multi-day packages allow you to choose any 2 out of 3 time slots for each of those days.",
+  how_step1_p1:        "Available times are blocked by morning, afternoon, and evening. Morning and evening blocks often offer great conditions as wind and boat traffic is typically lower than mid-day. For a Single Day during the week we offer the option of either morning + afternoon or afternoon + evening. A Premium Day is a weekend, holiday or a Primetime weekday, which allows you to book morning and evening on a single day during the week. All Multi-day packages allow you to choose any 2 out of 3 time slots for each of those days.",
   how_step1_p2:        "Check our booking page for available dates and please feel free to contact us if you have questions before requesting dates.",
 
   how_step2_eyebrow:   "Within 24 Hours",
