@@ -26,7 +26,43 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9Z296M7ZLP"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-9Z296M7ZLP');</script>
 </head>
+
+
 <body>
+
+
+<!-- ══ SW INTRO: loaded from intro.html ══ -->
+<script>
+(function(){
+  fetch('./intro.html')
+    .then(function(r){ return r.text(); })
+    .then(function(html){
+      var tmp = document.createElement('div');
+      tmp.innerHTML = html;
+
+      // Inject <style>
+      var style = tmp.querySelector('style');
+      if(style){ document.head.appendChild(style); }
+
+      // Inject overlay HTML (all non-script, non-style nodes)
+      Array.from(tmp.childNodes).forEach(function(node){
+        if(node.nodeName !== 'STYLE' && node.nodeName !== 'SCRIPT'){
+          document.body.insertBefore(node.cloneNode(true), document.body.firstChild);
+        }
+      });
+
+      // Inject and execute <script>
+      var src = tmp.querySelector('script');
+      if(src){
+        var s = document.createElement('script');
+        s.textContent = src.textContent;
+        document.body.appendChild(s);
+      }
+    })
+    .catch(function(e){ console.warn('SW intro load failed', e); });
+})();
+</script>
+<!-- ══ /SW INTRO ══ -->
 
 <nav>
   <a href="/" class="nav-brand"><img src="./Sports_clear_bg.png" alt="Stillwater Sports" style="height:116px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.3))"/></a>
@@ -253,16 +289,12 @@
   </div>
 </section>
 
-<!-- 04 BOOKING -->
-
-
 <!-- 04 TESTIMONIALS -->
 <section style="background:var(--dark);padding:80px 0">
   <div class="s">
     <div class="eyebrow" style="color:var(--cyan)">What Clients Say</div>
     <h2 style="font-size:clamp(32px,5vw,56px);font-weight:800;line-height:1.05;letter-spacing:-.03em;color:var(--yellow);margin-bottom:48px">Real families.<br><em style="color:var(--cyan)">Real sessions.</em></h2>
     <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px">
-
       <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:16px">
         <div style="color:#f5a623;font-size:15px;letter-spacing:2px">★★★★★</div>
         <p style="font-size:15px;color:rgba(255,255,231,0.85);line-height:1.75;font-style:italic;margin:0">"Christian had our three kids up on skis within the first hour. The patience and encouragement he showed was incredible. We'll absolutely be booking again next summer."</p>
@@ -271,7 +303,6 @@
           <div style="font-size:12px;color:rgba(255,255,231,0.45);margin-top:2px">White Lake · Waterski & Tubing</div>
         </div>
       </div>
-
       <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:16px">
         <div style="color:#f5a623;font-size:15px;letter-spacing:2px">★★★★★</div>
         <p style="font-size:15px;color:rgba(255,255,231,0.85);line-height:1.75;font-style:italic;margin:0">"Best cottage experience we've had. Christian showed up on time, had everything ready, and coached each person at their own level. My husband finally got up on one ski!"</p>
@@ -280,7 +311,6 @@
           <div style="font-size:12px;color:rgba(255,255,231,0.45);margin-top:2px">Rideau Lakes · Full Weekend Package</div>
         </div>
       </div>
-
       <div style="background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:16px">
         <div style="color:#f5a623;font-size:15px;letter-spacing:2px">★★★★★</div>
         <p style="font-size:15px;color:rgba(255,255,231,0.85);line-height:1.75;font-style:italic;margin:0">"We booked the 3 Day Work Week and it was worth every penny. Our group of 6 got so much time on the water. Christian's knowledge of barefoot skiing is unmatched."</p>
@@ -289,7 +319,6 @@
           <div style="font-size:12px;color:rgba(255,255,231,0.45);margin-top:2px">Calabogie · 3 Day Work Week</div>
         </div>
       </div>
-
     </div>
     <div style="text-align:center;margin-top:40px">
       <a href="https://g.page/r/stillwatersports/review" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:rgba(255,255,231,0.5);text-decoration:none;border:1px solid rgba(255,255,255,0.12);border-radius:50px;padding:10px 20px;transition:all .2s" onmouseover="this.style.color='var(--yellow)';this.style.borderColor='rgba(255,255,231,0.3)'" onmouseout="this.style.color='rgba(255,255,231,0.5)';this.style.borderColor='rgba(255,255,255,0.12)'">⭐ Leave us a Google Review</a>
@@ -396,7 +425,7 @@ document.addEventListener('click',function(e){
 function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
 document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
 
-// SPORTS FAN CARDS — expand on click + auto-rotate every 1.5s
+// SPORTS FAN CARDS
 function expandCard(card){
   document.querySelectorAll('.sport-fan-card').forEach(c=>c.classList.remove('active'));
   card.classList.add('active');
