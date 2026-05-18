@@ -26,7 +26,7 @@ body{-webkit-user-select:none;user-select:none}
 /* ── ESTIMATOR ───────────────────────────────────── */
 .est-wrap{max-width:860px;margin:0 auto}
 .est-section{margin-bottom:32px}
-.est-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px}
+.est-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text);text-shadow:-1px -1px 0 var(--cyan),1px -1px 0 var(--cyan),-1px 1px 0 var(--cyan),1px 1px 0 var(--cyan);padding-bottom:3px;border-bottom:1.5px solid var(--cyan);display:inline-block;margin-bottom:12px}
 .est-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .est-input{width:100%;padding:13px 16px;border:1.5px solid rgba(0,200,212,0.25);border-radius:12px;font-size:15px;font-family:'Outfit',sans-serif;color:var(--text);background:#fff;outline:none;transition:border-color .15s;box-sizing:border-box}
 .est-input:focus{border-color:var(--cyan)}
@@ -71,7 +71,7 @@ body{-webkit-user-select:none;user-select:none}
 .tier-card{background:#fff;border-radius:20px;padding:24px 20px;border:1.5px solid var(--cyan);display:flex;flex-direction:column;gap:10px}
 .tier-card.featured{box-shadow:0 4px 28px rgba(0,200,212,0.15)}
 .tier-card.local{border-color:var(--pink)!important;background:var(--cyan)}
-.tier-card.local .tier-eyebrow{color:rgba(255,255,231,0.75)}
+.tier-card.local .tier-eyebrow{color:var(--yellow);text-shadow:none;border-bottom-color:rgba(255,255,231,0.4)}
 .tier-card.local .tier-name{color:#fff}
 .tier-card.local .tier-desc{color:rgba(255,255,231,0.88)}
 .tier-eyebrow{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--cyan)}
@@ -339,7 +339,7 @@ body{-webkit-user-select:none;user-select:none}
 
             <!-- Time on the water — sits between prices and breakdown -->
             <div id="turns-card" style="display:none;margin-bottom:20px;background:rgba(0,200,212,0.06);border:1px solid rgba(0,200,212,0.15);border-radius:12px;padding:16px 20px">
-              <div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--cyan);margin-bottom:12px" data-content="pricing_turns_title"></div>
+              <div class="ref-label" style="margin-bottom:12px" data-content="pricing_turns_title"></div>
               <div id="turns-card-content"></div>
             </div>
 
@@ -403,7 +403,7 @@ body{-webkit-user-select:none;user-select:none}
           </div>
           <div style="padding:20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan)">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px;flex-wrap:wrap">
-              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;min-width:0">
                 <div style="font-size:18px;font-weight:900;color:var(--cyan);letter-spacing:-.01em">Full Day — Split</div>
                 <div style="display:inline-flex;align-items:center;gap:5px;background:var(--cyan);color:var(--dark);font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 12px;border-radius:20px;white-space:nowrap">⭐ Most Popular ⭐</div>
               </div>
@@ -436,7 +436,7 @@ body{-webkit-user-select:none;user-select:none}
           </div>
           <div style="padding:20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan)">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px;flex-wrap:wrap">
-              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;min-width:0">
                 <div style="font-size:18px;font-weight:900;color:var(--cyan);letter-spacing:-.01em">3 Day Work Week</div>
                 <div style="display:inline-flex;align-items:center;gap:5px;background:var(--cyan);color:var(--dark);font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 12px;border-radius:20px;white-space:nowrap">💰 Best Value 💰</div>
               </div>
@@ -450,9 +450,9 @@ body{-webkit-user-select:none;user-select:none}
           </div>
           <div style="padding:24px 20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan);grid-column:span 2">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px;flex-wrap:wrap">
-              <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;min-width:0">
                 <div style="font-size:18px;font-weight:900;color:var(--cyan);letter-spacing:-.01em">5 Day Week</div>
-                <div style="display:inline-flex;align-items:center;gap:8px;background:var(--cyan);color:var(--dark);font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:5px 16px;border-radius:20px;white-space:nowrap">🔥 Huge Savings · Weekends · Holidays · Split Days Included 🔥</div>
+                <div style="display:inline-flex;align-items:center;gap:6px;background:var(--cyan);color:var(--dark);font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:4px 12px;border-radius:20px;white-space:normal;flex-wrap:wrap;max-width:100%">🔥 Huge Savings · Weekends · Holidays · Split Days Included 🔥</div>
               </div>
               <div class="pkg-price" style="color:var(--yellow);font-size:24px;font-weight:900;line-height:1;flex-shrink:0">$4,500</div>
             </div>

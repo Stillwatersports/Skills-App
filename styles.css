@@ -26,6 +26,7 @@ nav{
   border-bottom:2px solid var(--pink);
 }
 .nav-brand{display:flex;align-items:center;gap:10px;text-decoration:none}
+.nav-brand img{margin-top:4px}
 .nav-links{display:flex;align-items:center;gap:24px}
 
 .nav-links a{color:var(--yellow);text-decoration:none;font-size:16px;font-weight:600;transition:opacity .15s;text-shadow:none}
@@ -82,7 +83,7 @@ nav{
   font-size:11px;font-weight:600;letter-spacing:.08em;
   color:rgba(255,255,231,0.5);line-height:1.6;
 }
-.hero-content{position:absolute;z-index:2;bottom:100px;left:48px;max-width:580px;max-height:calc(100% - 180px);display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start}
+.hero-content{position:absolute;z-index:2;bottom:min(100px,12dvh);left:48px;max-width:580px;max-height:calc(100% - 14dvh);display:flex;flex-direction:column;justify-content:flex-end;align-items:flex-start}
 .hero-badge{
   display:inline-flex;align-items:center;gap:8px;
   border:none;
@@ -234,7 +235,7 @@ nav{
 .offer-divider{height:1px;background:rgba(0,0,0,0.06);margin-bottom:14px}
 .offer-tag{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 .offer-tag::before{content:'●';font-size:7px}
-.offer-tag.cyan{color:var(--cyan)}.offer-tag.cyan::before{color:var(--cyan)}
+.offer-tag.cyan{color:var(--text);text-shadow:-1px -1px 0 var(--cyan),1px -1px 0 var(--cyan),-1px 1px 0 var(--cyan),1px 1px 0 var(--cyan)}.offer-tag.cyan::before{color:var(--cyan)}
 .offer-tag.pink{color:var(--pink)}.offer-tag.pink::before{color:var(--pink)}
 
 /* ── SPORT CARDS ── */
@@ -315,7 +316,7 @@ nav{
 .book-info-item{display:flex;gap:16px;align-items:flex-start;padding:16px 0;border-bottom:1px solid rgba(0,0,0,0.07)}
 .book-info-item:last-child{border:none}
 .book-info-icon{width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(0,200,212,0.3);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:15px;color:var(--cyan)}
-.book-info-key{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan);margin-bottom:4px}
+.book-info-key{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text);text-shadow:-1px -1px 0 var(--cyan),1px -1px 0 var(--cyan),-1px 1px 0 var(--cyan),1px 1px 0 var(--cyan);margin-bottom:4px}
 .book-info-val{font-size:13px;color:var(--muted);line-height:1.55}
 .cal-card{background:var(--white);border-radius:20px;padding:28px;border:1px solid rgba(0,0,0,0.07);min-width:0;overflow:hidden}
 .cal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
@@ -374,18 +375,18 @@ nav{
 .highlight-band p{font-size:15px;color:#3a6a6a;line-height:1.75;margin-bottom:24px}
 
 /* ── FOOTER ── */
-footer{background:var(--cyan);border-top:2px solid var(--pink);padding:80px 48px 32px;position:relative;overflow:hidden}
+footer{background:var(--cyan);border-top:2px solid var(--pink);padding:48px 48px 24px;position:relative;overflow:hidden}
 .footer-watermark{position:absolute;bottom:-20px;left:-20px;font-size:180px;font-weight:900;letter-spacing:-.05em;color:rgba(255,255,255,0.06);line-height:1;pointer-events:none;user-select:none;white-space:nowrap}
 .footer-inner{max-width:1200px;margin:0 auto;position:relative;z-index:1}
-.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:48px}
+.footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:28px;margin-bottom:28px}
 .footer-brand-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.footer-logo{height:200px;width:auto;border-radius:12px;display:block}
-.footer-desc{font-size:14px;color:#3a6a6a;line-height:1.7;max-width:340px;margin-bottom:20px}
+.footer-logo{height:80px;width:auto;border-radius:8px;display:block}
+.footer-desc{font-size:12px;color:#3a6a6a;line-height:1.6;max-width:280px;margin-bottom:14px}
 .footer-social{display:flex;gap:10px}
 .footer-social-btn{width:36px;height:36px;border-radius:50%;border:1px solid rgba(58,106,106,0.4);display:flex;align-items:center;justify-content:center;color:#3a6a6a;font-size:14px;text-decoration:none;transition:all .15s}
 .footer-social-btn:hover{border-color:var(--yellow);color:var(--yellow)}
-.footer-col h4{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5a8a8a;margin-bottom:20px}
-.footer-col a{display:block;font-size:14px;font-weight:500;color:#3a6a6a;text-decoration:none;margin-bottom:10px;transition:color .15s}
+.footer-col h4{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#5a8a8a;margin-bottom:12px}
+.footer-col a{display:block;font-size:12px;font-weight:500;color:#3a6a6a;text-decoration:none;margin-bottom:7px;transition:color .15s}
 .footer-col a:hover{color:var(--yellow)}
 .footer-bottom{border-top:1px solid rgba(255,255,231,0.1);padding-top:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
 .footer-copy{font-size:13px;color:#3a6a6a}
@@ -476,7 +477,7 @@ footer{background:var(--cyan);border-top:2px solid var(--pink);padding:80px 48px
   .hero-tall{min-height:92dvh}
   .hero h1{font-size:clamp(38px,10vw,64px)}
   .hero-sub{font-size:15px;max-width:100%}
-  .hero-actions{flex-direction:column;align-items:flex-start}
+  .hero-actions{flex-direction:row;flex-wrap:wrap;align-items:flex-start;gap:10px}
   .hero-stats-mini{gap:12px}
   .hero-stat-mini-num{font-size:13px}
 
@@ -645,5 +646,19 @@ footer{background:var(--cyan);border-top:2px solid var(--pink);padding:80px 48px
 }
 
 /* ── TESTIMONIALS SCROLL ── */
-.testimonials-scroll{-ms-overflow-style:none;scrollbar-width:none}
+.testimonials-scroll{-ms-overflow-style:none;scrollbar-width:none;padding:0 24px}
 .testimonials-scroll::-webkit-scrollbar{display:none}
+
+/* ── INLINE LABEL (small cyan text with teal outline — like ref-label but lighter) ── */
+.inline-label{
+  display:inline-block;
+  font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--text);
+  text-shadow:
+    -1px -1px 0 var(--cyan),
+     1px -1px 0 var(--cyan),
+    -1px  1px 0 var(--cyan),
+     1px  1px 0 var(--cyan);
+  padding-bottom:3px;
+  border-bottom:1.5px solid var(--cyan);
+}
