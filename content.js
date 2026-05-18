@@ -543,8 +543,8 @@ const CONTENT = {
   faq_a4:              "Light rain — we go. Heavy rain or thunder — we reschedule with full credit. Overcast or wind only — session proceeds; if conditions deteriorate, you receive a pro-rated credit for remaining time. If no suitable rebook date exists before September 30, you receive a full refund. The coach has final say on all weather decisions.",
   faq_q5:              "Can I book multiple days and save money?",
   faq_a5:              "Yes — multi-day packages offer meaningful savings. Options include Double Weekday, 3 Day Work Week, Full Weekend, Holiday Weekend, and 5 Day Week packages. See the <a href='/pricing'>pricing page</a> for full details. Consecutive day bookings get the best rate per day.",
-  faq_q6:              "What is the Single Session 10% credit?",
-  faq_a6:              "When you book a Single Session ($600), you receive a 10% credit toward your next future booking. It's our way of rewarding clients who come back. The credit applies to any future package.",
+  faq_q6:              "",
+  faq_a6:              "",
 
   faq_location_cat:    "Location & Logistics",
   faq_q7:              "Do I need my own boat or lake access?",
