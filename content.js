@@ -138,16 +138,16 @@ const CONTENT = {
   pricing_stat3_num:    "100%",
   pricing_stat3_lbl:    "Gear included",
 
-  // Pass / Turn / Block explainer
+  // Pass / Set / Block explainer
   pricing_ptb_eyebrow:   "A Day in the Life of a Waterskier",
   pricing_ptb_h2_1:      "Time Management",
   pricing_ptb_h2_2:      " ",
   pricing_ptb_pass_num:  "01",
   pricing_ptb_pass_title:"Pass",
-  pricing_ptb_pass_desc: "3 to 4 minutes. A complete <i>Turn</i> is made up of 6–8 <i>Passes</i>, giving the rider a chance to practice, progress, rest, receive feedback, and go again before wrapping up their <i>Turn.</i>",
+  pricing_ptb_pass_desc: "3 to 4 minutes. A complete <i>Set</i> is made up of 6–8 <i>Passes</i>, giving the rider a chance to practice, progress, rest, receive feedback, and go again before wrapping up their <i>Set.</i>",
   pricing_ptb_turn_num:  "02",
   pricing_ptb_turn_title:"Set",
-  pricing_ptb_turn_desc: "20-30 minutes on water including occasional stops for coaching notes and to catch your breath. 2-4 turns in a day is <i>A Lot</i> of action! Caution: muscles may be sore the next day!",
+  pricing_ptb_turn_desc: "20-30 minutes on water including occasional stops for coaching notes and to catch your breath. 2-4 Sets in a day is <i>A Lot</i> of action! Caution: muscles may be sore the next day!",
   pricing_ptb_block_num: "03",
   pricing_ptb_block_title:"Block",
   pricing_ptb_block_desc:"4 Hours — Morning, Afternoon, or Evening. We can run 2–3 sets per hour. We offer 2 out of 3 blocks per day with a 1 hour break between consecutive time blocks i.e. [afternoon + evening]",
