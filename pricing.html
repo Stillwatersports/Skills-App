@@ -26,6 +26,16 @@ body{-webkit-user-select:none;user-select:none}
 /* ── ESTIMATOR ───────────────────────────────────── */
 .est-wrap{max-width:860px;margin:0 auto}
 .est-section{margin-bottom:32px}
+.blocks-day-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(0,200,212,0.15);flex-wrap:wrap}
+.blocks-day-row:last-child{border-bottom:none}
+.blocks-day-label{font-size:13px;font-weight:600;color:var(--text);min-width:130px;flex-shrink:0}
+.blocks-day-options{display:flex;gap:6px;flex-wrap:wrap;flex:1}
+.block-btn{font-family:'Outfit',sans-serif;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:7px 12px;border-radius:50px;border:1.5px solid rgba(0,200,212,0.3);background:#fff;color:var(--muted);cursor:pointer;transition:all .15s}
+.block-btn:hover{border-color:var(--cyan);color:var(--text)}
+.block-btn.active{background:var(--cyan);border-color:var(--cyan);color:var(--white)}
+.block-btn.disabled{opacity:.35;cursor:not-allowed;pointer-events:none}
+.blocks-day-note{font-size:11px;color:var(--pink);font-weight:700;margin-left:auto;white-space:nowrap}
+
 .est-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text);text-shadow:-1px -1px 0 var(--cyan),1px -1px 0 var(--cyan),-1px 1px 0 var(--cyan),1px 1px 0 var(--cyan);padding-bottom:3px;border-bottom:1.5px solid var(--cyan);display:inline-block;margin-bottom:12px}
 .est-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .est-input{width:100%;padding:13px 16px;border:1.5px solid rgba(0,200,212,0.25);border-radius:12px;font-size:15px;font-family:'Outfit',sans-serif;color:var(--text);background:#fff;outline:none;transition:border-color .15s;box-sizing:border-box}
@@ -244,26 +254,20 @@ body{-webkit-user-select:none;user-select:none}
         </div>
         <div class="est-section">
           <div class="est-label" data-content="pricing_est_step1_label"></div>
-          <div class="est-row">
-            <div>
-              <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px" data-content="pricing_est_riders_label"></label>
-              <select id="est-riders" class="est-input est-select" onchange="runEstimate()">
-                <option value="">Select riders...</option>
-                <option value="1">1 rider</option>
-                <option value="2">2 riders</option>
-                <option value="3">3 riders</option>
-                <option value="4">4 riders</option>
-                <option value="5">5 riders</option>
-                <option value="6">6 riders</option>
-                <option value="7">7 riders</option>
-                <option value="8">8 riders</option>
-                <option value="9">9+ riders — contact us</option>
-              </select>
-            </div>
-            <div>
-              <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px" data-content="pricing_est_location_label"></label>
-              <input type="text" id="est-location" class="est-input" data-content-placeholder="pricing_est_location_placeholder" placeholder="e.g. Calabogie or K7H 3C3" oninput="runEstimate()"/>
-            </div>
+          <div>
+            <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px" data-content="pricing_est_riders_label"></label>
+            <select id="est-riders" class="est-input est-select" onchange="runEstimate()">
+              <option value="">Select riders...</option>
+              <option value="1">1 rider</option>
+              <option value="2">2 riders</option>
+              <option value="3">3 riders</option>
+              <option value="4">4 riders</option>
+              <option value="5">5 riders</option>
+              <option value="6">6 riders</option>
+              <option value="7">7 riders</option>
+              <option value="8">8 riders</option>
+              <option value="9">9+ riders — contact us</option>
+            </select>
           </div>
         </div>
 
@@ -292,15 +296,11 @@ body{-webkit-user-select:none;user-select:none}
           </div>
         </div>
 
-        <!-- Split Day option (fullday only) -->
-        <div id="split-day-ui" style="display:none" class="est-section">
-          <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;padding:14px 16px;background:rgba(0,200,212,0.06);border:1.5px solid rgba(0,200,212,0.2);border-radius:12px">
-            <input type="checkbox" id="split-day-check" onchange="runEstimate()" style="accent-color:var(--cyan);margin-top:2px;flex-shrink:0;width:16px;height:16px"/>
-            <div>
-              <div style="font-size:13px;font-weight:700;color:var(--text)" data-content="pricing_tier2_split_label"></div>
-              <div style="font-size:12px;color:var(--cyan);margin-top:4px" data-content="pricing_tier2_split_tip"></div>
-            </div>
-          </label>
+        <!-- Time of Day blocks (per selected date) -->
+        <div id="blocks-ui" style="display:none" class="est-section">
+          <div class="est-label">Time on the Water</div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px" id="blocks-hint">Tap to pick when you want to ride.</div>
+          <div id="blocks-list"></div>
         </div>
 
         <!-- Nudges -->
@@ -309,13 +309,7 @@ body{-webkit-user-select:none;user-select:none}
           <div class="nudge-cards" id="nudge-cards"></div>
         </div>
 
-        <!-- Tubing (shown after dates selected, before result) -->
-        <div id="tubing-check" style="display:none">
-          <label style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted);cursor:pointer;padding:12px 14px;background:rgba(0,200,212,0.04);border:1px solid rgba(0,200,212,0.15);border-radius:10px">
-            <input type="checkbox" id="est-tubing" onchange="runEstimate()" style="accent-color:var(--cyan);width:16px;height:16px;cursor:pointer;flex-shrink:0"/>
-            <span data-content="pricing_est_tubing_label"></span>
-          </label>
-        </div>
+
 
         <!-- Result -->
         <div id="est-result" style="display:none">
@@ -452,7 +446,7 @@ body{-webkit-user-select:none;user-select:none}
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px;flex-wrap:wrap">
               <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;min-width:0">
                 <div style="font-size:18px;font-weight:900;color:var(--cyan);letter-spacing:-.01em">5 Day Week</div>
-                <div style="display:inline-flex;align-items:center;gap:6px;background:var(--cyan);color:var(--dark);font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:4px 12px;border-radius:20px;white-space:normal;flex-wrap:wrap;max-width:100%">🔥 Huge Savings · Weekends · Holidays · Split Days Included 🔥</div>
+                <div style="display:inline-flex;align-items:center;gap:6px;background:var(--cyan);color:var(--dark);font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:4px 12px;border-radius:20px;white-space:normal;flex-wrap:wrap;max-width:100%">🔥 Weekends · Holidays · Primetime — all included 🔥</div>
               </div>
               <div class="pkg-price" style="color:var(--yellow);font-size:24px;font-weight:900;line-height:1;flex-shrink:0">$4,500</div>
             </div>
@@ -601,12 +595,8 @@ function goToEstimator(type){
     b.classList.toggle('active', b.dataset.type===type);
   });
   selectedCardType = type;
-  splitDaySelected = false;
-  const splitCheck = document.getElementById('split-day-check');
-  if(splitCheck) splitCheck.checked = false;
-
-  const splitUI = document.getElementById('split-day-ui');
-  if(splitUI) splitUI.style.display = type==='fullday' ? 'block' : 'none';
+  const blocksUI = document.getElementById('blocks-ui');
+  if(blocksUI) blocksUI.style.display = (type==='halfday'||type==='fullday'||type==='multiday') ? 'block' : 'none';
   const dateSection = document.getElementById('date-range-section');
   if(dateSection) dateSection.style.display = type==='local' ? 'none' : 'block';
   updateDateUI(type);
@@ -616,11 +606,9 @@ function goToEstimator(type){
 
   setTimeout(()=>{
     const riders = document.getElementById('est-riders');
-    const loc    = document.getElementById('est-location');
     const start  = document.getElementById('est-date-start');
     const startM = document.getElementById('est-date-start-multi');
     if(riders && !riders.value) riders.focus();
-    else if(loc && !loc.value) loc.focus();
     else if(type==='multiday' && startM && !startM.value) startM.focus();
     else if(type!=='local' && start && !start.value) start.focus();
   }, 500);
@@ -630,13 +618,10 @@ function goToEstimator(type){
 
 function selectCardType(type, btn){
   selectedCardType = type;
-  splitDaySelected = false;
-  const splitCheck = document.getElementById('split-day-check');
-  if(splitCheck) splitCheck.checked = false;
   document.querySelectorAll('.card-type-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
-  const splitUI = document.getElementById('split-day-ui');
-  if(splitUI) splitUI.style.display = type==='fullday' ? 'block' : 'none';
+  const blocksUI = document.getElementById('blocks-ui');
+  if(blocksUI) blocksUI.style.display = (type==='halfday'||type==='fullday'||type==='multiday') ? 'block' : 'none';
   const dateSection = document.getElementById('date-range-section');
   if(dateSection) dateSection.style.display = type==='local' ? 'none' : 'block';
   updateDateUI(type);
@@ -683,7 +668,7 @@ function calcPackage(dates){
     pkg='5-Day Week'; base=P.five;
     const comp=wdDays*P.full+weDays*(P.full+P.wknd);
     lines=[{l:`${n} days (5 Day Week package)`,v:comp},{l:'5 Day Week rate — all premiums included',v:P.five-comp,t:'saving'}];
-    tip='🔥 <strong>5 Day Week:</strong> Weekends, holidays, and split days are all included in the flat rate. Best value on the calendar.';
+    tip='🔥 <strong>5 Day Week:</strong> Weekends, holidays, and primetime sessions are all included in the flat rate. Best value on the calendar.';
   } else if(n>8){
     // Over 8 days — cap at 5-day-week chunks, suggest calling
     pkg='Multi-Week (Custom)';
@@ -777,38 +762,37 @@ function groupSizeNote(riders){
 function runEstimate(){
   updateDateSummary();
 
-  const splitCheck=document.getElementById('split-day-check');
-  splitDaySelected=splitCheck?splitCheck.checked:false;
-
+  // Hide legacy split UI if it still exists in DOM
   const splitUI=document.getElementById('split-day-ui');
-  if(splitUI) splitUI.style.display=selectedCardType==='fullday'?'block':'none';
+  if(splitUI) splitUI.style.display='none';
 
+  const blocksUI=document.getElementById('blocks-ui');
   const riders=parseInt(document.getElementById('est-riders')?.value)||0;
-  const loc=document.getElementById('est-location')?.value.trim()||'';
 
   if(!riders){
     document.getElementById('est-result').style.display='none';
     document.getElementById('nudge-section').style.display='none';
-    document.getElementById('tubing-check').style.display='none';
+    if(blocksUI) blocksUI.style.display='none';
     return;
   }
 
   // ── LOCAL DROP-IN ────────────────────────────────────
   if(selectedCardType==='local'){
+    if(blocksUI) blocksUI.style.display='none';
     const turnsEach=2,price=50;
     const total=Math.max(200,riders*turnsEach*price);
     const pp=Math.round(total/riders);
     renderResult({
-      ppNum:pp, ppLabel:`per person · ${riders} rider${riders>1?'s':''} · Drop-In (est. ${turnsEach} turns each)`,
+      ppNum:pp, ppLabel:`per person · ${riders} rider${riders>1?'s':''} · Drop-In (est. ${turnsEach} sets each)`,
       total, pkg:'Drop-In',
       lines:[
         {l:`$50/person per set × ${riders*turnsEach} sets`,v:riders*turnsEach*price},
         ...(total>riders*turnsEach*price?[{l:'Minimum booking applied',v:0,t:'note'}]:[]),
       ],
-      note:'Estimate based on 2 turns per person. $200 minimum. Rideau River — Manotick area.',
+      note:'Estimate based on 2 sets per person. $200 minimum. Rideau River — Manotick area.',
       tip:(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_local)||'<strong>Rideau River only</strong> — available when the boat is already out locally. Check the booking calendar or follow us on Instagram.',
       gsNote:groupSizeNote(riders),
-      tubing:false, turns:null, sessionType:'local',
+      turns:null, sessionType:'local',
     });
     document.getElementById('nudge-section').style.display='none';
     return;
@@ -819,9 +803,12 @@ function runEstimate(){
   if(!dates.length){
     document.getElementById('est-result').style.display='none';
     document.getElementById('nudge-section').style.display='none';
-    document.getElementById('tubing-check').style.display='none';
+    if(blocksUI) blocksUI.style.display='none';
     return;
   }
+
+  // Render the block picker for the selected dates
+  renderBlocksUI(dates);
 
   let res=calcPackage(dates);
   if(!res) return;
@@ -831,7 +818,7 @@ function runEstimate(){
   if(selectedCardType==='halfday'){
     pkg=dates.length===1?(isWE(dates[0])||isHol(dates[0])?'Single Session (Weekend/Holiday)':'Single Session'):`${dates.length} × Single Session`;
     base=dates.reduce((s,d)=>s+(isWE(d)||isHol(d)?P.single+P.half_wknd:P.single),0);
-    lines=dates.length===1?[{l:'Single session — 1 time slot',v:P.single},...(isWE(dates[0])||isHol(dates[0])?[{l:'Weekend/Holiday premium (+$150)',v:P.half_wknd,t:'charge'}]:[])]:[{l:`${dates.length} half-day sessions`,v:base}];
+    lines=dates.length===1?[{l:'Single session — 1 time block',v:P.single},...(isWE(dates[0])||isHol(dates[0])?[{l:'Weekend/Holiday premium (+$150)',v:P.half_wknd,t:'charge'}]:[])]:[{l:`${dates.length} half-day sessions`,v:base}];
     tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_halfday)||'<strong>Tip:</strong> Upgrading to a full day is only +$400 and gives everyone twice the time.';
   }
 
@@ -840,46 +827,54 @@ function runEstimate(){
     pkg=dates.length===1?(isWE(dates[0])||isHol(dates[0])?'Full Day (Weekend/Holiday)':'Full Day'):`${dates.length} × Full Day`;
     base=dates.reduce((s,d)=>s+(isWE(d)||isHol(d)?P.full+P.wknd:P.full),0);
     lines=dates.length===1
-      ?[{l:'Full day — any 2 time blocks (morning, afternoon, or evening)',v:P.full},...(isWE(dates[0])||isHol(dates[0])?[{l:'Weekend/Holiday premium',v:P.wknd,t:'charge'}]:[])]
+      ?[{l:'Full day — any 2 time blocks',v:P.full},...(isWE(dates[0])||isHol(dates[0])?[{l:'Weekend/Holiday premium',v:P.wknd,t:'charge'}]:[])]
       :[{l:`${dates.length} full days`,v:base}];
   }
 
-  // Split day premium — only on single day weekday full day (not holidays, not multi-day)
-  if(selectedCardType==='fullday'&&splitDaySelected){
-    const dateIsHoliday = dates.length===1 && isHol(dates[0]);
-    if(dates.length===1 && !dateIsHoliday){
-      base+=P.split;
-      lines.push({l:'Morning + Evening split day upgrade',v:P.split,t:'charge'});
-      tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_splitday)||'<strong>Best conditions:</strong> Morning + evening gives you glassy water both times.';
-    } else if(dateIsHoliday){
-      lines.push({l:'Morning + Evening split — included on holiday bookings',v:0,t:'note'});
-      tip='<strong>Included:</strong> Split day (morning + evening) is built into holiday pricing — no extra charge.';
-    } else {
-      lines.push({l:'Morning + Evening split — included in multi-day rate',v:0,t:'note'});
-      tip='<strong>Included free on multi-day bookings:</strong> Morning + evening split is built into the package rate — no extra charge.';
+  // ── PRIMETIME UPCHARGE ──────────────────────────────────
+  // Triggered when ANY weekday full-day date has Morning + Evening selected (no Afternoon).
+  // Weekend/holiday and multi-day get primetime included free (no upcharge).
+  if(selectedCardType==='fullday'){
+    let splitCount=0;
+    const splitDateNames=[];
+    dates.forEach(d=>{
+      const ds_=ds(d);
+      const sel=window._blockSelections?.[ds_]||[];
+      const isSplit = sel.length===2 && sel.includes('M') && sel.includes('E') && !sel.includes('A');
+      if(isSplit && !isWE(d) && !isHol(d)){
+        splitCount++;
+        splitDateNames.push(d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}));
+      }
+    });
+    if(splitCount>0){
+      const totalSplit = splitCount * P.split;
+      base += totalSplit;
+      lines.push({l:`Morning + Evening primetime × ${splitCount}${splitDateNames.length?' ('+splitDateNames.join(', ')+')':''}`,v:totalSplit,t:'charge'});
+      tip=(typeof CONTENT!=='undefined'&&CONTENT.pricing_tip_splitday)||'<strong>Primetime tip:</strong> Morning + evening gives you glassy water both times. <a href="/how-it-works#primetime" style="color:var(--cyan);font-weight:700">What\'s Primetime? →</a>';
     }
   }
 
-  // On multi-day, always note that split day is included
-  if(selectedCardType==='multiday'&&!tip){
-    tip='💡 <strong>Split day included:</strong> Morning + evening combinations are built into multi-day package rates — no extra charge. Great conditions both times of day.';
+  // Multi-day: note that primetime is included
+  if(selectedCardType==='multiday'){
+    const anySplit = dates.some(d=>{
+      const sel=window._blockSelections?.[ds(d)]||[];
+      return sel.length===2 && sel.includes('M') && sel.includes('E') && !sel.includes('A');
+    });
+    if(anySplit && !tip){
+      tip='💡 <strong>Primetime included:</strong> Morning + evening combinations are built into multi-day package rates — no extra charge.';
+    }
   }
 
-  // Distance
-  const db=getDistBracket(loc);
-  const dc=db===0?0:db===1?P.dist_mid:db===2?P.dist_far:0;
-  if(dc>0){lines.push({l:db===1?'Travel surcharge (1.5–3hr from Manotick)':'Travel surcharge (3–6hr from Manotick)',v:dc,t:'charge'});base+=dc;}
-  else if(db===0) lines.push({l:'Local — no travel surcharge',v:0,t:'note'});
-  else if(loc.length>1&&db===-1) lines.push({l:'Travel surcharge: TBC — confirmed when we reply',v:0,t:'note'});
+  // Add selected blocks summary as a note line
+  const blockSummary = buildBlocksSummary(dates);
+  if(blockSummary) lines.push({l:blockSummary,v:0,t:'note'});
 
   if(anyHol){
     const hNames=dates.filter(d=>isHol(d)).map(d=>HOL_NAMES[ds(d)]||'Holiday').join(', ');
     lines.push({l:`Includes: ${hNames}`,v:0,t:'note'});
   }
 
-  const noteLines=[];
-  if(db===-1&&loc.length>1) noteLines.push("Distance TBC — confirmed in our reply.");
-  noteLines.push('Estimate assumes one full session per date. 30% deposit secures your date.');
+  const noteLines=['Estimate assumes one full session per date. 30% deposit secures your date.'];
 
   const turns = calcTurns(riders, selectedCardType, dates.length);
   window._lastDates = dates.length;
@@ -889,10 +884,109 @@ function runEstimate(){
     ppLabel:`per person · ${riders} rider${riders>1?'s':''} · ${pkg}`,
     total:base, pkg, lines,
     note:noteLines.join(' '),
-    tip, gsNote:groupSizeNote(riders), tubing:true,
+    tip, gsNote:groupSizeNote(riders),
     turns, sessionType:selectedCardType,
   });
   renderNudges(res,riders);
+}
+
+// ── BLOCKS UI ─────────────────────────────────────────────
+window._blockSelections = window._blockSelections || {};
+
+function renderBlocksUI(dates){
+  const ui = document.getElementById('blocks-ui');
+  const list = document.getElementById('blocks-list');
+  const hint = document.getElementById('blocks-hint');
+  if(!ui || !list) return;
+
+  const isHalf = selectedCardType==='halfday';
+  const isFull = selectedCardType==='fullday';
+  const isMulti = selectedCardType==='multiday';
+  if(!isHalf && !isFull && !isMulti){ ui.style.display='none'; return; }
+
+  const maxPerDay = isHalf ? 1 : 2;
+  if(hint){
+    hint.innerHTML = isHalf
+      ? 'Pick <strong>1 block</strong> per day — Morning, Afternoon, or Evening.'
+      : 'Pick <strong>2 blocks</strong> per day. Morning + Evening on a weekday is our <a href="/how-it-works#primetime" style="color:var(--cyan);font-weight:700;text-decoration:underline">Primetime</a> slot (+$250).';
+  }
+
+  // Drop selections for dates no longer chosen
+  const validKeys = new Set(dates.map(d=>ds(d)));
+  Object.keys(window._blockSelections).forEach(k=>{ if(!validKeys.has(k)) delete window._blockSelections[k]; });
+
+  // Default — if a date has no selection, give it a default
+  dates.forEach(d=>{
+    const k = ds(d);
+    if(!window._blockSelections[k]){
+      window._blockSelections[k] = isHalf ? ['A'] : ['M','A'];
+    }
+    if(window._blockSelections[k].length > maxPerDay){
+      window._blockSelections[k] = window._blockSelections[k].slice(0, maxPerDay);
+    }
+  });
+
+  // Build rows
+  const rows = dates.map(d=>{
+    const k = ds(d);
+    const sel = window._blockSelections[k] || [];
+    const labels = {M:'Morning', A:'Afternoon', E:'Evening'};
+    const dayLbl = d.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+    const isSplit = sel.length===2 && sel.includes('M') && sel.includes('E') && !sel.includes('A');
+    const showSplitNote = isFull && isSplit && !isWE(d) && !isHol(d);
+    const showFreeSplit = isSplit && (isWE(d)||isHol(d)||isMulti);
+
+    const btns = ['M','A','E'].map(b=>{
+      const active = sel.includes(b);
+      const wouldExceed = !active && sel.length>=maxPerDay;
+      const cls = `block-btn${active?' active':''}${wouldExceed?' disabled':''}`;
+      return `<button type="button" class="${cls}" onclick="toggleBlock('${k}','${b}')">${labels[b]}</button>`;
+    }).join('');
+
+    let note = '';
+    if(showSplitNote) note = '<span class="blocks-day-note">+$250 primetime</span>';
+    else if(showFreeSplit) note = '<span class="blocks-day-note" style="color:var(--cyan)">Primetime included</span>';
+
+    return `<div class="blocks-day-row"><div class="blocks-day-label">${dayLbl}</div><div class="blocks-day-options">${btns}</div>${note}</div>`;
+  }).join('');
+
+  list.innerHTML = rows;
+  ui.style.display = 'block';
+}
+
+function toggleBlock(dateKey, block){
+  window._blockSelections = window._blockSelections || {};
+  const sel = window._blockSelections[dateKey] || [];
+  const isHalf = selectedCardType==='halfday';
+  const maxPerDay = isHalf ? 1 : 2;
+
+  const idx = sel.indexOf(block);
+  if(idx>=0){
+    sel.splice(idx,1);
+  } else {
+    if(sel.length>=maxPerDay){
+      if(isHalf){ sel.length=0; sel.push(block); }
+      else { return; }
+    } else {
+      sel.push(block);
+    }
+  }
+  window._blockSelections[dateKey] = sel;
+  runEstimate();
+}
+
+function buildBlocksSummary(dates){
+  if(!dates || !dates.length) return '';
+  const labels = {M:'AM', A:'PM', E:'EVE'};
+  const parts = dates.map(d=>{
+    const k = ds(d);
+    const sel = (window._blockSelections[k]||[]).slice().sort((a,b)=>'MAE'.indexOf(a)-'MAE'.indexOf(b));
+    if(!sel.length) return null;
+    const dayLbl = dates.length===1 ? '' : d.toLocaleDateString('en-US',{weekday:'short',month:'numeric',day:'numeric'})+': ';
+    return dayLbl + sel.map(b=>labels[b]).join(' + ');
+  }).filter(Boolean);
+  if(!parts.length) return '';
+  return 'Time on water: ' + parts.join(' · ');
 }
 
 // ── TURN CALCULATOR ───────────────────────────────────────
@@ -984,7 +1078,7 @@ function renderResult({ppNum,ppLabel,total,pkg,lines,note,tip,gsNote,tubing,turn
   // Over-8-day callout
   const over8El = document.getElementById('over8-callout');
   if(over8El) over8El.style.display = (sessionType==='multiday' && (window._lastDates||0) > 8) ? 'block' : 'none';
-  document.getElementById('tubing-check').style.display=tubing?'block':'none';
+  // tubing checkbox removed
 }
 
 // ── REQUEST MODAL ─────────────────────────────────────────
@@ -1002,7 +1096,7 @@ function openRequestModal(){
   if(total)  summary += ` · Total ${total} · $${pp}/person`;
   document.getElementById('req-summary-line').textContent = summary || pkg;
   // Store for submission
-  window._reqSummary = {riders,dates:dates.map(d=>d.toISOString().split('T')[0]),pkg,total,pp,loc:document.getElementById('est-location')?.value||''};
+  window._reqSummary = {riders,dates:dates.map(d=>d.toISOString().split('T')[0]),pkg,total,pp,loc:''};
   // Reset form
   document.getElementById('req-name').value='';
   document.getElementById('req-email').value='';

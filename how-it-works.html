@@ -15,6 +15,14 @@
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9Z296M7ZLP"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-9Z296M7ZLP');</script>
+<style>
+@media(max-width:1100px){
+  section .content-grid-3[style*="repeat(4,1fr)"]{grid-template-columns:repeat(2,1fr)!important}
+}
+@media(max-width:680px){
+  section .content-grid-3[style*="repeat(4,1fr)"]{grid-template-columns:1fr!important}
+}
+</style>
 </head>
 <body>
 
@@ -89,7 +97,7 @@
   <div class="s">
     <div class="eyebrow" data-content="pricing_ptb_eyebrow"></div>
     <h2 class="big-title" style="margin-bottom:40px"><span data-content="pricing_ptb_h2_1"></span><br><em data-content="pricing_ptb_h2_2"></em></h2>
-    <div class="content-grid-3" style="margin-bottom:0">
+    <div class="content-grid-3" style="margin-bottom:0;grid-template-columns:repeat(4,1fr)">
 
       <div class="content-card" style="border-top:4px solid var(--cyan);border:1.5px solid var(--cyan);border-top:4px solid var(--cyan);padding-top:28px">
         <div style="font-size:40px;font-weight:900;color:rgba(0,200,212,0.45);line-height:1;margin-bottom:4px" data-content="pricing_ptb_pass_num"></div>
@@ -107,6 +115,12 @@
         <div style="font-size:40px;font-weight:900;color:rgba(0,0,0,0.22);line-height:1;margin-bottom:4px" data-content="pricing_ptb_block_num"></div>
         <h3 style="font-size:18px;margin-bottom:10px" data-content="pricing_ptb_block_title"></h3>
         <p style="font-size:14px;color:var(--muted);line-height:1.8" data-content="pricing_ptb_block_desc"></p>
+      </div>
+
+      <div class="content-card" id="primetime" style="border:1.5px solid var(--cyan);border-top:4px solid var(--cyan);padding-top:28px;scroll-margin-top:100px;background:linear-gradient(180deg,rgba(0,200,212,0.04) 0%,#fff 100%)">
+        <div style="font-size:40px;font-weight:900;color:rgba(0,200,212,0.45);line-height:1;margin-bottom:4px" data-content="pricing_ptb_primetime_num"></div>
+        <h3 style="color:var(--cyan);font-size:18px;margin-bottom:10px" data-content="pricing_ptb_primetime_title"></h3>
+        <p style="font-size:14px;color:var(--muted);line-height:1.8" data-content="pricing_ptb_primetime_desc"></p>
       </div>
 
     </div>
