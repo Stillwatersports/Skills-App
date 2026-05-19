@@ -183,12 +183,12 @@
   </div>
 </section>
 
-<!-- ══ THE ACTIVITY  ══ -->
+<!-- ══ THE ACTIVITY · MEET YOUR COACH ══ -->
 <section style="background:var(--yellow)">
   <div class="s">
     <div class="eyebrow">The Activity</div>
     <h2 class="big-title" style="margin-bottom:8px">Coached by a pro.<br><em>You'll get up first try.</em></h2>
-    <p class="section-desc">This isn't a buddy with a boat. It's a private lesson with Ottawa's most experienced waterski instructor — and a promise: you'll ride on your first attempt, or your follow-up session is on us.</p>
+    <p class="section-desc">This isn't a buddy with a boat. It's a private lesson with Ottawa's most experienced waterski coach — and a promise: you'll ride on your first attempt, or your follow-up session is on us.</p>
 
     <div class="dn-activity" style="margin-top:40px">
       <div>
@@ -208,8 +208,8 @@
             <div class="dn-cred-lbl">Worldwide Barefoot Athlete</div>
           </div>
           <div class="dn-cred">
-            <div class="dn-cred-num">Water Ski Wakeboard Canada</div>
-            <div class="dn-cred-lbl">Certified Instructor & Coach </div>
+            <div class="dn-cred-num">WSWC</div>
+            <div class="dn-cred-lbl">Certified Instructor</div>
           </div>
           <div class="dn-cred">
             <div class="dn-cred-num">25+</div>
@@ -217,7 +217,7 @@
           </div>
           <div class="dn-cred">
             <div class="dn-cred-num">1000+</div>
-            <div class="dn-cred-lbl">Beginners Taught</div>
+            <div class="dn-cred-lbl">Beginners Coached</div>
           </div>
         </div>
 
@@ -225,7 +225,7 @@
           <div class="dn-guarantee-icon">🏆</div>
           <div>
             <div class="dn-guarantee-title">The First-Try Guarantee</div>
-            <div class="dn-guarantee-text">If you don't get up on your first run, we'll bring you out again on the house.</div>
+            <div class="dn-guarantee-text">If you don't get up on your first attempt, we'll bring you out again on the house. That's how confident we are.</div>
           </div>
         </div>
 
@@ -239,7 +239,7 @@
   <div class="s" style="padding-top:0">
     <div class="eyebrow">Pick Your Dinner</div>
     <h2 class="big-title" style="margin-bottom:12px">Three ways to eat.<br><em>All of them good.</em></h2>
-    <p class="section-desc">Pick one when you book. We'll handle the rest.</p>
+    <p class="section-desc">Pick one when you book. We'll handle the rest, timing so it lands when you're hungry.</p>
 
     <div class="dn-restaurants" id="dinner">
       <div class="dn-restaurant">
@@ -306,7 +306,7 @@
 
     <div class="dn-price-card">
       <div class="dn-price-badge">All Inclusive</div>
-      <div class="dn-price-num">From $140 <em>/ person </em></div>
+      <div class="dn-price-num">From $350 <em>/ couple</em></div>
       <div class="dn-price-sub">Three dinner options · price varies by restaurant.</div>
       <div class="dn-price-meta">Any weekday or weekend evening · June through September</div>
       <a href="#dinner" class="dn-price-cta">Pick Your Dinner ↑</a>
@@ -415,12 +415,12 @@ document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click
     const SUPABASE_URL = 'https://isbhflfmugfeqwhhqlkh.supabase.co';
     const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzYmhmbGZtdWdmZXF3aGhxbGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDE0MzEsImV4cCI6MjA5MzA3NzQzMX0.TKMd_rSmJvoLiL5_1pFw9KqYHNne-eEdnGNR4zgZwFk';
     const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    db.from('email_templates').select('*').eq('key','sunset_wake_date').single().then(({data,error})=>{
+    db.from('email_templates').select('subject,body').eq('name','sunset_wake_date').single().then(({data,error})=>{
       if(data && !error){
         TEMPLATE = {
-          to:      data.to_address || FALLBACK.to,
+          to:      FALLBACK.to,              // to_address column doesn't exist on this table
           subject: data.subject || FALLBACK.subject,
-          body:    data.body || FALLBACK.body
+          body:    data.body    || FALLBACK.body
         };
         applyToCTAs();
       }
