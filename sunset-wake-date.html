@@ -50,6 +50,35 @@
   .dn-include-check{flex-shrink:0;width:24px;height:24px;background:var(--cyan);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
   .dn-include-text{font-size:14px;color:var(--text);line-height:1.5}
   @media(max-width:680px){.dn-includes{grid-template-columns:1fr}}
+
+  /* Dinner card price + CTA */
+  .dn-restaurant{display:flex;flex-direction:column}
+  .dn-restaurant-prices{margin-top:auto;padding-top:18px;border-top:1px dashed rgba(0,200,212,0.25);display:grid;gap:6px;margin-bottom:18px}
+  .dn-price-row{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--muted)}
+  .dn-price-row strong{font-size:18px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums}
+  .dn-price-row.featured strong{color:var(--cyan)}
+  .dn-restaurant-cta{display:block;text-align:center;background:var(--pink);color:var(--yellow);font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:13px 18px;border-radius:50px;text-decoration:none;transition:transform .15s,box-shadow .2s}
+  .dn-restaurant-cta:hover{transform:scale(1.02);box-shadow:0 0 0 4px rgba(224,64,160,.18)}
+
+  /* What's Included — yellow text override (on cyan band background) */
+  .highlight-band .dn-include{background:rgba(255,254,180,0.08);border:1px solid rgba(255,254,180,0.25)}
+  .highlight-band .dn-include-text{color:var(--yellow)}
+  .highlight-band .dn-include-check{background:var(--yellow);color:var(--cyan)}
+
+  /* The Activity section */
+  .dn-activity{display:grid;grid-template-columns:0.85fr 1.15fr;gap:48px;align-items:center}
+  @media(max-width:860px){.dn-activity{grid-template-columns:1fr;gap:32px}}
+  .dn-activity-photo{position:relative;aspect-ratio:4/5;border-radius:var(--radius);overflow:hidden;background:linear-gradient(160deg,rgba(0,200,212,0.15),rgba(224,64,160,0.08))}
+  .dn-activity-photo img{width:100%;height:100%;object-fit:cover;display:block}
+  .dn-activity-photo-badge{position:absolute;bottom:16px;left:16px;background:var(--pink);color:var(--yellow);font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:6px 14px;border-radius:50px}
+  .dn-creds{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0 26px}
+  .dn-cred{background:rgba(0,200,212,0.06);border:1px solid rgba(0,200,212,0.2);border-radius:var(--rsm);padding:14px 16px}
+  .dn-cred-num{font-size:20px;font-weight:900;color:var(--cyan);line-height:1;margin-bottom:4px}
+  .dn-cred-lbl{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);line-height:1.3}
+  .dn-guarantee{background:linear-gradient(135deg,var(--pink) 0%,#c43090 100%);color:var(--yellow);border-radius:var(--rsm);padding:22px 26px;display:flex;gap:18px;align-items:center;box-shadow:0 8px 24px rgba(224,64,160,.15)}
+  .dn-guarantee-icon{font-size:38px;line-height:1;flex-shrink:0}
+  .dn-guarantee-title{font-size:15px;font-weight:800;letter-spacing:.02em;margin-bottom:4px}
+  .dn-guarantee-text{font-size:13px;line-height:1.55;opacity:.92}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9Z296M7ZLP"></script>
@@ -108,7 +137,7 @@
     <h1><span class="l1">Sunset</span><span class="l3">Wake Date.</span></h1>
     <p class="hero-sub" style="color:var(--yellow);text-shadow:0 1px 6px rgba(0,0,0,.5)">Ottawa's most unique date night. Private waterski lesson, lakeside dinner, drinks, ice cream, and a sunset cruise. </p>
     <div class="hero-actions">
-      <a href="mailto:christian@learnwatersports.ca?subject=Sunset%20Wake%20Date%20Inquiry&body=Hi%20Christian%2C%0A%0AWe%27d%20like%20to%20book%20the%20Sunset%20Wake%20Date%20experience.%0A%0APreferred%20date%3A%20%0ANumber%20of%20people%20(2%20or%204)%3A%20%0ARestaurant%20choice%20(Big%20Rideau%20%2F%20BBQ%20Stand%20%2F%20Charcuterie)%3A%20%0AAny%20special%20requests%3A%20%0A%0AThanks!" class="btn-pink">Book This Experience →</a>
+      <a class="btn-pink" data-mailto data-restaurant="Not yet chosen" href="#">Book This Experience →</a>
       <a href="#what-included" class="btn-ghost">See What's Included</a>
     </div>
   </div>
@@ -154,6 +183,57 @@
   </div>
 </section>
 
+<!-- ══ THE ACTIVITY · MEET YOUR COACH ══ -->
+<section style="background:var(--yellow)">
+  <div class="s">
+    <div class="eyebrow">The Activity</div>
+    <h2 class="big-title" style="margin-bottom:8px">Coached by a pro.<br><em>You'll get up first try.</em></h2>
+    <p class="section-desc">This isn't a buddy with a boat. It's a private lesson with Ottawa's most experienced waterski coach — and a promise: you'll ride on your first attempt, or your follow-up session is on us.</p>
+
+    <div class="dn-activity" style="margin-top:40px">
+      <div>
+        <div class="dn-activity-photo">
+          <img src="./christian-photo.jpg" alt="Christian Richards · Stillwater Sports coach" onerror="this.style.display='none'"/>
+          <div class="dn-activity-photo-badge">Christian Richards · Coach</div>
+        </div>
+      </div>
+
+      <div>
+        <p style="font-size:16px;color:var(--text);line-height:1.75;margin-bottom:14px">Christian Richards has spent twenty-five years on the water — competing, coaching, and teaching first-timers how to ride.</p>
+        <p style="font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:8px">He's a top-100 worldwide barefoot athlete, a certified WSWC instructor, and has coached thousands of new waterskiers and wakeboarders across Ontario. He knows exactly how to read a beginner — the body position, the rope tension, the boat speed — and adjust everything so you stand up the first time.</p>
+
+        <div class="dn-creds">
+          <div class="dn-cred">
+            <div class="dn-cred-num">Top 100</div>
+            <div class="dn-cred-lbl">Worldwide Barefoot Athlete</div>
+          </div>
+          <div class="dn-cred">
+            <div class="dn-cred-num">WSWC</div>
+            <div class="dn-cred-lbl">Certified Instructor</div>
+          </div>
+          <div class="dn-cred">
+            <div class="dn-cred-num">25+</div>
+            <div class="dn-cred-lbl">Years on the Water</div>
+          </div>
+          <div class="dn-cred">
+            <div class="dn-cred-num">1000+</div>
+            <div class="dn-cred-lbl">Beginners Coached</div>
+          </div>
+        </div>
+
+        <div class="dn-guarantee">
+          <div class="dn-guarantee-icon">🏆</div>
+          <div>
+            <div class="dn-guarantee-title">The First-Try Guarantee</div>
+            <div class="dn-guarantee-text">If you don't get up on your first attempt, we'll bring you out again on the house. That's how confident we are.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- ══ RESTAURANT CHOICES ══ -->
 <section style="background:var(--yellow)">
   <div class="s" style="padding-top:0">
@@ -161,21 +241,36 @@
     <h2 class="big-title" style="margin-bottom:12px">Three ways to eat.<br><em>All of them good.</em></h2>
     <p class="section-desc">Pick one when you book. We'll handle the rest, timing so it lands when you're hungry.</p>
 
-    <div class="dn-restaurants">
+    <div class="dn-restaurants" id="dinner">
       <div class="dn-restaurant">
-        <div class="dn-restaurant-num">Option 01</div>
+        <div class="dn-restaurant-num">Option 01 · Premium</div>
         <div class="dn-restaurant-name">Swan on the Rideau Restaurant</div>
-        <div class="dn-restaurant-desc">Proper sit-down dinner at a most loved waterfront spot with a great patio. The classic move. Share an App, Cocktails, Dinner with wine and beer. Optional stop for ice cream if you have room! </div>
+        <div class="dn-restaurant-desc">Proper sit-down dinner at a most loved waterfront spot with a great patio. The classic move. Share an app, cocktails, dinner with wine and beer. Optional stop for ice cream if you have room!</div>
+        <div class="dn-restaurant-prices">
+          <div class="dn-price-row featured"><span>Couple (2 people)</span><strong>$450</strong></div>
+          <div class="dn-price-row"><span>Double date (4 people)</span><strong>$700</strong></div>
+        </div>
+        <a class="dn-restaurant-cta" data-mailto data-restaurant="Swan on the Rideau" href="#">Book the Swan →</a>
       </div>
       <div class="dn-restaurant">
-        <div class="dn-restaurant-num">Option 02</div>
+        <div class="dn-restaurant-num">Option 02 · Casual</div>
         <div class="dn-restaurant-name">Lakeside BBQ Stand</div>
         <div class="dn-restaurant-desc">Smoked brisket, pulled pork, burgers, poutine, and ice cream from the local BBQ stand. Casual, hands-on, picnic tables by the water. Generous portions, no fuss.</div>
+        <div class="dn-restaurant-prices">
+          <div class="dn-price-row featured"><span>Couple (2 people)</span><strong>$350</strong></div>
+          <div class="dn-price-row"><span>Double date (4 people)</span><strong>$560</strong></div>
+        </div>
+        <a class="dn-restaurant-cta" data-mailto data-restaurant="Lakeside BBQ Stand" href="#">Book the BBQ →</a>
       </div>
       <div class="dn-restaurant">
-        <div class="dn-restaurant-num">Option 03</div>
+        <div class="dn-restaurant-num">Option 03 · Romantic</div>
         <div class="dn-restaurant-name">Curated Charcuterie</div>
-        <div class="dn-restaurant-desc">A full board of cheeses, cured meats, fresh bread, fruit, and chocolate. Enjoy a picnic at a park on the water. Very Romantic! </div>
+        <div class="dn-restaurant-desc">A full board of cheeses, cured meats, fresh bread, fruit, and chocolate. Enjoy a picnic at a park on the water. Very romantic!</div>
+        <div class="dn-restaurant-prices">
+          <div class="dn-price-row featured"><span>Couple (2 people)</span><strong>$350</strong></div>
+          <div class="dn-price-row"><span>Double date (4 people)</span><strong>$560</strong></div>
+        </div>
+        <a class="dn-restaurant-cta" data-mailto data-restaurant="Curated Charcuterie" href="#">Book the Charcuterie →</a>
       </div>
     </div>
   </div>
@@ -211,11 +306,11 @@
 
     <div class="dn-price-card">
       <div class="dn-price-badge">All Inclusive</div>
-      <div class="dn-price-num">$Starting at $375 <em>/ couple</em></div>
-      <div class="dn-price-sub">Make it a double date and share the cost! </div>
+      <div class="dn-price-num">From $350 <em>/ couple</em></div>
+      <div class="dn-price-sub">Three dinner options · price varies by restaurant.</div>
       <div class="dn-price-meta">Any weekday or weekend evening · June through September</div>
-      <a href="mailto:christian@learnwatersports.ca?subject=Sunset%20Wake%20Date%20Booking&body=Hi%20Christian%2C%0A%0AWe%27d%20like%20to%20book%20the%20Sunset%20Wake%20Date%20experience.%0A%0APreferred%20date%3A%20%0ANumber%20of%20people%20(2%20or%204)%3A%20%0ARestaurant%20choice%20(Big%20Rideau%20%2F%20BBQ%20Stand%20%2F%20Charcuterie)%3A%20%0AAny%20special%20requests%3A%20%0A%0AThanks!" class="dn-price-cta">Book by Email →</a>
-      <div class="dn-price-fine">No payment to request a date. We will contact you to confirm your details and availability within 24 hours.</div>
+      <a href="#dinner" class="dn-price-cta">Pick Your Dinner ↑</a>
+      <div class="dn-price-fine">No payment to request a date. We confirm details and availability within 24 hours.</div>
     </div>
   </div>
 </section>
@@ -285,5 +380,54 @@ document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click
 }));
 </script>
 
+
+<!-- ══ EMAIL TEMPLATE LOADER (admin-editable via Supabase) ══ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  // Fallback template — used if Supabase fetch fails or template not yet seeded.
+  // Edit the live template via Admin → Email Templates → "sunset_wake_date".
+  const FALLBACK = {
+    to:      'christian@learnwatersports.ca',
+    subject: 'Sunset Wake Date Inquiry',
+    body:    "Hi Christian,\n\nWe'd like to book the Sunset Wake Date experience.\n\nRestaurant: {{restaurant}}\nGroup size: 2 (couple) or 4 (double date)?  \nPreferred date: \nAny special requests: \n\nThanks!"
+  };
+  let TEMPLATE = FALLBACK;
+
+  function buildMailto(restaurant){
+    const subject = encodeURIComponent(TEMPLATE.subject);
+    const body = encodeURIComponent((TEMPLATE.body||'').replace(/\{\{restaurant\}\}/g, restaurant || 'Not yet chosen'));
+    return 'mailto:' + TEMPLATE.to + '?subject=' + subject + '&body=' + body;
+  }
+
+  function applyToCTAs(){
+    document.querySelectorAll('[data-mailto]').forEach(a=>{
+      const r = a.dataset.restaurant || 'Not yet chosen';
+      a.href = buildMailto(r);
+    });
+  }
+
+  // Apply fallback immediately so the page works even before Supabase responds.
+  applyToCTAs();
+
+  // Try to fetch from Supabase
+  try {
+    const SUPABASE_URL = 'https://isbhflfmugfeqwhhqlkh.supabase.co';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzYmhmbGZtdWdmZXF3aGhxbGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDE0MzEsImV4cCI6MjA5MzA3NzQzMX0.TKMd_rSmJvoLiL5_1pFw9KqYHNne-eEdnGNR4zgZwFk';
+    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    db.from('email_templates').select('*').eq('key','sunset_wake_date').single().then(({data,error})=>{
+      if(data && !error){
+        TEMPLATE = {
+          to:      data.to_address || FALLBACK.to,
+          subject: data.subject || FALLBACK.subject,
+          body:    data.body || FALLBACK.body
+        };
+        applyToCTAs();
+      }
+    }).catch(()=>{ /* silent — fallback already applied */ });
+  } catch(e){ /* silent */ }
+})();
+</script>
+<!-- ══ /EMAIL TEMPLATE LOADER ══ -->
 </body>
 </html>
