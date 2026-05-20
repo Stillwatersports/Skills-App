@@ -1,4 +1,3 @@
-
 // ── PROMO BANNER CONFIG ──────────────────────────────────────────────────
 // Edit here to update the banner on all pages.
 // Set active:false to hide it. Change id when you start a new promo.
