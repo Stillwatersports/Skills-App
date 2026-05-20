@@ -144,6 +144,7 @@
     <a href="/contact">Contact</a>
     <a href="/app">Stillwater Skills App</a>
   </div>
+  <a href="/promos" class="nav-promo" style="background:linear-gradient(135deg,var(--pink),#c43090);color:var(--yellow);font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:9px 16px;border-radius:50px;text-decoration:none;margin-right:8px;display:inline-flex;align-items:center;gap:5px;box-shadow:0 2px 10px rgba(224,64,160,0.25)">✨ Promos</a>
   <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
@@ -155,6 +156,7 @@
   <a href="/guidelines" onclick="toggleMenu()">Guidelines</a>
   <a href="/faq" onclick="toggleMenu()">FAQ</a>
   <a href="/pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="/promos" onclick="toggleMenu()" style="color:var(--pink);font-weight:800">✨ Promos</a>
   <a href="/booking" onclick="toggleMenu()">Booking</a>
   <a href="/contact" onclick="toggleMenu()">Contact</a>
   <a href="/app" onclick="toggleMenu()">Stillwater Skills App</a>
@@ -173,7 +175,7 @@
     <div class="hero-scroll">Select a Date Below</div>
     <div class="hero-stats-mini">
       <div class="hero-stat-mini"><div class="hero-stat-mini-num">24h</div><div class="hero-stat-mini-lbl">Confirmation</div></div>
-      <div class="hero-stat-mini"><div class="hero-stat-mini-num">30%</div><div class="hero-stat-mini-lbl">Deposit to Secure</div></div>
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num">✓</div><div class="hero-stat-mini-lbl">Deposit Required</div></div>
     </div>
     <a href="mailto:christian@learnwatersports.ca" class="hero-contact-link">Stillwater Sports · Coach</a>
   </div>
@@ -210,7 +212,7 @@
             <div class="info-row"><div class="info-icon">📅</div><div><div class="info-key">Season</div><div class="info-val" data-content="booking_info_season_val">May through September — weekdays and weekends</div></div></div>
             <div class="info-row"><div class="info-icon">⛅</div><div><div class="info-key">Weather</div><div class="info-val" data-content="booking_info_weather_val">Light rain proceeds. Heavy rain or thunder = reschedule with full credit</div></div></div>
             <div class="info-row"><div class="info-icon">🚗</div><div><div class="info-key">Distance</div><div class="info-val" data-content="booking_info_distance_val">+$100 (1.5–3hr) or +$200 (3–6hr) from Manotick, ON</div></div></div>
-            <div class="info-row"><div class="info-icon">💳</div><div><div class="info-key">Deposit</div><div class="info-val" data-content="booking_info_deposit_val">30% non-refundable deposit to secure your date</div></div></div>
+            <div class="info-row"><div class="info-icon">💳</div><div><div class="info-key">Deposit</div><div class="info-val" data-content="booking_info_deposit_val">Non-refundable deposit to secure your date</div></div></div>
             <div class="info-row"><div class="info-icon">📆</div><div><div class="info-key">Payment</div><div class="info-val" data-content="booking_info_payment_val">Full balance due 48 hours before your session via Square</div></div></div>
             <div style="border-top:1px solid rgba(0,200,212,0.15);margin-top:16px;padding-top:14px;display:flex;flex-wrap:wrap;gap:8px">
               <a href="/policies#refunds" style="font-size:11px;font-weight:700;color:var(--cyan);background:rgba(0,200,212,0.08);border:1px solid rgba(0,200,212,0.2);border-radius:20px;padding:5px 12px;text-decoration:none;letter-spacing:.04em;text-transform:uppercase" data-content="booking_policy_refund">Refund Policy</a>
@@ -305,7 +307,7 @@
         <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">What Happens Next</div>
         <div style="font-size:13px;color:var(--muted);line-height:1.8">
           ① We confirm within 24 hours<br>
-          ② 30% deposit link sent via Square<br>
+          ② Deposit link sent via Square<br>
           ③ Full payment due 48hrs before session<br>
           ④ We come to your lake — just show up
         </div>
@@ -327,7 +329,7 @@
         <p class="footer-desc">Private water sports coaching across Ontario cottage country. Six disciplines, all skill levels, all equipment included.</p>
         <div class="footer-social"><a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a><a href="#" class="footer-social-btn">⊙</a></div>
       </div>
-      <div class="footer-col"><h4>Explore</h4><a href="/about">About</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/pricing">Pricing</a><a href="/contact">Contact</a></div>
+      <div class="footer-col"><h4>Explore</h4><a href="/about">About</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/pricing">Pricing</a><a href="/promos">Promotions</a><a href="/contact">Contact</a></div>
       <div class="footer-col"><h4>How It Works</h4><a href="/how-it-works">What to Expect</a><a href="/guidelines">Guidelines</a><a href="/faq">FAQ</a></div>
       <div class="footer-col"><h4>Stillwater Skills</h4><a href="/stillwaterapp">Open the App</a><a href="/app">For Clubs &amp; Schools</a></div>
       <div class="footer-col"><h4>Legal</h4><a href="/policies">Privacy Policy</a><a href="/policies#terms">Terms of Service</a><a href="/policies#waiver">Waiver</a><a href="/policies#refunds">Refund Policy</a><a href="/requirements">Requirements</a></div>
@@ -1006,25 +1008,66 @@ document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click
   <a id="promo-banner-cta" href="/booking" style="display:none"></a>
   <button id="promo-banner-close" onclick="closeBanner()" aria-label="Close">✕</button>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
-  var cfg = window.PROMO_CONFIG;
-  if(!cfg || !cfg.active) return;
-  var dismissed = sessionStorage.getItem('promo-dismissed-'+cfg.id);
-  if(dismissed) return;
-  document.getElementById('promo-banner-text').textContent = cfg.text;
-  if(cfg.cta_text && cfg.cta_url){
-    var a = document.getElementById('promo-banner-cta');
-    a.textContent = cfg.cta_text;
-    a.href = cfg.cta_url;
-    a.style.display = 'inline';
+  // Banner reads from Supabase promo_config (admin-editable).
+  // Falls back to window.PROMO_CONFIG in content.js if Supabase is down.
+  var SUPABASE_URL = 'https://isbhflfmugfeqwhhqlkh.supabase.co';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzYmhmbGZtdWdmZXF3aGhxbGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDE0MzEsImV4cCI6MjA5MzA3NzQzMX0.TKMd_rSmJvoLiL5_1pFw9KqYHNne-eEdnGNR4zgZwFk';
+  var done = false;
+
+  function render(cfg){
+    if(done) return;
+    done = true;
+    if(!cfg || !cfg.active) return;
+    var id = cfg.promo_id || cfg.id || 'promo';
+    if(sessionStorage.getItem('promo-dismissed-'+id)) return;
+    var t = document.getElementById('promo-banner-text');
+    var b = document.getElementById('promo-banner');
+    if(!t || !b) return;
+    t.textContent = cfg.text || '';
+    if(cfg.cta_text && cfg.cta_url){
+      var a = document.getElementById('promo-banner-cta');
+      a.textContent = cfg.cta_text;
+      a.href = cfg.cta_url;
+      a.style.display = 'inline';
+    }
+    window._promoActiveId = id;
+    setTimeout(function(){ b.classList.add('visible'); }, 800);
   }
-  setTimeout(function(){ document.getElementById('promo-banner').classList.add('visible'); }, 800);
+
+  function fallback(){ render(window.PROMO_CONFIG); }
+
+  // Wait briefly for Supabase library to be ready
+  function tryFetch(){
+    if(typeof supabase === 'undefined'){ fallback(); return; }
+    try {
+      var db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      db.from('promo_config').select('*').eq('id',1).single().then(function(r){
+        if(r && r.data && !r.error){
+          render({
+            promo_id: r.data.promo_id,
+            active:   r.data.active,
+            text:     r.data.text,
+            cta_text: r.data.cta_text,
+            cta_url:  r.data.cta_url
+          });
+        } else { fallback(); }
+      }).catch(fallback);
+    } catch(e){ fallback(); }
+  }
+
+  // Supabase script loads sync above this block, so it should be ready.
+  // But cover edge cases with a tiny defer.
+  if(typeof supabase !== 'undefined'){ tryFetch(); }
+  else { setTimeout(tryFetch, 50); }
 })();
+
 function closeBanner(){
-  var cfg = window.PROMO_CONFIG;
-  if(cfg) sessionStorage.setItem('promo-dismissed-'+cfg.id, '1');
-  document.getElementById('promo-banner').classList.remove('visible');
+  sessionStorage.setItem('promo-dismissed-'+(window._promoActiveId||'promo'), '1');
+  var b = document.getElementById('promo-banner');
+  if(b) b.classList.remove('visible');
 }
 </script>
 <!-- ══ /PROMO BANNER ══ -->

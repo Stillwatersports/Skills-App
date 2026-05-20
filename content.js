@@ -42,7 +42,7 @@ const CONTENT = {
   footer_copy:             "© 2026 Christian Richards · Stillwater Sports · All rights reserved",
   footer_region:           "learnwatersports.ca",
   nav_book_btn:            "Book Now",
-  deposit_note:            "30% deposit required to reserve dates. <strong>Non-refundable.</strong> Full payment due 48 hours before session.",
+  deposit_note:            "Deposit required to reserve dates. <strong>Non-refundable.</strong> Full payment due 48 hours before session.",
 
 
   // ── HOME PAGE ──────────────────────────────────────────
@@ -232,7 +232,7 @@ const CONTENT = {
   pricing_incl_eyebrow: "Every booking",
   pricing_incl_h2_1:    "Everything included.",
   pricing_incl_h2_2:    "Just show up.",
-  pricing_incl_desc:    "30% deposit secures your date. Full balance due 48 hours before your session. No payment required to submit a request.",
+  pricing_incl_desc:    "A deposit secures your date. Full balance due 48 hours before your session. No payment required to submit a request.",
   pricing_incl_cta:     "Book a Session →",
 
   // ── SPORTS PAGE ───────────────────────────────────────
@@ -306,7 +306,7 @@ const CONTENT = {
   how_step2_h2_1:      "We confirm",
   how_step2_h2_2:      "and plan.",
   how_step2_p1:        "Within 24 hours we will reach out to confirm the date, discuss your group's goals, choose the best spot on your lake, and tailor a session plan around your group's skill levels and interests. If you have any questions about the available options or would like to make a request before booking, please contact us.",
-  how_step2_p2:        "Once confirmed, a 30% deposit link is sent via Square to secure your booking. Full payment is due 48 hours before your session.",
+  how_step2_p2:        "Once confirmed, a deposit link is sent via Square to secure your booking. Full payment is due 48 hours before your session.",
 
   how_step3_eyebrow:   "Before Your Session",
   how_step3_h2_1:      "Athlete",
@@ -332,7 +332,7 @@ const CONTENT = {
   how_faq3_q:          "What if the weather is bad?",
   how_faq3_a:          "Light rain — we go. Heavy rain or thunder — we reschedule with full credit. Full refund if no date is available before September 30.",
   how_faq4_q:          "What is the deposit policy?",
-  how_faq4_a:          "30% deposit required. <strong>Non-refundable.</strong> Full payment due 48 hours before session via Square payment link.",
+  how_faq4_a:          "Deposit required to secure your booking. <strong>Non-refundable.</strong> Full payment due 48 hours before session via Square payment link.",
   how_faq5_q:          "Can we use our own equipment?",
   how_faq5_a:          "Yes! We have all the gear including lifejackets however a properly fitting and comfortable lifejacket makes a huge difference. If you have a favourite lifejacket, ski, or handle, we encourage you to use it!",
 
@@ -403,7 +403,7 @@ const CONTENT = {
   booking_info_season_val:     "May through September — weekdays and weekends",
   booking_info_weather_val:    "Light rain proceeds. Heavy rain or thunder = reschedule with full credit",
   booking_info_distance_val:   "+$100 (1.5–3hr) or +$200 (3–6hr) from Manotick, ON",
-  booking_info_deposit_val:    "30% non-refundable deposit to secure your date",
+  booking_info_deposit_val:    "Non-refundable deposit to secure your date",
   booking_info_payment_val:    "Full balance due 48 hours before your session via Square",
   booking_policy_refund:       "Refund Policy",
   booking_policy_waiver:       "Liability Waiver",
@@ -503,7 +503,7 @@ const CONTENT = {
   guidelines_booking_h2:  "Booking & Payment Requirements",
   guidelines_booking_note:"For full policy details see <a href='/policies' style='color:var(--cyan);font-weight:600'>learnwatersports.ca/policies</a>",
   guidelines_secure_h3:   "To Secure Your Booking",
-  guidelines_secure_l1:   "A <strong>30% deposit</strong> is required — your date is not held until the deposit is received",
+  guidelines_secure_l1:   "A <strong>deposit</strong> is required to secure your booking — your date is not held until the deposit is received",
   guidelines_secure_l2:   "Full payment is due <strong>48 hours before your session</strong> via Square payment link",
   guidelines_secure_l3:   "Failure to pay by this deadline may result in forfeiture of the booking without refund of deposit",
   guidelines_secure_l4:   "Bookings are confirmed only upon receipt of deposit and written confirmation from Stillwater Sports",
@@ -537,11 +537,11 @@ const CONTENT = {
 
   faq_booking_cat:     "Booking & Pricing",
   faq_q1:              "Do I need to pay upfront to book?",
-  faq_a1:              "A 30% deposit is required to secure your date — no date is held without it. Full payment is due 48 hours before your session via Square payment link. No payment is required just to submit a booking request.",
+  faq_a1:              "A deposit is required to secure your date — no date is held without it. The exact amount is shown when you book or use the pricing calculator. Full payment is due 48 hours before your session via Square payment link. No payment is required just to submit a booking request.",
   faq_q2:              "What does the price include?",
   faq_a2:              "Everything. The boat, fuel, all equipment (skis, boards, ropes, handles, life jackets in all sizes), and coach time. The only additional costs are distance surcharges (if applicable) and a $30/hr tubing surcharge. No hidden fees.",
   faq_q3:              "What is your cancellation policy?",
-  faq_a3:              "The 30% deposit is <strong>non-refundable</strong> in case of cancellation by the client. If Stillwater Sports cancels for non-weather reasons, you receive a full reschedule or refund. Cancellations must be submitted by email to <a href='mailto:bookings@learnwatersports.ca'>bookings@learnwatersports.ca</a> — not accepted by phone or text. See our full <a href='/policies#refunds'>refund policy</a>.",
+  faq_a3:              "The deposit is <strong>non-refundable</strong> in case of cancellation by the client. If Stillwater Sports cancels for non-weather reasons, you receive a full reschedule or refund. Cancellations must be submitted by email to <a href='mailto:bookings@learnwatersports.ca'>bookings@learnwatersports.ca</a> — not accepted by phone or text. See our full <a href='/policies#refunds'>refund policy</a>.",
   faq_q4:              "What happens if the weather is bad?",
   faq_a4:              "Light rain — we go. Heavy rain or thunder — we reschedule with full credit. Overcast or wind only — session proceeds; if conditions deteriorate, you receive a pro-rated credit for remaining time. If no suitable rebook date exists before September 30, you receive a full refund. The coach has final say on all weather decisions.",
   faq_q5:              "Can I book multiple days and save money?",

@@ -78,17 +78,19 @@ body{-webkit-user-select:none;user-select:none}
 .card-type-btn.local{border-color:var(--pink)}
 .card-type-btn.local.active{background:var(--cyan);border-color:var(--pink);color:#fff}
 .tier-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+
+[onclick^="jumpToCalc"]:hover{transform:translateY(-2px);box-shadow:0 6px 16px rgba(0,200,212,.15)}
 .tier-card{background:#fff;border-radius:20px;padding:24px 20px;border:1.5px solid var(--cyan);display:flex;flex-direction:column;gap:10px}
 .tier-card.featured{box-shadow:0 4px 28px rgba(0,200,212,0.15)}
 .tier-card.local{border-color:var(--pink)!important;background:var(--cyan)}
 .tier-card.local .tier-eyebrow{color:var(--yellow);text-shadow:none;border-bottom-color:rgba(255,255,231,0.4)}
-.tier-card.local .tier-name{color:#fff}
+.tier-card.local .tier-name{color:#fff;text-shadow:none}
 .tier-card.local .tier-desc{color:rgba(255,255,231,0.88)}
 .tier-eyebrow{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--cyan)}
 .tier-price{font-size:40px;font-weight:900;color:var(--text);line-height:1;letter-spacing:-.02em}
 .tier-price sup{font-size:16px;vertical-align:top;margin-top:8px;font-weight:700}
 .tier-price small{font-size:12px;font-weight:500;color:var(--muted)}
-.tier-name{font-size:16px;font-weight:800;color:var(--text)}
+.tier-name{font-size:17px;font-weight:800;color:var(--text);text-shadow:-1px -1px 0 var(--cyan),1px -1px 0 var(--cyan),-1px 1px 0 var(--cyan),1px 1px 0 var(--cyan)}
 .tier-desc{font-size:13px;color:var(--muted);line-height:1.75;flex:1}
 
 /* slot bubbles */
@@ -141,6 +143,7 @@ body{-webkit-user-select:none;user-select:none}
     <a href="/contact">Contact</a>
     <a href="/app">Stillwater Skills App</a>
   </div>
+  <a href="/promos" class="nav-promo" style="background:linear-gradient(135deg,var(--pink),#c43090);color:var(--yellow);font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:9px 16px;border-radius:50px;text-decoration:none;margin-right:8px;display:inline-flex;align-items:center;gap:5px;box-shadow:0 2px 10px rgba(224,64,160,0.25)">✨ Promos</a>
   <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
@@ -152,6 +155,7 @@ body{-webkit-user-select:none;user-select:none}
   <a href="/guidelines" onclick="toggleMenu()">Guidelines</a>
   <a href="/faq" onclick="toggleMenu()">FAQ</a>
   <a href="/pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="/promos" onclick="toggleMenu()" style="color:var(--pink);font-weight:800">✨ Promos</a>
   <a href="/booking" onclick="toggleMenu()">Booking</a>
   <a href="/contact" onclick="toggleMenu()">Contact</a>
   <a href="/app" onclick="toggleMenu()">Stillwater Skills App</a>
@@ -316,30 +320,32 @@ body{-webkit-user-select:none;user-select:none}
           <div class="est-label" data-content="pricing_est_result_label"></div>
           <div class="result-card">
 
-            <!-- Per person + total -->
-            <div style="display:flex;align-items:flex-start;gap:32px;flex-wrap:wrap;margin-bottom:20px">
-              <div style="text-align:center">
-                <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px" data-content="pricing_result_pp_label"></div>
-                <div class="result-pp"><sup>$</sup><span id="res-pp-num">—</span></div>
-                <div class="result-pp-lbl" id="res-pp-lbl">estimated</div>
-              </div>
-              <div style="text-align:center">
-                <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px" data-content="pricing_result_total_label"></div>
-                <div style="font-size:56px;font-weight:900;color:var(--text);line-height:1;letter-spacing:-.02em" id="res-total-num">—</div>
-                <div style="font-size:12px;color:var(--muted);margin-top:4px" data-content="pricing_result_tax_note"></div>
-              </div>
-              <div id="upsell-tip" class="upsell-tip" style="display:none;flex:1;min-width:200px;align-self:center"></div>
-            </div>
-
-            <!-- Time on the water — sits between prices and breakdown -->
+            <!-- 1. Time on the Water — at TOP -->
             <div id="turns-card" style="display:none;margin-bottom:20px;background:rgba(0,200,212,0.06);border:1px solid rgba(0,200,212,0.15);border-radius:12px;padding:16px 20px">
               <div class="ref-label" style="margin-bottom:12px" data-content="pricing_turns_title"></div>
               <div id="turns-card-content"></div>
             </div>
 
-            <hr class="result-divider"/>
+            <!-- 2. Line item breakdown -->
             <div id="res-breakdown"></div>
             <div class="res-note" id="res-note"></div>
+
+            <hr class="result-divider"/>
+
+            <!-- 3. Pricing summary — per-rider large + cyan outline, total muted-teal smaller -->
+            <div style="display:flex;align-items:center;gap:32px;flex-wrap:wrap;margin-top:16px;margin-bottom:20px;padding:24px;background:linear-gradient(135deg,rgba(0,200,212,0.04),rgba(255,254,180,0.3));border-radius:14px;border:1px solid rgba(0,200,212,0.18)">
+              <div style="text-align:center">
+                <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px" data-content="pricing_result_pp_label"></div>
+                <div style="font-size:68px;font-weight:900;color:var(--text);text-shadow:-1.5px -1.5px 0 var(--cyan),1.5px -1.5px 0 var(--cyan),-1.5px 1.5px 0 var(--cyan),1.5px 1.5px 0 var(--cyan);line-height:1;letter-spacing:-.02em"><sup style="font-size:32px;text-shadow:none;color:var(--cyan)">$</sup><span id="res-pp-num">—</span></div>
+                <div class="result-pp-lbl" id="res-pp-lbl" style="margin-top:4px">estimated</div>
+              </div>
+              <div style="text-align:center">
+                <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px" data-content="pricing_result_total_label"></div>
+                <div style="font-size:42px;font-weight:900;color:#3a6a6a;line-height:1;letter-spacing:-.02em" id="res-total-num">—</div>
+                <div style="font-size:12px;color:var(--muted);margin-top:4px" data-content="pricing_result_tax_note"></div>
+              </div>
+              <div id="upsell-tip" class="upsell-tip" style="display:none;flex:1;min-width:200px;align-self:center"></div>
+            </div>
 
             <div style="margin-top:20px;display:flex;gap:12px;flex-wrap:wrap">
               <button class="btn-pink" onclick="openRequestModal()" style="border:none;cursor:pointer" data-content="pricing_request_btn"></button>
@@ -365,7 +371,7 @@ body{-webkit-user-select:none;user-select:none}
       <div style="margin-bottom:28px">
         <div class="ref-label">Come to Us · Rideau River · Ottawa · Manotick · Kemptville</div>
         <div style="display:grid;grid-template-columns:1fr;gap:8px">
-          <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,200,212,0.05);border-radius:12px;border:1.5px solid var(--cyan);flex-wrap:wrap;gap:12px">
+          <div onclick="jumpToCalc('local')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,200,212,0.05);border-radius:12px;border:1.5px solid var(--cyan);flex-wrap:wrap;gap:12px;transition:transform .15s">
             <div><div class="pkg-name">Pay Per Turn</div><div class="pkg-when">Tons of great spots — boat launches and public parks along the Rideau River</div></div>
             <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap">
               <div style="text-align:right"><div class="pkg-price pkg-local">$50<span style="font-size:12px;font-weight:500;color:var(--muted)">/person/set</span></div><div style="font-size:11px;color:var(--muted)">$200 minimum</div></div>
@@ -379,7 +385,7 @@ body{-webkit-user-select:none;user-select:none}
       <div style="margin-bottom:28px">
         <div class="ref-label">Single Day · We come to you</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan)">
+          <div onclick="jumpToCalc('halfday')" style="cursor:pointer;padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan);transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Half Day</div><div class="pkg-price">$600</div></div>
             <div class="pkg-when">Morning, Afternoon, or Evening</div>
           </div>
@@ -387,18 +393,18 @@ body{-webkit-user-select:none;user-select:none}
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Half Day <span style="font-size:11px;font-weight:500;color:var(--pink)">Wknd/Hol</span></div><div class="pkg-price">$750</div></div>
             <div class="pkg-when">Morning, Afternoon, or Evening</div>
           </div>
-          <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan)">
+          <div onclick="jumpToCalc('fullday')" style="cursor:pointer;padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan);transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Full Day</div><div class="pkg-price">$1,000</div></div>
             <div class="pkg-when">[Morning + Afternoon] OR [Afternoon + Evening]</div>
           </div>
           <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan)">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Full Day <span style="font-size:11px;font-weight:500;color:var(--pink)">Wknd/Hol</span></div><div class="pkg-price">$1,250</div></div>
-            <div class="pkg-when">Any 2 blocks incl. split — one premium covers all</div>
+            <div class="pkg-when">Any 2 blocks incl. Primetime — one premium covers all</div>
           </div>
-          <div style="padding:20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan)">
+          <div onclick="jumpToCalc('fullday')" style="cursor:pointer;padding:20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan);transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px;flex-wrap:wrap">
               <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;min-width:0">
-                <div style="font-size:18px;font-weight:900;color:var(--cyan);letter-spacing:-.01em">Full Day — Split</div>
+                <div style="font-size:18px;font-weight:900;color:var(--cyan);letter-spacing:-.01em">Full Day — Primetime</div>
                 <div style="display:inline-flex;align-items:center;gap:5px;background:var(--cyan);color:var(--dark);font-size:10px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:4px 12px;border-radius:20px;white-space:nowrap">⭐ Most Popular ⭐</div>
               </div>
               <div class="pkg-price" style="color:var(--yellow);font-size:20px;font-weight:900;line-height:1;flex-shrink:0">$1,250</div>
@@ -412,7 +418,7 @@ body{-webkit-user-select:none;user-select:none}
       <div>
         <div class="ref-label">Multi-Day · Bigger savings</div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div style="padding:16px 20px;background:rgba(0,200,212,0.04);border-radius:12px;border:1.5px solid var(--cyan)">
+          <div onclick="jumpToCalc('multiday')" style="cursor:pointer;padding:16px 20px;background:rgba(0,200,212,0.04);border-radius:12px;border:1.5px solid var(--cyan);transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
               <div class="pkg-name">Double Weekday</div>
               <div class="pkg-price">$1,750</div>
@@ -420,7 +426,7 @@ body{-webkit-user-select:none;user-select:none}
             <div class="pkg-when" style="margin-bottom:8px">2 Consecutive Weekdays</div>
             <span class="pkg-save">Save $250</span>
           </div>
-          <div style="padding:16px 20px;background:rgba(0,200,212,0.04);border-radius:12px;border:1.5px solid var(--cyan)">
+          <div onclick="jumpToCalc('multiday')" style="cursor:pointer;padding:16px 20px;background:rgba(0,200,212,0.04);border-radius:12px;border:1.5px solid var(--cyan);transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
               <div class="pkg-name">Full Weekend</div>
               <div class="pkg-price">$2,100</div>
@@ -428,7 +434,7 @@ body{-webkit-user-select:none;user-select:none}
             <div class="pkg-when" style="margin-bottom:8px">Saturday + Sunday</div>
             <span class="pkg-save">Save $400</span>
           </div>
-          <div style="padding:20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan)">
+          <div onclick="jumpToCalc('multiday')" style="cursor:pointer;padding:20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan);transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px;flex-wrap:wrap">
               <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;min-width:0">
                 <div style="font-size:18px;font-weight:900;color:var(--cyan);letter-spacing:-.01em">3 Day Work Week</div>
@@ -442,7 +448,7 @@ body{-webkit-user-select:none;user-select:none}
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Holiday Weekend</div><div class="pkg-price">$3,000</div></div>
             <div class="pkg-when">Holiday Fri or Mon + [Sat + Sun] — The Perfect Long Weekend!</div>
           </div>
-          <div style="padding:24px 20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan);grid-column:span 2">
+          <div onclick="jumpToCalc('multiday')" style="cursor:pointer;padding:24px 20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan);grid-column:span 2;transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px;flex-wrap:wrap">
               <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;min-width:0">
                 <div style="font-size:18px;font-weight:900;color:var(--cyan);letter-spacing:-.01em">5 Day Week</div>
@@ -456,7 +462,7 @@ body{-webkit-user-select:none;user-select:none}
       </div>
       <div style="margin-top:12px;font-size:12px;color:var(--muted);line-height:1.8">
         <strong>Distance surcharges:</strong> +$100 (1.5–3hr from Manotick) · +$200 (3–6hr) &nbsp;·&nbsp;
-        <strong>Deposit:</strong> 30% non-refundable to secure your date &nbsp;·&nbsp;
+        <strong>Deposit:</strong> non-refundable, required to secure your date &nbsp;·&nbsp;
         <strong>Balance:</strong> due 48hrs before your session
       </div>
     </div>
@@ -532,7 +538,7 @@ body{-webkit-user-select:none;user-select:none}
         <p class="footer-desc">Private water sports coaching across Ontario cottage country. Six disciplines, all skill levels, all equipment included.</p>
         <div class="footer-social"><a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a><a href="#" class="footer-social-btn">⊙</a></div>
       </div>
-      <div class="footer-col"><h4>Explore</h4><a href="/about">About</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/pricing">Pricing</a><a href="/contact">Contact</a></div>
+      <div class="footer-col"><h4>Explore</h4><a href="/about">About</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/pricing">Pricing</a><a href="/promos">Promotions</a><a href="/contact">Contact</a></div>
       <div class="footer-col"><h4>How It Works</h4><a href="/how-it-works">What to Expect</a><a href="/guidelines">Guidelines</a><a href="/faq">FAQ</a></div>
       <div class="footer-col"><h4>Stillwater Skills</h4><a href="/stillwaterapp">Open the App</a><a href="/app">For Clubs &amp; Schools</a></div>
       <div class="footer-col"><h4>Legal</h4><a href="/policies">Privacy Policy</a><a href="/policies#terms">Terms of Service</a><a href="/policies#waiver">Waiver</a><a href="/policies#refunds">Refund Policy</a></div>
@@ -759,6 +765,20 @@ function groupSizeNote(riders){
 }
 
 // ── MAIN RUNNER ───────────────────────────────────────────
+
+// ── Jump from price-table card to calculator ──────────────────────────
+function jumpToCalc(type, packageHint){
+  try {
+    if(typeof selectCardType === 'function'){
+      // Build a fake "click target" for selectCardType compatibility
+      var btn = document.querySelector('.card-type-btn[data-type="'+type+'"]');
+      if(btn) btn.click(); else selectCardType(type, btn);
+    }
+  } catch(e){ console.warn(e); }
+  var target = document.getElementById('estimator');
+  if(target) target.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
 function runEstimate(){
   updateDateSummary();
 
@@ -907,8 +927,8 @@ function renderBlocksUI(dates){
   const maxPerDay = isHalf ? 1 : 2;
   if(hint){
     hint.innerHTML = isHalf
-      ? 'Pick <strong>1 block</strong> per day — Morning, Afternoon, or Evening.'
-      : 'Pick <strong>2 blocks</strong> per day. Morning + Evening on a weekday is our <a href="/how-it-works#primetime" style="color:var(--cyan);font-weight:700;text-decoration:underline">Primetime</a> slot (+$250).';
+      ? '<strong>Pick 1 block</strong> per day — Morning, Afternoon, or Evening.'
+      : '<strong>Pick 2 blocks</strong> per day. Morning + Evening on a weekday is our <a href="/how-it-works#primetime" style="color:var(--cyan);font-weight:700;text-decoration:underline">Primetime</a> slot (+$250).';
   }
 
   // Drop selections for dates no longer chosen
@@ -919,7 +939,7 @@ function renderBlocksUI(dates){
   dates.forEach(d=>{
     const k = ds(d);
     if(!window._blockSelections[k]){
-      window._blockSelections[k] = isHalf ? ['A'] : ['M','A'];
+      window._blockSelections[k] = []; // empty by default — user picks
     }
     if(window._blockSelections[k].length > maxPerDay){
       window._blockSelections[k] = window._blockSelections[k].slice(0, maxPerDay);
@@ -1168,25 +1188,66 @@ async function submitRequest(){
   <a id="promo-banner-cta" href="/booking" style="display:none"></a>
   <button id="promo-banner-close" onclick="closeBanner()" aria-label="Close">✕</button>
 </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
-  var cfg = window.PROMO_CONFIG;
-  if(!cfg || !cfg.active) return;
-  var dismissed = sessionStorage.getItem('promo-dismissed-'+cfg.id);
-  if(dismissed) return;
-  document.getElementById('promo-banner-text').textContent = cfg.text;
-  if(cfg.cta_text && cfg.cta_url){
-    var a = document.getElementById('promo-banner-cta');
-    a.textContent = cfg.cta_text;
-    a.href = cfg.cta_url;
-    a.style.display = 'inline';
+  // Banner reads from Supabase promo_config (admin-editable).
+  // Falls back to window.PROMO_CONFIG in content.js if Supabase is down.
+  var SUPABASE_URL = 'https://isbhflfmugfeqwhhqlkh.supabase.co';
+  var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzYmhmbGZtdWdmZXF3aGhxbGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDE0MzEsImV4cCI6MjA5MzA3NzQzMX0.TKMd_rSmJvoLiL5_1pFw9KqYHNne-eEdnGNR4zgZwFk';
+  var done = false;
+
+  function render(cfg){
+    if(done) return;
+    done = true;
+    if(!cfg || !cfg.active) return;
+    var id = cfg.promo_id || cfg.id || 'promo';
+    if(sessionStorage.getItem('promo-dismissed-'+id)) return;
+    var t = document.getElementById('promo-banner-text');
+    var b = document.getElementById('promo-banner');
+    if(!t || !b) return;
+    t.textContent = cfg.text || '';
+    if(cfg.cta_text && cfg.cta_url){
+      var a = document.getElementById('promo-banner-cta');
+      a.textContent = cfg.cta_text;
+      a.href = cfg.cta_url;
+      a.style.display = 'inline';
+    }
+    window._promoActiveId = id;
+    setTimeout(function(){ b.classList.add('visible'); }, 800);
   }
-  setTimeout(function(){ document.getElementById('promo-banner').classList.add('visible'); }, 800);
+
+  function fallback(){ render(window.PROMO_CONFIG); }
+
+  // Wait briefly for Supabase library to be ready
+  function tryFetch(){
+    if(typeof supabase === 'undefined'){ fallback(); return; }
+    try {
+      var db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      db.from('promo_config').select('*').eq('id',1).single().then(function(r){
+        if(r && r.data && !r.error){
+          render({
+            promo_id: r.data.promo_id,
+            active:   r.data.active,
+            text:     r.data.text,
+            cta_text: r.data.cta_text,
+            cta_url:  r.data.cta_url
+          });
+        } else { fallback(); }
+      }).catch(fallback);
+    } catch(e){ fallback(); }
+  }
+
+  // Supabase script loads sync above this block, so it should be ready.
+  // But cover edge cases with a tiny defer.
+  if(typeof supabase !== 'undefined'){ tryFetch(); }
+  else { setTimeout(tryFetch, 50); }
 })();
+
 function closeBanner(){
-  var cfg = window.PROMO_CONFIG;
-  if(cfg) sessionStorage.setItem('promo-dismissed-'+cfg.id, '1');
-  document.getElementById('promo-banner').classList.remove('visible');
+  sessionStorage.setItem('promo-dismissed-'+(window._promoActiveId||'promo'), '1');
+  var b = document.getElementById('promo-banner');
+  if(b) b.classList.remove('visible');
 }
 </script>
 <!-- ══ /PROMO BANNER ══ -->

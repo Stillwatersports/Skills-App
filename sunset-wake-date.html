@@ -7,6 +7,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <meta name="description" content="Ottawa's most unique date night — a private waterski, wakeboard, or surf lesson, lakeside dinner, and a sunset cruise. Starting at $135. person Up to 4 people."/>
 <title>Sunset Wake Date — Ottawa's Ultimate Date Night | Stillwater Sports</title>
+<!-- Open Graph (Facebook, LinkedIn, iMessage, WhatsApp, Slack) -->
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://www.learnwatersports.ca/sunset-wake-date"/>
+<meta property="og:title" content="Sunset Wake Date — Ottawa's Ultimate Date Night"/>
+<meta property="og:description" content="Private waterski lesson, lakeside dinner, and a sunset cruise."/>
+<meta property="og:image" content="https://www.learnwatersports.ca/FB-date.jpg"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+
+<!-- Twitter card -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Sunset Wake Date — Ottawa's Ultimate Date Night"/>
+<meta name="twitter:description" content="Private waterski lesson, lakeside dinner, and a sunset cruise. From $350 per couple."/>
+<meta name="twitter:image" content="https://www.learnwatersports.ca/FB-date.jpg"/>
+
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="./styles.css"/>
@@ -111,7 +126,7 @@
     <a href="/contact">Contact</a>
     <a href="/app">Stillwater Skills App</a>
   </div>
-  <a href="/booking" class="nav-book">Book Now</a>
+  <a href="/promos" class="nav-promo" style="background:linear-gradient(135deg,var(--pink),#c43090);color:var(--yellow);font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:9px 16px;border-radius:50px;text-decoration:none;margin-right:8px;display:inline-flex;align-items:center;gap:5px;box-shadow:0 2px 10px rgba(224,64,160,0.25)">✨ Promos</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
 <div class="mobile-menu" id="mobileMenu">
@@ -122,6 +137,7 @@
   <a href="/guidelines" onclick="toggleMenu()">Guidelines</a>
   <a href="/faq" onclick="toggleMenu()">FAQ</a>
   <a href="/pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="/promos" onclick="toggleMenu()" style="color:var(--pink);font-weight:800">✨ Promos</a>
   <a href="/booking" onclick="toggleMenu()">Booking</a>
   <a href="/contact" onclick="toggleMenu()">Contact</a>
   <a href="/app" onclick="toggleMenu()">Stillwater Skills App</a>
@@ -249,6 +265,7 @@
         <div class="dn-restaurant-prices">
           <div class="dn-price-row featured"><span>Couple (2 people)</span><strong>$450</strong></div>
           <div class="dn-price-row"><span>Double date (4 people)</span><strong>$700</strong></div>
+          <div class="dn-price-row" style="border-top:1px dashed rgba(224,64,160,0.25);padding-top:8px;margin-top:4px"><span style="color:var(--pink);font-weight:700">Fri / Sat night</span><strong style="color:var(--pink)">+$50</strong></div>
         </div>
         <a class="dn-restaurant-cta" data-mailto data-restaurant="Swan on the Rideau" href="#">Book the Swan →</a>
       </div>
@@ -259,6 +276,7 @@
         <div class="dn-restaurant-prices">
           <div class="dn-price-row featured"><span>Couple (2 people)</span><strong>$350</strong></div>
           <div class="dn-price-row"><span>Double date (4 people)</span><strong>$560</strong></div>
+          <div class="dn-price-row" style="border-top:1px dashed rgba(224,64,160,0.25);padding-top:8px;margin-top:4px"><span style="color:var(--pink);font-weight:700">Fri / Sat night</span><strong style="color:var(--pink)">+$50</strong></div>
         </div>
         <a class="dn-restaurant-cta" data-mailto data-restaurant="Lakeside BBQ Stand" href="#">Book the BBQ →</a>
       </div>
@@ -269,6 +287,7 @@
         <div class="dn-restaurant-prices">
           <div class="dn-price-row featured"><span>Couple (2 people)</span><strong>$350</strong></div>
           <div class="dn-price-row"><span>Double date (4 people)</span><strong>$560</strong></div>
+          <div class="dn-price-row" style="border-top:1px dashed rgba(224,64,160,0.25);padding-top:8px;margin-top:4px"><span style="color:var(--pink);font-weight:700">Fri / Sat night</span><strong style="color:var(--pink)">+$50</strong></div>
         </div>
         <a class="dn-restaurant-cta" data-mailto data-restaurant="Curated Charcuterie" href="#">Book the Charcuterie →</a>
       </div>
@@ -308,7 +327,7 @@
       <div class="dn-price-badge">All Inclusive</div>
       <div class="dn-price-num">From $350 <em>/ couple</em></div>
       <div class="dn-price-sub">Three dinner options · price varies by restaurant.</div>
-      <div class="dn-price-meta">Any weekday or weekend evening · June through September</div>
+      <div class="dn-price-meta">Any evening · June – September · <strong style="color:var(--pink)">+$50 Friday or Saturday</strong></div>
       <a href="#dinner" class="dn-price-cta">Pick Your Dinner ↑</a>
       <div class="dn-price-fine">No payment to request a date. We confirm details and availability within 24 hours.</div>
     </div>
@@ -325,6 +344,7 @@
         <div><strong style="color:var(--text);display:block;margin-bottom:4px">First time skiing?</strong>Perfect. We have taught hundreds of first-timers, if not over a thousand. We'll start with basics, take it slow, and build confidence.</div>
         <div><strong style="color:var(--text);display:block;margin-bottom:4px">Dietary restrictions?</strong>Mention them when you book — all three dinner options can accommodate vegetarian, gluten-free, or other needs with notice.</div>
         <div><strong style="color:var(--text);display:block;margin-bottom:4px">Special occasion?</strong>Engagement, anniversary, birthday — let us know. We can help add a personal touch (flowers, a card, a playlist)</div>
+        <div><strong style="color:var(--text);display:block;margin-bottom:4px">Why does Friday or Saturday cost more?</strong>Friday and Saturday are peak demand evenings. Bookings on those nights are <strong style="color:var(--pink)">+$50</strong> flat. Sunday through Thursday are full price as listed on each dinner card.</div>
         <div><strong style="color:var(--text);display:block;margin-bottom:4px">Location?</strong> Various spots along the Rideau River, Manotick, Riverside south, Barrhaven, Kemptville, Kars and more have great staging areas depending on your package. Address and dock details sent on confirmation.</div>
       </div>
     </div>
@@ -340,7 +360,7 @@
         <p class="footer-desc">Private water sports coaching across Ontario cottage country. Six disciplines, all skill levels, all equipment included.</p>
         <div class="footer-social"><a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a><a href="#" class="footer-social-btn">⊙</a></div>
       </div>
-      <div class="footer-col"><h4>Explore</h4><a href="/about">About</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/pricing">Pricing</a><a href="/contact">Contact</a></div>
+      <div class="footer-col"><h4>Explore</h4><a href="/about">About</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/pricing">Pricing</a><a href="/promos">Promotions</a><a href="/contact">Contact</a></div>
       <div class="footer-col"><h4>How It Works</h4><a href="/how-it-works">What to Expect</a><a href="/guidelines">Guidelines</a><a href="/faq">FAQ</a></div>
       <div class="footer-col"><h4>Stillwater Skills</h4><a href="/stillwaterapp">Open the App</a><a href="/app">For Clubs &amp; Schools</a></div>
       <div class="footer-col"><h4>Legal</h4><a href="/policies">Privacy Policy</a><a href="/policies#terms">Terms of Service</a><a href="/policies#waiver">Waiver</a><a href="/policies#refunds">Refund Policy</a></div>
@@ -390,7 +410,7 @@ document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click
   const FALLBACK = {
     to:      'christian@learnwatersports.ca',
     subject: 'Sunset Wake Date Inquiry',
-    body:    "Hi Christian,\n\nWe'd like to book the Sunset Wake Date experience.\n\nRestaurant: {{restaurant}}\nGroup size: 2 (couple) or 4 (double date)?  \nPreferred date: \nAny special requests: \n\nThanks!"
+    body:    "Hi Christian,\n\nWe'd like to book the Sunset Wake Date experience.\n\nRestaurant: {{restaurant}}\nGroup size: 2 (couple) or 4 (double date)?  \nPreferred date (Fri/Sat is +$50): \nAny special requests: \n\nThanks!"
   };
   let TEMPLATE = FALLBACK;
 
