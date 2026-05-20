@@ -86,11 +86,11 @@ body{-webkit-user-select:none;user-select:none}
 .tier-card.local .tier-eyebrow{color:var(--yellow);text-shadow:none;border-bottom-color:rgba(255,255,231,0.4)}
 .tier-card.local .tier-name{color:#fff;text-shadow:none}
 .tier-card.local .tier-desc{color:rgba(255,255,231,0.88)}
-.tier-eyebrow{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--cyan)}
+.tier-eyebrow{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--text);text-shadow:-1px -1px 0 var(--cyan),1px -1px 0 var(--cyan),-1px 1px 0 var(--cyan),1px 1px 0 var(--cyan);padding-bottom:4px;border-bottom:1.5px solid var(--cyan);display:inline-block}
 .tier-price{font-size:40px;font-weight:900;color:var(--text);line-height:1;letter-spacing:-.02em}
 .tier-price sup{font-size:16px;vertical-align:top;margin-top:8px;font-weight:700}
 .tier-price small{font-size:12px;font-weight:500;color:var(--muted)}
-.tier-name{font-size:17px;font-weight:800;color:var(--text);text-shadow:-1px -1px 0 var(--cyan),1px -1px 0 var(--cyan),-1px 1px 0 var(--cyan),1px 1px 0 var(--cyan)}
+.tier-name{font-size:17px;font-weight:800;color:var(--text)}
 .tier-desc{font-size:13px;color:var(--muted);line-height:1.75;flex:1}
 
 /* slot bubbles */
@@ -143,7 +143,7 @@ body{-webkit-user-select:none;user-select:none}
     <a href="/contact">Contact</a>
     <a href="/app">Stillwater Skills App</a>
   </div>
-  <a href="/promos" class="nav-promo" style="background:linear-gradient(135deg,var(--pink),#c43090);color:var(--yellow);font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:9px 16px;border-radius:50px;text-decoration:none;margin-right:8px;display:inline-flex;align-items:center;gap:5px;box-shadow:0 2px 10px rgba(224,64,160,0.25)">Promos</a>
+  <a href="/promos" class="nav-promo" style="background:linear-gradient(135deg,var(--pink),#c43090);color:var(--yellow);font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:9px 16px;border-radius:50px;text-decoration:none;margin-left:auto;margin-right:4px;display:inline-flex;align-items:center;gap:5px;box-shadow:0 2px 10px rgba(224,64,160,0.25)">Promos</a>
   <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
@@ -338,6 +338,7 @@ body{-webkit-user-select:none;user-select:none}
                 <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px" data-content="pricing_result_pp_label"></div>
                 <div style="font-size:68px;font-weight:900;color:var(--text);text-shadow:-1.5px -1.5px 0 var(--cyan),1.5px -1.5px 0 var(--cyan),-1.5px 1.5px 0 var(--cyan),1.5px 1.5px 0 var(--cyan);line-height:1;letter-spacing:-.02em"><sup style="font-size:32px;text-shadow:none;color:var(--cyan)">$</sup><span id="res-pp-num">—</span></div>
                 <div class="result-pp-lbl" id="res-pp-lbl" style="margin-top:4px">estimated</div>
+                <div id="res-per-day-row" style="display:none;margin-top:10px;padding-top:10px;border-top:1px dashed rgba(0,200,212,0.3);font-size:13px;color:var(--muted);font-weight:600"><span style="color:var(--cyan)">$<span id="res-per-day-num">—</span></span> per ski day <span style="color:#3a6a6a">· <span id="res-per-day-count"></span> days</span></div>
               </div>
               <div style="text-align:center">
                 <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px" data-content="pricing_result_total_label"></div>
@@ -389,7 +390,7 @@ body{-webkit-user-select:none;user-select:none}
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Half Day</div><div class="pkg-price">$600</div></div>
             <div class="pkg-when">Morning, Afternoon, or Evening</div>
           </div>
-          <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan)">
+          <div onclick="jumpToCalc('halfday')" style="cursor:pointer;padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan);transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Half Day <span style="font-size:11px;font-weight:500;color:var(--pink)">Wknd/Hol</span></div><div class="pkg-price">$750</div></div>
             <div class="pkg-when">Morning, Afternoon, or Evening</div>
           </div>
@@ -397,7 +398,7 @@ body{-webkit-user-select:none;user-select:none}
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Full Day</div><div class="pkg-price">$1,000</div></div>
             <div class="pkg-when">[Morning + Afternoon] OR [Afternoon + Evening]</div>
           </div>
-          <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan)">
+          <div onclick="jumpToCalc('fullday')" style="cursor:pointer;padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan);transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Full Day <span style="font-size:11px;font-weight:500;color:var(--pink)">Wknd/Hol</span></div><div class="pkg-price">$1,250</div></div>
             <div class="pkg-when">Any 2 blocks incl. Primetime — one premium covers all</div>
           </div>
@@ -688,7 +689,16 @@ function calcPackage(dates){
     if(wdC) lines.push({l:`${wdC} weekday session${wdC>1?'s':''}`,v:wdC*P.full});
     if(weC) lines.push({l:`${weC} weekend/holiday session${weC>1?'s':''}`,v:weC*(P.full+P.wknd)});
   }
-  return {pkg,base,lines,tip,anyHol,holDays,sorted,n,weDays,wdDays};
+  // Determine actual ski-days (sessions) for the package — important for multi-day
+  // where user might select 8 calendar dates for a 5-Day Week package.
+  let skiDays = n;
+  if(pkg.indexOf('5-Day Week')===0 || pkg.indexOf('5 Day Week')===0) skiDays = 5;
+  else if(pkg.indexOf('Holiday Weekend')===0 && n>=3) skiDays = 3;
+  else if(pkg==='Full Weekend') skiDays = 2;
+  else if(pkg==='Double Weekday') skiDays = 2;
+  else if(pkg==='3 Day Work Week') skiDays = 3;
+  else if(pkg.indexOf('Multi-Week')===0){ const weeks=Math.floor(n/5); const rem=n%5; skiDays=weeks*5+rem; }
+  return {pkg,base,lines,tip,anyHol,holDays,sorted,n,weDays,wdDays,skiDays};
 }
 
 // ── DISTANCE LOOKUP ───────────────────────────────────────
@@ -894,10 +904,11 @@ function runEstimate(){
     lines.push({l:`Includes: ${hNames}`,v:0,t:'note'});
   }
 
-  const noteLines=['Estimate assumes one full session per date. 30% deposit secures your date.'];
+  const noteLines=[];  // note removed per user request
 
-  const turns = calcTurns(riders, selectedCardType, dates.length);
+  const turns = calcTurns(riders, selectedCardType, res.skiDays || dates.length);
   window._lastDates = dates.length;
+  window._lastSkiDays = res.skiDays || dates.length;
 
   renderResult({
     ppNum:Math.round(base/riders),
@@ -928,7 +939,9 @@ function renderBlocksUI(dates){
   if(hint){
     hint.innerHTML = isHalf
       ? '<strong>Pick 1 block</strong> per day — Morning, Afternoon, or Evening.'
-      : '<strong>Pick 2 blocks</strong> per day. Morning + Evening on a weekday is our <a href="/how-it-works#primetime" style="color:var(--cyan);font-weight:700;text-decoration:underline">Primetime</a> slot (+$250).';
+      : isMulti
+        ? '<strong>Pick 2 blocks</strong> per day. <span style="color:var(--cyan);font-weight:700">Primetime (Morning + Evening) is included on multi-day packages.</span>'
+        : '<strong>Pick 2 blocks</strong> per day. Morning + Evening on a weekday is our <a href="/how-it-works#primetime" style="color:var(--cyan);font-weight:700;text-decoration:underline">Primetime</a> slot (+$250).';
   }
 
   // Drop selections for dates no longer chosen
@@ -1017,6 +1030,7 @@ const TURNS_PER_BLOCK_MAX = 12; // 3 turns/hr × 4hr block
 function calcTurns(riders, sessionType, numDays){
   if(!riders || riders < 1) return null;
   if(sessionType === 'local') return null;
+  if(sessionType === 'multiday') return null;  // multi-day skips Time on Water card
 
   const r = Math.min(riders, 9);
   const blocksPerDay = sessionType === 'halfday' ? 1 : 2;
@@ -1074,6 +1088,20 @@ function renderResult({ppNum,ppLabel,total,pkg,lines,note,tip,gsNote,tubing,turn
   document.getElementById('res-pp-num').textContent=ppNum.toLocaleString();
   document.getElementById('res-pp-lbl').textContent=ppLabel;
   document.getElementById('res-total-num').textContent='$'+total.toLocaleString();
+
+  // Per-day breakdown — only show for multi-day packages
+  const perDayRow = document.getElementById('res-per-day-row');
+  if(perDayRow){
+    const skiDays = (window._lastSkiDays || 1);
+    if(sessionType === 'multiday' && skiDays > 1){
+      const perDay = Math.round(total / skiDays);
+      document.getElementById('res-per-day-num').textContent = perDay.toLocaleString();
+      document.getElementById('res-per-day-count').textContent = skiDays;
+      perDayRow.style.display = 'block';
+    } else {
+      perDayRow.style.display = 'none';
+    }
+  }
 
   const bk=lines.map(l=>{
     if(l.t==='note') return `<div class="res-line"><span class="lbl" style="color:var(--pink)">★ ${l.l}</span><span></span></div>`;
