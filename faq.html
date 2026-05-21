@@ -30,7 +30,7 @@
 <body>
 
 <nav>
-  <a href="/" class="nav-brand"><img src="./Sports_clear_bg.png" alt="Stillwater Sports" style="height:116px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.3))"/></a>
+  <a href="/" class="nav-brand"><img src="./Sports_clear_bg.webp"alt="Stillwater Sports" style="height:116px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.3))"/></a>
   <div class="nav-links">
     <div class="nav-dropdown">
       <a href="javascript:void(0)" class="nav-link-top " onclick="toggleDropdown(event,'about-menu')">About ▾</a>
@@ -52,9 +52,9 @@
     <a href="/pricing">Pricing</a>
     <a href="/booking">Booking</a>
     <a href="/contact">Contact</a>
-    <a href="/app">Stillwater Skills App</a>
-  </div>
-  <a href="/promos" class="nav-promo" style="background:linear-gradient(135deg,var(--pink),#c43090);color:var(--yellow);font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:9px 16px;border-radius:50px;text-decoration:none;margin-left:auto;margin-right:4px;display:inline-flex;align-items:center;gap:5px;box-shadow:0 2px 10px rgba(224,64,160,0.25)">Promos</a>
+</div>
+    <a href="tel:+16132995998" class="nav-phone" style="color:var(--yellow);font-size:13px;font-weight:600;text-decoration:none;margin-right:12px;white-space:nowrap" title="Call us"><span style="font-size:14px">📞</span> 613-299-5998</a>
+  <a href="/promos" class="nav-promo" style="background:var(--cyan);color:var(--yellow);border:2px solid var(--pink);font-size:14px;font-weight:700;padding:8px 20px;border-radius:50px;text-decoration:none;margin-right:10px;display:inline-flex;align-items:center;gap:5px;letter-spacing:.04em;text-transform:uppercase">Promos</a>
   <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
@@ -66,15 +66,14 @@
   <a href="/guidelines" onclick="toggleMenu()">Guidelines</a>
   <a href="/faq" onclick="toggleMenu()">FAQ</a>
   <a href="/pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="tel:+16132995998" onclick="toggleMenu()" style="color:var(--cyan);font-weight:800">📞 Call 613-299-5998</a>
   <a href="/promos" onclick="toggleMenu()" style="color:var(--pink);font-weight:800">✨ Promos</a>
   <a href="/booking" onclick="toggleMenu()">Booking</a>
-  <a href="/contact" onclick="toggleMenu()">Contact</a>
-  <a href="/app" onclick="toggleMenu()">Stillwater Skills App</a>
-  <a href="/policies" onclick="toggleMenu()">Policies</a>
+  <a href="/contact" onclick="toggleMenu()">Contact</a><a href="/policies" onclick="toggleMenu()">Policies</a>
 </div>
 
 <section class="hero hero-mid">
-   <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 100%),url('./faq-hero.jpeg') 60% center/cover no-repeat;background-color:var(--cyan)"></div>
+   <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 100%),url('./faq-hero.webp') 60% center/cover no-repeat;background-color:var(--cyan)"></div>
   <div class="hero-coords">N 45°<br>OTTAWA</div>
   <div class="hero-content" style="bottom:120px;left:50%;transform:translateX(-50%);max-width:580px;text-align:left">
     <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)">Common Questions · Honest Answers</div>
@@ -220,9 +219,10 @@
   <div class="footer-inner">
     <div class="footer-top">
       <div>
-        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.png" alt="Stillwater Sports"/></div>
+        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.webp"alt="Stillwater Sports"/></div>
         <p class="footer-desc">Private water sports coaching across Ontario cottage country. Six disciplines, all skill levels, all equipment included.</p>
-        <div class="footer-social"><a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a><a href="#" class="footer-social-btn">⊙</a></div>
+        <div class="footer-social"><a href="mailto:christian@learnwatersports.ca" class="footer-social-btn" title="Email">✉</a><a href="tel:+16132995998" class="footer-social-btn" title="Call">📞</a><a href="#" class="footer-social-btn">⊙</a></div>
+        <div style="margin-top:12px;font-size:13px"><a href="tel:+16132995998" style="color:var(--yellow);font-weight:600;text-decoration:none">📞 613-299-5998</a></div>
       </div>
       <div class="footer-col"><h4>Explore</h4><a href="/about">About</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/pricing">Pricing</a><a href="/promos">Promotions</a><a href="/contact">Contact</a></div>
       <div class="footer-col"><h4>How It Works</h4><a href="/how-it-works">What to Expect</a><a href="/guidelines">Guidelines</a><a href="/faq">FAQ</a></div>

@@ -124,7 +124,7 @@ body{-webkit-user-select:none;user-select:none}
 </head>
 <body>
 <nav>
-  <a href="/" class="nav-brand"><img src="./Sports_clear_bg.png" alt="Stillwater Sports" style="height:116px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.3))"/></a>
+  <a href="/" class="nav-brand"><img src="./Sports_clear_bg.webp"alt="Stillwater Sports" style="height:116px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.3))"/></a>
   <div class="nav-links">
     <div class="nav-dropdown">
       <a href="javascript:void(0)" class="nav-link-top" onclick="toggleDropdown(event,'about-menu')">About ▾</a>
@@ -141,9 +141,9 @@ body{-webkit-user-select:none;user-select:none}
     <a href="/pricing" class="active">Pricing</a>
     <a href="/booking">Booking</a>
     <a href="/contact">Contact</a>
-    <a href="/app">Stillwater Skills App</a>
-  </div>
-  <a href="/promos" class="nav-promo" style="background:linear-gradient(135deg,var(--pink),#c43090);color:var(--yellow);font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:9px 16px;border-radius:50px;text-decoration:none;margin-left:auto;margin-right:4px;display:inline-flex;align-items:center;gap:5px;box-shadow:0 2px 10px rgba(224,64,160,0.25)">Promos</a>
+</div>
+    <a href="tel:+16132995998" class="nav-phone" style="color:var(--yellow);font-size:13px;font-weight:600;text-decoration:none;margin-right:12px;white-space:nowrap" title="Call us"><span style="font-size:14px">📞</span> 613-299-5998</a>
+  <a href="/promos" class="nav-promo" style="background:var(--cyan);color:var(--yellow);border:2px solid var(--pink);font-size:14px;font-weight:700;padding:8px 20px;border-radius:50px;text-decoration:none;margin-right:10px;display:inline-flex;align-items:center;gap:5px;letter-spacing:.04em;text-transform:uppercase">Promos</a>
   <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
@@ -155,16 +155,15 @@ body{-webkit-user-select:none;user-select:none}
   <a href="/guidelines" onclick="toggleMenu()">Guidelines</a>
   <a href="/faq" onclick="toggleMenu()">FAQ</a>
   <a href="/pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="tel:+16132995998" onclick="toggleMenu()" style="color:var(--cyan);font-weight:800">📞 Call 613-299-5998</a>
   <a href="/promos" onclick="toggleMenu()" style="color:var(--pink);font-weight:800">✨ Promos</a>
   <a href="/booking" onclick="toggleMenu()">Booking</a>
-  <a href="/contact" onclick="toggleMenu()">Contact</a>
-  <a href="/app" onclick="toggleMenu()">Stillwater Skills App</a>
-  <a href="/policies" onclick="toggleMenu()">Policies</a>
+  <a href="/contact" onclick="toggleMenu()">Contact</a><a href="/policies" onclick="toggleMenu()">Policies</a>
 </div>
 
 <!-- HERO -->
 <section class="hero hero-mid">
-  <div class="hero-bg" style="background:url('./pricing-hero.jpeg') 60% center/cover no-repeat;background-color:var(--cyan)"></div>
+  <div class="hero-bg" style="background:url('./pricing-hero.webp') 60% center/cover no-repeat;background-color:var(--cyan)"></div>
   <div class="hero-coords">N 45°<br>OTTAWA</div>
   <div class="hero-content" style="bottom:100px;left:48px;max-width:580px">
     <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)" data-content="pricing_hero_badge"></div>
@@ -288,12 +287,12 @@ body{-webkit-user-select:none;user-select:none}
           <div id="multi-date-row" style="display:none">
             <div class="date-range-row">
               <div>
-                <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px">Start Date</label>
-                <input type="date" id="est-date-start-multi" class="date-range-input" onchange="syncDates();runEstimate()" min="2026-05-01"/>
+                <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px">Number of Ski Days</label>
+                <input type="number" id="est-num-days" class="date-range-input" onchange="syncDates();runEstimate()" min="2" max="14" value="2" style="max-width:120px"/>
               </div>
               <div>
-                <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px">End Date</label>
-                <input type="date" id="est-date-end" class="date-range-input" onchange="runEstimate()" min="2026-05-01"/>
+                <label style="font-size:12px;font-weight:600;color:var(--muted);display:block;margin-bottom:6px">Start Date</label>
+                <input type="date" id="est-date-start-multi" class="date-range-input" onchange="syncDates();runEstimate()" min="2026-05-01"/>
               </div>
             </div>
             <div class="date-range-summary" id="date-range-summary-multi" style="margin-top:8px"></div>
@@ -338,7 +337,7 @@ body{-webkit-user-select:none;user-select:none}
                 <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px" data-content="pricing_result_pp_label"></div>
                 <div style="font-size:68px;font-weight:900;color:var(--text);text-shadow:-1.5px -1.5px 0 var(--cyan),1.5px -1.5px 0 var(--cyan),-1.5px 1.5px 0 var(--cyan),1.5px 1.5px 0 var(--cyan);line-height:1;letter-spacing:-.02em"><sup style="font-size:32px;text-shadow:none;color:var(--cyan)">$</sup><span id="res-pp-num">—</span></div>
                 <div class="result-pp-lbl" id="res-pp-lbl" style="margin-top:4px">estimated</div>
-                <div id="res-per-day-row" style="display:none;margin-top:10px;padding-top:10px;border-top:1px dashed rgba(0,200,212,0.3);font-size:13px;color:var(--muted);font-weight:600"><span style="color:var(--cyan)">$<span id="res-per-day-num">—</span></span> per ski day <span style="color:#3a6a6a">· <span id="res-per-day-count"></span> days</span></div>
+                <div id="res-per-day-row" style="display:none;margin-top:10px;padding-top:10px;border-top:1px dashed rgba(0,200,212,0.3);font-size:13px;color:var(--muted);font-weight:600"><span style="color:var(--cyan)">$<span id="res-per-day-num">—</span></span> per person · per ski day <span style="color:#3a6a6a">(<span id="res-per-day-count"></span> ski days)</span></div>
               </div>
               <div style="text-align:center">
                 <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:4px" data-content="pricing_result_total_label"></div>
@@ -463,7 +462,7 @@ body{-webkit-user-select:none;user-select:none}
       </div>
       <div style="margin-top:12px;font-size:12px;color:var(--muted);line-height:1.8">
         <strong>Distance surcharges:</strong> +$100 (1.5–3hr from Manotick) · +$200 (3–6hr) &nbsp;·&nbsp;
-        <strong>Deposit:</strong> non-refundable, required to secure your date &nbsp;·&nbsp;
+        <strong>Deposit:</strong> required to secure your date &nbsp;·&nbsp;
         <strong>Balance:</strong> due 48hrs before your session
       </div>
     </div>
@@ -535,9 +534,10 @@ body{-webkit-user-select:none;user-select:none}
   <div class="footer-inner">
     <div class="footer-top">
       <div>
-        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.png" alt="Stillwater Sports"/></div>
+        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.webp"alt="Stillwater Sports"/></div>
         <p class="footer-desc">Private water sports coaching across Ontario cottage country. Six disciplines, all skill levels, all equipment included.</p>
-        <div class="footer-social"><a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a><a href="#" class="footer-social-btn">⊙</a></div>
+        <div class="footer-social"><a href="mailto:christian@learnwatersports.ca" class="footer-social-btn" title="Email">✉</a><a href="tel:+16132995998" class="footer-social-btn" title="Call">📞</a><a href="#" class="footer-social-btn">⊙</a></div>
+        <div style="margin-top:12px;font-size:13px"><a href="tel:+16132995998" style="color:var(--yellow);font-weight:600;text-decoration:none">📞 613-299-5998</a></div>
       </div>
       <div class="footer-col"><h4>Explore</h4><a href="/about">About</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/pricing">Pricing</a><a href="/promos">Promotions</a><a href="/contact">Contact</a></div>
       <div class="footer-col"><h4>How It Works</h4><a href="/how-it-works">What to Expect</a><a href="/guidelines">Guidelines</a><a href="/faq">FAQ</a></div>
@@ -603,7 +603,7 @@ function goToEstimator(type){
   });
   selectedCardType = type;
   const blocksUI = document.getElementById('blocks-ui');
-  if(blocksUI) blocksUI.style.display = (type==='halfday'||type==='fullday'||type==='multiday') ? 'block' : 'none';
+  if(blocksUI) blocksUI.style.display = (type==='halfday'||type==='fullday') ? 'block' : 'none';
   const dateSection = document.getElementById('date-range-section');
   if(dateSection) dateSection.style.display = type==='local' ? 'none' : 'block';
   updateDateUI(type);
@@ -616,7 +616,11 @@ function goToEstimator(type){
     const start  = document.getElementById('est-date-start');
     const startM = document.getElementById('est-date-start-multi');
     if(riders && !riders.value) riders.focus();
-    else if(type==='multiday' && startM && !startM.value) startM.focus();
+    else if(type==='multiday'){
+      const numDays = document.getElementById('est-num-days');
+      if(numDays && (!numDays.value || numDays.value==='2')) numDays.focus();
+      else if(startM && !startM.value) startM.focus();
+    }
     else if(type!=='local' && start && !start.value) start.focus();
   }, 500);
 
@@ -628,7 +632,7 @@ function selectCardType(type, btn){
   document.querySelectorAll('.card-type-btn').forEach(b=>b.classList.remove('active'));
   btn.classList.add('active');
   const blocksUI = document.getElementById('blocks-ui');
-  if(blocksUI) blocksUI.style.display = (type==='halfday'||type==='fullday'||type==='multiday') ? 'block' : 'none';
+  if(blocksUI) blocksUI.style.display = (type==='halfday'||type==='fullday') ? 'block' : 'none';
   const dateSection = document.getElementById('date-range-section');
   if(dateSection) dateSection.style.display = type==='local' ? 'none' : 'block';
   updateDateUI(type);
@@ -716,21 +720,23 @@ function getDistBracket(loc){
 
 // ── DATE RANGE ────────────────────────────────────────────
 function getSelectedDates(){
-  let startVal, endVal;
   if(selectedCardType === 'multiday'){
-    startVal = document.getElementById('est-date-start-multi')?.value;
-    endVal   = document.getElementById('est-date-end')?.value;
+    const startVal = document.getElementById('est-date-start-multi')?.value;
+    const numDays  = Math.max(2, Math.min(14, parseInt(document.getElementById('est-num-days')?.value)||2));
+    if(!startVal) return [];
+    const start = new Date(startVal+'T12:00:00');
+    const dates = [];
+    for(let i=0; i<numDays; i++){
+      const d = new Date(start);
+      d.setDate(d.getDate()+i);
+      dates.push(d);
+    }
+    return dates;
   } else {
-    startVal = document.getElementById('est-date-start')?.value;
-    endVal   = startVal; // single day — end = start
+    const startVal = document.getElementById('est-date-start')?.value;
+    if(!startVal) return [];
+    return [new Date(startVal+'T12:00:00')];
   }
-  if(!startVal) return [];
-  const start = new Date(startVal+'T12:00:00');
-  const end   = endVal ? new Date(endVal+'T12:00:00') : start;
-  if(end < start) return [start];
-  const dates = [];
-  for(let d=new Date(start); d<=end; d.setDate(d.getDate()+1)) dates.push(new Date(d));
-  return dates;
 }
 
 function updateDateSummary(){
@@ -909,6 +915,7 @@ function runEstimate(){
   const turns = calcTurns(riders, selectedCardType, res.skiDays || dates.length);
   window._lastDates = dates.length;
   window._lastSkiDays = res.skiDays || dates.length;
+  window._lastRiders = riders;
 
   renderResult({
     ppNum:Math.round(base/riders),
@@ -934,6 +941,8 @@ function renderBlocksUI(dates){
   const isFull = selectedCardType==='fullday';
   const isMulti = selectedCardType==='multiday';
   if(!isHalf && !isFull && !isMulti){ ui.style.display='none'; return; }
+  // Hide blocks UI entirely for multi-day — primetime is included, no need to pick per day
+  if(isMulti){ ui.style.display='none'; return; }
 
   const maxPerDay = isHalf ? 1 : 2;
   if(hint){
@@ -1089,13 +1098,14 @@ function renderResult({ppNum,ppLabel,total,pkg,lines,note,tip,gsNote,tubing,turn
   document.getElementById('res-pp-lbl').textContent=ppLabel;
   document.getElementById('res-total-num').textContent='$'+total.toLocaleString();
 
-  // Per-day breakdown — only show for multi-day packages
+  // Per-day breakdown — only show for multi-day packages (per person · per ski day)
   const perDayRow = document.getElementById('res-per-day-row');
   if(perDayRow){
     const skiDays = (window._lastSkiDays || 1);
+    const ridersCount = (window._lastRiders || 1);
     if(sessionType === 'multiday' && skiDays > 1){
-      const perDay = Math.round(total / skiDays);
-      document.getElementById('res-per-day-num').textContent = perDay.toLocaleString();
+      const perPersonPerDay = Math.round(total / ridersCount / skiDays);
+      document.getElementById('res-per-day-num').textContent = perPersonPerDay.toLocaleString();
       document.getElementById('res-per-day-count').textContent = skiDays;
       perDayRow.style.display = 'block';
     } else {

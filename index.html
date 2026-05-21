@@ -29,7 +29,7 @@
 <body>
 
 <nav>
-  <a href="/" class="nav-brand"><img src="./Sports_clear_bg.png" alt="Stillwater Sports" style="height:116px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.3))"/></a>
+  <a href="/" class="nav-brand"><img src="./Sports_clear_bg.webp"alt="Stillwater Sports" style="height:116px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.3))"/></a>
   <div class="nav-links">
     <div class="nav-dropdown">
       <a href="javascript:void(0)" class="nav-link-top " onclick="toggleDropdown(event,'about-menu')">About ▾</a>
@@ -51,9 +51,9 @@
     <a href="/pricing">Pricing</a>
     <a href="/booking">Booking</a>
     <a href="/contact">Contact</a>
-    <a href="/app">Stillwater Skills App</a>
-  </div>
-  <a href="/promos" class="nav-promo" style="background:linear-gradient(135deg,var(--pink),#c43090);color:var(--yellow);font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;padding:9px 16px;border-radius:50px;text-decoration:none;margin-left:auto;margin-right:4px;display:inline-flex;align-items:center;gap:5px;box-shadow:0 2px 10px rgba(224,64,160,0.25)">Promos</a>
+</div>
+    <a href="tel:+16132995998" class="nav-phone" style="color:var(--yellow);font-size:13px;font-weight:600;text-decoration:none;margin-right:12px;white-space:nowrap" title="Call us"><span style="font-size:14px">📞</span> 613-299-5998</a>
+  <a href="/promos" class="nav-promo" style="background:var(--cyan);color:var(--yellow);border:2px solid var(--pink);font-size:14px;font-weight:700;padding:8px 20px;border-radius:50px;text-decoration:none;margin-right:10px;display:inline-flex;align-items:center;gap:5px;letter-spacing:.04em;text-transform:uppercase">Promos</a>
   <a href="/booking" class="nav-book">Book Now</a>
   <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
 </nav>
@@ -65,17 +65,16 @@
   <a href="/guidelines" onclick="toggleMenu()">Guidelines</a>
   <a href="/faq" onclick="toggleMenu()">FAQ</a>
   <a href="/pricing" onclick="toggleMenu()">Pricing</a>
+  <a href="tel:+16132995998" onclick="toggleMenu()" style="color:var(--cyan);font-weight:800">📞 Call 613-299-5998</a>
   <a href="/promos" onclick="toggleMenu()" style="color:var(--pink);font-weight:800">✨ Promos</a>
   <a href="/booking" onclick="toggleMenu()">Booking</a>
-  <a href="/contact" onclick="toggleMenu()">Contact</a>
-  <a href="/app" onclick="toggleMenu()">Stillwater Skills App</a>
-  <a href="/policies" onclick="toggleMenu()">Policies</a>
+  <a href="/contact" onclick="toggleMenu()">Contact</a><a href="/policies" onclick="toggleMenu()">Policies</a>
 </div>
 
 
 <!-- HERO -->
 <section class="hero hero-tall">
-  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,100,120,0.55) 0%,rgba(0,80,100,0.35) 40%,rgba(0,50,70,0.45) 100%),url('./index-hero.jpg') center 35%/cover no-repeat;background-color:var(--cyan)"></div>
+  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,100,120,0.55) 0%,rgba(0,80,100,0.35) 40%,rgba(0,50,70,0.45) 100%),url('./index-hero.webp') center 35%/cover no-repeat;background-color:var(--cyan)"></div>
   <div class="hero-coords">N 45°<br>OTTAWA</div>
   <div class="hero-content" style="bottom:100px;right:48px;left:auto;max-width:580px">
     <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)" data-content="home_hero_badge"></div>
@@ -87,7 +86,6 @@
     <p class="hero-sub" style="color:var(--yellow);opacity:0.9" data-content="home_hero_sub"></p>
       <div class="hero-actions" style="margin-top:0">
         <a href="/booking" class="btn-pink">Book a Lesson →</a>
-        <a href="/sports" class="btn-ghost">Explore Sports</a>
       </div>
     </div>
     
@@ -178,37 +176,37 @@
   </div>
   <div class="sport-fan-wrap fade-up">
     <a href="/sports#waterski" class="sport-fan-card active" data-sport="waterski" onclick="expandCard(this)">
-      <div class="sport-fan-bg" style="background:url('./waterski.jpg') center 35%/cover no-repeat,linear-gradient(160deg,#004a60,#007080)"></div>
+      <div class="sport-fan-bg" style="background:url('./waterski.webp') center 35%/cover no-repeat,linear-gradient(160deg,#004a60,#007080)"></div>
       <div class="sport-fan-overlay"></div>
       <span class="sport-fan-num">01</span>
       <span class="sport-fan-name">Waterski</span>
     </a>
     <a href="/sports#wakeboard" class="sport-fan-card" data-sport="wakeboard" onclick="expandCard(this)">
-      <div class="sport-fan-bg" style="background:url('./wakeboard.jpg') center 35%/cover no-repeat,linear-gradient(160deg,#003848,#006070)"></div>
+      <div class="sport-fan-bg" style="background:url('./wakeboard.webp') center 35%/cover no-repeat,linear-gradient(160deg,#003848,#006070)"></div>
       <div class="sport-fan-overlay"></div>
       <span class="sport-fan-num">02</span>
       <span class="sport-fan-name">Wakeboard</span>
     </a>
     <a href="/sports#wakesurf" class="sport-fan-card" data-sport="wakesurf" onclick="expandCard(this)">
-      <div class="sport-fan-bg" style="background:url('./wakesurf.jpg') center 35%/cover no-repeat,linear-gradient(160deg,#002838,#004858)"></div>
+      <div class="sport-fan-bg" style="background:url('./wakesurf.webp') center 35%/cover no-repeat,linear-gradient(160deg,#002838,#004858)"></div>
       <div class="sport-fan-overlay"></div>
       <span class="sport-fan-num">03</span>
       <span class="sport-fan-name">Wakesurf</span>
     </a>
     <a href="/sports#slalom" class="sport-fan-card" data-sport="slalom" onclick="expandCard(this)">
-      <div class="sport-fan-bg" style="background:url('./slalom.jpg') center 35%/cover no-repeat,linear-gradient(160deg,#003850,#005a70)"></div>
+      <div class="sport-fan-bg" style="background:url('./slalom.webp') center 35%/cover no-repeat,linear-gradient(160deg,#003850,#005a70)"></div>
       <div class="sport-fan-overlay"></div>
       <span class="sport-fan-num">04</span>
       <span class="sport-fan-name">Slalom</span>
     </a>
     <a href="/sports#barefoot" class="sport-fan-card" data-sport="barefoot" onclick="expandCard(this)">
-      <div class="sport-fan-bg" style="background:url('./barefoot.jpg') center 35%/cover no-repeat,linear-gradient(160deg,#1a3020,#2a5535)"></div>
+      <div class="sport-fan-bg" style="background:url('./barefoot.webp') center 35%/cover no-repeat,linear-gradient(160deg,#1a3020,#2a5535)"></div>
       <div class="sport-fan-overlay"></div>
       <span class="sport-fan-num">05</span>
       <span class="sport-fan-name">Barefoot</span>
     </a>
     <a href="/sports#tubing" class="sport-fan-card" data-sport="tubing" onclick="expandCard(this)">
-      <div class="sport-fan-bg" style="background:url('./tubing.jpg') center 35%/cover no-repeat,linear-gradient(160deg,#3a1a30,#602040)"></div>
+      <div class="sport-fan-bg" style="background:url('./tubing.webp') center 35%/cover no-repeat,linear-gradient(160deg,#3a1a30,#602040)"></div>
       <div class="sport-fan-overlay"></div>
       <span class="sport-fan-num">06</span>
       <span class="sport-fan-name">Tubing</span>
@@ -306,12 +304,14 @@
   <div class="footer-inner">
     <div class="footer-top">
       <div>
-        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.png" alt="Stillwater Sports"/></div>
+        <div class="footer-brand-row"><img class="footer-logo" src="./Logo4.webp"alt="Stillwater Sports"/></div>
         <p class="footer-desc">Private water sports coaching across Ontario cottage country. Six disciplines, all skill levels, all equipment included.</p>
         <div class="footer-social">
-          <a href="mailto:christian@learnwatersports.ca" class="footer-social-btn">✉</a>
+          <a href="mailto:christian@learnwatersports.ca" class="footer-social-btn" title="Email">✉</a>
+          <a href="tel:+16132995998" class="footer-social-btn" title="Call">📞</a>
           <a href="#" class="footer-social-btn">⊙</a>
         </div>
+        <div style="margin-top:12px;font-size:13px"><a href="tel:+16132995998" style="color:var(--yellow);font-weight:600;text-decoration:none">📞 613-299-5998</a></div>
       </div>
       <div class="footer-col">
         <h4>Explore</h4>
@@ -368,7 +368,7 @@
       <div style="margin-bottom:14px"><label style="display:block;font-size:11px;font-weight:700;color:#4a7a7a;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase">Sport</label><select id="b-sport" style="width:100%;padding:11px 14px;border:1px solid rgba(0,180,190,0.3);border-radius:10px;font-size:15px;font-family:Outfit,sans-serif;outline:none;background:#FFFeb4;-webkit-appearance:none"><option value="">Select...</option><option>Waterski</option><option>Wakeboard</option><option>Wakesurf</option><option>Slalom</option><option>Barefoot</option><option>Tubing</option><option>Multiple / Not sure</option></select></div>
       <div style="margin-bottom:20px"><label style="display:block;font-size:11px;font-weight:700;color:#4a7a7a;margin-bottom:5px;letter-spacing:.06em;text-transform:uppercase">Anything Else?</label><textarea id="b-notes" placeholder="Ages of riders, goals, questions, AM or PM preference..." style="width:100%;padding:11px 14px;border:1px solid rgba(0,180,190,0.3);border-radius:10px;font-size:14px;font-family:Outfit,sans-serif;outline:none;background:#FFFeb4;resize:vertical;min-height:70px;line-height:1.5"></textarea></div>
       <button id="b-submit" onclick="submitBooking()" style="width:100%;padding:14px;background:#E040A0;color:#fff;border:none;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:Outfit,sans-serif">Request This Date →</button>
-      <p style="font-size:11px;color:#7aacac;text-align:center;margin-top:10px">No payment required. We will confirm within 24 hours. <strong style="color:#E040A0">Deposits are non-refundable.</strong></p>
+      <p style="font-size:11px;color:#7aacac;text-align:center;margin-top:10px">No payment required. We will confirm within 24 hours.</p>
     </div>
     <div id="modal-success" style="display:none;text-align:center;padding:20px 0">
       <div style="font-size:52px;margin-bottom:16px">🌊</div>
