@@ -8,7 +8,7 @@
 <meta property="og:url" content="https://learnwatersports.ca/"/>
 <meta property="og:title" content="Stillwater Sports — Private Watersports Coaching"/>
 <meta property="og:description" content="Private waterski, wakeboard, wakesurf and more across cottage country. Boat and all equipment included. We come to your lake."/>
-<meta property="og:image" content="https://learnwatersports.ca/FB-main.jpg"/>
+<meta property="og:image" content="https://learnwatersports.ca/assets/images/jpg/FB-main.jpg"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta name="twitter:card" content="summary_large_image"/>
@@ -28,53 +28,14 @@
 </head>
 <body>
 
-<nav>
-  <a href="/" class="nav-brand"><img src="./assets/images/png/Sports_clear_bg.png"alt="Stillwater Sports" style="height:116px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.3))"/></a>
-  <div class="nav-links">
-    <div class="nav-dropdown">
-      <a href="javascript:void(0)" class="nav-link-top " onclick="toggleDropdown(event,'about-menu')">About ▾</a>
-      <div class="nav-dropdown-menu" id="about-menu">
-        <a href="/about">Meet the Coach</a>
-        <a href="/sports">Sports</a>
-        <a href="/equipment">Equipment</a>
-        <a href="/policies">Policies</a>
-      </div>
-    </div>
-    <div class="nav-dropdown">
-      <a href="javascript:void(0)" class="nav-link-top " onclick="toggleDropdown(event,'hiw-menu')">How It Works ▾</a>
-      <div class="nav-dropdown-menu" id="hiw-menu">
-        <a href="/how-it-works">What to Expect</a>
-        <a href="/guidelines">Guidelines</a>
-        <a href="/faq">FAQ</a>
-      </div>
-    </div>
-    <a href="/pricing">Pricing</a>
-    <a href="/booking">Booking</a>
-    <a href="/contact">Contact</a>
-</div>
-    <a href="tel:+16132995998" class="nav-phone" style="color:var(--yellow);font-size:13px;font-weight:600;text-decoration:none;margin-right:12px;white-space:nowrap" title="Call us"><span style="font-size:14px">📞</span> 613-299-5998</a>
-  <a href="/promos" class="nav-promo" style="background:var(--cyan);color:var(--yellow);border:2px solid var(--pink);font-size:14px;font-weight:700;padding:8px 20px;border-radius:50px;text-decoration:none;margin-right:10px;display:inline-flex;align-items:center;gap:5px;letter-spacing:.04em;text-transform:uppercase">Promos</a>
-  <a href="/booking" class="nav-book">Book Now</a>
-  <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
-</nav>
-<div class="mobile-menu" id="mobileMenu">
-  <a href="/about" onclick="toggleMenu()">Meet the Coach</a>
-  <a href="/sports" onclick="toggleMenu()">Sports</a>
-  <a href="/equipment" onclick="toggleMenu()">Equipment</a>
-  <a href="/how-it-works" onclick="toggleMenu()">What to Expect</a>
-  <a href="/guidelines" onclick="toggleMenu()">Guidelines</a>
-  <a href="/faq" onclick="toggleMenu()">FAQ</a>
-  <a href="/pricing" onclick="toggleMenu()">Pricing</a>
-  <a href="tel:+16132995998" onclick="toggleMenu()" style="color:var(--cyan);font-weight:800">📞 Call 613-299-5998</a>
-  <a href="/promos" onclick="toggleMenu()" style="color:var(--pink);font-weight:800">✨ Promos</a>
-  <a href="/booking" onclick="toggleMenu()">Booking</a>
-  <a href="/contact" onclick="toggleMenu()">Contact</a><a href="/policies" onclick="toggleMenu()">Policies</a>
-</div>
+
+<div id="nav-placeholder"></div>
+<script src="./assets/js/nav.js"></script>
 
 
 <!-- HERO -->
 <section class="hero hero-tall">
-  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,100,120,0.55) 0%,rgba(0,80,100,0.35) 40%,rgba(0,50,70,0.45) 100%),url('./index-hero.webp') center 35%/cover no-repeat;background-color:var(--cyan)"></div>
+  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,100,120,0.55) 0%,rgba(0,80,100,0.35) 40%,rgba(0,50,70,0.45) 100%),url('./assets/images/webp/index-hero.webp') center 35%/cover no-repeat;background-color:var(--cyan)"></div>
   <div class="hero-coords">N 45°<br>OTTAWA</div>
   <div class="hero-content" style="bottom:100px;right:48px;left:auto;max-width:580px">
     <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)" data-content="home_hero_badge"></div>
@@ -176,37 +137,37 @@
   </div>
   <div class="sport-fan-wrap fade-up">
     <a href="/sports#waterski" class="sport-fan-card active" data-sport="waterski" onclick="expandCard(this)">
-      <div class="sport-fan-bg" style="background:url('./waterski.webp') center 35%/cover no-repeat,linear-gradient(160deg,#004a60,#007080)"></div>
+      <div class="sport-fan-bg" style="background:url('./assets/images/webp/waterski.webp') center 35%/cover no-repeat,linear-gradient(160deg,#004a60,#007080)"></div>
       <div class="sport-fan-overlay"></div>
       <span class="sport-fan-num">01</span>
       <span class="sport-fan-name">Waterski</span>
     </a>
     <a href="/sports#wakeboard" class="sport-fan-card" data-sport="wakeboard" onclick="expandCard(this)">
-      <div class="sport-fan-bg" style="background:url('./wakeboard.webp') center 35%/cover no-repeat,linear-gradient(160deg,#003848,#006070)"></div>
+      <div class="sport-fan-bg" style="background:url('./assets/images/webp/wakeboard.webp') center 35%/cover no-repeat,linear-gradient(160deg,#003848,#006070)"></div>
       <div class="sport-fan-overlay"></div>
       <span class="sport-fan-num">02</span>
       <span class="sport-fan-name">Wakeboard</span>
     </a>
     <a href="/sports#wakesurf" class="sport-fan-card" data-sport="wakesurf" onclick="expandCard(this)">
-      <div class="sport-fan-bg" style="background:url('./wakesurf.webp') center 35%/cover no-repeat,linear-gradient(160deg,#002838,#004858)"></div>
+      <div class="sport-fan-bg" style="background:url('./assets/images/webp/wakesurf.webp') center 35%/cover no-repeat,linear-gradient(160deg,#002838,#004858)"></div>
       <div class="sport-fan-overlay"></div>
       <span class="sport-fan-num">03</span>
       <span class="sport-fan-name">Wakesurf</span>
     </a>
     <a href="/sports#slalom" class="sport-fan-card" data-sport="slalom" onclick="expandCard(this)">
-      <div class="sport-fan-bg" style="background:url('./slalom.webp') center 35%/cover no-repeat,linear-gradient(160deg,#003850,#005a70)"></div>
+      <div class="sport-fan-bg" style="background:url('./assets/images/webp/slalom.webp') center 35%/cover no-repeat,linear-gradient(160deg,#003850,#005a70)"></div>
       <div class="sport-fan-overlay"></div>
       <span class="sport-fan-num">04</span>
       <span class="sport-fan-name">Slalom</span>
     </a>
     <a href="/sports#barefoot" class="sport-fan-card" data-sport="barefoot" onclick="expandCard(this)">
-      <div class="sport-fan-bg" style="background:url('./barefoot.webp') center 35%/cover no-repeat,linear-gradient(160deg,#1a3020,#2a5535)"></div>
+      <div class="sport-fan-bg" style="background:url('./assets/images/webp/barefoot.webp') center 35%/cover no-repeat,linear-gradient(160deg,#1a3020,#2a5535)"></div>
       <div class="sport-fan-overlay"></div>
       <span class="sport-fan-num">05</span>
       <span class="sport-fan-name">Barefoot</span>
     </a>
     <a href="/sports#tubing" class="sport-fan-card" data-sport="tubing" onclick="expandCard(this)">
-      <div class="sport-fan-bg" style="background:url('./tubing.webp') center 35%/cover no-repeat,linear-gradient(160deg,#3a1a30,#602040)"></div>
+      <div class="sport-fan-bg" style="background:url('./assets/images/webp/tubing.webp') center 35%/cover no-repeat,linear-gradient(160deg,#3a1a30,#602040)"></div>
       <div class="sport-fan-overlay"></div>
       <span class="sport-fan-num">06</span>
       <span class="sport-fan-name">Tubing</span>
@@ -299,49 +260,8 @@
   </div>
 </section>
 
-<footer>
-  <div class="footer-watermark">LEARNWATERSPORTS</div>
-  <div class="footer-inner">
-    <div class="footer-top">
-      <div>
-        <div class="footer-brand-row"><img class="footer-logo" src="./assets/images/png/Logo4.png"alt="Stillwater Sports"/></div>
-        <p class="footer-desc">Private water sports coaching across Ontario cottage country. Six disciplines, all skill levels, all equipment included.</p>
-        <div class="footer-social">
-          <a href="mailto:christian@learnwatersports.ca" class="footer-social-btn" title="Email">✉</a>
-          <a href="tel:+16132995998" class="footer-social-btn" title="Call">📞</a>
-          <a href="#" class="footer-social-btn">⊙</a>
-        </div>
-        <div style="margin-top:12px;font-size:13px"><a href="tel:+16132995998" style="color:var(--yellow);font-weight:600;text-decoration:none">📞 613-299-5998</a></div>
-      </div>
-      <div class="footer-col">
-        <h4>Explore</h4>
-        <a href="/about">About</a>
-        <a href="/sports">Sports</a>
-        <a href="/equipment">Equipment</a>
-        <a href="/how-it-works">How It Works</a>
-        <a href="/pricing">Pricing</a>
-        <a href="/booking">Book Now</a>
-        <a href="/promos">Promotions</a>
-      </div>
-      <div class="footer-col">
-        <h4>Stillwater Skills</h4>
-        <a href="/stillwaterapp">Open the App</a>
-        <a href="/app">For Clubs &amp; Schools</a>
-      </div>
-      <div class="footer-col">
-        <h4>Legal</h4>
-        <a href="/policies">Privacy Policy</a>
-        <a href="/policies#terms">Terms of Service</a>
-        <a href="/policies#waiver">Waiver</a>
-        <a href="/policies#refunds">Refund Policy</a>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <span class="footer-copy">© 2026 Christian Richards · Stillwater Sports · All rights reserved</span>
-      <span class="footer-dot">Ontario Cottage Country · learnwatersports.ca</span>
-    </div>
-  </div>
-</footer>
+<div id="footer-placeholder"></div>
+<script src="./assets/js/footer.js"></script>
 
 <div id="toast"></div>
 
@@ -388,19 +308,6 @@ try{
 }catch(e){console.warn('Supabase init failed',e)}
 
 // NAV
-function toggleDropdown(e, menuId){
-  e.preventDefault(); e.stopPropagation();
-  document.querySelectorAll('.nav-dropdown-menu').forEach(m=>{if(m.id!==menuId)m.classList.remove('open');});
-  document.getElementById(menuId).classList.toggle('open');
-}
-document.addEventListener('click',function(e){
-  if(!e.target.closest('.nav-dropdown')){
-    document.querySelectorAll('.nav-dropdown-menu').forEach(m=>m.classList.remove('open'));
-  }
-});
-function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
-document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
-
 // SPORTS FAN CARDS — expand on click + auto-rotate every 1.5s
 function expandCard(card){
   document.querySelectorAll('.sport-fan-card').forEach(c=>c.classList.remove('active'));

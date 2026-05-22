@@ -119,51 +119,12 @@
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9Z296M7ZLP"></script>
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-9Z296M7ZLP');</script>
 </head>
-<body><nav>
-  <a href="/" class="nav-brand"><img src="./assets/images/png/Sports_clear_bg.png"alt="Stillwater Sports" style="height:116px;width:auto;object-fit:contain;filter:drop-shadow(0 1px 4px rgba(0,0,0,0.3))"/></a>
-  <div class="nav-links">
-    <div class="nav-dropdown">
-      <a href="javascript:void(0)" class="nav-link-top" onclick="toggleDropdown(event,'about-menu')">About ▾</a>
-      <div class="nav-dropdown-menu" id="about-menu">
-        <a href="/about">Meet the Coach</a>
-        <a href="/sports">Sports</a>
-        <a href="/equipment">Equipment</a>
-        <a href="/policies">Policies</a>
-      </div>
-    </div>
-    <div class="nav-dropdown">
-      <a href="javascript:void(0)" class="nav-link-top" onclick="toggleDropdown(event,'hiw-menu')">How It Works ▾</a>
-      <div class="nav-dropdown-menu" id="hiw-menu">
-        <a href="/how-it-works">What to Expect</a>
-        <a href="/guidelines">Guidelines</a>
-        <a href="/faq">FAQ</a>
-      </div>
-    </div>
-    <a href="/pricing">Pricing</a>
-    <a href="/booking" class="active">Booking</a>
-    <a href="/contact">Contact</a>
-</div>
-    <a href="tel:+16132995998" class="nav-phone" style="color:var(--yellow);font-size:13px;font-weight:600;text-decoration:none;margin-right:12px;white-space:nowrap" title="Call us"><span style="font-size:14px">📞</span> 613-299-5998</a>
-  <a href="/promos" class="nav-promo" style="background:var(--cyan);color:var(--yellow);border:2px solid var(--pink);font-size:14px;font-weight:700;padding:8px 20px;border-radius:50px;text-decoration:none;margin-right:10px;display:inline-flex;align-items:center;gap:5px;letter-spacing:.04em;text-transform:uppercase">Promos</a>
-  <a href="/booking" class="nav-book">Book Now</a>
-  <button class="nav-hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
-</nav>
-<div class="mobile-menu" id="mobileMenu">
-  <a href="/about" onclick="toggleMenu()">Meet the Coach</a>
-  <a href="/sports" onclick="toggleMenu()">Sports</a>
-  <a href="/equipment" onclick="toggleMenu()">Equipment</a>
-  <a href="/how-it-works" onclick="toggleMenu()">What to Expect</a>
-  <a href="/guidelines" onclick="toggleMenu()">Guidelines</a>
-  <a href="/faq" onclick="toggleMenu()">FAQ</a>
-  <a href="/pricing" onclick="toggleMenu()">Pricing</a>
-  <a href="tel:+16132995998" onclick="toggleMenu()" style="color:var(--cyan);font-weight:800">📞 Call 613-299-5998</a>
-  <a href="/promos" onclick="toggleMenu()" style="color:var(--pink);font-weight:800">✨ Promos</a>
-  <a href="/booking" onclick="toggleMenu()">Booking</a>
-  <a href="/contact" onclick="toggleMenu()">Contact</a><a href="/policies" onclick="toggleMenu()">Policies</a>
-</div>
+<body>
+<div id="nav-placeholder"></div>
+<script src="./assets/js/nav.js"></script>
 
 <section class="hero hero-tall">
-  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 100%),url('./booking-hero.webp') center 40%/cover no-repeat;background-color:var(--cyan)"></div>
+  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 100%),url('./assets/images/webp/booking-hero.webp') center 40%/cover no-repeat;background-color:var(--cyan)"></div>
   <div class="hero-coords">N 45°<br>OTTAWA</div>
   <div class="hero-content" style="margin-left:auto;max-width:660px">
     <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)" data-content="booking_hero_badge"></div>
@@ -320,27 +281,8 @@
 
   </div>
 </section>
-<footer>
-  <div class="footer-watermark">LEARNWATERSPORTS</div>
-  <div class="footer-inner">
-    <div class="footer-top">
-      <div>
-        <div class="footer-brand-row"><img class="footer-logo" src="./assets/images/png/Logo4.png"alt="Stillwater Sports"/></div>
-        <p class="footer-desc">Private water sports coaching across Ontario cottage country. Six disciplines, all skill levels, all equipment included.</p>
-        <div class="footer-social"><a href="mailto:christian@learnwatersports.ca" class="footer-social-btn" title="Email">✉</a><a href="tel:+16132995998" class="footer-social-btn" title="Call">📞</a><a href="#" class="footer-social-btn">⊙</a></div>
-        <div style="margin-top:12px;font-size:13px"><a href="tel:+16132995998" style="color:var(--yellow);font-weight:600;text-decoration:none">📞 613-299-5998</a></div>
-      </div>
-      <div class="footer-col"><h4>Explore</h4><a href="/about">About</a><a href="/sports">Sports</a><a href="/equipment">Equipment</a><a href="/pricing">Pricing</a><a href="/promos">Promotions</a><a href="/contact">Contact</a></div>
-      <div class="footer-col"><h4>How It Works</h4><a href="/how-it-works">What to Expect</a><a href="/guidelines">Guidelines</a><a href="/faq">FAQ</a></div>
-      <div class="footer-col"><h4>Stillwater Skills</h4><a href="/stillwaterapp">Open the App</a><a href="/app">For Clubs &amp; Schools</a></div>
-      <div class="footer-col"><h4>Legal</h4><a href="/policies">Privacy Policy</a><a href="/policies#terms">Terms of Service</a><a href="/policies#waiver">Waiver</a><a href="/policies#refunds">Refund Policy</a><a href="/requirements">Requirements</a></div>
-    </div>
-    <div class="footer-bottom">
-      <span class="footer-copy">© 2026 Christian Richards · Stillwater Sports · All rights reserved</span>
-      <span class="footer-dot">Ontario Cottage Country · learnwatersports.ca</span>
-    </div>
-  </div>
-</footer>
+<div id="footer-placeholder"></div>
+<script src="./assets/js/footer.js"></script>
 <div id="toast"></div>
 
 
@@ -985,23 +927,6 @@ renderPackageCards();
 
 <script src="./assets/js/content.js"></script>
 
-<script>
-function toggleDropdown(e, menuId){
-  e.preventDefault();
-  e.stopPropagation();
-  document.querySelectorAll('.nav-dropdown-menu').forEach(m => {
-    if(m.id !== menuId) m.classList.remove('open');
-  });
-  document.getElementById(menuId).classList.toggle('open');
-}
-document.addEventListener('click',function(e){
-  if(!e.target.closest('.nav-dropdown')){
-    document.querySelectorAll('.nav-dropdown-menu').forEach(m=>m.classList.remove('open'));
-  }
-});
-function toggleMenu(){const m=document.getElementById('mobileMenu');m.classList.toggle('open');document.body.style.overflow=m.classList.contains('open')?'hidden':'';}
-document.querySelectorAll('.mobile-menu a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('mobileMenu').classList.remove('open');document.body.style.overflow='';}));
-</script>
 
 <!-- ══ PROMO BANNER ══ -->
 <div id="promo-banner" role="alert">
