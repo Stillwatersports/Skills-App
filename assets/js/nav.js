@@ -52,8 +52,7 @@
   <div class="nav-cta-group">
     <a href="/promos" class="nav-promo${ac(promosActive)}"
        style="background:var(--cyan);color:var(--yellow);border:2px solid var(--pink);font-size:13px;font-weight:700;padding:7px 18px;border-radius:50px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;letter-spacing:.04em;text-transform:uppercase">Promos</a>
-    <a href="tel:+16132995998" class="nav-phone" title="Call us">📞 613-299-5998</a>
-    <a href="/booking" class="nav-book">Book Now</a>
+<a href="tel:+16132995998" class="nav-phone" title="Call us" style="background:var(--cyan);color:var(--yellow);border:2px solid var(--pink);font-size:13px;font-weight:700;padding:7px 18px;border-radius:50px;text-decoration:none;display:inline-flex;align-items:center;gap:4px;letter-spacing:.04em;text-transform:uppercase">📞 613-299-5998</a>    <a href="/booking" class="nav-book">Book Now</a>
     <button class="nav-hamburger" onclick="toggleMenu()">
       <span></span><span></span><span></span>
     </button>
