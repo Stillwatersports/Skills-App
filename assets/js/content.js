@@ -148,13 +148,13 @@ const CONTENT = {
   // Four tier cards
   pricing_tiers_eyebrow: "Flexible Options",
   pricing_tiers_h2_1:    "All Inclusive",
-  pricing_tiers_h2_2:    "Learn to Ride, or Improve Your Skills — Guaranteed",
-  pricing_tiers_desc:    "Every booking includes the boat, all equipment, fuel, and full coaching time. Use the calculator below to plan for your group.",
+  pricing_tiers_h2_2:    "Learn or Improve — Guaranteed",
+  pricing_tiers_desc:    "Pricing includes the boat, all equipment, fuel, and full coaching time and taxes. Use the calculator below to plan for your group.",
   pricing_tier_cta:      "Check Pricing →",
 
   pricing_tier1_eyebrow: "Single Session · 4 hours",
   pricing_tier1_name:    "Half Day",
-  pricing_tier1_desc:    "Single 4-hour block — morning, afternoon, or evening. Perfect first experience for a group of friends or family. Everyone gets solid time on the water.",
+  pricing_tier1_desc:    "Single 4-hour block — Morning, Afternoon, or Evening. Perfect first experience for a group of friends or family.",
 
   pricing_tier2_eyebrow: "2 × 4 hour sessions",
   pricing_tier2_name:    "Full Day"
