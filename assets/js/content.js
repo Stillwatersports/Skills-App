@@ -15,16 +15,6 @@ window.PROMO_CONFIG = {
  * ============================================================
  *  STILLWATER SPORTS — SITE CONTENT
  *  learnwatersports.ca
- *
- *  Edit text here. Changes apply across the whole site.
- *  To edit: find the key, change the value, save, deploy.
- *
- *  DO NOT edit the keys (left side of the colon).
- *  Only edit the values (right side, inside the quotes).
- *
- *  For line breaks inside text use:  <br>
- *  For bold text use:                <strong>word</strong>
- *  For italic text use:              <em>word</em>
  * ============================================================
  */
 
@@ -43,19 +33,16 @@ const CONTENT = {
   nav_book_btn:            "Book Now",
   deposit_note:            "Deposit required to reserve dates. Full payment due 48 hours before session.",
 
-
   // ── HOME PAGE ──────────────────────────────────────────
   home_hero_badge:      "Now Booking · Summer 2026",
   home_hero_l1:         "Your lake.",
   home_hero_l2:         "Your lesson.",
   home_hero_l3:         "Our ride.",
   home_hero_sub:        "Ottawa · Muskoka · Kawarthas · Prince Edward County · Rideau Lakes · Mont Tremblant · and beyond.",
-
   home_offers_eyebrow:  "01 · What's Offered",
   home_offers_h2_1:     "Everything you need",
   home_offers_h2_2:     "to get up and ride.",
   home_offers_desc:     "Every session is private. Our progressive skills system guarantees everyone gets up the first run.",
-
   home_offer1_title:    "Boat & Equipment Included",
   home_offer1_text:     "World Competition level boat, wakeboards, surfboards, skis, tubes, ropes and life jackets. Show up — everything else is handled.",
   home_offer2_title:    "Beginner to Advanced",
@@ -68,31 +55,25 @@ const CONTENT = {
   home_offer5_text:     "No marina, no boat maintenance. We load up and drive to you — Calabogie, Rideau Lakes, White Lake, Perth, Mont Tremblant, Montebello and beyond.",
   home_offer6_title:    "Skills Tracking Included",
   home_offer6_text:     "All students get access to the Stillwater Skills app — earn Bronze to Gold badges and track progress all season long.",
-
   home_sports_eyebrow:  "02 · Sport Matrix",
   home_sports_h2_1:     "Riders Choice.",
   home_sports_h2_2:     "Try them all or master one!",
   home_sports_desc:     "All disciplines. Structured progression from first-timer to advanced. Click any card to explore.",
 
-
-
   // ── ABOUT PAGE ────────────────────────────────────────
   about_hero_badge:    "Coach · Athlete · Father",
   about_hero_l1:       "Passing",
   about_hero_l3:       "The Handle",
-
   about_story_eyebrow: "The Story",
   about_story_h2_1:    "Born for",
   about_story_h2_2:    "the water.",
   about_story_p1:      "It all started for me at Hockey Opportunity Camp in South River, Ontario. Dont let the name fool you, yes they have a world class hockey program, but their waterski program has given rise to some world class competitors as well. I was six years old my first day of summer camp… I'm not sure if it was seeing the waterski coaches make a human pyramid on water skis, the flips on a wakeboard, or sliding across the water on their bare feet at crazy speeds … But I was hooked.",
   about_story_p2:      "Over the next decade and a half I would return to HOC as a camper, I wanted nothing more than to be a waterski coach. I went through Leader in Training and Counsellor in Training programs, National lifeguard certification, Canadian Waterski coaches certification and eventually spent three seasons as a waterski coach — passing the handle on to hundreds, if not thousands of kids.",
   about_story_p3:      "Today I compete and coach out of Ottawa, specializing in all three barefoot disciplines — slalom, trick, and jump. I train year-round and rank within the top 100 worldwide. I'm competitive by nature, but nothing is better than seeing someone new experience waterskiing for the first time!",
-
   about_stat1_num:     "Certified",
   about_stat1_label:   "Waterski Instructor",
   about_stat2_num:     "1000+",
   about_stat2_label:   "new waterskiers created",
-
   about_cred_eyebrow:  "Credentials",
   about_cred_h2_1:     "Certified.",
   about_cred_h2_2:     "Experienced. Safe.",
@@ -108,12 +89,10 @@ const CONTENT = {
   about_cred5_text:    "Volunteer board member for Water Ski & Wakeboard Canada and formerly for the Ottawa Water Ski Club. Invested in growing the sport at a national level.",
   about_cred6_title:   "Hockey Opportunity Camp",
   about_cred6_text:    "Over 52 weeks as a camper, Leader In Training, Counsellor In Training, and three seasons as a waterski instructor at HOC in South River, ON — one of Canada's most respected waterski programs.",
-
   about_cta_eyebrow:   "Ready to Ride?",
   about_cta_h2:        "Book a session now!",
   about_cta_desc:      "Spots are limited — summer fills fast.",
   about_cta_btn:       "Book a Lesson →",
-
 
   // ── PRICING PAGE ─────────────────────────────────────
   pricing_hero_badge:   "Now Booking · Summer 2026",
@@ -127,8 +106,6 @@ const CONTENT = {
   pricing_stat2_lbl:    "Per person, Per day",
   pricing_stat3_num:    "100%",
   pricing_stat3_lbl:    "Gear included",
-
-  // Pass / Set / Block explainer
   pricing_ptb_eyebrow:   "A Day in the Life of a Waterskier",
   pricing_ptb_h2_1:      "Time Management",
   pricing_ptb_h2_2:      " ",
@@ -144,34 +121,26 @@ const CONTENT = {
   pricing_ptb_primetime_num:  "04",
   pricing_ptb_primetime_title:"Primetime",
   pricing_ptb_primetime_desc: "<strong>[Morning + Evening]</strong> Offers the best water conditions and a 4 hour break mid-day. +$250 to a weekday. Included free on weekends, holidays, and all Multi-Day packages.",
-
-  // Four tier cards
   pricing_tiers_eyebrow: "Flexible Options",
   pricing_tiers_h2_1:    "All Inclusive",
   pricing_tiers_h2_2:    "Learn or Improve — Guaranteed",
   pricing_tiers_desc:    "Pricing includes the boat, all equipment, fuel, and full coaching time and taxes. Use the calculator below to plan for your group.",
   pricing_tier_cta:      "Check Pricing →",
-
   pricing_tier1_eyebrow: "Single Session · 4 hours",
   pricing_tier1_name:    "Half Day",
   pricing_tier1_desc:    "Single 4-hour block — Morning, Afternoon, or Evening. Perfect first experience for a group of friends or family.",
-
   pricing_tier2_eyebrow: "2 × 4 hour sessions",
-  pricing_tier2_name:    "Full Day"
+  pricing_tier2_name:    "Full Day",
   pricing_tier2_desc:    "Pick: [Morning + Afternoon], [Afternoon + Evening], or upgrade to ride in the [Morning + Evening] for the best conditions!",
   pricing_tier2_split_label: "Primetime — [Morning + Evening] +$250",
   pricing_tier2_split_tip:   "⭐ Best conditions — water is calm and boat traffic is low in the early morning and evening. Worth every penny.",
-
   pricing_tier3_eyebrow: "Multi-Day · Best value",
   pricing_tier3_name:    "Multi-Day",
   pricing_tier3_desc:    "Book 2, 3, or 5 day packages and unlock real savings!",
-
   pricing_tier4_eyebrow: "Come to Us · Rideau River",
   pricing_tier4_name:    "Ride With Us · in Ottawa",
   pricing_tier4_desc:    "A great value option! Visit us locally for a condensed session, $50/person, $200 minimum. You come to us. Perfect for local riders and small groups.",
   pricing_tier4_cta:     "Check Availability →",
-
-  // Estimator UI labels
   pricing_est_eyebrow:              "Price Calculator",
   pricing_est_h2_1:                 "See Exactly What",
   pricing_est_h2_2:                 "You Get.",
@@ -185,16 +154,12 @@ const CONTENT = {
   pricing_est_nudge_label:          "💡 You might save more",
   pricing_est_result_label:         "Your estimate",
   pricing_est_tubing_label:         "We might want to include tubing — good to know, I'll follow up about this.",
-
-  // Result card labels
   pricing_result_pp_label:          "Per Person",
   pricing_result_total_label:       "Group Total",
   pricing_result_tax_note:          "Tax Included",
   pricing_turns_title:              "Time on the Water",
   pricing_request_btn:              "Request This Date →",
   pricing_question_btn:             "Ask a Question →",
-
-  // Request modal
   pricing_modal_eyebrow:            "Almost there",
   pricing_modal_h3:                 "Tell us a bit about your group.",
   pricing_modal_name_label:         "Your Name",
@@ -206,8 +171,6 @@ const CONTENT = {
   pricing_modal_success_h3:         "Request received!",
   pricing_modal_success_p:          "We'll be in touch within 24 hours to confirm your session and send a deposit link. Check your inbox — and spam just in case!",
   pricing_modal_success_btn:        "Back to Pricing",
-
-  // Estimator logic tips (used in JS — edit these to change suggestion text)
   pricing_gs_solo:      "💡 <strong>Solo rider:</strong> Drop-In ($50/set) is your best option — no minimum and no need to fill the boat.",
   pricing_gs_pair:      "💡 <strong>Two riders:</strong> Drop-In works great at $50/set ($200 min). Or book a half day and split $600 — $300 each.",
   pricing_gs_small:     "✅ <strong>Good size:</strong> A half day at $600 splits to $200/person. Adding a 4th drops it to $150.",
@@ -217,8 +180,6 @@ const CONTENT = {
   pricing_tip_halfday:  "<strong>Tip:</strong> Upgrading to a full day (2 sessions) is only +$400 and gives everyone twice the time on the water.",
   pricing_tip_splitday: "<strong>Primetime tip:</strong> [Morning + Evening] offers great conditions. Adds $250 but worth every penny.",
   pricing_tip_local:    "<strong>Rideau River only</strong>",
-
-  // Included band
   pricing_incl_eyebrow: "Every booking",
   pricing_incl_h2_1:    "Everything included.",
   pricing_incl_h2_2:    "Just show up.",
@@ -229,42 +190,33 @@ const CONTENT = {
   sports_hero_badge:   "All Disciplines · One Coach",
   sports_hero_l1:      "Pick your",
   sports_hero_l3:      "favourite.",
-
   sports_waterski_h2:  "The <em>classic.</em>",
   sports_waterski_p1:  "Waterskiing is where most riders start — and where many spend a lifetime. From your first deep water start on two skis to dropping a ski and carving on one, the progression is structured, achievable, and incredibly satisfying.",
   sports_waterski_p2:  "We teach waterskiing from absolute beginner through advanced slalom technique, wake crossings, and slalom course introduction. Every session builds on the last.",
-
   sports_wakeboard_h2: "Pop, grab, <em>land.</em>",
   sports_wakeboard_p1: "Wakeboarding is the most popular discipline on the water — and for good reason. The learning curve is fast, the tricks are visual, and the feeling of catching air off the wake never gets old.",
   sports_wakeboard_p2: "From your first edge cut and wake jump through heelside 180s, toeside tricks, and inverts — coaching is structured around clean technique first, progression second. Basic skills are completed and mastered before moving up.",
-
   sports_wakesurf_h2:  "Drop the rope…<br><em>And surf.</em>",
   sports_wakesurf_p1:  "Wakesurfing is the most relaxed and social discipline on the water — riding the boat's wake without a rope, surfing an endless wave behind the boat. Perfect for all ages and fitness levels.",
   sports_wakesurf_p2:  "Coaching covers getting up, finding the sweet spot in the wave, dropping the rope, and eventually shredding turns and tricks. The ballast bags and surf tabs on the Sanger DLX create an excellent wave for learning.",
-
   sports_slalom_h2:    "Six buoys.<br><em>One ski.</em>",
   sports_slalom_p1:    "Slalom skiing is the technical pinnacle of waterski — threading six buoys on one ski at increasing speeds and shortening rope lengths. It demands precise edge control, timing, and body position.",
   sports_slalom_p2:    "We coach slalom from first one-ski attempts through course introduction, gate entries, and shortline technique. Perfect Pass on the boat ensures consistent, precise speeds every pass.",
-
   sports_barefoot_h2:  "No skis.<br><em>Just feet.</em>",
   sports_barefoot_p1:  "Barefoot water skiing is possibly the most extreme discipline on the water — skiing on your bare feet at high speeds.",
   sports_barefoot_p2:  "Coaching starts on the boom — this is where the application of proper, logical skills progression is most important. We go slow and controlled with the goal of minimizing wipe outs to create a positive experience.",
-
   sports_tubing_h2:    "Hold on.<br><em>Have fun.</em>",
   sports_tubing_p1:    "Tubing is the gateway to water sports — fun for the whole family, no experience required, and guaranteed to get everyone laughing. Perfect for kids, cottage weekends, and groups with mixed interest levels.",
   sports_tubing_surcharge: "A <strong>$30/hr fuel surcharge</strong> applies to tubing sessions due to the additional fuel consumption.",
-
 
   // ── EQUIPMENT PAGE ────────────────────────────────────
   equip_hero_badge:    "Professional Grade · All Included",
   equip_hero_l1:       "The Right Stuff.",
   equip_hero_sub:       "Top Brands: Ronix, Phase 5, O'brien, Connelly, Barefoot International, Big Air and more... ",
-
   equip_boat_eyebrow:  "The Boat",
   equip_boat_h2:       "Sanger <em>DLX.</em>",
   equip_boat_p1:       "Sanger boats are one of the most respected manufacturers in competitive water sports — The DLX is specifically chosen for its hull design, wake shape, and performance at both ski and wakeboard speeds. This isn't a recreational runabout. It's a purpose-built all-watersports platform. The open bow design allows up to 8 passengers comfortably!",
   equip_boat_p2:       "The hull design means the boat performs across every discipline — clean, flat wakes for slalom and barefoot, configurable wave for wakeboard and wakesurf, and stable, predictable handling that lets the driver focus entirely on the rider.",
-
   equip_feat1_title:   "Perfect Pass",
   equip_feat1_text:    "GPS-based speed control system used in sanctioned competition. Locks speed precisely regardless of rider weight, rope pull, or water conditions. Essential for serious training and beginner learning.",
   equip_feat2_title:   "Wakeboard Tower",
@@ -280,41 +232,34 @@ const CONTENT = {
   equip_feat7_title:   "Bimini Top",
   equip_feat7_text:    "Full bimini top for shade and sun protection during long days on the water. Important for families, all-day sessions, and keeping everyone comfortable.",
 
-
-  // ── HOW IT WORKS (WHAT TO EXPECT) ─────────────────────
+  // ── HOW IT WORKS ─────────────────────────────────────
   how_hero_badge:      "Five Steps · First Run Guaranteed",
   how_hero_l1:         "Simple",
   how_hero_l3:         "And Fun",
-
   how_step1_eyebrow:   "Planning and Booking Your Session",
   how_step1_h2_1:      "Request a date",
   how_step1_h2_2:      "online.",
   how_step1_p1:        "Available sessions are blocked by Morning, Afternoon, and Evening. Morning and Evening sessions often offer great conditions as wind and boat traffic is typically lower than mid-day. For a Single Day during the week we offer the option of either [Morning + Afternoon] or [Afternoon + Evening]. A Premium Day is a weekend, holiday or a Primetime weekday, which allows you to book morning and evening on a single day during the week. All Multi-day packages allow you to choose any 2 out of 3 time slots for each of those days.",
   how_step1_p2:        "Check our booking page for available dates and please feel free to contact us if you have questions before requesting dates.",
-
   how_step2_eyebrow:   "Within 24 Hours",
   how_step2_h2_1:      "We confirm",
   how_step2_h2_2:      "and plan.",
   how_step2_p1:        "Within 24 hours we will reach out to confirm your group's goals, and needs as well as discussing logistics. We choose the best spot on your lake, and tailor a session plan around your group's skill levels and interests. If you have any questions about the available options or would like to make a request before booking, please contact us.",
   how_step2_p2:        "Once all your questions are answered a deposit link is sent via Square to secure your booking. Full payment is due 48 hours before your session.",
-
   how_step3_eyebrow:   "Before Your Session",
   how_step3_h2_1:      "Athlete",
   how_step3_h2_2:      "preparation.",
   how_step3_p1:        "Leading up to our session we will send some resources for all athletes to look over including some videos that will cover all of the pre-session rules, and how-to's so that we can maximize our time on the water!",
-
   how_step4_eyebrow:   "Session Day",
   how_step4_h2_1:      "We come to your lake.",
   how_step4_h2_2:      "Fully set up.",
   how_step4_p1:        "On the day of your session we arrive with a structured plan, ready to go. We will review the plan, rules, signals, techniques and safety protocol with the whole group. We will run lessons from the 'staging area' which can be a cottage, a park, or a beach. An adult is not required in the boat but is required to be present on shore if there are minors participating.",
   how_step4_bring:     "<strong>What to bring:</strong> Swimwear, sunscreen, water, snacks, and a towel. Everything else is provided.",
-
   how_step5_eyebrow:   "On the Water",
   how_step5_h2_1:      "Learn, progress,",
   how_step5_h2_2:      "have fun.",
   how_step5_p1:        "Every session follows a structured progression — starting with safety and fundamentals, building through skills at the right pace for each rider. Our progressive system is designed so that everyone gets up on their first session.",
   how_step5_p2:        "After your session, all Stillwater Sports athletes get access to the Stillwater Skills app — track your progress, earn Bronze through Gold badges, and try to unlock the secret Platinum level!",
-
   how_faq1_q:          "Do I need my own boat or lake access?",
   how_faq1_a:          "No! No boat required, we bring our own. Typically we go to our clients cottage however we can arrange to meet at a public park on a lake near you, or come to us. We also run on the Rideau River in Ottawa. Distance surcharges apply for locations 1.5+ hrs from Ottawa. A boat launch on the same body of water is required. If there are any culverts to pass through, a minimum 8' clearance is required.",
   how_faq2_q:          "What age can kids start?",
@@ -325,7 +270,6 @@ const CONTENT = {
   how_faq4_a:          "Deposit required to secure your booking. <strong>Non-refundable.</strong> Full payment due 48 hours before session via Square payment link.",
   how_faq5_q:          "Can we use our own equipment?",
   how_faq5_a:          "Yes! We have all the gear including lifejackets however a properly fitting and comfortable lifejacket makes a huge difference. If you have a favourite lifejacket, ski, or handle, we encourage you to use it!",
-
 
   // ── CONTACT PAGE ──────────────────────────────────────
   contact_hero_badge:     "Questions?",
@@ -340,7 +284,6 @@ const CONTENT = {
   contact_direct_h2_2:    "Directly?",
   contact_response_time:  "",
   contact_response_note:  "",
-
 
   // ── APP PAGE ──────────────────────────────────────────
   app_hero_badge:      "Free for Stillwater Sports Students",
@@ -368,8 +311,6 @@ const CONTENT = {
   app_clubs_plan1:     "Free Tier Available",
   app_clubs_plan2:     "Club Plan — $49/mo",
   app_clubs_plan3:     "Pro Plan — $99/mo",
-
-  // App demo card
   app_demo_label:      "Gold Skills · Waterski",
   app_demo_skill1:     "Deep water start — both skis",
   app_demo_skill2:     "One-ski drop at speed",
@@ -378,13 +319,10 @@ const CONTENT = {
   app_demo_skill5:     "Slalom course introduction",
   app_demo_progress:   "3 of 5 Gold skills completed",
 
-
   // ── BOOKING HERO ──────────────────────────────────────
   booking_hero_badge:  "Live Availability · 24hr Confirmation",
   booking_hero_l1:     "Book your",
   booking_hero_l3:     "Session.",
-
-  // Booking info cards
   booking_gear_title:          "What's Included",
   booking_gear_boat:           "Sanger DLX competition towboat — fully fuelled",
   booking_gear_equip:          "Waterskis, wakeboards, wakesurf, ropes, handles",
@@ -400,37 +338,31 @@ const CONTENT = {
   booking_policy_terms:        "Terms of Service",
   booking_policy_guidelines:   "Guidelines",
 
-
   // ── POLICIES HERO ─────────────────────────────────────
   policies_hero_badge: "Transparency · Trust · Safety",
   policies_hero_l1:    "Policies &",
   policies_hero_l3:    "Legal.",
-
 
   // ── GUIDELINES PAGE ───────────────────────────────────
   guidelines_hero_badge:  "Please Read Before Booking",
   guidelines_hero_l1:     "Session",
   guidelines_hero_l3:     "Guidelines.",
   guidelines_intro:       "Please read through the following guidelines before booking your session. They cover everything you need to know about location access, participant rules, what to bring, safety expectations, and booking policies. If you have any questions, <a href='/contact' style='color:var(--cyan);font-weight:600'>contact us</a> — we're happy to help and will try to make accommodations before you book.",
-
   guidelines_lake_h2:     "Lake & Location Requirements",
   guidelines_launch_h3:   "Boat Launch",
   guidelines_launch_l1:   "A usable boat launch must be present on the <strong>same body of water</strong> as your session",
   guidelines_launch_l2:   "A trailer-friendly ramp (concrete or gravel) is strongly preferred — we arrive with a full-size ski boat and trailer",
   guidelines_launch_l3:   "Minimum <strong>8 feet of clearance</strong> required for any culverts, bridges, or locks on the route to the launch",
   guidelines_launch_l4:   "Launch must accommodate a full-size ski boat with parking for truck and trailer",
-
   guidelines_water_h3:    "Water Requirements",
   guidelines_water_l1:    "Any lake, river, or waterway that allows motorized watercraft is suitable",
   guidelines_water_l2:    "Open water preferred — a clear stretch of at least 200–300m is ideal for most disciplines",
   guidelines_water_l3:    "We also operate on the Rideau River in Ottawa — no cottage required",
   guidelines_water_l4:    "Public parks and boat launches are acceptable if no private cottage access is available",
-
   guidelines_location_h3: "Location",
   guidelines_location_l1: "Please ensure there is a bathroom on-site or nearby",
   guidelines_location_l2: "A covered area and/or seating is recommended for observers",
   guidelines_location_l3: "A nearby gas station (non-marine) is strongly preferred for full day and multi-day bookings",
-
   guidelines_participants_h2: "Participant Requirements",
   guidelines_age_h3:      "Age",
   guidelines_age_l1:      "All ages welcome — our youngest skier was 2.5 years old, our oldest is… undisclosed!",
@@ -438,19 +370,16 @@ const CONTENT = {
   guidelines_age_l3:      "Minors whose parents are not present require additional written consent from a parent or guardian",
   guidelines_age_l4:      "Equipment is available in all sizes — we accommodate all ages",
   guidelines_age_l5:      "We offer lifejackets in every size but recommend bringing your own for proper fitment. A well-fitting lifejacket should be snug but not tight — if it rises to or past the wearer's ears when lifted by the shoulders, it does not fit properly.",
-
   guidelines_health_h3:   "Health & Physical Condition",
   guidelines_health_l1:   "Participants should be comfortable in the water — basic swimming ability is required",
   guidelines_health_l2:   "If any participant has a physical limitation, injury, or medical condition, please advise us in advance",
   guidelines_health_l3:   "Participants who appear to be under the influence of alcohol or drugs will not be permitted to participate — <strong>no refund will be issued</strong>",
   guidelines_health_l4:   "Alcohol and drugs are not permitted on the boat",
-
   guidelines_waiver_h3:   "Waivers",
   guidelines_waiver_l1:   "A signed liability waiver is required for every participant before entering the boat or water",
   guidelines_waiver_l2:   "Waivers for minors must be signed by a parent or legal guardian",
   guidelines_waiver_l3:   "If a minor's parents are not present, contact information and additional written consent is required prior to the session — a form will be provided",
   guidelines_waiver_l4:   "Waivers will be sent upon booking confirmation — please complete in advance",
-
   guidelines_bring_h2:    "What to Bring",
   guidelines_bring_intro: "We provide everything on the water. Just show up ready to ride.",
   guidelines_req_h3:      "Required",
@@ -467,7 +396,6 @@ const CONTENT = {
   guidelines_opt_l5:      "Camera / GoPro",
   guidelines_opt_l6:      "Change of clothes for the drive home",
   guidelines_provided:    "Sanger DLX boat · Fuel · Waterskis · Wakeboards · Wakesurf board · Combo skis · Trick skis · Slalom ski · Ropes · Handles · PFDs in all sizes · Barefoot boom · Wakeboard tower · Surf tabs · Ballast bags · First aid kit · Safety equipment",
-
   guidelines_safety_h2:   "On-Water Safety Rules",
   guidelines_safety_intro:"Safety is covered at the start of every session. These rules are non-negotiable and apply to all participants on and around the water.",
   guidelines_pfd_h3:      "Life Jackets",
@@ -489,7 +417,6 @@ const CONTENT = {
   guidelines_boat_l4:     "Alcohol on the boat is prohibited by law — no participant who has consumed alcohol in excess will be permitted to ride. A drink on shore is fine; the coach may even join you after the session ends!",
   guidelines_boat_l5:     "All instructions from the coach must be followed at all times on and around the water",
   guidelines_authority:   "<strong>Coach Authority:</strong> The coach has final say on all safety decisions — including weather, conditions, and participant readiness. Sessions may be paused or ended at any time if safety is a concern.",
-
   guidelines_booking_h2:  "Booking & Payment Requirements",
   guidelines_booking_note:"For full policy details see <a href='/policies' style='color:var(--cyan);font-weight:600'>learnwatersports.ca/policies</a>",
   guidelines_secure_h3:   "To Secure Your Booking",
@@ -498,7 +425,7 @@ const CONTENT = {
   guidelines_secure_l3:   "Failure to pay by this deadline may result in forfeiture of the booking without refund of deposit",
   guidelines_secure_l4:   "Bookings are confirmed only upon receipt of deposit and written confirmation from Stillwater Sports",
   guidelines_cancel_h3:   "Cancellation Policy",
-  guidelines_cancel_l1:   "Deposit is <strong>non-refundable</strong> in all cases of client cancellation",
+  guidelines_cancel_l1:   "Deposit is required to secure your booking. See <a href='/policies#refunds'>refund policy</a> for details",
   guidelines_cancel_l2:   "Cancellation by Stillwater Sports — reschedule at no charge with credit for any money paid. Full refund if no suitable date is available",
   guidelines_cancel_l3:   "Cancellations must be submitted by email to <a href='mailto:bookings@learnwatersports.ca' style='color:var(--cyan);font-weight:600'>bookings@learnwatersports.ca</a> — not accepted by phone or text",
   guidelines_weather_h3:  "Weather Policy",
@@ -510,7 +437,6 @@ const CONTENT = {
   guidelines_surcharge_h3:"Surcharges",
   guidelines_surcharge_l1:"Tubing: +$30/hr additional fuel surcharge — waived for 2+ consecutive day bookings. It's a fun way to break up the other activities!",
   guidelines_surcharge_l2:"Distance: +$100 flat (1.5–3hr) or +$200 flat (3–6hr) from Ottawa",
-
   guidelines_app_h2:      "Stillwater Skills App",
   guidelines_app_desc:    "All Stillwater Sports students receive free access to the Stillwater Skills app — a structured progression platform for tracking skills and earning certifications from Bronze through Platinum.",
   guidelines_app_l1:      "Access at <a href='/stillwaterapp' style='color:var(--cyan);font-weight:600'>learnwatersports.ca/stillwaterapp</a> — free for all students",
@@ -519,26 +445,23 @@ const CONTENT = {
   guidelines_app_l4:      "GPS session tracking — record your time on the water and compare against your friends",
   guidelines_app_l5:      "We recommend creating your account before your session — we'll sign off your first skills on the day",
 
-
   // ── FAQ PAGE ──────────────────────────────────────────
   faq_hero_badge:      "Common Questions · Honest Answers",
   faq_hero_l1:         "Frequently",
   faq_hero_l3:         "Asked Questions.",
-
   faq_booking_cat:     "Booking & Pricing",
   faq_q1:              "Do I need to pay upfront to book?",
   faq_a1:              "A deposit is required to secure your date — no date is held without it. The exact amount is shown when you book or use the pricing calculator. Full payment is due 48 hours before your session via Square payment link. No payment is required just to submit a booking request.",
   faq_q2:              "What does the price include?",
   faq_a2:              "Everything. The boat, fuel, all equipment (skis, boards, ropes, handles, life jackets in all sizes), and coach time. The only additional costs are distance surcharges (if applicable) and a $30/hr tubing surcharge. No hidden fees.",
   faq_q3:              "What is your cancellation policy?",
-  faq_a3:              "The deposit is <strong>non-refundable</strong> in case of cancellation by the client. If Stillwater Sports cancels for non-weather reasons, you receive a full reschedule or refund. Cancellations must be submitted by email to <a href='mailto:bookings@learnwatersports.ca'>bookings@learnwatersports.ca</a> — not accepted by phone or text. See our full <a href='/policies#refunds'>refund policy</a>.",
+  faq_a3:              "The deposit is required to secure your booking. If Stillwater Sports cancels for non-weather reasons, you receive a full reschedule or refund. Cancellations must be submitted by email to <a href='mailto:bookings@learnwatersports.ca'>bookings@learnwatersports.ca</a> — not accepted by phone or text. See our full <a href='/policies#refunds'>refund policy</a>.",
   faq_q4:              "What happens if the weather is bad?",
   faq_a4:              "Light rain — we go. Heavy rain or thunder — we reschedule with full credit. Overcast or wind only — session proceeds; if conditions deteriorate, you receive a pro-rated credit for remaining time. If no suitable rebook date exists before September 30, you receive a full refund. The coach has final say on all weather decisions.",
   faq_q5:              "Can I book multiple days and save money?",
   faq_a5:              "Yes — multi-day packages offer meaningful savings. Options include Double Weekday, 3 Day Work Week, Full Weekend, Holiday Weekend, and 5 Day Week packages. See the <a href='/pricing'>pricing page</a> for full details. Consecutive day bookings get the best rate per day.",
   faq_q6:              "",
   faq_a6:              "",
-
   faq_location_cat:    "Location & Logistics",
   faq_q7:              "Do I need my own boat or lake access?",
   faq_a7:              "No boat required — we bring our own. You need access to a body of water that allows motorized boats and a usable boat launch on the same waterway. We typically go to our clients' cottage, but we also operate on the Rideau River in Ottawa and can arrange sessions at public parks or launches if needed.",
@@ -548,7 +471,6 @@ const CONTENT = {
   faq_a9:              "We travel across Ontario cottage country — Ottawa, Muskoka, Kawarthas, Rideau Lakes, Prince Edward County, Thousand Islands, and beyond. Distance surcharges apply: +$100 flat for 1.5–3hr drives, +$200 flat for 3–6hr drives from Ottawa. For locations further than 6hrs, <a href='/contact'>contact us</a> and we'll see what we can do.",
   faq_q10:             "What if there are culverts or bridges to get to the launch?",
   faq_a10:             "A minimum of 8 feet of clearance is required for any culverts, bridges, or locks on the route to the boat launch. Please measure and advise us before booking if there are any obstructions on the route.",
-
   faq_safety_cat:      "Participants & Safety",
   faq_q11:             "What age can kids start?",
   faq_a11:             "All ages are welcome — our youngest skier to date was 2.5 years old, our oldest is… undisclosed! We have equipment in all sizes. Children under 16 must have a parent or guardian present on shore at all times.",
@@ -562,7 +484,6 @@ const CONTENT = {
   faq_a15:             "Absolutely. We provide everything, but if you have a favourite lifejacket, ski, handle, or rope — bring it. A well-fitting lifejacket in particular makes a noticeable difference and we always encourage clients to bring their own if they have one.",
   faq_q16:             "Is alcohol allowed on the boat?",
   faq_a16:             "Alcohol on the boat is prohibited by law. Participants who have consumed alcohol in excess will not be permitted to ride — no refund will be issued. That said, a drink on shore is totally fine, and the coach may even join you for one after the session wraps up.",
-
   faq_sports_cat:      "Sports & Progression",
   faq_q17:             "We've never done this before. Is that okay?",
   faq_a17:             "It's actually where most of our clients start. Our progressive system is specifically designed so that <strong>everyone gets up on their first session</strong>. We start with the basics, adapt to each rider's pace, and keep it safe and fun the whole way through.",
@@ -572,7 +493,6 @@ const CONTENT = {
   faq_a19:             "Six disciplines: Waterski, Wakeboard, Wakesurf, Slalom, Barefoot, and Tubing. All are available in a single session — see the <a href='/sports'>Sports page</a> for details on each.",
   faq_q20:             "What is the Stillwater Skills App?",
   faq_a20:             "A free skill tracking app for all Stillwater Sports students. Track your progression from Bronze through Gold certifications, submit video for coach approval, and use GPS session tracking. Complete Gold to unlock the secret Platinum level. Access at <a href='/stillwaterapp'>learnwatersports.ca/stillwaterapp</a>.",
-
   faq_timing_cat:      "Timing & Group Planning",
   faq_q21:             "How do I know how much time to book for my group?",
   faq_a21:             "A good rule of thumb: each person gets 1–2 sets per block (a block is 4 hours — morning, afternoon, or evening). Each set is one person's full set — about 20–30 minutes on the water including coaching stops. For a group of 6, a single block gives everyone at least 1 set; a full day (2 blocks) gives everyone 2 sets each. If you're unsure, <a href='/contact'>contact us</a> and we'll help you plan.",
@@ -580,7 +500,6 @@ const CONTENT = {
   faq_a22:             "Ideal group sizes are <strong>4–8 people per block</strong>. Smaller than 4 means less rotation energy on the boat; larger than 8 and some riders might only get 1 short set. That said, we work with all group sizes — 1-on-1 sessions are just as welcome as groups of 10. If you have a smaller group of 1–3, see our <a href='/pricing'>Come to Us pricing</a> for the most affordable option, or <a href='/contact'>contact us</a> and we'll figure it out.",
   faq_q23:             "What if we run over the allotted time slot?",
   faq_a23:             "Waterskiing is a relaxed sport — we don't watch the clock obsessively. Start and finish times are reasonably flexible. What matters most is that everyone gets a fair set and equal time on the water. We have guidelines to help with planning, but every group is different and we're happy to accommodate. If the session naturally runs a bit long, we'll work with you. Just communicate with the coach on the day.",
-
   faq_cta_eyebrow:     "Still have a question?",
   faq_cta_h3:          "We reply personally — usually same day.",
   faq_cta_desc:        "No question is too small. If something is stopping you from booking, just ask — we're happy to help.",
