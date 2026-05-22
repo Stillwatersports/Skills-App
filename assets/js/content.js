@@ -41,7 +41,7 @@ const CONTENT = {
   footer_copy:             "© 2026 Christian Richards · Stillwater Sports · All rights reserved",
   footer_region:           "learnwatersports.ca",
   nav_book_btn:            "Book Now",
-  deposit_note:            "Deposit required to reserve dates. <strong>Non-refundable.</strong> Full payment due 48 hours before session.",
+  deposit_note:            "Deposit required to reserve dates. Full payment due 48 hours before session.",
 
 
   // ── HOME PAGE ──────────────────────────────────────────
@@ -54,16 +54,16 @@ const CONTENT = {
   home_offers_eyebrow:  "01 · What's Offered",
   home_offers_h2_1:     "Everything you need",
   home_offers_h2_2:     "to get up and ride.",
-  home_offers_desc:     "Every session is private, tailored to your group, and built around real progression. Our system guarantees everyone gets up the first run.",
+  home_offers_desc:     "Every session is private. Our progressive skills system guarantees everyone gets up the first run.",
 
   home_offer1_title:    "Boat & Equipment Included",
   home_offer1_text:     "World Competition level boat, wakeboards, surfboards, skis, tubes, ropes and life jackets. Show up — everything else is handled.",
   home_offer2_title:    "Beginner to Advanced",
-  home_offer2_text:     "First time on the water to Barefoot skiing and Wakeboard Backflips — Thousands of kids and adults learned to ski with us.",
+  home_offer2_text:     "First time on the water to Barefoot skiing and Wakeboard Backflips — 1000+ kids and adults learned to ski with us.",
   home_offer3_title:    "Family & Group Sessions",
   home_offer3_text:     "Half-day and full-day options for the whole family. Kids welcome. Safe, structured, and a lot of fun.",
   home_offer4_title:    "Private Lessons",
-  home_offer4_text:     "Focused one-on-one sessions for learning to ski, slalom, trick ski, wakeboard and wakesurf with structured progression and video analysis.",
+  home_offer4_text:     "Focused one-on-one sessions for learning to ski, slalom, trick ski, wakeboard and wakesurf with structured progression.",
   home_offer5_title:    "We Come to Your Lake",
   home_offer5_text:     "No marina, no boat maintenance. We load up and drive to you — Calabogie, Rideau Lakes, White Lake, Perth, Mont Tremblant, Montebello and beyond.",
   home_offer6_title:    "Skills Tracking Included",
@@ -74,15 +74,6 @@ const CONTENT = {
   home_sports_h2_2:     "Try them all or master one!",
   home_sports_desc:     "All disciplines. Structured progression from first-timer to advanced. Click any card to explore.",
 
-  home_booking_eyebrow: "04 · Command Center",
-  home_booking_h2_1:    "Ready to get",
-  home_booking_h2_2:    "on the water?",
-  home_booking_desc:    "Pick an open date directly from the live calendar and lock in your session!",
-  home_booking_season:  "May through September. Weekdays and weekends available. Book early — summer fills up fast.",
-  home_booking_lengths: "Single session · Full day · Multi-day packages",
-  home_booking_included:"Boat, fuel, gear, and coach time. No hidden costs.",
-  home_booking_location:"Tell us where you are. We handle the drive, the launch, and the lesson.",
-  home_booking_pricing: "See our <a href='/pricing'>pricing page</a> for full details.",
 
 
   // ── ABOUT PAGE ────────────────────────────────────────
@@ -99,13 +90,13 @@ const CONTENT = {
 
   about_stat1_num:     "Certified",
   about_stat1_label:   "Waterski Instructor",
-  about_stat2_num:     "Thousands",
-  about_stat2_label:   "of new waterskiers coached",
+  about_stat2_num:     "1000+",
+  about_stat2_label:   "new waterskiers created",
 
   about_cred_eyebrow:  "Credentials",
   about_cred_h2_1:     "Certified.",
   about_cred_h2_2:     "Experienced. Safe.",
-  about_cred1_title:   "WSWC Certified Level 2 Coach",
+  about_cred1_title:   "WSWC Certified Coach",
   about_cred1_text:    "Certified through Water Ski & Wakeboard Canada — the national governing body for the sport.",
   about_cred2_title:   "Certified Lifeguard",
   about_cred2_text:    "National Lifeguard certification with CPR-C and Standard First Aid. Every session on the water is run with full emergency preparedness.",
@@ -148,11 +139,11 @@ const CONTENT = {
   pricing_ptb_turn_title:"Set",
   pricing_ptb_turn_desc: "20-30 minutes on water including occasional stops for coaching notes and to catch your breath. 2-4 Sets in a day is <i>A Lot</i> of action! Caution: muscles may be sore the next day!",
   pricing_ptb_block_num: "03",
-  pricing_ptb_block_title:"Block",
-  pricing_ptb_block_desc:"4 Hours — Morning, Afternoon, or Evening. We can run 2–3 sets per hour. We offer 2 out of 3 blocks per day with a 1 hour break between consecutive time blocks i.e. [afternoon + evening]",
+  pricing_ptb_block_title:"Session",
+  pricing_ptb_block_desc:"4 Hours — Morning, Afternoon, or Evening. We can run 2–3 sets per hour. We offer 2 out of 3 sessions per day with a 1 hour break between consecutive time blocks i.e. [afternoon + evening]",
   pricing_ptb_primetime_num:  "04",
   pricing_ptb_primetime_title:"Primetime",
-  pricing_ptb_primetime_desc: "<strong>Morning + Evening on the same weekday.</strong> The glassiest, calmest water of the day with a midday break in between. Adds $250 to a weekday Full Day. Already included free on weekends, holidays, and all Multi-Day packages.",
+  pricing_ptb_primetime_desc: "<strong>[Morning + Evening]</strong> Offers the best water conditions and a 4 hour break mid-day. +$250 to a weekday. Included free on weekends, holidays, and all Multi-Day packages.",
 
   // Four tier cards
   pricing_tiers_eyebrow: "Flexible Options",
@@ -166,25 +157,25 @@ const CONTENT = {
   pricing_tier1_desc:    "Single 4-hour block — morning, afternoon, or evening. Perfect first experience for a group of friends or family. Everyone gets solid time on the water.",
 
   pricing_tier2_eyebrow: "2 × 4 hour sessions",
-  pricing_tier2_name:    "Full Day",
-  pricing_tier2_desc:    "Pick: [Morning + afternoon], [afternoon + evening], or upgrade to ride in the [morning + evening] for the best water conditions!",
-  pricing_tier2_split_label: "Primetime — Morning + Evening +$250",
+  pricing_tier2_name:    "Full Day"
+  pricing_tier2_desc:    "Pick: [Morning + Afternoon], [Afternoon + Evening], or upgrade to ride in the [Morning + Evening] for the best conditions!",
+  pricing_tier2_split_label: "Primetime — [Morning + Evening] +$250",
   pricing_tier2_split_tip:   "⭐ Best conditions — water is calm and boat traffic is low in the early morning and evening. Worth every penny.",
 
   pricing_tier3_eyebrow: "Multi-Day · Best value",
   pricing_tier3_name:    "Multi-Day",
-  pricing_tier3_desc:    "Book 2, 3, or 5 day packages and unlock real savings — up to $1,000 off!",
+  pricing_tier3_desc:    "Book 2, 3, or 5 day packages and unlock real savings!",
 
   pricing_tier4_eyebrow: "Come to Us · Rideau River",
   pricing_tier4_name:    "Ride With Us · in Ottawa",
-  pricing_tier4_desc:    "A great value option! Visit us locally for 15–20 min sets, $50/person, $200 minimum. You come to us. Perfect for local riders and small groups.",
+  pricing_tier4_desc:    "A great value option! Visit us locally for a condensed session, $50/person, $200 minimum. You come to us. Perfect for local riders and small groups.",
   pricing_tier4_cta:     "Check Availability →",
 
   // Estimator UI labels
   pricing_est_eyebrow:              "Price Calculator",
   pricing_est_h2_1:                 "See Exactly What",
   pricing_est_h2_2:                 "You Get.",
-  pricing_est_desc:                 "Select your session type, # of riders, and dates — we'll calculate your best-fit package and full breakdown.",
+  pricing_est_desc:                 "Select your session type, # of riders, and dates — we'll calculate your full breakdown.",
   pricing_est_step1_label:          "Step 1 — Session Type",
   pricing_est_riders_label:         "Number of riders",
   pricing_est_location_label:       "Your city or postal code",
@@ -209,7 +200,7 @@ const CONTENT = {
   pricing_modal_name_label:         "Your Name",
   pricing_modal_email_label:        "Email",
   pricing_modal_phone_label:        "Phone",
-  pricing_modal_notes_label:        "Anything Else?",
+  pricing_modal_notes_label:        "Question, comments, reuqests?",
   pricing_modal_disclaimer:         "No payment required, yet. We'll reply within 24 hours to confirm details.",
   pricing_modal_submit:             "Send Request →",
   pricing_modal_success_h3:         "Request received!",
@@ -221,17 +212,17 @@ const CONTENT = {
   pricing_gs_pair:      "💡 <strong>Two riders:</strong> Drop-In works great at $50/set ($200 min). Or book a half day and split $600 — $300 each.",
   pricing_gs_small:     "✅ <strong>Good size:</strong> A half day at $600 splits to $200/person. Adding a 4th drops it to $150.",
   pricing_gs_good:      "✅ <strong>Great group:</strong> $150/person for a half day. A full day at $1,000 is $250/person — solid value.",
-  pricing_gs_ideal:     "🎯 <strong>Ideal group size:</strong> Sweet spot for value and time on the water. Full day splits to $167–$200/person.",
-  pricing_gs_large:     "⚠️ <strong>Large group:</strong> Consider booking 2 blocks so sets stay frequent and no one waits long.",
-  pricing_tip_halfday:  "<strong>Tip:</strong> Upgrading to a full day (2 blocks) is only +$400 and gives everyone twice the time on the water.",
-  pricing_tip_splitday: "<strong>Primetime tip:</strong> Morning + evening gives you glassy water both times. Adds $250 but worth it.",
-  pricing_tip_local:    "<strong>Rideau River only</strong> — Drop-In is available when the boat is already out locally. Check the booking calendar or follow us on Instagram for open slots.",
+  pricing_gs_ideal:     "🎯 <strong>Ideal group size:</strong> Sweet spot for value and time on the water!",
+  pricing_gs_large:     "⚠️ <strong>Large group:</strong> Consider booking 2 sessions so sets stay frequent and no one waits long.",
+  pricing_tip_halfday:  "<strong>Tip:</strong> Upgrading to a full day (2 sessions) is only +$400 and gives everyone twice the time on the water.",
+  pricing_tip_splitday: "<strong>Primetime tip:</strong> [Morning + Evening] offers great conditions. Adds $250 but worth every penny.",
+  pricing_tip_local:    "<strong>Rideau River only</strong>",
 
   // Included band
   pricing_incl_eyebrow: "Every booking",
   pricing_incl_h2_1:    "Everything included.",
   pricing_incl_h2_2:    "Just show up.",
-  pricing_incl_desc:    "A deposit secures your date. Full balance due 48 hours before your session. No payment required to submit a request.",
+  pricing_incl_desc:    "No payment required to submit a request. A deposit secures your date. Full balance due 48 hours before your session.",
   pricing_incl_cta:     "Book a Session →",
 
   // ── SPORTS PAGE ───────────────────────────────────────
@@ -292,25 +283,25 @@ const CONTENT = {
 
   // ── HOW IT WORKS (WHAT TO EXPECT) ─────────────────────
   how_hero_badge:      "Five Steps · First Run Guaranteed",
-  how_hero_l1:         "Simple, from",
-  how_hero_l3:         "booking to splash.",
+  how_hero_l1:         "Simple",
+  how_hero_l3:         "And Fun",
 
   how_step1_eyebrow:   "Planning and Booking Your Session",
   how_step1_h2_1:      "Request a date",
   how_step1_h2_2:      "online.",
-  how_step1_p1:        "Available times are blocked by morning, afternoon, and evening. Morning and evening blocks often offer great conditions as wind and boat traffic is typically lower than mid-day. For a Single Day during the week we offer the option of either morning + afternoon or afternoon + evening. A Premium Day is a weekend, holiday or a Primetime weekday, which allows you to book morning and evening on a single day during the week. All Multi-day packages allow you to choose any 2 out of 3 time slots for each of those days.",
+  how_step1_p1:        "Available sessions are blocked by Morning, Afternoon, and Evening. Morning and Evening sessions often offer great conditions as wind and boat traffic is typically lower than mid-day. For a Single Day during the week we offer the option of either [Morning + Afternoon] or [Afternoon + Evening]. A Premium Day is a weekend, holiday or a Primetime weekday, which allows you to book morning and evening on a single day during the week. All Multi-day packages allow you to choose any 2 out of 3 time slots for each of those days.",
   how_step1_p2:        "Check our booking page for available dates and please feel free to contact us if you have questions before requesting dates.",
 
   how_step2_eyebrow:   "Within 24 Hours",
   how_step2_h2_1:      "We confirm",
   how_step2_h2_2:      "and plan.",
-  how_step2_p1:        "Within 24 hours we will reach out to confirm the date, discuss your group's goals, choose the best spot on your lake, and tailor a session plan around your group's skill levels and interests. If you have any questions about the available options or would like to make a request before booking, please contact us.",
-  how_step2_p2:        "Once confirmed, a deposit link is sent via Square to secure your booking. Full payment is due 48 hours before your session.",
+  how_step2_p1:        "Within 24 hours we will reach out to confirm your group's goals, and needs as well as discussing logistics. We choose the best spot on your lake, and tailor a session plan around your group's skill levels and interests. If you have any questions about the available options or would like to make a request before booking, please contact us.",
+  how_step2_p2:        "Once all your questions are answered a deposit link is sent via Square to secure your booking. Full payment is due 48 hours before your session.",
 
   how_step3_eyebrow:   "Before Your Session",
   how_step3_h2_1:      "Athlete",
   how_step3_h2_2:      "preparation.",
-  how_step3_p1:        "Leading up to our session we will send some resources for all athletes to look over including some videos that will cover all of the pre-session rules, instructions and how-to's so that we can maximize our time on the water!",
+  how_step3_p1:        "Leading up to our session we will send some resources for all athletes to look over including some videos that will cover all of the pre-session rules, and how-to's so that we can maximize our time on the water!",
 
   how_step4_eyebrow:   "Session Day",
   how_step4_h2_1:      "We come to your lake.",
@@ -337,7 +328,7 @@ const CONTENT = {
 
 
   // ── CONTACT PAGE ──────────────────────────────────────
-  contact_hero_badge:     "Got Questions?",
+  contact_hero_badge:     "Questions?",
   contact_hero_l1:        "We Have",
   contact_hero_l3:        "Answers!",
   contact_form_eyebrow:   "Send a Message",
@@ -345,8 +336,8 @@ const CONTENT = {
   contact_form_h2_2:      "anything.",
   contact_reply_note:     "We reply personally — usually same day, always within 24 hours.",
   contact_direct_eyebrow: "Direct Contact",
-  contact_direct_h2_1:    "Prefer to",
-  contact_direct_h2_2:    "reach out directly?",
+  contact_direct_h2_1:    "Reach out",
+  contact_direct_h2_2:    "Directly?",
   contact_response_time:  "",
   contact_response_note:  "",
 
@@ -391,18 +382,18 @@ const CONTENT = {
   // ── BOOKING HERO ──────────────────────────────────────
   booking_hero_badge:  "Live Availability · 24hr Confirmation",
   booking_hero_l1:     "Book your",
-  booking_hero_l3:     "session.",
+  booking_hero_l3:     "Session.",
 
   // Booking info cards
   booking_gear_title:          "What's Included",
   booking_gear_boat:           "Sanger DLX competition towboat — fully fuelled",
   booking_gear_equip:          "Waterskis, wakeboards, wakesurf, ropes, handles",
-  booking_gear_coach:          "Christian Richards — top 100 worldwide barefoot, 15+ yrs coaching",
+  booking_gear_coach:          "Christian Richards — 15+ yrs coaching",
   booking_info_season_title:   "Season & Policies",
   booking_info_season_val:     "May through September — weekdays and weekends",
   booking_info_weather_val:    "Light rain proceeds. Heavy rain or thunder = reschedule with full credit",
-  booking_info_distance_val:   "+$100 (1.5–3hr) or +$200 (3–6hr) from Manotick, ON",
-  booking_info_deposit_val:    "Non-refundable deposit to secure your date",
+  booking_info_distance_val:   "+ $100 (1.5–3hr) or + $200 (3–6hr) from Ottawa, ON",
+  booking_info_deposit_val:    "Deposit required to secure your date",
   booking_info_payment_val:    "Full balance due 48 hours before your session via Square",
   booking_policy_refund:       "Refund Policy",
   booking_policy_waiver:       "Liability Waiver",
