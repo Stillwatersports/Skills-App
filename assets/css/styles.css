@@ -628,13 +628,13 @@ footer{background:var(--cyan);border-top:2px solid var(--pink);padding:48px 48px
 /* ── PROMO BANNER ── */
 #promo-banner{
   position:fixed;bottom:0;left:0;right:0;z-index:150;
-  background:var(--pink);
+  background:var(--cyan);
   color:var(--yellow);
-  font-size:13px;font-weight:700;
+  font-size:16px;font-weight:800;
   text-align:center;
   padding:11px 48px;
   display:flex;align-items:center;justify-content:center;gap:16px;
-  border-top:2px solid var(--yellow);
+  border-top:2px solid var(--pink
   transform:translateY(100%);
   transition:transform .4s cubic-bezier(.16,1,.3,1);
 }
