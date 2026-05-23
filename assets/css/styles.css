@@ -140,7 +140,7 @@ nav{
 .hero-scroll::before{content:'↓';font-size:15px;display:inline-block;animation:bounceArrow 1.8s ease-in-out infinite}
 .hero-stats-mini{display:flex;gap:32px}
 .hero-stat-mini{text-align:center}
-.hero-stat-mini-num{font-size:24px;font-weight:800;color:var(--yellow);text-shadow:0 1px 6px rgba(0,0,0,0.6)}
+.hero-stat-mini-num{font-size:22px;font-weight:750;color:var(--yellow);text-shadow:0 1px 6px rgba(0,0,0,0.6)}
 .hero-stat-mini-lbl{font-size:11px;font-weight:600;color:rgba(255,255,231,0.75);letter-spacing:.07em;text-transform:uppercase;text-shadow:0 1px 4px rgba(0,0,0,0.5)}
 .hero-contact-link{
   font-size:12px;font-weight:600;letter-spacing:.06em;
@@ -808,6 +808,58 @@ footer{background:var(--cyan);border-top:2px solid var(--pink);padding:48px 48px
   gap: 8px;
 }
 @media (max-width: 960px) { .mobile-float-cta { display: block; } }
+
+/* ── Hero stat neon glitch ───────────────────────────── */
+.hero-stat-mini-num {
+  color: var(--yellow);
+  text-shadow:
+    0 0 8px  rgba(255, 254, 180, 0.85),
+    -2px 0 0 rgba(0, 200, 212, 0.9),
+     2px 0 0 rgba(224, 64, 160, 0.9),
+    0 0 22px rgba(0, 200, 212, 0.45),
+    0 0 44px rgba(224, 64, 160, 0.25);
+  animation: neonGlitch 5s ease-in-out infinite;
+  will-change: text-shadow, transform;
+}
+
+@keyframes neonGlitch {
+  0%, 88%, 100% {
+    text-shadow:
+      0 0 8px  rgba(255, 254, 180, 0.85),
+      -2px 0 0 rgba(0, 200, 212, 0.9),
+       2px 0 0 rgba(224, 64, 160, 0.9),
+      0 0 22px rgba(0, 200, 212, 0.45),
+      0 0 44px rgba(224, 64, 160, 0.25);
+    transform: translateX(0);
+  }
+  90% {
+    text-shadow:
+      0 0 12px rgba(255, 254, 180, 1),
+      -5px 0 0 rgba(0, 200, 212, 1),
+       5px 0 0 rgba(224, 64, 160, 1),
+      0 0 40px rgba(0, 200, 212, 0.85),
+      0 0 70px rgba(224, 64, 160, 0.5);
+    transform: translateX(3px);
+  }
+  92% {
+    text-shadow:
+      0 0 12px rgba(255, 254, 180, 1),
+       4px 0 0 rgba(0, 200, 212, 1),
+      -4px 0 0 rgba(224, 64, 160, 1),
+      0 0 36px rgba(0, 200, 212, 0.7),
+      0 0 60px rgba(224, 64, 160, 0.45);
+    transform: translateX(-3px);
+  }
+  94% {
+    text-shadow:
+      0 0 8px  rgba(255, 254, 180, 0.85),
+      -2px 0 0 rgba(0, 200, 212, 0.9),
+       2px 0 0 rgba(224, 64, 160, 0.9),
+      0 0 22px rgba(0, 200, 212, 0.45),
+      0 0 44px rgba(224, 64, 160, 0.25);
+    transform: translateX(0);
+  }
+}
 
 /* ── Reduced motion safety ───────────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
