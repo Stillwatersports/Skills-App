@@ -2,6 +2,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- ── Stillwater Splash Intro Styles ──────────────────── -->
+<style>
+  #sw-splash {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: #1a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.9s ease;
+  }
+  #sw-splash.fade-out {
+    opacity: 0;
+    pointer-events: none;
+  }
+  #sw-splash video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  #sw-skip {
+    position: absolute;
+    bottom: 28px;
+    right: 28px;
+    z-index: 10;
+    color: rgba(255,255,255,0.45);
+    font-family: 'DM Sans', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.8px;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 8px 18px;
+    border-radius: 20px;
+    transition: color 0.2s ease, border-color 0.2s ease;
+    user-select: none;
+  }
+  #sw-skip:hover {
+    color: #00C8D4;
+    border-color: #00C8D4;
+  }
+</style>
   <!-- Open Graph -->
 <meta property="og:type" content="website"/>
 <meta property="og:site_name" content="Stillwater Sports"/>
@@ -27,8 +72,20 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-9Z296M7ZLP');</script>
 </head>
 <body>
-
-
+<!-- ── Stillwater Splash Intro ─────────────────────────── -->
+<div id="sw-splash">
+  <video
+    id="sw-splash-video"
+    autoplay
+    muted
+    playsinline
+    preload="auto"
+  >
+    <source src="./splash.webm" type="video/webm">
+    <source src="./splash.mp4"  type="video/mp4">
+  </video>
+  <div id="sw-skip" onclick="swDismiss()">Skip →</div>
+</div>
 <div id="nav-placeholder"></div>
 <script src="./assets/js/nav.js"></script>
 
@@ -483,6 +540,46 @@ function closeBanner(){
   }, { passive: true });
 })();
 </script>
+<!-- ── Stillwater Splash Logic ─────────────────────────── -->
+<script>
+(function () {
+  var overlay = document.getElementById('sw-splash');
+  var video   = document.getElementById('sw-splash-video');
+  var skip    = document.getElementById('sw-skip');
 
+  // Show once per session — remove this block to show on every visit
+  if (sessionStorage.getItem('swSeen')) {
+    overlay.style.display = 'none';
+    return;
+  }
+
+  // Dismiss function — fades out and removes the overlay
+  function swDismiss() {
+    sessionStorage.setItem('swSeen', '1');
+    overlay.classList.add('fade-out');
+    setTimeout(function () {
+      if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+    }, 950);
+  }
+  window.swDismiss = swDismiss;
+
+  // Dismiss when video ends naturally
+  video.addEventListener('ended', swDismiss);
+
+  // Safety fallback — dismiss after 8s if video stalls (e.g. slow mobile)
+  var fallback = setTimeout(swDismiss, 8000);
+  video.addEventListener('ended', function () { clearTimeout(fallback); });
+
+  // Show skip button after 1.5 seconds
+  skip.style.opacity = '0';
+  skip.style.transition = 'opacity 0.5s ease';
+  setTimeout(function () { skip.style.opacity = '1'; }, 1500);
+
+  // iOS fallback — if video can't autoplay, dismiss immediately
+  setTimeout(function () {
+    if (video.paused) swDismiss();
+  }, 600);
+})();
+</script>
 </body>
 </html>
