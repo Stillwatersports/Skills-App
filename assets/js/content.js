@@ -123,7 +123,7 @@ const CONTENT = {
   pricing_ptb_primetime_desc: "<strong>[Morning + Evening]</strong> Offers the best water conditions and a 4 hour break mid-day. +$250 to a weekday. Included free on weekends, holidays, and all Multi-Day packages.",
   pricing_tiers_eyebrow: "Flexible Options",
   pricing_tiers_h2_1:    "All Inclusive",
-  pricing_tiers_h2_2:    "Learn or Improve — Guaranteed",
+  pricing_tiers_h2_2:    "Learn or Improve <br><span style='color:var(--pink)'>Guaranteed!</span>",
   pricing_tiers_desc:    "Pricing includes the boat, all equipment, fuel, and full coaching time and taxes. Use the calculator below to plan for your group.",
   pricing_tier_cta:      "Check Pricing →",
   pricing_tier1_eyebrow: "Single Session · 4 hours",
