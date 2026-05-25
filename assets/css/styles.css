@@ -129,7 +129,7 @@ nav{
   display:flex;justify-content:space-between;align-items:center;
   padding:22px 48px;
   border-top:1px solid rgba(255,255,231,0.15);
-  background:rgba(0,0,0,0.18);
+  background:rgba(0,0,0,0.32);
 }
 .hero-scroll{
   font-size:13px;font-weight:700;letter-spacing:.12em;
