@@ -333,9 +333,13 @@ body{-webkit-user-select:none;user-select:none}
       <h2 class="big-title" style="margin-bottom:8px">All packages<br><em>at a glance.</em></h2>
       <p style="font-size:14px;color:var(--muted);line-height:1.7;max-width:760px;margin-bottom:28px">Our pricing varies based on peak times — weekends and holidays have increased costs. We've kept pricing accessible and comparable to other premium activities. Every group shares costs differently; the calculator above will help you plan based on your group size. All packages include boat, fuel, equipment, PFDs, and full coaching time. Prices in CAD, tax included. Questions? <a href="/contact" style="color:var(--cyan);font-weight:600">Contact us</a> or email <a href="mailto:christian@learnwatersports.ca" style="color:var(--cyan);font-weight:600">christian@learnwatersports.ca</a> — see you on the water!</p>
     
-      <!-- COME TO US -->
-      <div style="margin-bottom:28px">
-        <div class="ref-label">Come to Us · Rideau River · Ottawa · Manotick · Kemptville</div>
+
+      <!-- SECTION HEADING: COME TO US -->
+      <div style="text-align:center;padding-bottom:18px;margin-bottom:20px;border-bottom:2px solid rgba(0,200,212,0.18);margin-top:16px">
+        <div style="font-size:22px;font-weight:900;color:var(--text);letter-spacing:-.02em">Come to Us</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:4px;font-weight:500">Rideau River · Ottawa · Manotick · Kemptville</div>
+      </div>
+      <div style="margin-bottom:36px">
         <div style="display:grid;grid-template-columns:1fr;gap:8px">
           <div onclick="jumpToCalc('local')" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;padding:16px 20px;background:rgba(0,200,212,0.05);border-radius:12px;border:1.5px solid var(--cyan);flex-wrap:wrap;gap:12px;transition:transform .15s">
             <div><div class="pkg-name">Pay Per Turn</div><div class="pkg-when">Tons of great spots — boat launches and public parks along the Rideau River</div></div>
@@ -347,27 +351,41 @@ body{-webkit-user-select:none;user-select:none}
         </div>
       </div>
 
-      <!-- SINGLE DAY -->
-      <div style="margin-bottom:28px">
-        <div class="ref-label">Single Day · We come to you</div>
+      <div style="height:1px;background:rgba(0,200,212,0.15);margin-bottom:28px"></div>
+
+      <!-- SECTION HEADING: SINGLE DAY -->
+      <div style="text-align:center;padding-bottom:18px;margin-bottom:20px;border-bottom:2px solid rgba(0,200,212,0.18);margin-top:16px">
+        <div style="font-size:22px;font-weight:900;color:var(--text);letter-spacing:-.02em">Single Day</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:4px;font-weight:500">We come to you</div>
+      </div>
+      <div style="margin-bottom:36px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
+        <div style="text-align:center;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);padding:7px 0;border-bottom:2px solid var(--cyan)">📅 Weekday</div>
+        <div style="text-align:center;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--pink);padding:7px 0;border-bottom:2px solid var(--pink)">🌊 Weekend / Holiday</div>
+      </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div onclick="jumpToCalc('halfday')" style="cursor:pointer;padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan);transition:transform .15s">
+          <!-- WEEKDAY -->
+          <div onclick="jumpToCalc('halfday')" style="cursor:pointer;padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan);border-top:3px solid var(--cyan);transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Half Day</div><div class="pkg-price">$600</div></div>
             <div class="pkg-when">Morning, Afternoon, or Evening</div>
           </div>
-          <div onclick="jumpToCalc('halfday')" style="cursor:pointer;padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan);transition:transform .15s">
+          <!-- WEEKEND -->
+          <div onclick="jumpToCalc('halfday')" style="cursor:pointer;padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--pink);border-top:3px solid var(--pink);transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Half Day <span style="font-size:11px;font-weight:500;color:var(--pink)">Wknd/Hol</span></div><div class="pkg-price">$750</div></div>
             <div class="pkg-when">Morning, Afternoon, or Evening</div>
           </div>
-          <div onclick="jumpToCalc('fullday')" style="cursor:pointer;padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan);transition:transform .15s">
+          <!-- WEEKDAY -->
+          <div onclick="jumpToCalc('fullday')" style="cursor:pointer;padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan);border-top:3px solid var(--cyan);transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Full Day</div><div class="pkg-price">$1,000</div></div>
             <div class="pkg-when">[Morning + Afternoon] OR [Afternoon + Evening]</div>
           </div>
-          <div onclick="jumpToCalc('fullday')" style="cursor:pointer;padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan);transition:transform .15s">
+          <!-- WEEKEND -->
+          <div onclick="jumpToCalc('fullday')" style="cursor:pointer;padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--pink);border-top:3px solid var(--pink);transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Full Day <span style="font-size:11px;font-weight:500;color:var(--pink)">Wknd/Hol</span></div><div class="pkg-price">$1,250</div></div>
             <div class="pkg-when">Any 2 blocks incl. Primetime — one premium covers all</div>
           </div>
-          <div onclick="jumpToCalc('fullday')" style="cursor:pointer;padding:20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan);transition:transform .15s">
+          <!-- PRIMETIME — spans both cols -->
+          <div onclick="jumpToCalc('fullday')" style="cursor:pointer;padding:20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan);transition:transform .15s;grid-column:span 2">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px;flex-wrap:wrap">
               <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;min-width:0">
                 <div style="font-size:18px;font-weight:900;color:var(--cyan);letter-spacing:-.01em">Full Day — Primetime</div>
@@ -375,24 +393,35 @@ body{-webkit-user-select:none;user-select:none}
               </div>
               <div class="pkg-price" style="color:var(--yellow);font-size:20px;font-weight:900;line-height:1;flex-shrink:0">$1,250</div>
             </div>
-            <div class="pkg-when" style="color:rgba(255,255,231,0.8)">[Morning + Evening] · Best Conditions · Afternoon Break</div>
+            <div class="pkg-when" style="color:rgba(255,255,231,0.8)">[Morning + Evening] · Best Conditions · Afternoon Break · Any Day</div>
           </div>
         </div>
       </div>
 
-      <!-- MULTI-DAY -->
+      <div style="height:1px;background:rgba(0,200,212,0.15);margin-bottom:28px"></div>
+
+      <!-- SECTION HEADING: MULTI-DAY -->
+      <div style="text-align:center;padding-bottom:18px;margin-bottom:20px;border-bottom:2px solid rgba(0,200,212,0.18);margin-top:16px">
+        <div style="font-size:22px;font-weight:900;color:var(--text);letter-spacing:-.02em">Multi-Day</div>
+        <div style="font-size:13px;color:var(--muted);margin-top:4px;font-weight:500">Bigger savings · Primetime included on all packages</div>
+      </div>
       <div>
-        <div class="ref-label">Multi-Day · Bigger savings · Primetime Included</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:6px">
+        <div style="text-align:center;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--cyan);padding:7px 0;border-bottom:2px solid var(--cyan)">📅 Weekday</div>
+        <div style="text-align:center;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--pink);padding:7px 0;border-bottom:2px solid var(--pink)">🌊 Weekend / Holiday</div>
+      </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div onclick="jumpToCalc('multiday')" style="cursor:pointer;padding:16px 20px;background:rgba(0,200,212,0.04);border-radius:12px;border:1.5px solid var(--cyan);transition:transform .15s">
+          <!-- WEEKDAY -->
+          <div onclick="jumpToCalc('multiday')" style="cursor:pointer;padding:16px 20px;background:rgba(0,200,212,0.04);border-radius:12px;border:1.5px solid var(--cyan);border-top:3px solid var(--cyan);transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
               <div class="pkg-name">Double Weekday</div>
               <div class="pkg-price">$1,750</div>
             </div>
             <div class="pkg-when" style="margin-bottom:8px">2 Consecutive Weekdays</div>
-            <span class="pkg-save">Save $250 or more with primetime included - free</span>
+            <span class="pkg-save">Save $250 or more — Primetime included free</span>
           </div>
-          <div onclick="jumpToCalc('multiday')" style="cursor:pointer;padding:16px 20px;background:rgba(0,200,212,0.04);border-radius:12px;border:1.5px solid var(--cyan);transition:transform .15s">
+          <!-- WEEKEND -->
+          <div onclick="jumpToCalc('multiday')" style="cursor:pointer;padding:16px 20px;background:rgba(224,64,160,0.04);border-radius:12px;border:1.5px solid var(--pink);border-top:3px solid var(--pink);transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
               <div class="pkg-name">Full Weekend</div>
               <div class="pkg-price">$2,100</div>
@@ -400,7 +429,8 @@ body{-webkit-user-select:none;user-select:none}
             <div class="pkg-when" style="margin-bottom:8px">Saturday + Sunday</div>
             <span class="pkg-save">Save $400</span>
           </div>
-          <div onclick="jumpToCalc('multiday')" style="cursor:pointer;padding:20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan);transition:transform .15s">
+          <!-- WEEKDAY -->
+          <div onclick="jumpToCalc('multiday')" style="cursor:pointer;padding:20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan);border-top:3px solid var(--cyan);transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px;flex-wrap:wrap">
               <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;min-width:0">
                 <div style="font-size:18px;font-weight:900;color:var(--cyan);letter-spacing:-.01em">3 Day Work Week</div>
@@ -408,12 +438,14 @@ body{-webkit-user-select:none;user-select:none}
               </div>
               <div class="pkg-price" style="color:var(--yellow);font-size:20px;font-weight:900;line-height:1;flex-shrink:0">$2,500</div>
             </div>
-            <div class="pkg-when" style="color:rgba(255,255,231,0.8)">Book Monday to Friday and ski Any 3 days · e.g. Ski Mon, Wed, Fri — Rest: Tue &amp; Thu</div>
+            <div class="pkg-when" style="color:rgba(255,255,231,0.8)">Any 3 days Mon–Fri · e.g. Ski Mon, Wed, Fri — Rest Tue &amp; Thu</div>
           </div>
-          <div style="padding:16px 20px;background:#fff;border-radius:12px;border:1.5px solid var(--cyan)">
+          <!-- WEEKEND -->
+          <div onclick="jumpToCalc('multiday')" style="cursor:pointer;padding:16px 20px;background:rgba(224,64,160,0.04);border-radius:12px;border:1.5px solid var(--pink);border-top:3px solid var(--pink);transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px"><div class="pkg-name">Holiday Weekend</div><div class="pkg-price">$3,000</div></div>
             <div class="pkg-when">Holiday Fri or Mon + [Sat + Sun] — The Perfect Long Weekend!</div>
           </div>
+          <!-- 5 DAY WEEK — spans both cols -->
           <div onclick="jumpToCalc('multiday')" style="cursor:pointer;padding:24px 20px;background:var(--pink);border-radius:12px;border:1.5px solid var(--cyan);grid-column:span 2;transition:transform .15s">
             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:10px;flex-wrap:wrap">
               <div style="display:flex;align-items:flex-start;gap:8px;flex-wrap:wrap;min-width:0">
@@ -422,11 +454,12 @@ body{-webkit-user-select:none;user-select:none}
               </div>
               <div class="pkg-price" style="color:var(--yellow);font-size:24px;font-weight:900;line-height:1;flex-shrink:0">$4,500</div>
             </div>
-            <div class="pkg-when" style="color:rgba(255,255,231,0.8)">Book the whole week. Ski Any 5 of 8 days · Weekends too · Ex. Ski: Sat, Mon, Tues, Thur, Sat · Perfect to keep the kids outside and active at the cottage! </div>
+            <div class="pkg-when" style="color:rgba(255,255,231,0.8)">Book the whole week. Ski Any 5 of 8 days · Weekends too · e.g. Ski: Sat, Mon, Tues, Thur, Sat · Perfect to keep the kids outside and active at the cottage!</div>
           </div>
         </div>
       </div>
-      <div style="margin-top:12px;font-size:12px;color:var(--muted);line-height:1.8">
+
+            <div style="margin-top:12px;font-size:12px;color:var(--muted);line-height:1.8">
         <strong>Distance surcharges:</strong> +$100 (1.5–3hr from Manotick) · +$200 (3–6hr) &nbsp;·&nbsp;
         <strong>Deposit:</strong> required to secure your date &nbsp;·&nbsp;
         <strong>Balance:</strong> due 48hrs before your session
