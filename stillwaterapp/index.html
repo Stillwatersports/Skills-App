@@ -2713,11 +2713,39 @@ async function updateRole(userId,newRole){
   showToast('Role updated')
 }
 
+async function getOrCreateGeneralClub(){
+  // Look for existing General club
+  const{data:existing}=await db.from('clubs').select('id').eq('name','General').single()
+  if(existing)return existing.id
+  // Create it if it doesn't exist
+  const{data:created,error}=await db.from('clubs').insert({
+    name:'General',
+    description:'Default club for users not assigned to a specific club.',
+    owner_id:currentUser.id
+  }).select('id').single()
+  if(error){console.error('Could not create General club:',error);return null}
+  return created.id
+}
+
 async function deleteClub(clubId){
-  if(!confirm('Delete this club and all its classes?'))return
+  if(!confirm('Delete this club? All members will be moved to the General club.'))return
+  // Get or create the General club
+  const generalId=await getOrCreateGeneralClub()
+  if(!generalId){showToast('Could not create General club');return}
+  // Get all classes in this club
+  const{data:classes}=await db.from('classes').select('id').eq('club_id',clubId)
+  const classIds=(classes||[]).map(c=>c.id)
+  // Move affected users: clear their class, move to General club
+  if(classIds.length){
+    await db.from('profiles').update({class_id:null,club_id:generalId}).in('class_id',classIds)
+  }
+  // Move any remaining members of the club (no class assigned)
+  await db.from('profiles').update({club_id:generalId}).eq('club_id',clubId)
+  // Delete classes then club
+  await db.from('classes').delete().eq('club_id',clubId)
   const{error}=await db.from('clubs').delete().eq('id',clubId)
   if(error){showToast('Delete failed: '+error.message);return}
-  showToast('Club deleted')
+  showToast('Club deleted — members moved to General')
   adminSubView='clubs'
   setAdminSub('clubs')
 }
