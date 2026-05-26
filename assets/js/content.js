@@ -142,7 +142,7 @@ const CONTENT = {
   pricing_tier4_desc:    "A great value option! Visit us locally for a condensed session, $50/person, $200 minimum. You come to us. Perfect for local riders and small groups.",
   pricing_tier4_cta:     "Check Availability →",
   pricing_est_eyebrow:              "Price Calculator",
-  pricing_est_h2_1:                 "Budget For ",
+  pricing_est_h2_1:                 "Budget for ",
   pricing_est_h2_2:                 "Your Group.",
   pricing_est_desc:                 "Select your session type, # of riders, and dates — we'll calculate your full breakdown.",
   pricing_est_step1_label:          "Step 1 — Session Type",
