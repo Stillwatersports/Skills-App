@@ -53,10 +53,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .field textarea{resize:vertical;min-height:60px;line-height:1.5;font-size:14px}
 .role-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
 .role-opt{padding:10px 6px;border-radius:var(--rsm);border:0.5px solid var(--border);background:var(--bg);cursor:pointer;text-align:center;transition:all .15s}
-.role-opt.selected{border:2px solid var(--brand);background:rgba(0,200,212,0.08)}
+.role-opt.selected{border:2px solid var(--accent);background:rgba(224,64,160,0.07)}
 .role-opt-icon{font-size:22px;margin-bottom:4px}
 .role-opt-label{font-size:11px;font-weight:600;color:var(--muted)}
-.role-opt.selected .role-opt-label{color:var(--brand)}
+.role-opt.selected .role-opt-label{color:var(--accent)}
 .btn-primary{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:var(--rsm);font-size:15px;font-weight:600;cursor:pointer;transition:opacity .15s;-webkit-tap-highlight-color:transparent}
 .btn-primary:hover{opacity:.85}
 .btn-primary:disabled{opacity:.45;cursor:default}
@@ -390,7 +390,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 <!-- PWA INSTALL BANNER -->
 <div id="pwa-banner">
   <div class="pwa-banner-inner">
-    <div class="pwa-banner-icon"><img src="./Logo4.png"/></div>
+    <div class="pwa-banner-icon"><img src="https://raw.githubusercontent.com/Stillwatersports/Skills-App/main/Logo4.png"/></div>
     <div class="pwa-banner-text">
       <div class="pwa-banner-title">Add Stillwater to your home screen</div>
       <div class="pwa-banner-sub">Full app experience · works offline</div>
@@ -424,7 +424,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 <!-- AUTH -->
 <div id="auth-screen">
   <div class="auth-card">
-    <div class="auth-logo"><img src="./Logo4.png"/></div>
+    <div class="auth-logo"><img src="https://raw.githubusercontent.com/Stillwatersports/Skills-App/main/Logo4.png"/></div>
     <div class="auth-tabs">
       <button class="auth-tab active" onclick="switchTab('login')">Sign in</button>
       <button class="auth-tab" onclick="switchTab('signup')">Sign up</button>
@@ -474,7 +474,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
     <div id="login-fields">
       <div class="field"><label>Username or Email</label><input type="text" id="inp-login" placeholder="username or you@example.com" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter')doAuth()"/></div>
     </div>
-    <div class="field"><label>Password</label><input type="password" id="inp-pass" placeholder="········" onkeydown="if(event.key==='Enter')doAuth()"/></div>
+    <div class="field"><label>Password</label><input type="password" id="inp-pass" placeholder="········" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuth()"/></div>
     <button class="btn-primary" id="auth-btn" onclick="doAuth()">Sign in</button>
     <div class="auth-msg" id="auth-msg"></div>
     <div style="text-align:center;margin-top:1rem;font-size:11px;color:var(--muted);line-height:1.8">
@@ -493,7 +493,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
   <div class="topbar">
     <div class="topbar-side left"><span class="saving-dot" id="saving-dot"></span></div>
     <div class="topbar-logo-wrap">
-      <img class="topbar-logo" src="./Logo4.png" onclick="setView('home')"/>
+      <img class="topbar-logo" src="https://raw.githubusercontent.com/Stillwatersports/Skills-App/main/Logo4.png" onclick="setView('home')"/>
     </div>
     <div class="topbar-side right">
       <div id="avatar-top" onclick="setView('profile')" style="cursor:pointer"></div>
@@ -507,7 +507,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 <script>
 
 // ── PWA ───────────────────────────────────────────────────────────
-const manifestData={name:'Stillwater Sports Ottawa',short_name:'Stillwater',description:'Progressive watersports skills & rewards',start_url:'/',display:'standalone',background_color:'#FFFeb4',theme_color:'#00C8D4',orientation:'portrait',icons:[{src:'./Logo4.png',sizes:'192x192',type:'image/png'},{src:'./Logo4.png',sizes:'512x512',type:'image/png',purpose:'any maskable'}]}
+const manifestData={name:'Stillwater Sports Ottawa',short_name:'Stillwater',description:'Progressive watersports skills & rewards',start_url:'/',display:'standalone',background_color:'#FFFeb4',theme_color:'#00C8D4',orientation:'portrait',icons:[{src:'https://raw.githubusercontent.com/Stillwatersports/Skills-App/main/Logo4.png',sizes:'192x192',type:'image/png'},{src:'https://raw.githubusercontent.com/Stillwatersports/Skills-App/main/Logo4.png',sizes:'512x512',type:'image/png',purpose:'any maskable'}]}
 const mb=new Blob([JSON.stringify(manifestData)],{type:'application/json'})
 document.getElementById('pwa-manifest').href=URL.createObjectURL(mb)
 let deferredInstall=null
@@ -572,8 +572,8 @@ let sessionStartTime=null,lastPosition=null,currentSpeed=0
 let isActiveRun=false,runStartTime=null,sessionTimer=null
 let selectedSignupRole='rider'
 // Valid signup roles: rider, parent, coach, admin (super_admin is assigned manually)
-let appSettingsCache={} // loaded from Supabase app_settings table
-let quizOverridesCache={} // loaded from Supabase quiz_overrides table
+let appSettingsCache={}
+let quizOverridesCache={}
 const RUN_SPEED_THRESHOLD=20,RUN_MIN_DURATION=5
 
 // ── DB SKILLS ─────────────────────────────────────────────────────
@@ -666,7 +666,7 @@ async function checkSharePage(){
 
 // ── AUTH ──────────────────────────────────────────────────────────
 let authMode='login'
-function selectRole(r){selectedSignupRole=r;document.querySelectorAll('.role-opt').forEach(el=>el.classList.remove('selected'));document.getElementById('role-'+r)?.classList.add('selected')}
+function selectRole(r){selectedSignupRole=r;document.querySelectorAll('#signup-fields .role-opt').forEach(el=>el.classList.remove('selected'));document.getElementById('role-'+r)?.classList.add('selected')}
 function sanitizeUsername(el){el.value=el.value.toLowerCase().replace(/[^a-z0-9_]/g,'')}
 function switchTab(m){
   authMode=m
@@ -674,6 +674,7 @@ function switchTab(m){
   document.getElementById('signup-fields').style.display=m==='signup'?'block':'none'
   document.getElementById('login-fields').style.display=m==='login'?'block':'none'
   document.getElementById('auth-btn').textContent=m==='signup'?'Create account':'Sign in'
+  document.getElementById('inp-pass').autocomplete=m==='signup'?'new-password':'current-password'
   setMsg('','')
 }
 function setMsg(t,type){const el=document.getElementById('auth-msg');el.textContent=t;el.className='auth-msg'+(type?' '+type:'')}
@@ -941,7 +942,7 @@ function renderNav(){
 }
 function renderAvatarTop(){document.getElementById('avatar-top').innerHTML=avatarHtml(userProfile?.avatar_url,userProfile?.name,28)}
 
-async function setView(v,opts={}){
+async function setView(v,opts={},skipHistory=false){
   activeView=v
   if(opts.sub)activeSubView[v]=opts.sub
   if(v==='certs'&&isCoach())await loadCoachQueue()
@@ -949,6 +950,7 @@ async function setView(v,opts={}){
   if(v==='social'&&activeSubView['social']==='leaderboard')await loadLeaderboard()
   if(v==='admin')await loadAllUsers()
   if(v==='social'&&activeSubView['social']==='friends')await loadFriends()
+  if(!skipHistory)history.pushState({v,opts},'','')
   renderNav()
   const c=document.getElementById('main-content')
   window.scrollTo({top:0,behavior:'smooth'})
@@ -960,6 +962,11 @@ async function setView(v,opts={}){
   else if(v==='profile')renderProfileView(c)
   else if(v==='admin')renderAdminView(c)
 }
+window.addEventListener('popstate',e=>{
+  if(!currentUser)return
+  if(e.state?.v)setView(e.state.v,e.state.opts||{},true)
+  else setView('home',{},true)
+})
 
 // ── HOME PAGE ─────────────────────────────────────────────────────
 function renderHome(c){
@@ -1869,7 +1876,7 @@ async function printReportCard(studentId, studentName, avatarUrl, username, pass
 
   <!-- ATHLETE STRIPE — logo sits on yellow background so original colours show correctly -->
   <div class="athlete-stripe">
-    <img src="./Logo4.png" style="height:52px;width:auto;object-fit:contain;flex-shrink:0" onerror="this.style.display='none'"/>
+    <img src="https://raw.githubusercontent.com/Stillwatersports/Skills-App/main/Logo4.png" style="height:52px;width:auto;object-fit:contain;flex-shrink:0" onerror="this.style.display='none'"/>
     <div style="width:1px;background:rgba(0,0,0,0.12);align-self:stretch;margin:0 4px"></div>
     <div class="athlete-initial">${(studentName||'?')[0].toUpperCase()}</div>
     <div>
@@ -2698,9 +2705,18 @@ async function adminCreateClub(){
   await renderAdminClubs(c,subTabs)
 }
 
+async function updateRole(userId,newRole){
+  const{error}=await db.from('profiles').update({role:newRole}).eq('id',userId)
+  if(error){alert('Failed to update role: '+error.message);return}
+  const u=allUsers.find(u=>u.id===userId)
+  if(u)u.role=newRole
+  showToast('Role updated')
+}
+
 async function deleteClub(clubId){
   if(!confirm('Delete this club and all its classes?'))return
   await db.from('clubs').delete().eq('id',clubId)
+  adminSubView='clubs'
   renderAdminView(document.getElementById('main-content'))
 }
 
@@ -2756,45 +2772,32 @@ async function saveSkill(skillId,idx){
   if(flash){flash.textContent='Saved!';setTimeout(()=>flash.textContent='',2000)}
   if(btn)btn.disabled=false
 }
-// ── APP SETTINGS (Supabase-backed) ────────────────────────────────
-// Required tables (run once in Supabase SQL editor):
-//   create table if not exists app_settings (key text primary key, value jsonb not null);
-//   alter table app_settings enable row level security;
-//   create policy "public rw settings" on app_settings for all using (true) with check (true);
+// ── APP SETTINGS (Supabase-backed) ───────────────────────────────
+// SQL: create table if not exists app_settings (key text primary key, value jsonb not null);
+// SQL: alter table app_settings enable row level security;
+// SQL: create policy "rw" on app_settings for all using (true) with check (true);
 //
-//   create table if not exists quiz_overrides (quiz_id text not null, question_index int not null, question_text text, options jsonb, correct_index int, primary key (quiz_id, question_index));
-//   alter table quiz_overrides enable row level security;
-//   create policy "public rw quiz overrides" on quiz_overrides for all using (true) with check (true);
+// SQL: create table if not exists quiz_overrides (quiz_id text not null, question_index int not null, question_text text, options jsonb, correct_index int, primary key (quiz_id, question_index));
+// SQL: alter table quiz_overrides enable row level security;
+// SQL: create policy "rw" on quiz_overrides for all using (true) with check (true);
 
 async function loadAppSettings(){
   const{data,error}=await db.from('app_settings').select('key,value')
-  if(error||!data){
-    console.warn('app_settings not found — using localStorage fallback')
-    try{appSettingsCache=JSON.parse(localStorage.getItem('sw-settings')||'{}')}catch(e){appSettingsCache={}}
-    return
-  }
-  appSettingsCache={}
-  data.forEach(r=>{appSettingsCache[r.key]=r.value})
+  if(error||!data){try{appSettingsCache=JSON.parse(localStorage.getItem('sw-settings')||'{}')}catch(e){appSettingsCache={}};return}
+  appSettingsCache={};data.forEach(r=>{appSettingsCache[r.key]=r.value})
 }
-
 function getAppSettings(){return appSettingsCache}
-
 async function saveAppSetting(key,val){
   appSettingsCache[key]=val
   const{error}=await db.from('app_settings').upsert({key,value:val},{onConflict:'key'})
   if(error){const s=JSON.parse(localStorage.getItem('sw-settings')||'{}');s[key]=val;localStorage.setItem('sw-settings',JSON.stringify(s))}
 }
-
 async function loadQuizOverrides(){
   const{data,error}=await db.from('quiz_overrides').select('*')
   quizOverridesCache={}
   if(error||!data)return
-  data.forEach(r=>{
-    if(!quizOverridesCache[r.quiz_id])quizOverridesCache[r.quiz_id]={}
-    quizOverridesCache[r.quiz_id][r.question_index]={q:r.question_text,opts:r.options,a:r.correct_index}
-  })
+  data.forEach(r=>{if(!quizOverridesCache[r.quiz_id])quizOverridesCache[r.quiz_id]={};quizOverridesCache[r.quiz_id][r.question_index]={q:r.question_text,opts:r.options,a:r.correct_index}})
 }
-
 function getEffectiveQuiz(qid){
   const base=QUIZZES[qid];if(!base)return null
   const overrides=quizOverridesCache[qid]||{}
@@ -2857,50 +2860,16 @@ function renderAdminQuizEditor(c,subTabs){
     const q=ov.q!==undefined?ov.q:bq.q
     const opts=ov.opts||bq.opts
     const a=ov.a!==undefined?ov.a:bq.a
-    const optsHtml=opts.map((o,oi)=>`
-      <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
-        <input type="radio" name="correct-${i}" value="${oi}" ${a===oi?'checked':''} onchange="adminQuizSetCorrect(${i},${oi})" style="accent-color:var(--accent);width:14px;height:14px;flex-shrink:0"/>
-        <input type="text" value="${o.replace(/"/g,'&quot;')}" id="qopt-${i}-${oi}" style="flex:1;padding:6px 8px;border:0.5px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px;outline:none" oninput="adminQuizMarkDirty(${i})"/>
-      </div>`).join('')
+    const optsHtml=opts.map((o,oi)=>`<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px"><input type="radio" name="correct-${i}" value="${oi}" ${a===oi?'checked':''} onchange="adminQuizSetCorrect(${i},${oi})" style="accent-color:var(--accent);width:14px;height:14px;flex-shrink:0"/><input type="text" value="${o.replace(/"/g,'&quot;')}" id="qopt-${i}-${oi}" style="flex:1;padding:6px 8px;border:0.5px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px;outline:none" oninput="adminQuizMarkDirty(${i})"/></div>`).join('')
     const isOverridden=Object.prototype.hasOwnProperty.call(overrides,i)
-    return`<div id="quiz-q-card-${i}" style="background:var(--card);border:0.5px solid ${isOverridden?'var(--accent)':'var(--border)'};border-radius:var(--rsm);padding:14px;margin-bottom:10px">
-      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <span style="font-size:11px;font-weight:700;color:var(--muted);min-width:22px">Q${i+1}</span>
-        <input type="text" id="qtxt-${i}" value="${q.replace(/"/g,'&quot;')}" style="flex:1;padding:8px 10px;border:0.5px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px;font-weight:500;outline:none" oninput="adminQuizMarkDirty(${i})"/>
-      </div>
-      <div style="padding-left:30px;margin-bottom:8px">
-        <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Options — select correct answer:</div>
-        ${optsHtml}
-      </div>
-      <div style="display:flex;gap:6px;justify-content:flex-end">
-        ${isOverridden?`<button onclick="adminQuizResetQuestion(${i})" style="padding:5px 10px;border-radius:6px;border:0.5px solid var(--border);background:none;color:var(--muted);font-size:11px;cursor:pointer">Reset to default</button>`:''}
-        <button onclick="adminQuizSaveQuestion(${i})" style="padding:5px 12px;border-radius:6px;border:none;background:var(--brand);color:#fff;font-size:11px;font-weight:600;cursor:pointer" id="quiz-save-btn-${i}">Save</button>
-        <span id="quiz-saved-${i}" style="font-size:11px;color:#1D9E75;align-self:center;display:none">✓ Saved</span>
-      </div>
-    </div>`
+    return`<div id="quiz-q-card-${i}" style="background:var(--card);border:0.5px solid ${isOverridden?'var(--accent)':'var(--border)'};border-radius:var(--rsm);padding:14px;margin-bottom:10px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:8px"><span style="font-size:11px;font-weight:700;color:var(--muted);min-width:22px">Q${i+1}</span><input type="text" id="qtxt-${i}" value="${q.replace(/"/g,'&quot;')}" style="flex:1;padding:8px 10px;border:0.5px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px;font-weight:500;outline:none" oninput="adminQuizMarkDirty(${i})"/></div><div style="padding-left:30px;margin-bottom:8px"><div style="font-size:11px;color:var(--muted);margin-bottom:6px">Options — select correct answer:</div>${optsHtml}</div><div style="display:flex;gap:6px;justify-content:flex-end">${isOverridden?`<button onclick="adminQuizResetQuestion(${i})" style="padding:5px 10px;border-radius:6px;border:0.5px solid var(--border);background:none;color:var(--muted);font-size:11px;cursor:pointer">Reset to default</button>`:''}<button onclick="adminQuizSaveQuestion(${i})" style="padding:5px 12px;border-radius:6px;border:none;background:var(--brand);color:#fff;font-size:11px;font-weight:600;cursor:pointer" id="quiz-save-btn-${i}">Save</button><span id="quiz-saved-${i}" style="font-size:11px;color:#1D9E75;align-self:center;display:none">✓ Saved</span></div></div>`
   }).join('')
-  c.innerHTML=`<div class="page-title">Admin</div><div class="page-sub">Manage users, roles and content</div>
-  <div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap">${subTabs}</div>
-  <div style="margin-bottom:1rem;overflow-x:auto;white-space:nowrap;padding-bottom:4px">${quizPills}</div>
-  <div class="club-card" style="margin-bottom:10px">
-    <div style="display:flex;align-items:center;justify-content:space-between">
-      <div>
-        <div style="font-size:15px;font-weight:700">${base.icon} ${base.title}</div>
-        <div style="font-size:12px;color:var(--muted);margin-top:2px">${base.questions.length} questions · Pass mark: ${base.passMark}%</div>
-      </div>
-      <div style="font-size:11px;color:var(--accent)">${Object.keys(overrides).length?Object.keys(overrides).length+' customised':''}</div>
-    </div>
-  </div>
-  <div id="quiz-editor-rows">${rows}</div>`
+  c.innerHTML=`<div class="page-title">Admin</div><div class="page-sub">Manage users, roles and content</div><div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap">${subTabs}</div><div style="margin-bottom:1rem;overflow-x:auto;white-space:nowrap;padding-bottom:4px">${quizPills}</div><div class="club-card" style="margin-bottom:10px"><div style="display:flex;align-items:center;justify-content:space-between"><div><div style="font-size:15px;font-weight:700">${base.icon} ${base.title}</div><div style="font-size:12px;color:var(--muted);margin-top:2px">${base.questions.length} questions · Pass mark: ${base.passMark}%</div></div><div style="font-size:11px;color:var(--accent)">${Object.keys(overrides).length?Object.keys(overrides).length+' customised':''}</div></div></div><div id="quiz-editor-rows">${rows}</div>`
 }
 
-// track per-question in-progress state
 const adminQuizDirty={}
 function adminQuizMarkDirty(i){adminQuizDirty[i]=true}
-function adminQuizSetCorrect(i,oi){
-  // visually update radio without re-render
-  adminQuizMarkDirty(i)
-}
+function adminQuizSetCorrect(i,oi){adminQuizMarkDirty(i)}
 
 async function adminQuizSaveQuestion(i){
   const base=QUIZZES[adminQuizId]
@@ -2918,7 +2887,6 @@ async function adminQuizSaveQuestion(i){
   if(btn){btn.disabled=false;btn.textContent='Save'}
   const saved=document.getElementById(`quiz-saved-${i}`)
   if(saved){saved.style.display='inline';setTimeout(()=>saved.style.display='none',2000)}
-  // update card border to show it's customised
   const card=document.getElementById(`quiz-q-card-${i}`)
   if(card)card.style.borderColor='var(--accent)'
 }
