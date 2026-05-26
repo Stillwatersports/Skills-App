@@ -88,7 +88,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .saving-dot.show{opacity:1}
 .topbar-side{display:flex;align-items:center;gap:6px;width:70px}
 .topbar-side.right{justify-content:flex-end}
-.btn-sm{font-size:12px;color:var(--accent);background:#FFFeb4;border:0.5px solid var(--accent);border-radius:6px;padding:5px 10px;cursor:pointer;font-weight:600;white-space:nowrap;-webkit-tap-highlight-color:transparent}
+.btn-sm{font-size:12px;color:var(--accent);background:#FFFeb4;border:1.5px solid var(--accent);border-radius:6px;padding:5px 10px;cursor:pointer;font-weight:600;white-space:nowrap;-webkit-tap-highlight-color:transparent}
 
 /* ── BOTTOM NAV ── */
 .bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:20;background:var(--brand);border-top:2px solid var(--accent);display:flex;align-items:stretch;padding-bottom:var(--safe-bottom)}
@@ -141,12 +141,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .sub-nav{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:1.25rem;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .sub-nav::-webkit-scrollbar{display:none}
 .sub-pill{padding:7px 16px;border-radius:20px;font-size:13px;font-weight:500;border:0.5px solid var(--border);cursor:pointer;background:var(--card);color:var(--muted);white-space:nowrap;transition:all .15s;-webkit-tap-highlight-color:transparent;flex-shrink:0}
-.sub-pill.active{background:var(--brand);color:#fff;border-color:transparent}
+.sub-pill.active{background:var(--brand);color:#fff;border-color:var(--accent)}
 
 /* ── SPORT SCROLL ── */
 .sport-scroll{display:grid;grid-template-columns:repeat(auto-fit,minmax(80px,1fr));gap:6px;margin-bottom:1rem}
 .sport-pill{padding:7px 6px;border-radius:20px;font-size:12px;font-weight:500;border:0.5px solid var(--border);cursor:pointer;background:var(--card);color:var(--muted);text-align:center;transition:all .15s;-webkit-tap-highlight-color:transparent;white-space:normal;line-height:1.2}
-.sport-pill.active{background:var(--brand);color:#fff;border-color:transparent}
+.sport-pill.active{background:var(--brand);color:#fff;border-color:var(--accent)}
 .sport-pill.locked-sport{opacity:.5}
 
 /* ── STATS ── */
@@ -279,7 +279,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .class-item:last-child{margin-bottom:0}
 .class-name{font-size:13px;font-weight:500}
 .class-meta{font-size:11px;color:var(--muted);margin-top:2px}
-.btn-add{padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;background:var(--brand);color:#fff;border:none;cursor:pointer}
+.btn-add{padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;background:var(--brand);color:#fff;border:1.5px solid var(--accent);cursor:pointer}
 .btn-outline{padding:7px 14px;border-radius:6px;font-size:12px;font-weight:600;background:none;color:var(--brand);border:1.5px solid var(--brand);cursor:pointer}
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);display:flex;align-items:flex-end;justify-content:center;z-index:100}
 .modal-sheet{background:var(--card);border-radius:var(--radius) var(--radius) 0 0;padding:1.5rem;padding-bottom:calc(1.5rem + var(--safe-bottom));width:100%;max-width:480px}
@@ -476,6 +476,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
     </div>
     <div class="field"><label>Password</label><input type="password" id="inp-pass" placeholder="········" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuth()"/></div>
     <button class="btn-primary" id="auth-btn" onclick="doAuth()">Sign in</button>
+    <div id="forgot-wrap" style="text-align:center;margin-top:10px">
+      <button onclick="showForgotPassword()" style="background:none;border:none;color:rgba(255,255,255,0.75);font-size:12px;cursor:pointer;text-decoration:underline">Forgot password?</button>
+    </div>
     <div class="auth-msg" id="auth-msg"></div>
     <div style="text-align:center;margin-top:1rem;font-size:11px;color:var(--muted);line-height:1.8">
       <a href="https://learnwatersports.ca/privacy" target="_blank" style="color:var(--muted)">Privacy Policy</a>
@@ -574,7 +577,14 @@ let selectedSignupRole='rider'
 // Valid signup roles: rider, parent, coach, admin (super_admin is assigned manually)
 let appSettingsCache={}
 let quizOverridesCache={}
-const RUN_SPEED_THRESHOLD=20,RUN_MIN_DURATION=5
+// Default speed thresholds per sport (km/h) — user can override in profile
+const SPORT_SPEED_DEFAULTS={waterski:{min:26,max:58},wakeboard:{min:20,max:35},wakesurf:{min:14,max:22},slalom:{min:43,max:58},barefoot:{min:53,max:72},kneeboard:{min:20,max:35},shoeski:{min:20,max:32},tubes:{min:16,max:32},driving:{min:16,max:72}}
+const RUN_MIN_DURATION=5
+function getRunThreshold(sport){
+  const prefs=userProfile?.sport_speed_prefs||{}
+  const defaults=SPORT_SPEED_DEFAULTS[sport]||{min:20,max:60}
+  return prefs[sport]?.min??defaults.min
+}
 
 // ── DB SKILLS ─────────────────────────────────────────────────────
 async function loadDbSkills(){
@@ -673,11 +683,52 @@ function switchTab(m){
   document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&m==='login')||(i===1&&m==='signup')))
   document.getElementById('signup-fields').style.display=m==='signup'?'block':'none'
   document.getElementById('login-fields').style.display=m==='login'?'block':'none'
+  const fw=document.getElementById('forgot-wrap');if(fw)fw.style.display=m==='login'?'block':'none'
   document.getElementById('auth-btn').textContent=m==='signup'?'Create account':'Sign in'
   document.getElementById('inp-pass').autocomplete=m==='signup'?'new-password':'current-password'
   setMsg('','')
 }
 function setMsg(t,type){const el=document.getElementById('auth-msg');el.textContent=t;el.className='auth-msg'+(type?' '+type:'')}
+async function showForgotPassword(){
+  // Check if this is a coach-created username-only account
+  const loginVal=document.getElementById('inp-login')?.value?.trim()
+  if(loginVal&&!loginVal.includes('@')){
+    const{data:prof}=await db.from('profiles').select('email').eq('username',loginVal.toLowerCase()).maybeSingle()
+    if(prof&&(!prof.email||prof.email.endsWith('@stillwater.local'))){
+      const modal=document.createElement('div');modal.className='modal-overlay'
+      modal.innerHTML=`<div class="modal-sheet"><div class="modal-handle"></div>
+        <div style="text-align:center;font-size:32px;margin-bottom:8px">🔑</div>
+        <div class="modal-title" style="text-align:center">Password reset</div>
+        <div style="font-size:13px;color:var(--muted);text-align:center;line-height:1.6;margin-bottom:1.5rem">This account was created by a coach and doesn't have an email address linked.<br><br>To reset your password, contact your <strong style="color:var(--text)">coach or club admin</strong> and ask them to reset it for you.</div>
+        <button onclick="this.closest('.modal-overlay').remove()" style="width:100%;padding:12px;border-radius:var(--rsm);border:none;background:var(--brand);color:#fff;font-weight:600;cursor:pointer;font-size:13px">Got it</button>
+      </div>`
+      document.body.appendChild(modal);return
+    }
+  }
+  const email=document.getElementById('inp-login')?.value?.trim()
+  const modal=document.createElement('div');modal.className='modal-overlay'
+  modal.innerHTML=`<div class="modal-sheet"><div class="modal-handle"></div>
+    <div class="modal-title">Reset password</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:1.25rem">Enter your email and we'll send a reset link.</div>
+    <div class="field"><label>Email</label><input type="email" id="forgot-email" value="${email||''}" placeholder="you@example.com" style="font-size:16px"/></div>
+    <div id="forgot-msg" style="font-size:12px;min-height:16px;margin-bottom:10px"></div>
+    <div style="display:flex;gap:8px">
+      <button onclick="this.closest('.modal-overlay').remove()" style="flex:1;padding:12px;border-radius:var(--rsm);border:0.5px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:13px">Cancel</button>
+      <button onclick="sendPasswordReset()" style="flex:2;padding:12px;border-radius:var(--rsm);border:none;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;font-size:13px">Send reset link</button>
+    </div>
+  </div>`
+  document.body.appendChild(modal)
+}
+async function sendPasswordReset(){
+  const email=document.getElementById('forgot-email')?.value?.trim()
+  const msg=document.getElementById('forgot-msg')
+  if(!email){msg.style.color='#D85A30';msg.textContent='Enter your email address';return}
+  const{error}=await db.auth.resetPasswordForEmail(email,{redirectTo:window.location.href})
+  if(error){msg.style.color='#D85A30';msg.textContent=error.message;return}
+  msg.style.color='#1D9E75';msg.textContent='Reset link sent — check your email'
+  setTimeout(()=>document.querySelector('.modal-overlay')?.remove(),3000)
+}
+
 async function doAuth(){
   const pass=document.getElementById('inp-pass').value
   const btn=document.getElementById('auth-btn')
@@ -753,7 +804,7 @@ async function loadUser(user){
     await db.from('quiz_results').upsert({user_id:currentUser.id,quiz_id:'dryland',score:100,passed:true},{onConflict:'user_id,quiz_id'})
     quizResults['dryland']={score:100,passed:true}
   }
-  await Promise.all([loadDbSkills(),loadApprovals(),loadSkillNotes(),loadQuizResults(),loadDrylandApprovals(),loadCoachQueue(),loadFriends(),loadMyClub(),loadAppSettings(),loadQuizOverrides()])
+  await Promise.all([loadDbSkills(),loadApprovals(),loadSkillNotes(),loadQuizResults(),loadDrylandApprovals(),loadCoachQueue(),loadFriends(),loadMyClub(),loadAppSettings(),loadQuizOverrides(),loadLinkedChildren()])
   document.getElementById('auth-screen').style.display='none'
   document.getElementById('app-screen').style.display='block'
   renderNav();renderAvatarTop()
@@ -828,6 +879,12 @@ async function loadQuizResults(){const{data}=await db.from('quiz_results').selec
 async function loadCoachQueue(){const{data}=await db.from('approvals').select('*').eq('status','pending').order('created_at',{ascending:true});if(!data){pendingCoach=[];return};const ids=[...new Set(data.map(r=>r.rider_id))];const{data:pData}=await db.from('profiles').select('id,name,avatar_url').in('id',ids);const pm={};if(pData)pData.forEach(p=>pm[p.id]=p);pendingCoach=data.map(r=>({...r,profiles:pm[r.rider_id]||null}))}
 async function loadLeaderboard(){const{data}=await db.from('leaderboard').select('*').order('skills_done',{ascending:false});lbData=data||[]}
 async function loadAllUsers(){const{data}=await db.from('profiles').select('*').order('name');allUsers=data||[]}
+
+let linkedChildren=[]
+async function loadLinkedChildren(){
+  const{data}=await db.from('parent_child_links').select('child_id,profiles!parent_child_links_child_id_fkey(id,name,avatar_url,username,friend_code,role)').eq('parent_id',currentUser.id)
+  linkedChildren=(data||[]).map(r=>r.profiles).filter(Boolean)
+}
 async function loadFriends(){
   const{data}=await db.from('friendships').select('*').or(`requester_id.eq.${currentUser.id},recipient_id.eq.${currentUser.id}`)
   friends=[];friendRequests=[]
@@ -1228,7 +1285,7 @@ function setLbSport(id){activeLbSport=id;renderSocialView(document.getElementByI
 function setLbFilter(f){activeLbFilter=f;renderSocialView(document.getElementById('main-content'))}
 
 function renderVideosContent(){
-  return`<div style="margin-bottom:1rem"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem"><div class="section-head" style="margin-bottom:0">All videos</div>${isCoach()?`<button class="btn-add" onclick="showUploadVideoModal()">Upload</button>`:''}</div></div><div id="videos-list"><div class="empty-state">Loading videos…</div></div>`
+  return`<div style="margin-bottom:1rem"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem"><div class="section-head" style="margin-bottom:0">All videos</div>${isCoach()?`<button class="btn-add" onclick="showUploadVideoModal()">Upload</button>`:''}</div></div><div id="videos-list"><div class="empty-state">No videos yet.</div></div>`
   // In a real app: load from Supabase media table
 }
 
@@ -1468,10 +1525,30 @@ function renderMyClub(){
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
       <div class="section-head" style="margin-bottom:0">Classes</div>
       <button class="btn-add" onclick="showCreateClassModal()">+ Add class</button>
+      <button class="btn-add" onclick="showBatchUploadModal()">⬆ Batch upload</button>
     </div>
     ${classes.length?classItems:`<div style="font-size:13px;color:var(--muted);padding:12px 0">No classes yet — add your first one.</div>`}
   </div>`
 }
+
+function renderClubCoachesList(){
+  var coaches=allUsers.filter(function(u){
+    return (u.role==='coach'||u.role==='admin')&&u.club_id===myClub?.id
+  })
+  if(!coaches.length)return ''
+  return '<div class="club-card" style="margin-bottom:12px">'
+    +'<div class="section-head">Coaches in '+myClub.name+'</div>'
+    +'<div style="font-size:12px;color:var(--muted);margin-bottom:10px">These coaches can be assigned to classes and athletes.</div>'
+    +coaches.map(function(u){
+      return '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border)">'
+        +avatarHtml(u.avatar_url,u.name,32)
+        +'<div style="flex:1"><div style="font-size:13px;font-weight:500">'+u.name+'</div>'
+        +'<div style="font-size:11px;color:var(--muted);text-transform:capitalize">'+u.role+'</div></div>'
+        +'</div>'
+    }).join('')
+    +'</div>'
+}
+
 
 async function loadStudentById(studentId){
   const{data:profile}=await db.from('profiles').select('id,name,avatar_url,role').eq('id',studentId).single()
@@ -1582,7 +1659,7 @@ function autoFillAthleteCredentials(){
   const name=(nameEl?.value||'').trim()
   if(!name)return
   const parts=name.toLowerCase().replace(/[^a-z0-9 ]/g,'').split(/\s+/).filter(Boolean)
-  const username=parts.join('')
+  const username=parts.length>=2?parts[0]+'.'+parts.slice(1).join(''):parts[0]||''
   const password=parts.join('')
   const unEl=document.getElementById('new-athlete-username')
   const passEl=document.getElementById('new-athlete-pass')
@@ -1601,7 +1678,6 @@ async function checkDuplicateAthlete(name,username){
   const{data}=await db.from('profiles')
     .select('id,name,username,friend_code')
     .or(`name.ilike.${name},username.ilike.${username}`)
-    .eq('role','rider')
     .limit(5)
   if(!data||data.length===0){msg.textContent='';return}
   const matches=data.filter(p=>
@@ -1623,7 +1699,6 @@ async function searchReturningAthlete(classId){
   const{data}=await db.from('profiles')
     .select('id,name,username,friend_code,role')
     .or(`name.ilike.%${q}%,username.ilike.%${q}%`)
-    .eq('role','rider')
     .limit(8)
   if(!data||data.length===0){el.innerHTML='<div style="font-size:12px;color:var(--muted)">No athletes found</div>';return}
   el.innerHTML=data.map(p=>`
@@ -1667,7 +1742,6 @@ async function createAthleteAccount(classId){
   const{data:dupes}=await db.from('profiles')
     .select('id,name,username,friend_code')
     .or(`name.ilike.${name},username.eq.${username}`)
-    .eq('role','rider')
     .limit(5)
 
   const exactNameMatch=dupes?.find(p=>p.name?.toLowerCase()===name.toLowerCase())
@@ -2027,8 +2101,9 @@ function onGPSUpdate(pos){
   if(lastPosition){const d=haversine(lastPosition.lat,lastPosition.lng,lat,lng);sessionDistance+=d}
   sessionPositions.push({lat,lng,speed:speedKmh,t:Date.now()})
   lastPosition={lat,lng}
-  if(speedKmh>=RUN_SPEED_THRESHOLD&&!isActiveRun){isActiveRun=true;runStartTime=Date.now()}
-  else if(speedKmh<RUN_SPEED_THRESHOLD&&isActiveRun){const dur=(Date.now()-runStartTime)/1000;if(dur>=RUN_MIN_DURATION)sessionRuns++;isActiveRun=false;runStartTime=null}
+  const thresh=getRunThreshold(activeSession?.sport||'waterski')
+  if(speedKmh>=thresh&&!isActiveRun){isActiveRun=true;runStartTime=Date.now()}
+  else if(speedKmh<thresh&&isActiveRun){const dur=(Date.now()-runStartTime)/1000;if(dur>=RUN_MIN_DURATION)sessionRuns++;isActiveRun=false;runStartTime=null}
   updateSessionUI()
 }
 function updateSessionUI(){
@@ -2060,7 +2135,7 @@ function renderProfileView(c){
   const roleFriendly=roleLabels[p?.role]||p?.role||'rider'
   const certList=Object.keys(DEFAULT_SKILLS).map(id=>{const earned=TIERS.filter(t=>allApproved(id,t));const highest=earned[earned.length-1];if(!highest)return'';return`<div class="profile-row"><span class="profile-key">${DEFAULT_SKILLS[id].name}</span>${tierBadge(highest)}</div>`}).filter(Boolean).join('')
   const driverCerts=Object.values(QUIZZES).filter(q=>q.id!=='dryland'&&q.id!=='safety_advanced'&&hasPassed(q.id)).map(q=>`<div class="profile-row"><span class="profile-key">${q.title}</span><span style="font-size:11px;font-weight:600;color:#1D9E75">Certified ${quizResults[q.id]?.score}%</span></div>`).join('')
-  c.innerHTML=`
+  const profileHTML=`
   <div class="page-title">Profile</div><div class="page-sub">Your account and achievements</div>
   <div class="profile-card">
     <div class="profile-avatar-wrap">
@@ -2081,6 +2156,12 @@ function renderProfileView(c){
     <div style="font-size:13px;color:var(--muted);margin-bottom:10px">Enter the class code your coach gave you.</div>
     <div style="display:flex;gap:8px"><input id="club-code-inp" placeholder="ABC123" maxlength="6" style="flex:1;padding:10px 12px;border:0.5px solid var(--border);border-radius:var(--rsm);background:var(--bg);color:var(--text);font-size:16px;outline:none;text-transform:uppercase"/><button class="btn-add" onclick="joinClass()">Join</button></div>
     <div id="club-msg" style="font-size:12px;margin-top:8px;min-height:16px"></div>
+  </div>
+  ${isParent()?renderLinkedChildrenCard():''}
+  <div class="profile-card">
+    <div class="section-head">Session speed ranges</div>
+    <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Set your typical speed range per sport. The app uses the lower bound to detect when a run starts. Drag to adjust — changes save automatically.</div>
+    <div id="speed-prefs-list"></div>
   </div>
   <div class="profile-card">
     <div class="section-head">Privacy &amp; data</div>
@@ -2105,7 +2186,11 @@ function renderProfileView(c){
       <button onclick="requestDataDeletion()" style="padding:8px 14px;border-radius:var(--rsm);border:0.5px solid #D85A30;background:none;color:#D85A30;font-size:12px;font-weight:600;cursor:pointer">Request data deletion</button>
     </div>
   </div>`
+  c.innerHTML=profileHTML
   loadClubName()
+  // Populate speed prefs after render
+  const spEl=document.getElementById('speed-prefs-list')
+  if(spEl)spEl.innerHTML=renderSpeedPrefsList()
 }
 async function loadClubName(){const el=document.getElementById('club-name-display');if(!el)return;if(!userProfile?.club_id){el.textContent='No club';return};const{data}=await db.from('clubs').select('name').eq('id',userProfile.club_id).single();if(el)el.textContent=data?.name||'Unknown club'}
 
@@ -2657,6 +2742,8 @@ function filterPlatformUsers(q,makeRow){
 }
 
 async function renderAdminClubs(c,subTabs){
+  // Load coaches for this club for assignment dropdowns
+  if(!allUsers.length)await loadAllUsers()
   const{data:clubs,error:clubsError}=await db.from('clubs').select('*').order('name')
   if(clubsError){c.innerHTML=`<div class="empty-state">Error loading clubs: ${clubsError.message}</div>`;return}
   // Load coaches separately to avoid RLS join issues
@@ -2957,12 +3044,446 @@ async function quickSubmitSkill(sport,tier,idx){
     }
     return
   }
+  const skills=tier==='platinum'?getSkills(sport,'platinum'):getSkills(sport,tier)
+  const sk=skills[idx];if(!sk)return
+  // Confirmation modal
+  const modal=document.createElement('div');modal.className='modal-overlay'
+  modal.innerHTML=`<div class="modal-sheet"><div class="modal-handle"></div>
+    <div style="text-align:center;font-size:32px;margin-bottom:8px">✋</div>
+    <div class="modal-title" style="text-align:center">Submit for approval?</div>
+    <div style="font-size:13px;color:var(--muted);text-align:center;margin-bottom:1.5rem;line-height:1.5">"${sk.skill_name}"<br>Your coach will review and approve this skill.</div>
+    <div style="display:flex;gap:8px">
+      <button onclick="this.closest('.modal-overlay').remove()" style="flex:1;padding:12px;border-radius:var(--rsm);border:0.5px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:13px">Cancel</button>
+      <button onclick="confirmSubmitSkill('${sport}','${tier}',${idx})" style="flex:2;padding:12px;border-radius:var(--rsm);border:none;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;font-size:13px">Yes, submit</button>
+    </div>
+  </div>`
+  document.body.appendChild(modal)
+}
+async function confirmSubmitSkill(sport,tier,idx){
+  document.querySelector('.modal-overlay')?.remove()
   flashSave()
   const{data,error}=await db.from('approvals').upsert({rider_id:currentUser.id,sport,tier,skill_index:idx,status:'pending'},{onConflict:'rider_id,sport,tier,skill_index'}).select().single()
   if(!error&&data)approvals[`${sport}|${tier}|${idx}`]=data
   renderSkillsView(document.getElementById('main-content'))
   showToast('Submitted for coach approval')
+  // Notify coaches in background
+  notifyCoachesOfSubmission(sport,tier,idx)
 }
+
+// ── BATCH UPLOAD ─────────────────────────────────────────────────
+function showBatchUploadModal(){
+  const classOptions=(myClub?.classes||[]).map(cl=>`<option value="${cl.id}">${cl.name}</option>`).join('')
+  const modal=document.createElement('div');modal.className='modal-overlay'
+  modal.innerHTML=`<div class="modal-sheet" style="max-height:90vh;overflow-y:auto"><div class="modal-handle"></div>
+    <div class="modal-title">Batch add athletes</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:1.25rem;line-height:1.5">Add multiple athletes at once. Each gets a generated username (<code>firstname.lastname</code>) and password.</div>
+
+    <div class="field">
+      <label>Class <span style="color:var(--brand);font-weight:700">*</span></label>
+      <select id="batch-class-select" style="font-size:16px;padding:10px 12px;width:100%;border:0.5px solid var(--border);border-radius:var(--rsm);background:var(--bg);color:var(--text);outline:none">
+        <option value="">— Select existing class —</option>
+        ${classOptions}
+        <option value="__new__">+ Create new class…</option>
+      </select>
+    </div>
+    <div id="new-class-name-wrap" style="display:none">
+      <div class="field"><label>New class name</label><input type="text" id="batch-new-class-name" placeholder="e.g. Beginner Group A"/></div>
+    </div>
+    <div class="field">
+      <label>Assign coach <span style="font-size:11px;color:var(--hint);font-weight:400">(optional)</span></label>
+      <select id="batch-coach-select" style="font-size:16px;padding:10px 12px;width:100%;border:0.5px solid var(--border);border-radius:var(--rsm);background:var(--bg);color:var(--text);outline:none">
+        <option value="">— No coach assigned —</option>
+        ${getClubCoachOptions()}
+      </select>
+    </div>
+
+    <div style="display:flex;gap:6px;margin-bottom:10px">
+      <button class="sub-pill active" id="batch-tab-paste" onclick="switchBatchTab('paste')">Paste names</button>
+      <button class="sub-pill" id="batch-tab-csv" onclick="switchBatchTab('csv')">Upload CSV</button>
+    </div>
+
+    <div id="batch-paste-area">
+      <div class="field">
+        <label>Names (one per line, First Last format)</label>
+        <textarea id="batch-names" placeholder="Emma Johnson&#10;Jake Smith&#10;Lily Chen" style="min-height:120px;font-size:14px;line-height:1.8;letter-spacing:.01em" oninput="previewBatchNames()"></textarea>
+      </div>
+    </div>
+    <div id="batch-csv-area" style="display:none">
+      <div class="field">
+        <label>CSV file (column 1 = First Name, column 2 = Last Name or full name)</label>
+        <label style="display:flex;align-items:center;gap:10px;padding:12px;border:0.5px dashed var(--brand);border-radius:var(--rsm);cursor:pointer">
+          <span style="font-size:20px">📄</span>
+          <div><div style="font-size:13px;color:var(--brand);font-weight:500">Choose CSV file</div><div style="font-size:11px;color:var(--muted)" id="csv-filename">No file selected</div></div>
+          <input type="file" accept=".csv,text/csv" id="batch-csv-input" style="display:none" onchange="loadCSVFile(this)"/>
+        </label>
+      </div>
+    </div>
+
+    <div id="batch-preview" style="margin-bottom:1rem"></div>
+
+    <div style="margin-bottom:12px;padding:10px 12px;background:rgba(0,200,212,0.06);border-radius:var(--rsm);border:0.5px solid var(--border)">
+      <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;line-height:1.5">
+        <input type="checkbox" id="batch-consent" style="margin-top:3px;flex-shrink:0;width:16px;height:16px;accent-color:var(--brand)"/>
+        <span style="font-size:12px;color:var(--muted)">I confirm parental or guardian consent has been obtained for all athletes listed.</span>
+      </label>
+    </div>
+    <div id="batch-msg" style="font-size:12px;min-height:16px;margin-bottom:10px"></div>
+    <div style="display:flex;gap:8px">
+      <button onclick="this.closest('.modal-overlay').remove()" style="flex:1;padding:12px;border-radius:var(--rsm);border:0.5px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:13px">Cancel</button>
+      <button id="batch-submit-btn" onclick="runBatchUpload()" style="flex:2;padding:12px;border-radius:var(--rsm);border:none;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;font-size:13px">Create all accounts</button>
+    </div>
+  </div>`
+  document.body.appendChild(modal)
+  document.getElementById('batch-class-select').addEventListener('change',function(){
+    document.getElementById('new-class-name-wrap').style.display=this.value==='__new__'?'block':'none'
+  })
+}
+
+function getClubCoachOptions(){
+  if(!allUsers.length)return''
+  const coaches=allUsers.filter(u=>
+    (u.role==='coach'||u.role==='admin'||u.role==='super_admin')&&
+    (u.club_id===myClub?.id||isSuperAdmin())
+  )
+  return coaches.map(u=>'<option value="'+u.id+'">'+u.name+' ('+u.role+')</option>').join('')
+}
+
+function switchBatchTab(tab){
+  document.getElementById('batch-paste-area').style.display=tab==='paste'?'block':'none'
+  document.getElementById('batch-csv-area').style.display=tab==='csv'?'block':'none'
+  document.getElementById('batch-tab-paste').className='sub-pill'+(tab==='paste'?' active':'')
+  document.getElementById('batch-tab-csv').className='sub-pill'+(tab==='csv'?' active':'')
+}
+
+function parseBatchNames(raw){
+  return raw.split('\n').map(l=>l.trim()).filter(l=>l.length>1).map(l=>{
+    const parts=l.replace(/,/g,' ').replace(/\s+/g,' ').trim().split(' ')
+    const name=parts.map(p=>p.charAt(0).toUpperCase()+p.slice(1).toLowerCase()).join(' ')
+    const userParts=parts.map(p=>p.toLowerCase().replace(/[^a-z0-9]/g,''))
+    const username=userParts.length>=2?userParts[0]+'.'+userParts.slice(1).join(''):userParts[0]
+    const password=userParts.join('')
+    return{name,username,password}
+  }).filter(a=>a.username.length>=2)
+}
+
+function previewBatchNames(){
+  const raw=document.getElementById('batch-names')?.value||''
+  const athletes=parseBatchNames(raw)
+  renderBatchPreview(athletes)
+}
+
+function loadCSVFile(input){
+  const file=input.files[0];if(!file)return
+  document.getElementById('csv-filename').textContent=file.name
+  const reader=new FileReader()
+  reader.onload=e=>{
+    const lines=e.target.result.split('\n')
+    const names=lines.map(l=>{
+      const cols=l.split(',').map(s=>s.replace(/"/g,'').trim())
+      if(cols.length>=2&&cols[0]&&cols[1])return cols[0]+' '+cols[1]
+      if(cols[0]&&cols[0].includes(' '))return cols[0]
+      return ''
+    }).filter(Boolean).join('\n')
+    renderBatchPreview(parseBatchNames(names))
+    // Store for submission
+    window._batchCSVNames=names
+  }
+  reader.readAsText(file)
+}
+
+function renderBatchPreview(athletes){
+  const el=document.getElementById('batch-preview')
+  if(!athletes.length){el.innerHTML='';return}
+  el.innerHTML=`<div style="font-size:12px;font-weight:600;color:var(--muted);margin-bottom:6px">${athletes.length} athlete${athletes.length!==1?'s':''} to create:</div>
+  <div style="max-height:160px;overflow-y:auto;border:0.5px solid var(--border);border-radius:var(--rsm)">
+    ${athletes.map((a,i)=>`<div style="display:flex;gap:8px;align-items:center;padding:7px 10px;border-bottom:0.5px solid var(--border);font-size:12px${i===athletes.length-1?';border-bottom:none':''}">
+      <span style="min-width:20px;color:var(--muted)">${i+1}</span>
+      <span style="flex:1;font-weight:500">${a.name}</span>
+      <code style="color:var(--brand);font-size:11px">@${a.username}</code>
+    </div>`).join('')}
+  </div>`
+}
+
+async function runBatchUpload(){
+  const classSelect=document.getElementById('batch-class-select')
+  const classVal=classSelect?.value
+  const msg=document.getElementById('batch-msg')
+  const btn=document.getElementById('batch-submit-btn')
+  if(!document.getElementById('batch-consent')?.checked){msg.style.color='#D85A30';msg.textContent='Please confirm parental consent';return}
+
+  // Resolve class ID
+  let classId=classVal
+  if(classVal==='__new__'){
+    const newName=document.getElementById('batch-new-class-name')?.value?.trim()
+    if(!newName){msg.style.color='#D85A30';msg.textContent='Enter a class name';return}
+    const code=Math.random().toString(36).slice(2,8).toUpperCase()
+    const{data:newClass,error:ce}=await db.from('classes').insert({club_id:myClub?.id,name:newName,invite_code:code}).select().single()
+    if(ce||!newClass){msg.style.color='#D85A30';msg.textContent='Could not create class: '+(ce?.message||'error');return}
+    classId=newClass.id
+    await loadMyClub()
+  }
+  if(!classId){msg.style.color='#D85A30';msg.textContent='Please select or create a class';return}
+
+  // Get names from active tab
+  const isCSV=document.getElementById('batch-csv-area')?.style.display!=='none'
+  const raw=isCSV?(window._batchCSVNames||''):document.getElementById('batch-names')?.value||''
+  const athletes=parseBatchNames(raw)
+  if(!athletes.length){msg.style.color='#D85A30';msg.textContent='No valid names found';return}
+
+  btn.disabled=true
+  const results=[]
+  let created=0,skipped=0
+
+  for(let i=0;i<athletes.length;i++){
+    const a=athletes[i]
+    btn.textContent=`Creating ${i+1} of ${athletes.length}…`
+    msg.style.color='var(--muted)'
+    msg.textContent=`Processing ${a.name}…`
+
+    // Duplicate check
+    const{data:dupes}=await db.from('profiles').select('id,name,username').or(`name.ilike.${a.name},username.eq.${a.username}`).limit(3)
+    const isDupe=dupes?.some(p=>p.name?.toLowerCase()===a.name.toLowerCase()||p.username?.toLowerCase()===a.username?.toLowerCase())
+    if(isDupe){results.push({...a,status:'skipped',reason:'Already exists'});skipped++;continue}
+
+    // Ensure username is unique (append number if needed)
+    let finalUsername=a.username
+    let attempt=0
+    while(true){
+      const{data:taken}=await db.from('profiles').select('id').eq('username',finalUsername).maybeSingle()
+      if(!taken)break
+      attempt++;finalUsername=a.username+attempt
+    }
+
+    const authEmail=`${finalUsername}@stillwater.local`
+    const friendCode=Math.random().toString(36).slice(2,8).toUpperCase()
+    const{data:authData,error:authErr}=await db.auth.signUp({email:authEmail,password:a.password})
+    if(authErr||!authData?.user?.id){results.push({...a,status:'failed',reason:authErr?.message||'Auth error'});continue}
+
+    const userId=authData.user.id
+    await db.from('profiles').upsert({id:userId,name:a.name,username:finalUsername,role:'rider',club_id:myClub?.id||null,friend_code:friendCode})
+    const coachId=document.getElementById('batch-coach-select')?.value||null
+    await db.from('class_members').insert({class_id:classId,student_id:userId,coach_id:coachId||undefined})
+    if(myClub?.id)await db.from('profiles').update({club_id:myClub.id,class_id:classId,assigned_coach_id:coachId||null}).eq('id',userId)
+
+    results.push({...a,username:finalUsername,password:a.password,friendCode,userId,status:'created'})
+    created++
+  }
+
+  // Show results
+  const sheet=document.querySelector('.modal-sheet')
+  if(sheet){
+    sheet.innerHTML=`<div class="modal-handle"></div>
+      <div class="modal-title">✓ Batch upload complete</div>
+      <div style="font-size:13px;color:var(--muted);margin-bottom:1rem">${created} created · ${skipped} skipped (duplicates) · ${results.filter(r=>r.status==='failed').length} failed</div>
+      <div style="max-height:220px;overflow-y:auto;border:0.5px solid var(--border);border-radius:var(--rsm);margin-bottom:1rem">
+        ${results.map(r=>`<div style="display:flex;gap:8px;align-items:center;padding:8px 10px;border-bottom:0.5px solid var(--border);font-size:12px">
+          <span style="font-size:14px">${r.status==='created'?'✓':r.status==='skipped'?'⚠':'✗'}</span>
+          <span style="flex:1;font-weight:500">${r.name}</span>
+          ${r.status==='created'?`<code style="font-size:10px;color:var(--brand)">@${r.username}</code>`:`<span style="font-size:11px;color:var(--muted)">${r.reason}</span>`}
+        </div>`).join('')}
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="this.closest('.modal-overlay').remove();loadMyClub().then(()=>renderCoachView(document.getElementById('main-content')))" style="flex:1;padding:12px;border-radius:var(--rsm);border:0.5px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:13px">Close</button>
+        ${created>0?`<button onclick="printBatchCredentials(window._batchResults)" style="flex:2;padding:12px;border-radius:var(--rsm);border:none;background:var(--brand);color:#fff;font-weight:600;cursor:pointer;font-size:13px">🖨 Print all cards</button>`:''}
+      </div>`
+    window._batchResults=results.filter(r=>r.status==='created')
+  }
+}
+
+function printBatchCredentials(athletes){
+  const win=window.open('','_blank')
+  const cards=athletes.map(a=>`
+    <div class="card">
+      <div class="card-header">Stillwater Skills</div>
+      <div class="athlete-name">${a.name}</div>
+      <div class="cred-row"><span class="cred-label">Username</span><span class="cred-val">${a.username}</span></div>
+      <div class="cred-row"><span class="cred-label">Password</span><span class="cred-val">${a.password}</span></div>
+      <div class="cred-row"><span class="cred-label">Friend code</span><span class="cred-val">${a.friendCode}</span></div>
+      <div class="cred-row"><span class="cred-label">App</span><span class="cred-val" style="color:#00C8D4;font-size:10px">learnwatersports.ca/stillwaterapp</span></div>
+    </div>`).join('')
+  win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Athlete Credentials</title><style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#fff;padding:10mm}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6mm}
+    .card{border:1.5px solid #00C8D4;border-radius:8px;padding:10px;break-inside:avoid}
+    .card-header{font-size:8px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;color:#00C8D4;margin-bottom:6px}
+    .athlete-name{font-size:14px;font-weight:800;color:#1a2a2a;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid #e8e8e0}
+    .cred-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0}
+    .cred-label{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#3a6a6a}
+    .cred-val{font-size:11px;font-weight:700;font-family:monospace;color:#1a2a2a}
+    @media print{@page{margin:10mm}}
+  </style></head><body><div class="grid">${cards}</div><script>window.print()<\/script></body></html>`)
+  win.document.close()
+}
+
+// ── SPEED PREFS ──────────────────────────────────────────────────
+function renderLinkedChildrenCard(){
+  if(!linkedChildren.length){
+    return '<div class="profile-card">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">'
+      +'<div class="section-head" style="margin-bottom:0">My Athletes</div>'
+      +'<button class="btn-add" onclick="showLinkChildModal()">+ Add child</button>'
+      +'</div>'
+      +'<div style="font-size:12px;color:var(--muted);margin-bottom:12px">Link your children to view their progress.</div>'
+      +'<div style="font-size:13px;color:var(--muted)">No athletes linked yet — add your child\'s friend code.</div>'
+      +'</div>'
+  }
+  var rows=linkedChildren.map(function(ch){
+    var id=ch.id||''
+    var name=ch.name||'Athlete'
+    var username=ch.username||'—'
+    var code=ch.friend_code||'—'
+    var esc=name.replace(/\\/g,'\\\\').replace(/"/g,'&quot;')
+    return '<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--border)">'
+      +avatarHtml(ch.avatar_url,name,32)
+      +'<div style="flex:1">'
+      +'<div style="font-size:13px;font-weight:600">'+name+'</div>'
+      +'<div style="font-size:11px;color:var(--muted)">@'+username+' · Code: '+code+'</div>'
+      +'</div>'
+      +'<button onclick="viewChildProgress(\"'+id+'\",\"'+esc+'\")" style="padding:6px 12px;border-radius:6px;border:1px solid var(--brand);background:none;color:var(--brand);font-size:11px;font-weight:600;cursor:pointer">View skills</button>'
+      +'<button onclick="unlinkChild(\"'+id+'\")" style="padding:6px 8px;border-radius:6px;border:0.5px solid var(--border);background:none;color:var(--muted);font-size:11px;cursor:pointer">✕</button>'
+      +'</div>'
+  }).join('')
+  return '<div class="profile-card">'
+    +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">'
+    +'<div class="section-head" style="margin-bottom:0">My Athletes</div>'
+    +'<button class="btn-add" onclick="showLinkChildModal()">+ Add child</button>'
+    +'</div>'
+    +'<div style="font-size:12px;color:var(--muted);margin-bottom:12px">Link your children to view their progress.</div>'
+    +'<div id="linked-children-list">'+rows+'</div>'
+    +'</div>'
+}
+
+
+async function showLinkChildModal(){
+  const modal=document.createElement('div');modal.className='modal-overlay'
+  modal.innerHTML=`<div class="modal-sheet"><div class="modal-handle"></div>
+    <div class="modal-title">Link a child's account</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:1.25rem;line-height:1.5">Ask your child's coach for their <strong>friend code</strong>, or find it in your child's Profile page.</div>
+    <div class="field"><label>Friend code</label><input type="text" id="link-child-code" placeholder="ABC123" maxlength="6" style="font-size:18px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;text-align:center"/></div>
+    <div id="link-child-preview" style="min-height:40px;margin-bottom:10px"></div>
+    <div id="link-child-msg" style="font-size:12px;min-height:16px;margin-bottom:10px"></div>
+    <div style="display:flex;gap:8px">
+      <button onclick="this.closest('.modal-overlay').remove()" style="flex:1;padding:12px;border-radius:var(--rsm);border:0.5px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:13px">Cancel</button>
+      <button onclick="linkChildByCode()" style="flex:2;padding:12px;border-radius:var(--rsm);border:none;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;font-size:13px">Link account</button>
+    </div>
+  </div>`
+  document.body.appendChild(modal)
+  document.getElementById('link-child-code').addEventListener('input',async function(){
+    const code=this.value.trim().toUpperCase()
+    const prev=document.getElementById('link-child-preview')
+    if(code.length<6){prev.innerHTML='';return}
+    const{data}=await db.from('profiles').select('id,name,username,avatar_url').eq('friend_code',code).maybeSingle()
+    if(data){prev.innerHTML=`<div style="display:flex;align-items:center;gap:10px;padding:10px;background:rgba(29,158,117,0.08);border-radius:var(--rsm)">${avatarHtml(data.avatar_url,data.name,32)}<div><div style="font-size:13px;font-weight:600">${data.name}</div><div style="font-size:11px;color:var(--muted)">@${data.username||'—'}</div></div></div>`}
+    else{prev.innerHTML=`<div style="font-size:12px;color:var(--muted)">No account found with that code</div>`}
+  })
+}
+async function linkChildByCode(){
+  const code=document.getElementById('link-child-code')?.value?.trim().toUpperCase()
+  const msg=document.getElementById('link-child-msg')
+  if(!code||code.length<6){msg.style.color='#D85A30';msg.textContent='Enter the 6-character friend code';return}
+  const{data:child}=await db.from('profiles').select('id,name').eq('friend_code',code).maybeSingle()
+  if(!child){msg.style.color='#D85A30';msg.textContent='No account found with that code';return}
+  if(child.id===currentUser.id){msg.style.color='#D85A30';msg.textContent="That's your own account";return}
+  // Check not already linked
+  const{data:existing}=await db.from('parent_child_links').select('id').match({parent_id:currentUser.id,child_id:child.id}).maybeSingle()
+  if(existing){msg.style.color='#D85A30';msg.textContent=`${child.name} is already linked`;return}
+  const{error}=await db.from('parent_child_links').insert({parent_id:currentUser.id,child_id:child.id})
+  if(error){msg.style.color='#D85A30';msg.textContent='Link failed: '+error.message;return}
+  await loadLinkedChildren()
+  document.querySelector('.modal-overlay')?.remove()
+  showToast(`${child.name} linked ✓`)
+  renderProfileView(document.getElementById('main-content'))
+}
+async function unlinkChild(childId){
+  if(!confirm('Remove this child from your account?'))return
+  await db.from('parent_child_links').delete().match({parent_id:currentUser.id,child_id:childId})
+  await loadLinkedChildren()
+  renderProfileView(document.getElementById('main-content'))
+}
+async function viewChildProgress(childId,childName){
+  const{data:appData}=await db.from('approvals').select('*').eq('rider_id',childId)
+  coachStudentApprovals={}
+  if(appData)appData.forEach(r=>{coachStudentApprovals[`${r.sport}|${r.tier}|${r.skill_index}`]=r})
+  renderStudentSkillView(childId,childName,'')
+}
+// SQL for parent_child_links table:
+// create table if not exists parent_child_links (id uuid default gen_random_uuid() primary key, parent_id uuid references profiles(id) on delete cascade, child_id uuid references profiles(id) on delete cascade, created_at timestamptz default now(), unique(parent_id,child_id));
+// alter table parent_child_links enable row level security;
+// create policy "parents manage own links" on parent_child_links for all using (auth.uid()=parent_id) with check (auth.uid()=parent_id);
+
+function renderSpeedPrefsList(){
+  const prefs=userProfile?.sport_speed_prefs||{}
+  const sports=getClubSports()
+  return sports.map(id=>{
+    const defaults=SPORT_SPEED_DEFAULTS[id]||{min:20,max:60}
+    const cur=prefs[id]||defaults
+    const minVal=cur.min??defaults.min
+    const maxVal=cur.max??defaults.max
+    return`<div style="margin-bottom:14px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+        <span style="font-size:13px;font-weight:500">${DEFAULT_SKILLS[id]?.name||id}</span>
+        <span style="font-size:11px;color:var(--brand);font-weight:600" id="speed-label-${id}">${minVal}–${maxVal} km/h</span>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <span style="font-size:10px;color:var(--muted);width:22px">Min</span>
+        <input type="range" min="10" max="80" value="${minVal}" step="1"
+          style="flex:1;accent-color:var(--brand)"
+          oninput="updateSpeedLabel('${id}',this.value,null)"
+          onchange="saveSpeedPref('${id}',+this.value,null)"/>
+        <span style="font-size:10px;color:var(--muted);width:22px">Max</span>
+        <input type="range" min="10" max="100" value="${maxVal}" step="1"
+          style="flex:1;accent-color:var(--accent)"
+          oninput="updateSpeedLabel('${id}',null,this.value)"
+          onchange="saveSpeedPref('${id}',null,+this.value)"/>
+      </div>
+    </div>`
+  }).join('')
+}
+function updateSpeedLabel(id,minV,maxV){
+  const el=document.getElementById(`speed-label-${id}`)
+  if(!el)return
+  const cur=el.textContent.match(/(\d+)–(\d+)/)
+  const curMin=cur?+cur[1]:20,curMax=cur?+cur[2]:60
+  el.textContent=`${minV??curMin}–${maxV??curMax} km/h`
+}
+async function saveSpeedPref(id,minV,maxV){
+  const prefs=userProfile?.sport_speed_prefs||{}
+  const defaults=SPORT_SPEED_DEFAULTS[id]||{min:20,max:60}
+  if(!prefs[id])prefs[id]={...defaults}
+  if(minV!==null)prefs[id].min=minV
+  if(maxV!==null)prefs[id].max=maxV
+  userProfile.sport_speed_prefs=prefs
+  await db.from('profiles').update({sport_speed_prefs:prefs}).eq('id',currentUser.id)
+}
+
+// ── PUSH ──────────────────────────────────────────────────────────
+async function notifyCoachesOfSubmission(sport,tier,idx){
+  try{
+    // Find coaches linked to this user's club/class
+    if(!userProfile?.club_id)return
+    const{data:coaches}=await db.from('profiles').select('id').eq('club_id',userProfile.club_id).in('role',['coach','admin','super_admin'])
+    if(!coaches?.length)return
+    const skillName=getSkills(sport,tier)[idx]?.skill_name||'a skill'
+    const riderName=userProfile.name||'A rider'
+    for(const coach of coaches){
+      await db.from('notifications').insert({
+        user_id:coach.id,
+        type:'skill_submitted',
+        title:'Skill submitted for approval',
+        body:`${riderName} submitted "${skillName}" (${tier} ${sport})`,
+        data:{sport,tier,idx,rider_id:currentUser.id},
+        read:false
+      }).catch(()=>{}) // silent fail if table doesn't exist yet
+    }
+  }catch(e){}
+}
+// SQL for notifications table:
+// create table if not exists notifications (id uuid default gen_random_uuid() primary key, user_id uuid references profiles(id), type text, title text, body text, data jsonb, read boolean default false, created_at timestamptz default now());
+// alter table notifications enable row level security;
+// create policy "users read own notifications" on notifications for select using (auth.uid()=user_id);
+// create policy "anyone can insert notifications" on notifications for insert with check (true);
+// create policy "users update own notifications" on notifications for update using (auth.uid()=user_id);
 
 // ── PUSH ──────────────────────────────────────────────────────────
 async function requestPushPermission(){if(!('Notification' in window)||!('serviceWorker' in navigator))return;if(Notification.permission==='granted'){await registerPush();return};if(Notification.permission!=='denied'){const p=await Notification.requestPermission();if(p==='granted')await registerPush()}}
