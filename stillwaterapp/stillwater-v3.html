@@ -572,6 +572,8 @@ let sessionStartTime=null,lastPosition=null,currentSpeed=0
 let isActiveRun=false,runStartTime=null,sessionTimer=null
 let selectedSignupRole='rider'
 // Valid signup roles: rider, parent, coach, admin (super_admin is assigned manually)
+let appSettingsCache={} // loaded from Supabase app_settings table
+let quizOverridesCache={} // loaded from Supabase quiz_overrides table
 const RUN_SPEED_THRESHOLD=20,RUN_MIN_DURATION=5
 
 // ── DB SKILLS ─────────────────────────────────────────────────────
@@ -750,7 +752,7 @@ async function loadUser(user){
     await db.from('quiz_results').upsert({user_id:currentUser.id,quiz_id:'dryland',score:100,passed:true},{onConflict:'user_id,quiz_id'})
     quizResults['dryland']={score:100,passed:true}
   }
-  await Promise.all([loadDbSkills(),loadApprovals(),loadSkillNotes(),loadQuizResults(),loadDrylandApprovals(),loadCoachQueue(),loadFriends(),loadMyClub()])
+  await Promise.all([loadDbSkills(),loadApprovals(),loadSkillNotes(),loadQuizResults(),loadDrylandApprovals(),loadCoachQueue(),loadFriends(),loadMyClub(),loadAppSettings(),loadQuizOverrides()])
   document.getElementById('auth-screen').style.display='none'
   document.getElementById('app-screen').style.display='block'
   renderNav();renderAvatarTop()
@@ -1964,7 +1966,7 @@ async function deleteClass(id){
 }
 
 // ── QUIZ ──────────────────────────────────────────────────────────
-function startQuiz(qid){activeQuiz=QUIZZES[qid];quizAnswers=[];quizCurrent=0;quizSelected=null;renderQuizQuestion()}
+function startQuiz(qid){activeQuiz=getEffectiveQuiz(qid);if(!activeQuiz)return;quizAnswers=[];quizCurrent=0;quizSelected=null;renderQuizQuestion()}
 
 function renderQuizQuestion(){
   const c=document.getElementById('main-content')
@@ -2590,8 +2592,8 @@ async function renderAdminView(c){
   const riders=allUsers.filter(u=>u.role==='rider').length
   const coaches=allUsers.filter(u=>u.role==='coach').length
   const parents=allUsers.filter(u=>u.role==='parent').length
-  const subTabList=sa?['users','clubs','skills','settings','platform']:['users','clubs','skills','settings']
-  const subTabs=subTabList.map(t=>`<button class="sub-pill${adminSubView===t?' active':''}" onclick="setAdminSub('${t}')" style="margin-bottom:1rem">${t==='platform'?'⚡ Platform':t.charAt(0).toUpperCase()+t.slice(1)}</button>`).join('')
+  const subTabList=sa?['users','clubs','skills','quizzes','settings','platform']:['users','clubs','skills','quizzes','settings']
+  const subTabs=subTabList.map(t=>`<button class="sub-pill${adminSubView===t?' active':''}" onclick="setAdminSub('${t}')" style="margin-bottom:1rem">${t==='platform'?'⚡ Platform':t==='quizzes'?'📝 Quizzes':t.charAt(0).toUpperCase()+t.slice(1)}</button>`).join('')
   const roleOpts=(sa
     ?`<option value="rider">Rider</option><option value="parent">Parent</option><option value="coach">Coach</option><option value="admin">Club Admin</option><option value="super_admin">Super Admin</option>`
     :`<option value="rider">Rider</option><option value="parent">Parent</option><option value="coach">Coach</option><option value="admin">Club Admin</option>`)
@@ -2603,6 +2605,8 @@ async function renderAdminView(c){
     c.innerHTML=`<div class="page-title">${sa?'Platform Admin':'Club Admin'}</div><div class="page-sub">${sa?'Platform-wide management':'Manage your club, users and content'}</div><div class="admin-grid"><div class="admin-stat"><div class="admin-stat-label">Total users</div><div class="admin-stat-val">${allUsers.length}</div></div><div class="admin-stat"><div class="admin-stat-label">Riders</div><div class="admin-stat-val">${riders}</div></div><div class="admin-stat"><div class="admin-stat-label">Coaches</div><div class="admin-stat-val">${coaches}</div></div><div class="admin-stat"><div class="admin-stat-label">Parents</div><div class="admin-stat-val">${parents}</div></div></div><div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap">${subTabs}</div><div class="invite-box"><div class="section-head">Invite user</div><div class="invite-row"><input id="invite-email" type="email" placeholder="rider@example.com"/><select id="invite-role">${roleOpts}</select><button class="btn-add" onclick="sendInvite()" id="invite-btn">Invite</button></div><div id="invite-msg" style="font-size:12px;margin-top:8px;min-height:16px"></div></div><div class="section-head" style="margin-bottom:.75rem">Users</div><div class="user-table"><div class="user-row header"><div>Name</div><div>Role</div><div>Actions</div></div>${rows}</div>`
   }else if(adminSubView==='clubs'){
     await renderAdminClubs(c,subTabs)
+  }else if(adminSubView==='quizzes'){
+    renderAdminQuizEditor(c,subTabs)
   }else if(adminSubView==='settings'){
     renderAdminSettings(c,subTabs)
   }else{
@@ -2690,7 +2694,7 @@ async function adminCreateClub(){
   document.querySelector('.modal-overlay')?.remove()
   adminSubView='clubs'
   const c=document.getElementById('main-content')
-  const subTabs=['users','clubs','skills','settings'].map(t=>`<button class="sub-pill${adminSubView===t?' active':''}" onclick="setAdminSub('${t}')" style="margin-bottom:1rem">${t.charAt(0).toUpperCase()+t.slice(1)}</button>`).join('')
+  const subTabs=['users','clubs','skills','quizzes','settings'].map(t=>`<button class="sub-pill${adminSubView===t?' active':''}" onclick="setAdminSub('${t}')" style="margin-bottom:1rem">${t==='quizzes'?'📝 Quizzes':t.charAt(0).toUpperCase()+t.slice(1)}</button>`).join('')
   await renderAdminClubs(c,subTabs)
 }
 
@@ -2719,7 +2723,7 @@ async function addCoachToClub(clubId){
   document.querySelector('.modal-overlay')?.remove()
   adminSubView='clubs'
   const c=document.getElementById('main-content')
-  const subTabs=['users','clubs','skills','settings'].map(t=>`<button class="sub-pill${adminSubView===t?' active':''}" onclick="setAdminSub('${t}')" style="margin-bottom:1rem">${t.charAt(0).toUpperCase()+t.slice(1)}</button>`).join('')
+  const subTabs=['users','clubs','skills','quizzes','settings'].map(t=>`<button class="sub-pill${adminSubView===t?' active':''}" onclick="setAdminSub('${t}')" style="margin-bottom:1rem">${t==='quizzes'?'📝 Quizzes':t.charAt(0).toUpperCase()+t.slice(1)}</button>`).join('')
   await renderAdminClubs(c,subTabs)
 }
 
@@ -2728,7 +2732,7 @@ async function removeCoachFromClub(clubId,coachId){
   await db.from('club_coaches').delete().match({club_id:clubId,coach_id:coachId})
   adminSubView='clubs'
   const c=document.getElementById('main-content')
-  const subTabs=['users','clubs','skills','settings'].map(t=>`<button class="sub-pill${adminSubView===t?' active':''}" onclick="setAdminSub('${t}')" style="margin-bottom:1rem">${t.charAt(0).toUpperCase()+t.slice(1)}</button>`).join('')
+  const subTabs=['users','clubs','skills','quizzes','settings'].map(t=>`<button class="sub-pill${adminSubView===t?' active':''}" onclick="setAdminSub('${t}')" style="margin-bottom:1rem">${t==='quizzes'?'📝 Quizzes':t.charAt(0).toUpperCase()+t.slice(1)}</button>`).join('')
   await renderAdminClubs(c,subTabs)
 }
 function renderSkillsEditor(c,subTabs){
@@ -2752,11 +2756,50 @@ async function saveSkill(skillId,idx){
   if(flash){flash.textContent='Saved!';setTimeout(()=>flash.textContent='',2000)}
   if(btn)btn.disabled=false
 }
-function getAppSettings(){
-  try{return JSON.parse(localStorage.getItem('sw-settings')||'{}')}catch(e){return{}}
+// ── APP SETTINGS (Supabase-backed) ────────────────────────────────
+// Required tables (run once in Supabase SQL editor):
+//   create table if not exists app_settings (key text primary key, value jsonb not null);
+//   alter table app_settings enable row level security;
+//   create policy "public rw settings" on app_settings for all using (true) with check (true);
+//
+//   create table if not exists quiz_overrides (quiz_id text not null, question_index int not null, question_text text, options jsonb, correct_index int, primary key (quiz_id, question_index));
+//   alter table quiz_overrides enable row level security;
+//   create policy "public rw quiz overrides" on quiz_overrides for all using (true) with check (true);
+
+async function loadAppSettings(){
+  const{data,error}=await db.from('app_settings').select('key,value')
+  if(error||!data){
+    console.warn('app_settings not found — using localStorage fallback')
+    try{appSettingsCache=JSON.parse(localStorage.getItem('sw-settings')||'{}')}catch(e){appSettingsCache={}}
+    return
+  }
+  appSettingsCache={}
+  data.forEach(r=>{appSettingsCache[r.key]=r.value})
 }
-function saveAppSetting(key,val){
-  const s=getAppSettings();s[key]=val;localStorage.setItem('sw-settings',JSON.stringify(s))
+
+function getAppSettings(){return appSettingsCache}
+
+async function saveAppSetting(key,val){
+  appSettingsCache[key]=val
+  const{error}=await db.from('app_settings').upsert({key,value:val},{onConflict:'key'})
+  if(error){const s=JSON.parse(localStorage.getItem('sw-settings')||'{}');s[key]=val;localStorage.setItem('sw-settings',JSON.stringify(s))}
+}
+
+async function loadQuizOverrides(){
+  const{data,error}=await db.from('quiz_overrides').select('*')
+  quizOverridesCache={}
+  if(error||!data)return
+  data.forEach(r=>{
+    if(!quizOverridesCache[r.quiz_id])quizOverridesCache[r.quiz_id]={}
+    quizOverridesCache[r.quiz_id][r.question_index]={q:r.question_text,opts:r.options,a:r.correct_index}
+  })
+}
+
+function getEffectiveQuiz(qid){
+  const base=QUIZZES[qid];if(!base)return null
+  const overrides=quizOverridesCache[qid]||{}
+  if(!Object.keys(overrides).length)return base
+  return{...base,questions:base.questions.map((q,i)=>overrides[i]?{...q,...overrides[i]}:q)}
 }
 
 function renderAdminSettings(c,subTabs){
@@ -2792,15 +2835,102 @@ function renderAdminSettings(c,subTabs){
   </div>`
 }
 
-function toggleSetting(key,val){
-  console.log('toggleSetting called:', key, val)
-  saveAppSetting(key,val)
-  const verify=getAppSettings()
-  console.log('saved settings:', JSON.stringify(verify))
+async function toggleSetting(key,val){
+  await saveAppSetting(key,val)
   showToast((val?'✓ Enabled: ':'✗ Disabled: ')+key.replace(/_/g,' '))
 }
 
 function setAdminSub(v){adminSubView=v;renderAdminView(document.getElementById('main-content'))}
+
+// ── QUIZ EDITOR ───────────────────────────────────────────────────
+let adminQuizId='dryland'
+function setAdminQuiz(id){adminQuizId=id;renderAdminView(document.getElementById('main-content'))}
+
+function renderAdminQuizEditor(c,subTabs){
+  const quizList=Object.values(QUIZZES)
+  const quizPills=quizList.map(q=>`<button class="sub-pill${adminQuizId===q.id?' active':''}" onclick="setAdminQuiz('${q.id}')" style="font-size:12px;padding:5px 12px">${q.icon} ${q.title}</button>`).join('')
+  const base=QUIZZES[adminQuizId]
+  if(!base){c.innerHTML='<div class="empty-state">Quiz not found.</div>';return}
+  const overrides=quizOverridesCache[adminQuizId]||{}
+  const rows=base.questions.map((bq,i)=>{
+    const ov=overrides[i]||{}
+    const q=ov.q!==undefined?ov.q:bq.q
+    const opts=ov.opts||bq.opts
+    const a=ov.a!==undefined?ov.a:bq.a
+    const optsHtml=opts.map((o,oi)=>`
+      <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+        <input type="radio" name="correct-${i}" value="${oi}" ${a===oi?'checked':''} onchange="adminQuizSetCorrect(${i},${oi})" style="accent-color:var(--accent);width:14px;height:14px;flex-shrink:0"/>
+        <input type="text" value="${o.replace(/"/g,'&quot;')}" id="qopt-${i}-${oi}" style="flex:1;padding:6px 8px;border:0.5px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px;outline:none" oninput="adminQuizMarkDirty(${i})"/>
+      </div>`).join('')
+    const isOverridden=Object.prototype.hasOwnProperty.call(overrides,i)
+    return`<div id="quiz-q-card-${i}" style="background:var(--card);border:0.5px solid ${isOverridden?'var(--accent)':'var(--border)'};border-radius:var(--rsm);padding:14px;margin-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);min-width:22px">Q${i+1}</span>
+        <input type="text" id="qtxt-${i}" value="${q.replace(/"/g,'&quot;')}" style="flex:1;padding:8px 10px;border:0.5px solid var(--border);border-radius:6px;background:var(--bg);color:var(--text);font-size:13px;font-weight:500;outline:none" oninput="adminQuizMarkDirty(${i})"/>
+      </div>
+      <div style="padding-left:30px;margin-bottom:8px">
+        <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Options — select correct answer:</div>
+        ${optsHtml}
+      </div>
+      <div style="display:flex;gap:6px;justify-content:flex-end">
+        ${isOverridden?`<button onclick="adminQuizResetQuestion(${i})" style="padding:5px 10px;border-radius:6px;border:0.5px solid var(--border);background:none;color:var(--muted);font-size:11px;cursor:pointer">Reset to default</button>`:''}
+        <button onclick="adminQuizSaveQuestion(${i})" style="padding:5px 12px;border-radius:6px;border:none;background:var(--brand);color:#fff;font-size:11px;font-weight:600;cursor:pointer" id="quiz-save-btn-${i}">Save</button>
+        <span id="quiz-saved-${i}" style="font-size:11px;color:#1D9E75;align-self:center;display:none">✓ Saved</span>
+      </div>
+    </div>`
+  }).join('')
+  c.innerHTML=`<div class="page-title">Admin</div><div class="page-sub">Manage users, roles and content</div>
+  <div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap">${subTabs}</div>
+  <div style="margin-bottom:1rem;overflow-x:auto;white-space:nowrap;padding-bottom:4px">${quizPills}</div>
+  <div class="club-card" style="margin-bottom:10px">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div>
+        <div style="font-size:15px;font-weight:700">${base.icon} ${base.title}</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:2px">${base.questions.length} questions · Pass mark: ${base.passMark}%</div>
+      </div>
+      <div style="font-size:11px;color:var(--accent)">${Object.keys(overrides).length?Object.keys(overrides).length+' customised':''}</div>
+    </div>
+  </div>
+  <div id="quiz-editor-rows">${rows}</div>`
+}
+
+// track per-question in-progress state
+const adminQuizDirty={}
+function adminQuizMarkDirty(i){adminQuizDirty[i]=true}
+function adminQuizSetCorrect(i,oi){
+  // visually update radio without re-render
+  adminQuizMarkDirty(i)
+}
+
+async function adminQuizSaveQuestion(i){
+  const base=QUIZZES[adminQuizId]
+  const qText=document.getElementById(`qtxt-${i}`)?.value?.trim()
+  const opts=base.questions[i].opts.map((_,oi)=>document.getElementById(`qopt-${i}-${oi}`)?.value?.trim()||'')
+  const correctEl=document.querySelector(`input[name="correct-${i}"]:checked`)
+  const correctIdx=correctEl?parseInt(correctEl.value):base.questions[i].a
+  if(!qText){showToast('Question text cannot be empty');return}
+  const btn=document.getElementById(`quiz-save-btn-${i}`)
+  if(btn){btn.disabled=true;btn.textContent='Saving…'}
+  const{error}=await db.from('quiz_overrides').upsert({quiz_id:adminQuizId,question_index:i,question_text:qText,options:opts,correct_index:correctIdx},{onConflict:'quiz_id,question_index'})
+  if(error){showToast('Save failed: '+error.message);if(btn){btn.disabled=false;btn.textContent='Save'};return}
+  if(!quizOverridesCache[adminQuizId])quizOverridesCache[adminQuizId]={}
+  quizOverridesCache[adminQuizId][i]={q:qText,opts,a:correctIdx}
+  if(btn){btn.disabled=false;btn.textContent='Save'}
+  const saved=document.getElementById(`quiz-saved-${i}`)
+  if(saved){saved.style.display='inline';setTimeout(()=>saved.style.display='none',2000)}
+  // update card border to show it's customised
+  const card=document.getElementById(`quiz-q-card-${i}`)
+  if(card)card.style.borderColor='var(--accent)'
+}
+
+async function adminQuizResetQuestion(i){
+  if(!confirm('Reset this question to the default?'))return
+  const{error}=await db.from('quiz_overrides').delete().match({quiz_id:adminQuizId,question_index:i})
+  if(error){showToast('Reset failed: '+error.message);return}
+  if(quizOverridesCache[adminQuizId])delete quizOverridesCache[adminQuizId][i]
+  showToast('Question reset to default')
+  renderAdminView(document.getElementById('main-content'))
+}
 function setAdminSport(id){adminEditSport=id;adminEditTier=id==='dryland'?'required':'bronze';renderAdminView(document.getElementById('main-content'))}
 function setAdminTier(t){adminEditTier=t;renderAdminView(document.getElementById('main-content'))}
 async function sendInvite(){
