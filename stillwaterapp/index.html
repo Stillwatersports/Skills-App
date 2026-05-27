@@ -2801,38 +2801,44 @@ async function updateRole(userId,newRole){
 }
 
 async function getOrCreateGeneralClub(){
-  // Look for existing General club
-  const{data:existing}=await db.from('clubs').select('id').eq('name','General').single()
+  // Use maybeSingle so missing row returns null instead of error
+  const{data:existing}=await db.from('clubs').select('id').eq('name','General').maybeSingle()
   if(existing)return existing.id
-  // Create it if it doesn't exist
-  const{data:created,error}=await db.from('clubs').insert({
-    name:'General',
-    description:'Default club for users not assigned to a specific club.',
-    owner_id:currentUser.id
-  }).select('id').single()
-  if(error){console.error('Could not create General club:',error);return null}
-  return created.id
+  // Try to create — handle possible NOT NULL on invite_code
+  const insertData={name:'General',description:'Default club.',owner_id:currentUser.id}
+  // Check if invite_code column is required by trying without it first
+  const{data:created,error}=await db.from('clubs').insert(insertData).select('id').maybeSingle()
+  if(error){
+    // Fallback: try with a generated invite code in case column is NOT NULL
+    const code='GEN-'+Math.random().toString(36).slice(2,6).toUpperCase()
+    const{data:c2,error:e2}=await db.from('clubs').insert({...insertData,invite_code:code}).select('id').maybeSingle()
+    if(e2){console.error('Could not create General club:',e2);return null}
+    return c2?.id||null
+  }
+  return created?.id||null
 }
 
 async function deleteClub(clubId){
-  if(!confirm('Delete this club? All members will be moved to the General club.'))return
-  // Get or create the General club
-  const generalId=await getOrCreateGeneralClub()
-  if(!generalId){showToast('Could not create General club');return}
-  // Get all classes in this club
+  if(!confirm('Delete this club?'))return
+  // Check if there are any members first
+  const{data:members}=await db.from('profiles').select('id').eq('club_id',clubId).limit(1)
   const{data:classes}=await db.from('classes').select('id').eq('club_id',clubId)
-  const classIds=(classes||[]).map(c=>c.id)
-  // Move affected users: clear their class, move to General club
-  if(classIds.length){
-    await db.from('profiles').update({class_id:null,club_id:generalId}).in('class_id',classIds)
+  const classIds=(classes||[]).map(cl=>cl.id)
+  // Only bother with General club migration if there are actual members
+  const hasMembers=(members&&members.length>0)||classIds.length>0
+  if(hasMembers){
+    const generalId=await getOrCreateGeneralClub()
+    if(!generalId){showToast('Could not create General club — aborting');return}
+    if(classIds.length){
+      await db.from('profiles').update({class_id:null,club_id:generalId}).in('class_id',classIds)
+    }
+    await db.from('profiles').update({club_id:generalId}).eq('club_id',clubId)
   }
-  // Move any remaining members of the club (no class assigned)
-  await db.from('profiles').update({club_id:generalId}).eq('club_id',clubId)
   // Delete classes then club
-  await db.from('classes').delete().eq('club_id',clubId)
+  if(classIds.length)await db.from('classes').delete().eq('club_id',clubId)
   const{error}=await db.from('clubs').delete().eq('id',clubId)
   if(error){showToast('Delete failed: '+error.message);return}
-  showToast('Club deleted — members moved to General')
+  showToast(hasMembers?'Club deleted — members moved to General':'Club deleted')
   adminSubView='clubs'
   setAdminSub('clubs')
 }
@@ -3071,7 +3077,8 @@ async function confirmSubmitSkill(sport,tier,idx){
 }
 
 // ── BATCH UPLOAD ─────────────────────────────────────────────────
-function showBatchUploadModal(){
+async function showBatchUploadModal(){
+  if(!allUsers.length)await loadAllUsers()
   const classOptions=(myClub?.classes||[]).map(cl=>`<option value="${cl.id}">${cl.name}</option>`).join('')
   const modal=document.createElement('div');modal.className='modal-overlay'
   modal.innerHTML=`<div class="modal-sheet" style="max-height:90vh;overflow-y:auto"><div class="modal-handle"></div>
