@@ -2691,10 +2691,15 @@ async function renderAdminView(c){
     :`<option value="rider">Rider</option><option value="parent">Parent</option><option value="coach">Coach</option><option value="admin">Club Admin</option>`)
   const rowRoleOpts=(u)=>`<option value="rider" ${u.role==='rider'?'selected':''}>Rider</option><option value="parent" ${u.role==='parent'?'selected':''}>Parent</option><option value="coach" ${u.role==='coach'?'selected':''}>Coach</option><option value="admin" ${u.role==='admin'?'selected':''}>Club Admin</option>${sa?`<option value="super_admin" ${u.role==='super_admin'?'selected':''}>Super Admin</option>`:''}`
   if(adminSubView==='platform'&&sa){
-    renderSuperAdminPlatform(c,subTabs)
+    await renderSuperAdminPlatform(c,subTabs)
   }else if(adminSubView==='users'){
     const rows=allUsers.map(u=>`<div class="user-row"><div style="display:flex;align-items:center;gap:8px;min-width:0;overflow:hidden">${avatarHtml(u.avatar_url,u.name,22)}<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${u.name||u.id.slice(0,8)}</span></div><select class="role-select" onchange="updateRole('${u.id}',this.value)">${rowRoleOpts(u)}</select><button class="btn-reset" onclick="resetProgress('${u.id}')">Reset</button></div>`).join('')
-    c.innerHTML=`<div class="page-title">${sa?'Platform Admin':'Club Admin'}</div><div class="page-sub">${sa?'Platform-wide management':'Manage your club, users and content'}</div><div class="admin-grid"><div class="admin-stat"><div class="admin-stat-label">Total users</div><div class="admin-stat-val">${allUsers.length}</div></div><div class="admin-stat"><div class="admin-stat-label">Riders</div><div class="admin-stat-val">${riders}</div></div><div class="admin-stat"><div class="admin-stat-label">Coaches</div><div class="admin-stat-val">${coaches}</div></div><div class="admin-stat"><div class="admin-stat-label">Parents</div><div class="admin-stat-val">${parents}</div></div></div><div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap">${subTabs}</div><div class="invite-box"><div class="section-head">Invite user</div><div class="invite-row"><input id="invite-email" type="email" placeholder="rider@example.com"/><select id="invite-role">${roleOpts}</select><button class="btn-add" onclick="sendInvite()" id="invite-btn">Invite</button></div><div id="invite-msg" style="font-size:12px;margin-top:8px;min-height:16px"></div></div><div class="section-head" style="margin-bottom:.75rem">Users</div><div class="user-table"><div class="user-row header"><div>Name</div><div>Role</div><div>Actions</div></div>${rows}</div>`
+    c.innerHTML=`<div class="page-title">${sa?'Platform Admin':'Club Admin'}</div><div class="page-sub">${sa?'Platform-wide management':'Manage your club, users and content'}</div>
+    <div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap">${subTabs}</div>
+    <div class="admin-grid" style="margin-bottom:1rem"><div class="admin-stat"><div class="admin-stat-label">Total users</div><div class="admin-stat-val">${allUsers.length}</div></div><div class="admin-stat"><div class="admin-stat-label">Riders</div><div class="admin-stat-val">${riders}</div></div><div class="admin-stat"><div class="admin-stat-label">Coaches</div><div class="admin-stat-val">${coaches}</div></div><div class="admin-stat"><div class="admin-stat-label">Parents</div><div class="admin-stat-val">${parents}</div></div></div>
+    <div class="invite-box" style="margin-bottom:1rem"><div class="section-head">Invite user</div><div class="invite-row"><input id="invite-email" type="email" placeholder="rider@example.com"/><select id="invite-role">${roleOpts}</select><button class="btn-add" onclick="sendInvite()" id="invite-btn">Invite</button></div><div id="invite-msg" style="font-size:12px;margin-top:8px;min-height:16px"></div></div>
+    <div class="section-head" style="margin-bottom:.75rem">Users</div>
+    <div class="user-table"><div class="user-row header"><div>Name</div><div>Role</div><div>Actions</div></div>${rows}</div>`
   }else if(adminSubView==='clubs'){
     await renderAdminClubs(c,subTabs)
   }else if(adminSubView==='quizzes'){
@@ -2706,8 +2711,9 @@ async function renderAdminView(c){
   }
 }
 
-function renderSuperAdminPlatform(c,subTabs){
-  const totalClubs=clubs?.length||0
+async function renderSuperAdminPlatform(c,subTabs){
+  const{data:allClubsData}=await db.from('clubs').select('id,name,invite_code').order('name')
+  const totalClubs=(allClubsData||[]).length
   const superAdmins=allUsers.filter(u=>u.role==='super_admin')
   const makeRow=(u)=>`<div class="user-row"><div style="display:flex;align-items:center;gap:8px;min-width:0;overflow:hidden">${avatarHtml(u.avatar_url,u.name,22)}<div style="overflow:hidden"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px">${u.name||u.id.slice(0,8)}</div><div style="font-size:10px;color:var(--muted)">${u.email||u.username||''}</div></div></div><select class="role-select" onchange="updateRole('${u.id}',this.value)"><option value="rider" ${u.role==='rider'?'selected':''}>Rider</option><option value="parent" ${u.role==='parent'?'selected':''}>Parent</option><option value="coach" ${u.role==='coach'?'selected':''}>Coach</option><option value="admin" ${u.role==='admin'?'selected':''}>Club Admin</option><option value="super_admin" ${u.role==='super_admin'?'selected':''}>Super Admin</option></select><button class="btn-reset" onclick="resetProgress('${u.id}')">Reset</button></div>`
   const userRows=allUsers.slice(0,50).map(makeRow).join('')
@@ -2719,7 +2725,23 @@ function renderSuperAdminPlatform(c,subTabs){
   </div>
   <div class="club-card" style="margin-bottom:12px">
     <div class="section-head">Super admins</div>
-    ${superAdmins.length?superAdmins.map(u=>`<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--border)">${avatarHtml(u.avatar_url,u.name,28)}<div><div style="font-size:13px;font-weight:600">${u.name}</div><div style="font-size:11px;color:var(--muted)">${u.email||u.username||'—'}</div></div></div>`).join(''):'<div style="font-size:12px;color:var(--muted)">None assigned yet</div>'}
+    ${superAdmins.length?superAdmins.map(u=>'<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:0.5px solid var(--border)">'+avatarHtml(u.avatar_url,u.name,28)+'<div><div style="font-size:13px;font-weight:600">'+u.name+'</div><div style="font-size:11px;color:var(--muted)">'+(u.email||u.username||'—')+'</div></div></div>').join(''):'<div style="font-size:12px;color:var(--muted)">None assigned yet</div>'}
+  </div>
+  <div class="club-card" style="margin-bottom:12px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+      <div class="section-head" style="margin-bottom:0">All clubs (${totalClubs})</div>
+      <button class="btn-add" onclick="showAdminCreateClubModal()">+ New club</button>
+    </div>
+    ${(allClubsData||[]).length?
+      (allClubsData||[]).map(cl=>{
+        const admin=allUsers.find(u=>(u.role==='admin'||u.role==='super_admin')&&u.club_id===cl.id)
+        return '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:0.5px solid var(--border)">'
+          +'<div style="flex:1"><div style="font-size:13px;font-weight:600">'+cl.name+'</div>'
+          +'<div style="font-size:11px;color:var(--muted)">Code: '+(cl.invite_code||'—')+(admin?' · Admin: '+admin.name:'  · No admin assigned')+'</div></div>'
+          +'<button data-clubid="'+cl.id+'" data-clubname="'+encodeURIComponent(cl.name)+'" onclick="showAssignClubAdminModal(this.dataset.clubid,decodeURIComponent(this.dataset.clubname))" style="padding:5px 10px;border-radius:6px;border:0.5px solid var(--brand);background:none;color:var(--brand);font-size:11px;font-weight:600;cursor:pointer">'+(admin?'Change admin':'Assign admin')+'</button>'
+          +'</div>'
+      }).join('')
+    :'<div style="font-size:12px;color:var(--muted)">No clubs yet</div>'}
   </div>
   <div class="club-card" style="margin-bottom:12px">
     <div class="section-head">Find any user</div>
@@ -2734,6 +2756,46 @@ function renderSuperAdminPlatform(c,subTabs){
     <button onclick="loadAllUsers().then(()=>renderAdminView(document.getElementById('main-content')))" style="padding:10px 16px;border-radius:var(--rsm);border:0.5px solid var(--border);background:none;color:var(--muted);font-size:13px;cursor:pointer;width:100%;text-align:left">Refresh platform data</button>
   </div>`
 }
+
+async function showAssignClubAdminModal(clubId,clubName){
+  if(!allUsers.length)await loadAllUsers()
+  const candidates=allUsers.filter(function(u){return u.role==='admin'||u.role==='coach'||u.role==='super_admin'})
+  const opts=candidates.map(function(u){
+    return '<option value="'+u.id+'">'+u.name+' ('+u.role+')'+(u.club_id===clubId?' — current':'')+'</option>'
+  }).join('')
+  const modal=document.createElement('div');modal.className='modal-overlay'
+  const sheet=document.createElement('div');sheet.className='modal-sheet'
+  sheet.innerHTML='<div class="modal-handle"></div>'
+    +'<div class="modal-title">Assign club admin</div>'
+    +'<div style="font-size:13px;color:var(--muted);margin-bottom:1.25rem;line-height:1.5">Select a user to become the admin of <strong>'+clubName+'</strong>.</div>'
+    +'<div class="field"><label>Select user</label>'
+    +'<select id="assign-admin-select" style="font-size:16px;padding:10px 12px;width:100%;border:0.5px solid var(--border);border-radius:var(--rsm);background:var(--bg);color:var(--text);outline:none">'
+    +'<option value="">— Choose a user —</option>'+opts+'</select></div>'
+    +'<div id="assign-admin-msg" style="font-size:12px;min-height:16px;margin-bottom:10px"></div>'
+    +'<div style="display:flex;gap:8px">'
+    +'<button id="assign-cancel-btn" style="flex:1;padding:12px;border-radius:var(--rsm);border:0.5px solid var(--border);background:none;color:var(--muted);cursor:pointer;font-size:13px">Cancel</button>'
+    +'<button id="assign-confirm-btn" style="flex:2;padding:12px;border-radius:var(--rsm);border:none;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;font-size:13px">Assign</button>'
+    +'</div>'
+  modal.appendChild(sheet)
+  document.body.appendChild(modal)
+  document.getElementById('assign-cancel-btn').onclick=function(){modal.remove()}
+  document.getElementById('assign-confirm-btn').onclick=function(){assignClubAdmin(clubId)}
+}
+
+
+async function assignClubAdmin(clubId){
+  const userId=document.getElementById('assign-admin-select')?.value
+  const msg=document.getElementById('assign-admin-msg')
+  if(!userId){msg.style.color='#D85A30';msg.textContent='Please select a user';return}
+  const{error:roleErr}=await db.from('profiles').update({role:'admin',club_id:clubId}).eq('id',userId)
+  if(roleErr){msg.style.color='#D85A30';msg.textContent='Failed: '+roleErr.message;return}
+  const u=allUsers.find(function(u){return u.id===userId})
+  if(u){u.role='admin';u.club_id=clubId}
+  document.querySelector('.modal-overlay')?.remove()
+  showToast('Club admin assigned')
+  setAdminSub('platform')
+}
+
 
 function filterPlatformUsers(q,makeRow){
   const list=q?allUsers.filter(u=>(u.name||'').toLowerCase().includes(q.toLowerCase())||(u.username||'').toLowerCase().includes(q.toLowerCase())):allUsers.slice(0,50)
