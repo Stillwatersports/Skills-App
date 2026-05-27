@@ -577,9 +577,16 @@ let selectedSignupRole='rider'
 // Valid signup roles: rider, parent, coach, admin (super_admin is assigned manually)
 let appSettingsCache={}
 let quizOverridesCache={}
+let speedUnit='kmh' // 'kmh' or 'mph'
 // Default speed thresholds per sport (km/h) — user can override in profile
 const SPORT_SPEED_DEFAULTS={waterski:{min:26,max:58},wakeboard:{min:20,max:35},wakesurf:{min:14,max:22},slalom:{min:43,max:58},barefoot:{min:53,max:72},kneeboard:{min:20,max:35},shoeski:{min:20,max:32},tubes:{min:16,max:32},driving:{min:16,max:72}}
 const RUN_MIN_DURATION=5
+function kmhToMph(v){return Math.round(v*0.621371)}
+function mphToKmh(v){return Math.round(v*1.60934)}
+function toDisplaySpeed(kmh){return speedUnit==='mph'?kmhToMph(kmh):kmh}
+function fromDisplaySpeed(v){return speedUnit==='mph'?mphToKmh(v):v}
+function speedLabel(){return speedUnit==='mph'?'mph':'km/h'}
+
 function getRunThreshold(sport){
   const prefs=userProfile?.sport_speed_prefs||{}
   const defaults=SPORT_SPEED_DEFAULTS[sport]||{min:20,max:60}
@@ -2693,7 +2700,7 @@ async function renderAdminView(c){
   if(adminSubView==='platform'&&sa){
     await renderSuperAdminPlatform(c,subTabs)
   }else if(adminSubView==='users'){
-    const rows=allUsers.map(u=>`<div class="user-row"><div style="display:flex;align-items:center;gap:8px;min-width:0;overflow:hidden">${avatarHtml(u.avatar_url,u.name,22)}<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${u.name||u.id.slice(0,8)}</span></div><select class="role-select" onchange="updateRole('${u.id}',this.value)">${rowRoleOpts(u)}</select><button class="btn-reset" onclick="resetProgress('${u.id}')">Reset</button></div>`).join('')
+    const rows=allUsers.map(u=>'<div class="user-row">'+avatarHtml(u.avatar_url,u.name,22)+'<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(u.name||u.id.slice(0,8))+'</span>'+'<select class="role-select" data-uid="'+u.id+'" onchange="updateRole(this.dataset.uid,this.value)">'+rowRoleOpts(u)+'</select>'+'<button class="btn-reset" data-uid="'+u.id+'" onclick="resetProgress(this.dataset.uid)">Reset</button>'+(sa?'<button data-uid="'+u.id+'" data-uname="'+(u.name||'').replace(/"/g,'&quot;')+'" onclick="deleteUser(this.dataset.uid,this.dataset.uname)" style="padding:4px 8px;border-radius:6px;border:0.5px solid #D85A30;background:none;color:#D85A30;font-size:11px;cursor:pointer">Delete</button>':'')+'</div>').join('')
     c.innerHTML=`<div class="page-title">${sa?'Platform Admin':'Club Admin'}</div><div class="page-sub">${sa?'Platform-wide management':'Manage your club, users and content'}</div>
     <div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap">${subTabs}</div>
     <div class="admin-grid" style="margin-bottom:1rem"><div class="admin-stat"><div class="admin-stat-label">Total users</div><div class="admin-stat-val">${allUsers.length}</div></div><div class="admin-stat"><div class="admin-stat-label">Riders</div><div class="admin-stat-val">${riders}</div></div><div class="admin-stat"><div class="admin-stat-label">Coaches</div><div class="admin-stat-val">${coaches}</div></div><div class="admin-stat"><div class="admin-stat-label">Parents</div><div class="admin-stat-val">${parents}</div></div></div>
@@ -2715,7 +2722,7 @@ async function renderSuperAdminPlatform(c,subTabs){
   const{data:allClubsData}=await db.from('clubs').select('id,name,invite_code').order('name')
   const totalClubs=(allClubsData||[]).length
   const superAdmins=allUsers.filter(u=>u.role==='super_admin')
-  const makeRow=(u)=>`<div class="user-row"><div style="display:flex;align-items:center;gap:8px;min-width:0;overflow:hidden">${avatarHtml(u.avatar_url,u.name,22)}<div style="overflow:hidden"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px">${u.name||u.id.slice(0,8)}</div><div style="font-size:10px;color:var(--muted)">${u.email||u.username||''}</div></div></div><select class="role-select" onchange="updateRole('${u.id}',this.value)"><option value="rider" ${u.role==='rider'?'selected':''}>Rider</option><option value="parent" ${u.role==='parent'?'selected':''}>Parent</option><option value="coach" ${u.role==='coach'?'selected':''}>Coach</option><option value="admin" ${u.role==='admin'?'selected':''}>Club Admin</option><option value="super_admin" ${u.role==='super_admin'?'selected':''}>Super Admin</option></select><button class="btn-reset" onclick="resetProgress('${u.id}')">Reset</button></div>`
+  const makeRow=(u)=>'<div class="user-row">'+avatarHtml(u.avatar_url,u.name,22)+'<div style="overflow:hidden"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px">'+(u.name||u.id.slice(0,8))+'</div><div style="font-size:10px;color:var(--muted)">'+(u.email||u.username||'')+'</div></div>'+'<select class="role-select" data-uid="'+u.id+'" onchange="updateRole(this.dataset.uid,this.value)"><option value="rider" '+(u.role==='rider'?'selected':'')+'>Rider</option><option value="parent" '+(u.role==='parent'?'selected':'')+'>Parent</option><option value="coach" '+(u.role==='coach'?'selected':'')+'>Coach</option><option value="admin" '+(u.role==='admin'?'selected':'')+'>Club Admin</option><option value="super_admin" '+(u.role==='super_admin'?'selected':'')+'>Super Admin</option></select>'+'<button class="btn-reset" data-uid="'+u.id+'" onclick="resetProgress(this.dataset.uid)">Reset</button>'+'<button data-uid="'+u.id+'" data-uname="'+(u.name||'').replace(/"/g,'&quot;')+'" onclick="deleteUser(this.dataset.uid,this.dataset.uname)" style="padding:4px 8px;border-radius:6px;border:0.5px solid #D85A30;background:none;color:#D85A30;font-size:11px;cursor:pointer;white-space:nowrap">Delete</button>'+'</div>'
   const userRows=allUsers.slice(0,50).map(makeRow).join('')
   c.innerHTML=`<div class="page-title">⚡ Platform Admin</div><div class="page-sub">Full platform visibility — all clubs, all users</div>
   <div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap">${subTabs}</div>
@@ -2812,8 +2819,13 @@ async function renderAdminClubs(c,subTabs){
   const clubIds=(clubs||[]).map(cl=>cl.id)
   let coachMap={}
   if(clubIds.length>0){
-    const{data:ccData}=await db.from('club_coaches').select('club_id,coach_id,profiles(id,name,avatar_url)').in('club_id',clubIds)
-    if(ccData)ccData.forEach(cc=>{if(!coachMap[cc.club_id])coachMap[cc.club_id]=[];coachMap[cc.club_id].push(cc.profiles)})
+    // Fetch club_coaches rows then manually join with allUsers to avoid FK dependency
+    const{data:ccData}=await db.from('club_coaches').select('club_id,coach_id').in('club_id',clubIds)
+    if(ccData)ccData.forEach(cc=>{
+      const profile=allUsers.find(u=>u.id===cc.coach_id)
+      if(!coachMap[cc.club_id])coachMap[cc.club_id]=[]
+      if(profile)coachMap[cc.club_id].push(profile)
+    })
   }
   const clubCards=(clubs||[]).map(club=>{
     const coaches=(coachMap[club.id]||[]).filter(Boolean)
@@ -2852,6 +2864,26 @@ async function adminCreateClub(){
   const c=document.getElementById('main-content')
   const subTabs=['users','clubs','skills','quizzes','settings'].map(t=>`<button class="sub-pill${adminSubView===t?' active':''}" onclick="setAdminSub('${t}')" style="margin-bottom:1rem">${t==='quizzes'?'📝 Quizzes':t.charAt(0).toUpperCase()+t.slice(1)}</button>`).join('')
   await renderAdminClubs(c,subTabs)
+}
+
+async function deleteUser(userId,userName){
+  if(!isSuperAdmin()){showToast('Super admin only');return}
+  if(!confirm('Permanently delete '+userName+'? This cannot be undone.'))return
+  // Delete auth user via Supabase admin (requires service role - use edge function or do profile only)
+  // First remove profile data
+  await db.from('approvals').delete().eq('rider_id',userId)
+  await db.from('skill_notes').delete().eq('rider_id',userId)
+  await db.from('quiz_results').delete().eq('user_id',userId)
+  await db.from('dryland_approvals').delete().eq('rider_id',userId)
+  await db.from('class_members').delete().eq('student_id',userId)
+  await db.from('club_coaches').delete().eq('coach_id',userId)
+  await db.from('parent_child_links').delete().or('parent_id.eq.'+userId+',child_id.eq.'+userId)
+  await db.from('sessions').delete().eq('user_id',userId)
+  const{error}=await db.from('profiles').delete().eq('id',userId)
+  if(error){showToast('Delete failed: '+error.message);return}
+  allUsers=allUsers.filter(u=>u.id!==userId)
+  showToast(userName+' deleted')
+  renderAdminView(document.getElementById('main-content'))
 }
 
 async function updateRole(userId,newRole){
@@ -3484,31 +3516,47 @@ async function viewChildProgress(childId,childName){
 function renderSpeedPrefsList(){
   const prefs=userProfile?.sport_speed_prefs||{}
   const sports=getClubSports()
-  return sports.map(id=>{
+  const unitToggle='<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">'
+    +'<span style="font-size:12px;color:var(--muted)">Units:</span>'
+    +'<button id="unit-kmh-btn" onclick="setSpeedUnit(this.dataset.u)" data-u="kmh" style="padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid '+(speedUnit==='kmh'?'var(--accent)':'var(--border)')+';background:'+(speedUnit==='kmh'?'rgba(224,64,160,0.08)':'none')+';color:'+(speedUnit==='kmh'?'var(--accent)':'var(--muted)')+'">km/h</button>'
+    +'<button id="unit-mph-btn" onclick="setSpeedUnit(this.dataset.u)" data-u="mph" style="padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid '+(speedUnit==='mph'?'var(--accent)':'var(--border)')+';background:'+(speedUnit==='mph'?'rgba(224,64,160,0.08)':'none')+';color:'+(speedUnit==='mph'?'var(--accent)':'var(--muted)')+'">mph</button>'
+    +'</div>'
+  const rows=sports.map(function(id){
     const defaults=SPORT_SPEED_DEFAULTS[id]||{min:20,max:60}
     const cur=prefs[id]||defaults
-    const minVal=cur.min??defaults.min
-    const maxVal=cur.max??defaults.max
-    return`<div style="margin-bottom:14px">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
-        <span style="font-size:13px;font-weight:500">${DEFAULT_SKILLS[id]?.name||id}</span>
-        <span style="font-size:11px;color:var(--brand);font-weight:600" id="speed-label-${id}">${minVal}–${maxVal} km/h</span>
-      </div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <span style="font-size:10px;color:var(--muted);width:22px">Min</span>
-        <input type="range" min="10" max="80" value="${minVal}" step="1"
-          style="flex:1;accent-color:var(--brand)"
-          oninput="updateSpeedLabel('${id}',this.value,null)"
-          onchange="saveSpeedPref('${id}',+this.value,null)"/>
-        <span style="font-size:10px;color:var(--muted);width:22px">Max</span>
-        <input type="range" min="10" max="100" value="${maxVal}" step="1"
-          style="flex:1;accent-color:var(--accent)"
-          oninput="updateSpeedLabel('${id}',null,this.value)"
-          onchange="saveSpeedPref('${id}',null,+this.value)"/>
-      </div>
-    </div>`
+    const minKmh=cur.min??defaults.min
+    const maxKmh=cur.max??defaults.max
+    const minDisplay=toDisplaySpeed(minKmh)
+    const maxDisplay=toDisplaySpeed(maxKmh)
+    const sl=speedLabel()
+    const smin=speedUnit==='mph'?Math.round(10*0.621371):10
+    const smax80=speedUnit==='mph'?Math.round(80*0.621371):80
+    const smax100=speedUnit==='mph'?Math.round(100*0.621371):100
+    return '<div style="margin-bottom:14px">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">'
+      +'<span style="font-size:13px;font-weight:500">'+(DEFAULT_SKILLS[id]?.name||id)+'</span>'
+      +'<span style="font-size:11px;color:var(--brand);font-weight:600" id="speed-label-'+id+'">'+minDisplay+'–'+maxDisplay+' '+sl+'</span>'
+      +'</div>'
+      +'<div style="display:flex;gap:8px;align-items:center">'
+      +'<span style="font-size:10px;color:var(--muted);width:22px">Min</span>'
+      +'<input type="range" min="'+smin+'" max="'+smax80+'" value="'+minDisplay+'" step="1" style="flex:1;accent-color:var(--brand)" data-sport="'+id+'" data-type="min"'
+      +' oninput="updateSpeedLabel(this.dataset.sport,this.value,null)"'
+      +' onchange="saveSpeedPref(this.dataset.sport,fromDisplaySpeed(+this.value),null)"/>'
+      +'<span style="font-size:10px;color:var(--muted);width:22px">Max</span>'
+      +'<input type="range" min="'+smin+'" max="'+smax100+'" value="'+maxDisplay+'" step="1" style="flex:1;accent-color:var(--accent)" data-sport="'+id+'" data-type="max"'
+      +' oninput="updateSpeedLabel(this.dataset.sport,null,this.value)"'
+      +' onchange="saveSpeedPref(this.dataset.sport,null,fromDisplaySpeed(+this.value))"/>'
+      +'</div>'
+      +'</div>'
   }).join('')
+  return unitToggle+rows
 }
+function setSpeedUnit(unit){
+  speedUnit=unit
+  const el=document.getElementById('speed-prefs-list')
+  if(el)el.innerHTML=renderSpeedPrefsList()
+}
+
 function updateSpeedLabel(id,minV,maxV){
   const el=document.getElementById(`speed-label-${id}`)
   if(!el)return
