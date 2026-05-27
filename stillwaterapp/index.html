@@ -292,12 +292,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
 .admin-stat-label{font-size:11px;color:var(--muted);margin-bottom:4px}
 .admin-stat-val{font-size:24px;font-weight:600;color:var(--brand)}
 .user-table{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden}
-.user-row{display:grid;grid-template-columns:1fr auto auto;align-items:center;gap:8px;padding:10px 12px;border-bottom:0.5px solid var(--border);font-size:13px}
+.user-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:0.5px solid var(--border);font-size:13px;min-width:0}
 .user-row:last-child{border-bottom:none}
-.user-row.header{background:var(--bg);font-size:11px;font-weight:600;color:var(--muted)}
-.role-select{font-size:12px;padding:4px 8px;border-radius:6px;border:0.5px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer}
+.user-row.header{background:var(--bg);font-size:11px;font-weight:600;color:var(--muted);display:flex;gap:10px;padding:8px 12px}
+.role-select{font-size:11px;font-weight:500;padding:5px 8px;border-radius:8px;border:0.5px solid var(--border);background:var(--bg);color:var(--text);cursor:pointer;flex-shrink:0}
 .btn-reset{font-size:11px;padding:4px 8px;border-radius:6px;border:0.5px solid var(--border);background:none;color:var(--muted);cursor:pointer}
 .btn-reset:hover{color:#D85A30;border-color:#D85A30}
+.user-row .btn-reset{display:none}
 .invite-box{background:var(--card);border:0.5px solid var(--border);border-radius:var(--radius);padding:1.25rem;margin-bottom:1.25rem}
 .invite-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .invite-row input,.invite-row select{padding:8px 12px;border:0.5px solid var(--border);border-radius:var(--rsm);background:var(--bg);color:var(--text);font-size:14px;outline:none}
@@ -431,11 +432,22 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
     </div>
     <!-- SIGNUP FIELDS -->
     <div id="signup-fields" style="display:none">
-      <div class="field"><label>Your name</label><input type="text" id="inp-name" placeholder="e.g. Jake"/></div>
-      <div class="field">
-        <label>Username <span style="color:var(--brand);font-weight:700">*</span></label>
-        <input type="text" id="inp-username" placeholder="e.g. jake_ski" autocomplete="username" autocorrect="off" autocapitalize="off" spellcheck="false" oninput="sanitizeUsername(this)"/>
-        <div style="font-size:11px;color:var(--hint);margin-top:4px">Letters, numbers and _ only. Used to sign in.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="field" style="margin-bottom:0">
+          <label>First name <span style="color:var(--brand);font-weight:700">*</span></label>
+          <input type="text" id="inp-fname" placeholder="Jake" autocomplete="given-name" oninput="autoGenerateUsername()"/>
+        </div>
+        <div class="field" style="margin-bottom:0">
+          <label>Last name <span style="color:var(--brand);font-weight:700">*</span></label>
+          <input type="text" id="inp-lname" placeholder="Smith" autocomplete="family-name" oninput="autoGenerateUsername()"/>
+        </div>
+      </div>
+      <div class="field" style="margin-top:12px">
+        <label>Username</label>
+        <div id="inp-username-display" style="padding:10px 12px;border:0.5px solid var(--border);border-radius:var(--rsm);background:rgba(0,0,0,0.06);color:var(--muted);font-size:15px;font-family:monospace;min-height:44px;display:flex;align-items:center">
+          <span id="username-preview" style="color:var(--hint)">Enter your name above…</span>
+        </div>
+        <div style="font-size:11px;color:var(--hint);margin-top:4px">Auto-generated as firstname.lastname. Used to sign in.</div>
       </div>
       <div class="field">
         <label>Email <span style="font-size:11px;color:var(--hint);font-weight:400">(optional — for password recovery)</span></label>
@@ -685,6 +697,22 @@ async function checkSharePage(){
 let authMode='login'
 function selectRole(r){selectedSignupRole=r;document.querySelectorAll('#signup-fields .role-opt').forEach(el=>el.classList.remove('selected'));document.getElementById('role-'+r)?.classList.add('selected')}
 function sanitizeUsername(el){el.value=el.value.toLowerCase().replace(/[^a-z0-9_]/g,'')}
+function autoGenerateUsername(){
+  const fn=(document.getElementById('inp-fname')?.value||'').trim().toLowerCase().replace(/[^a-z0-9]/g,'')
+  const ln=(document.getElementById('inp-lname')?.value||'').trim().toLowerCase().replace(/[^a-z0-9]/g,'')
+  const preview=document.getElementById('username-preview')
+  if(!preview)return
+  if(fn&&ln){
+    preview.textContent=fn+'.'+ln
+    preview.style.color='var(--text)'
+  }else if(fn){
+    preview.textContent=fn+'.[last name]'
+    preview.style.color='var(--hint)'
+  }else{
+    preview.textContent='Enter your name above…'
+    preview.style.color='var(--hint)'
+  }
+}
 function switchTab(m){
   authMode=m
   document.querySelectorAll('.auth-tab').forEach((t,i)=>t.classList.toggle('active',(i===0&&m==='login')||(i===1&&m==='signup')))
@@ -743,23 +771,30 @@ async function doAuth(){
   btn.disabled=true;setMsg('','')
 
   if(authMode==='signup'){
-    const name=document.getElementById('inp-name').value.trim()||'Rider'
-    const username=document.getElementById('inp-username').value.trim().toLowerCase()
+    const fname=document.getElementById('inp-fname')?.value?.trim()
+    const lname=document.getElementById('inp-lname')?.value?.trim()
+    if(!fname||!lname){setMsg('Please enter your first and last name','err');btn.disabled=false;return}
+    const name=fname+' '+lname
+    const baseUsername=(fname+'.'+lname).toLowerCase().replace(/[^a-z0-9.]/g,'')
     const realEmail=document.getElementById('inp-email-signup').value.trim()
-    if(!username){setMsg('Please choose a username','err');btn.disabled=false;return}
-    if(username.length<3){setMsg('Username must be at least 3 characters','err');btn.disabled=false;return}
     // Consent checks
     if(!document.getElementById('consent-age')?.checked){setMsg('Please confirm your age or parental consent','err');btn.disabled=false;return}
     if(!document.getElementById('consent-terms')?.checked){setMsg('Please agree to the Privacy Policy and Terms of Service','err');btn.disabled=false;return}
-    // Check username not already taken
-    const{data:existing}=await db.from('profiles').select('id').eq('username',username).maybeSingle()
-    if(existing){setMsg('That username is already taken','err');btn.disabled=false;return}
-    // Use real email if provided, otherwise generate an internal one
-    const authEmail=realEmail||`${username}@stillwater.local`
-    const{data,error}=await db.auth.signUp({email:authEmail,password:pass})
+    // Find a unique username (append number if taken)
+    let username=baseUsername
+    let attempt=0
+    while(true){
+      const{data:taken}=await db.from('profiles').select('id').eq('username',username).maybeSingle()
+      if(!taken)break
+      attempt++;username=baseUsername+attempt
+    }
+    // Always use a UUID-based internal email to avoid conflicts with deleted accounts
+    const internalEmail=realEmail||(`u-${crypto.randomUUID().slice(0,8)}@stillwater.local`)
+    const{data,error}=await db.auth.signUp({email:internalEmail,password:pass})
     if(error){
-      // If internal email conflicts (rare), surface a friendly message
-      const msg=error.message.includes('already registered')?'Username already in use — try signing in instead':error.message
+      const msg=error.message.includes('already registered')
+        ?'This email is already registered — try signing in instead'
+        :error.message
       setMsg(msg,'err');btn.disabled=false;return
     }
     if(data?.user?.id){
@@ -768,9 +803,8 @@ async function doAuth(){
     if(data.session){
       await loadUser(data.user)
     }else{
-      setMsg(realEmail?'Account created! Check your email to confirm, then sign in.':'Account created! You can now sign in with your username.','ok')
+      setMsg(realEmail?'Account created! Check your email to confirm, then sign in.':'Account created! Sign in with username: '+username,'ok')
       btn.disabled=false
-      // Auto-switch to login and pre-fill username
       switchTab('login')
       document.getElementById('inp-login').value=username
     }
@@ -885,7 +919,7 @@ async function loadSkillNotes(){const{data}=await db.from('skill_notes').select(
 async function loadQuizResults(){const{data}=await db.from('quiz_results').select('*').eq('user_id',currentUser.id);quizResults={};if(data)data.forEach(r=>{quizResults[r.quiz_id]=r})}
 async function loadCoachQueue(){const{data}=await db.from('approvals').select('*').eq('status','pending').order('created_at',{ascending:true});if(!data){pendingCoach=[];return};const ids=[...new Set(data.map(r=>r.rider_id))];const{data:pData}=await db.from('profiles').select('id,name,avatar_url').in('id',ids);const pm={};if(pData)pData.forEach(p=>pm[p.id]=p);pendingCoach=data.map(r=>({...r,profiles:pm[r.rider_id]||null}))}
 async function loadLeaderboard(){const{data}=await db.from('leaderboard').select('*').order('skills_done',{ascending:false});lbData=data||[]}
-async function loadAllUsers(){const{data}=await db.from('profiles').select('*').order('name');allUsers=data||[]}
+async function loadAllUsers(){const{data}=await db.from('profiles').select('*').order('name');allUsers=(data||[]).filter(u=>!u.deleted)}
 
 let linkedChildren=[]
 async function loadLinkedChildren(){
@@ -2700,7 +2734,17 @@ async function renderAdminView(c){
   if(adminSubView==='platform'&&sa){
     await renderSuperAdminPlatform(c,subTabs)
   }else if(adminSubView==='users'){
-    const rows=allUsers.map(u=>'<div class="user-row">'+avatarHtml(u.avatar_url,u.name,22)+'<span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(u.name||u.id.slice(0,8))+'</span>'+'<select class="role-select" data-uid="'+u.id+'" onchange="updateRole(this.dataset.uid,this.value)">'+rowRoleOpts(u)+'</select>'+'<button class="btn-reset" data-uid="'+u.id+'" onclick="resetProgress(this.dataset.uid)">Reset</button>'+(sa?'<button data-uid="'+u.id+'" data-uname="'+(u.name||'').replace(/"/g,'&quot;')+'" onclick="deleteUser(this.dataset.uid,this.dataset.uname)" style="padding:4px 8px;border-radius:6px;border:0.5px solid #D85A30;background:none;color:#D85A30;font-size:11px;cursor:pointer">Delete</button>':'')+'</div>').join('')
+    const rows=allUsers.map(function(u){
+    return '<div class="user-row">'
+      +avatarHtml(u.avatar_url,u.name,32)
+      +'<div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(u.name||u.id.slice(0,8))+'</div>'
+      +'<div style="font-size:10px;color:var(--muted)">'+(u.username||u.email||'')+'</div></div>'
+      +'<select class="role-select" data-uid="'+u.id+'" onchange="updateRole(this.dataset.uid,this.value)" style="flex-shrink:0;max-width:120px">'+rowRoleOpts(u)+'</select>'
+      +(sa
+        ?'<button data-uid="'+u.id+'" data-uname="'+(u.name||'').replace(/"/g,'&quot;')+'" onclick="deleteUser(this.dataset.uid,this.dataset.uname)" style="flex-shrink:0;padding:5px 10px;border-radius:6px;border:0.5px solid #D85A30;background:none;color:#D85A30;font-size:11px;cursor:pointer;white-space:nowrap">Delete</button>'
+        :'')
+      +'</div>'
+  }).join('')
     c.innerHTML=`<div class="page-title">${sa?'Platform Admin':'Club Admin'}</div><div class="page-sub">${sa?'Platform-wide management':'Manage your club, users and content'}</div>
     <div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap">${subTabs}</div>
     <div class="admin-grid" style="margin-bottom:1rem"><div class="admin-stat"><div class="admin-stat-label">Total users</div><div class="admin-stat-val">${allUsers.length}</div></div><div class="admin-stat"><div class="admin-stat-label">Riders</div><div class="admin-stat-val">${riders}</div></div><div class="admin-stat"><div class="admin-stat-label">Coaches</div><div class="admin-stat-val">${coaches}</div></div><div class="admin-stat"><div class="admin-stat-label">Parents</div><div class="admin-stat-val">${parents}</div></div></div>
@@ -2722,7 +2766,24 @@ async function renderSuperAdminPlatform(c,subTabs){
   const{data:allClubsData}=await db.from('clubs').select('id,name,invite_code').order('name')
   const totalClubs=(allClubsData||[]).length
   const superAdmins=allUsers.filter(u=>u.role==='super_admin')
-  const makeRow=(u)=>'<div class="user-row">'+avatarHtml(u.avatar_url,u.name,22)+'<div style="overflow:hidden"><div style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:13px">'+(u.name||u.id.slice(0,8))+'</div><div style="font-size:10px;color:var(--muted)">'+(u.email||u.username||'')+'</div></div>'+'<select class="role-select" data-uid="'+u.id+'" onchange="updateRole(this.dataset.uid,this.value)"><option value="rider" '+(u.role==='rider'?'selected':'')+'>Rider</option><option value="parent" '+(u.role==='parent'?'selected':'')+'>Parent</option><option value="coach" '+(u.role==='coach'?'selected':'')+'>Coach</option><option value="admin" '+(u.role==='admin'?'selected':'')+'>Club Admin</option><option value="super_admin" '+(u.role==='super_admin'?'selected':'')+'>Super Admin</option></select>'+'<button class="btn-reset" data-uid="'+u.id+'" onclick="resetProgress(this.dataset.uid)">Reset</button>'+'<button data-uid="'+u.id+'" data-uname="'+(u.name||'').replace(/"/g,'&quot;')+'" onclick="deleteUser(this.dataset.uid,this.dataset.uname)" style="padding:4px 8px;border-radius:6px;border:0.5px solid #D85A30;background:none;color:#D85A30;font-size:11px;cursor:pointer;white-space:nowrap">Delete</button>'+'</div>'
+  const makeRow=function(u){
+    return '<div class="user-row">'
+      +avatarHtml(u.avatar_url,u.name,32)
+      +'<div style="flex:1;min-width:0">'
+      +'<div style="font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+(u.name||u.id.slice(0,8))+'</div>'
+      +'<div style="font-size:10px;color:var(--muted)">'+(u.email||u.username||'—')+'</div>'
+      +'<div style="font-size:10px;color:var(--muted);text-transform:capitalize">'+(u.club_id?'Club: '+u.club_id.slice(0,8):'No club')+'</div>'
+      +'</div>'
+      +'<select class="role-select" data-uid="'+u.id+'" onchange="updateRole(this.dataset.uid,this.value)" style="flex-shrink:0;max-width:115px">'
+      +'<option value="rider" '+(u.role==='rider'?'selected':'')+'>Rider</option>'
+      +'<option value="parent" '+(u.role==='parent'?'selected':'')+'>Parent</option>'
+      +'<option value="coach" '+(u.role==='coach'?'selected':'')+'>Coach</option>'
+      +'<option value="admin" '+(u.role==='admin'?'selected':'')+'>Club Admin</option>'
+      +'<option value="super_admin" '+(u.role==='super_admin'?'selected':'')+'>Super Admin</option>'
+      +'</select>'
+      +'<button data-uid="'+u.id+'" data-uname="'+(u.name||'').replace(/"/g,'&quot;')+'" onclick="deleteUser(this.dataset.uid,this.dataset.uname)" style="flex-shrink:0;padding:5px 10px;border-radius:6px;border:0.5px solid #D85A30;background:none;color:#D85A30;font-size:11px;cursor:pointer;white-space:nowrap">Delete</button>'
+      +'</div>'
+  }
   const userRows=allUsers.slice(0,50).map(makeRow).join('')
   c.innerHTML=`<div class="page-title">⚡ Platform Admin</div><div class="page-sub">Full platform visibility — all clubs, all users</div>
   <div style="display:flex;gap:6px;margin-bottom:1rem;flex-wrap:wrap">${subTabs}</div>
@@ -2868,9 +2929,8 @@ async function adminCreateClub(){
 
 async function deleteUser(userId,userName){
   if(!isSuperAdmin()){showToast('Super admin only');return}
-  if(!confirm('Permanently delete '+userName+'? This cannot be undone.'))return
-  // Delete auth user via Supabase admin (requires service role - use edge function or do profile only)
-  // First remove profile data
+  if(!confirm('Permanently delete '+userName+'?\n\nNote: if this user has a Supabase Auth account, they may reappear until the auth account is also deleted in your Supabase dashboard under Authentication → Users.'))return
+  // Clear all related data first
   await db.from('approvals').delete().eq('rider_id',userId)
   await db.from('skill_notes').delete().eq('rider_id',userId)
   await db.from('quiz_results').delete().eq('user_id',userId)
@@ -2879,10 +2939,12 @@ async function deleteUser(userId,userName){
   await db.from('club_coaches').delete().eq('coach_id',userId)
   await db.from('parent_child_links').delete().or('parent_id.eq.'+userId+',child_id.eq.'+userId)
   await db.from('sessions').delete().eq('user_id',userId)
-  const{error}=await db.from('profiles').delete().eq('id',userId)
-  if(error){showToast('Delete failed: '+error.message);return}
+  // Disable the profile so auth trigger can't recreate it
+  await db.from('profiles').update({deleted:true,name:'[Deleted]',username:null,club_id:null,class_id:null}).eq('id',userId)
+  // Attempt hard delete (will fail if auth trigger recreates — OK, update above handles it)
+  await db.from('profiles').delete().eq('id',userId)
   allUsers=allUsers.filter(u=>u.id!==userId)
-  showToast(userName+' deleted')
+  showToast(userName+' removed — also delete from Supabase Auth if needed')
   renderAdminView(document.getElementById('main-content'))
 }
 
