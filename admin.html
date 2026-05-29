@@ -156,7 +156,8 @@ tr:hover td{background:rgba(0,200,212,0.03)}
 <div id="login-screen">
   <div class="login-box">
     <h1>Stillwater Admin</h1>
-    <p>Coach dashboard — restricted access</p>
+   <p>Coach dashboard — restricted access</p>
+    <input type="email" id="email-input" placeholder="Email" onkeydown="if(event.key==='Enter')doLogin()"/>
     <input type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/>
     <button onclick="doLogin()">Sign In</button>
     <div class="login-error" id="login-error"></div>
@@ -518,7 +519,7 @@ tr:hover td{background:rgba(0,200,212,0.03)}
 // ── CONFIG ────────────────────────────────────────────────
 const SUPABASE_URL = 'https://isbhflfmugfeqwhhqlkh.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzYmhmbGZtdWdmZXF3aGhxbGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDE0MzEsImV4cCI6MjA5MzA3NzQzMX0.TKMd_rSmJvoLiL5_1pFw9KqYHNne-eEdnGNR4zgZwFk';
-const ADMIN_PASSWORD = 'Duke1246';
+
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
@@ -620,23 +621,37 @@ async function removeHoliday(id){
 }
 
 // ── AUTH ──────────────────────────────────────────────────
-function doLogin(){
-  const pw = document.getElementById('pw-input').value;
-  if(pw === ADMIN_PASSWORD){
-    document.getElementById('login-screen').style.display = 'none';
-    document.getElementById('app').style.display = 'block';
-    document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-CA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
-    loadAll();
-  } else {
-    document.getElementById('login-error').textContent = 'Incorrect password.';
-    setTimeout(()=>document.getElementById('login-error').textContent='', 2000);
+// ── AUTH ──────────────────────────────────────────────────
+async function doLogin(){
+  const email = document.getElementById('email-input').value.trim();
+  const pw    = document.getElementById('pw-input').value;
+  const err   = document.getElementById('login-error');
+  err.textContent = '';
+  const { error } = await db.auth.signInWithPassword({ email, password: pw });
+  if(error){
+    err.textContent = 'Incorrect email or password.';
+    setTimeout(()=>err.textContent='', 3000);
+    return;
   }
+  showApp();
 }
-function doLogout(){
+function showApp(){
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-CA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  loadAll();
+}
+async function doLogout(){
+  await db.auth.signOut();
   document.getElementById('app').style.display='none';
   document.getElementById('login-screen').style.display='flex';
   document.getElementById('pw-input').value='';
+  document.getElementById('email-input').value='';
 }
+// Stay logged in across refreshes
+(async function(){
+  try{ const { data:{ session } } = await db.auth.getSession(); if(session) showApp(); }catch(e){}
+})();
 
 // ── DATA LOAD ─────────────────────────────────────────────
 async function loadAll(){
