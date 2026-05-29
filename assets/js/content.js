@@ -215,7 +215,7 @@ const CONTENT = {
   equip_hero_sub:       "Top Brands: Ronix, Phase 5, O'brien, Connelly, Barefoot International, Big Air and more... ",
   equip_boat_eyebrow:  "The Boat",
   equip_boat_h2:       "Sanger <em>.</em>",
-  equip_boat_p1:       "Sanger boats are one of the most respected manufacturers in competitive water sports — Specifically chosen for its hull design, wake shape, and performance at both ski and wakeboard speeds. This isn't a recreational runabout. It's a purpose-built all-watersports platform. The open bow design allows up to 8 passengers comfortably!",
+  equip_boat_p1:       "Sanger boats are one of the most respected manufacturers in competitive water sports — Specifically chosen for its hull design, wake shape, and performance at both ski and wakeboard speeds. This isn't a recreational runabout. It's a purpose-built all-watersports platform. The design allows up to 8 passengers comfortably!",
   equip_boat_p2:       "The hull design means the boat performs across every discipline — clean, flat wakes for slalom and barefoot, configurable wave for wakeboard and wakesurf, and stable, predictable handling that lets the driver focus entirely on the rider.",
   equip_feat1_title:   "Perfect Pass",
   equip_feat1_text:    "GPS-based speed control system used in sanctioned competition. Locks speed precisely regardless of rider weight, rope pull, or water conditions. Essential for serious training and beginner learning.",
