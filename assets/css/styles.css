@@ -191,7 +191,7 @@ nav{
 .btn-yellow:hover{opacity:.88}
 
 /* ── SHARED SECTION ── */
-.s{padding:58px 48px;max-width:1200px;margin:0 auto}
+.s{padding:30px 48px;max-width:1200px;margin:0 auto}
 .eyebrow{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--pink);margin-bottom:16px}
 .big-title{font-size:clamp(32px,4.5vw,64px);font-weight:800;line-height:1.05;letter-spacing:-.03em;color:var(--text)}
 .big-title em{font-style:italic;color:var(--cyan)}
@@ -438,7 +438,7 @@ footer{background:var(--cyan);border-top:2px solid var(--pink);padding:48px 48px
   .book-layout{overflow:hidden}
 
   /* SECTIONS */
-  .s{padding:56px 20px}
+  .s{padding:30px 20px}
   .book-section{padding:56px 20px}
   .app-section{padding:64px 20px}
   .highlight-band{padding:40px 20px}
@@ -498,7 +498,7 @@ footer{background:var(--cyan);border-top:2px solid var(--pink);padding:48px 48px
   .hero-stats-mini{display:none}
 
   /* SECTIONS */
-  .s{padding:48px 16px}
+  .s{padding:24px 16px}
   .book-section,.app-section,.highlight-band{padding-left:16px;padding-right:16px}
   footer{padding:32px 16px 24px}
 
