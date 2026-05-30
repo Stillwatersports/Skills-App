@@ -655,7 +655,7 @@ async function loadBookedDates(){
   const start=new Date(calYear,calMonth,1).toISOString().split('T')[0];
   const end=new Date(calYear,calMonth+1,0).toISOString().split('T')[0];
   if(!db){renderCal();return}
-  const{data:bk}=await db.from('bookings').select('date,slot,status').gte('date',start).lte('date',end).in('status',['new','confirmed','deposit_paid']);
+  const{data:bk}=await db.rpc('get_calendar',{p_start:start,p_end:end});
   const{data:av}=await db.from('availability').select('date,slot,is_blocked,holiday_label,location_label,location_key').gte('date',start).lte('date',end);
   bookedDates={};blockedSlots={};holidayDates={};
 
@@ -853,25 +853,18 @@ async function submitBooking(){
     ? [requestedDate]
     : (selectedDates.length ? selectedDates.map(d=>d.toISOString().split('T')[0]) : [requestedDate]);
 
-  // Write to Supabase
+// Write to Supabase via secure function (no direct customer-data access)
   if(db){
     try{
-      const{data:bk}=await db.from('bookings').insert({
-        date:requestedDate,
-        slot:isDropin?'dropin':(selectedSlots[0]||''),
-        package:pkgLabel,
-        location,
-        sport:sport||null,
-        notes:(notes||'')+(allDates.length>1?'\nAll dates: '+allDates.join(', '):''),
-        status:'new',
-        raw_request:{name,email,phone,group,level,selectedSlots,allDates}
-      }).select().single();
-      // Try to find or create client
-      if(bk){
-        let{data:cl}=await db.from('clients').select('id').eq('email',email).single();
-        if(!cl&&email){ const{data}=await db.from('clients').insert({name,email,phone,location}).select().single(); cl=data; }
-        if(cl) await db.from('bookings').update({client_id:cl.id}).eq('id',bk.id);
-      }
+      await db.rpc('submit_booking', { p_payload: {
+        name, email, phone, location,
+        date: requestedDate,
+        slot: isDropin ? 'dropin' : (selectedSlots[0]||''),
+        package: pkgLabel,
+        sport: sport||null,
+        notes: (notes||'') + (allDates.length>1 ? '\nAll dates: '+allDates.join(', ') : ''),
+        raw_request: { name, email, phone, group, level, selectedSlots, allDates }
+      }});
     }catch(e){}
   }
 
