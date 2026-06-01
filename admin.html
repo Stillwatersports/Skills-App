@@ -5,8 +5,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Stillwater Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet"/><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -215,19 +214,53 @@ tr:hover td{background:rgba(0,200,212,.03)}
     </div>
   </div>
 
-  <div class="tabs">
-    <div class="tab active" onclick="showTab('dashboard')">Dashboard</div>
-    <div class="tab" onclick="showTab('calendar')">Calendar</div>
-    <div class="tab" onclick="showTab('bookings')">Bookings <span class="tab-badge" id="new-badge">0</span></div>
-    <div class="tab" onclick="showTab('clients')">Clients</div>
-    <div class="tab" onclick="showTab('emails')">Emails</div>
-    <div class="tab" onclick="showTab('promo')">Promo Banner</div>
-  </div>
+<div class="tabs">
+  <div class="tab active" onclick="showTab('tasks')">Dashboard</div>
+  <div class="tab" onclick="showTab('dashboard')">Sports Dash</div>
+  <div class="tab" onclick="showTab('calendar')">Calendar</div>
+  <div class="tab" onclick="showTab('bookings')">Bookings <span class="tab-badge" id="new-badge">0</span></div>
+  <div class="tab" onclick="showTab('clients')">Clients</div>
+  <div class="tab" onclick="showTab('emails')">Emails</div>
+  <div class="tab" onclick="showTab('promo')">Promo Banner</div>
+</div>
 
   <div class="content">
+<!-- TASKS DASHBOARD (default) -->
+<div class="panel active" id="panel-tasks">
+  <div id="tasks-tagline">Pick one thing and start — momentum beats motivation.</div>
 
+  <div class="sec-title">Today's Top 3</div>
+  <div class="top3" id="tasks-top3"></div>
+
+  <div class="sec-title">Where You Stand</div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num" id="t-stat-open">0</div><div class="stat-label">Open tasks</div></div>
+    <div class="stat-card"><div class="stat-num" id="t-stat-done">0</div><div class="stat-label">Done this week</div></div>
+    <div class="stat-card"><div class="stat-num" id="t-stat-book">0</div><div class="stat-label">Bookings left</div></div>
+    <div class="stat-card"><div class="stat-num" id="t-stat-aware">0</div><div class="stat-label">Awareness left</div></div>
+  </div>
+
+  <div class="sec-title">The Backlog</div>
+  <div class="task-cols">
+    <div class="task-col bookings"><h3>Bookings</h3><div class="count">Fill slots this season</div><div id="tcol-bookings"></div></div>
+    <div class="task-col awareness"><h3>Awareness</h3><div class="count">Grow social</div><div id="tcol-awareness"></div></div>
+    <div class="task-col later"><h3>Later</h3><div class="count">Matters, not now</div><div id="tcol-later"></div></div>
+  </div>
+
+  <div class="card">
+    <div class="add-task">
+      <input id="new-task-input" placeholder="Add a task..." onkeydown="if(event.key==='Enter')addTask()"/>
+      <select id="new-task-stage" style="padding:11px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans)">
+        <option value="bookings">Bookings</option>
+        <option value="awareness">Awareness</option>
+        <option value="later" selected>Later</option>
+      </select>
+      <button class="btn btn-primary" onclick="addTask()">Add</button>
+    </div>
+  </div>
+</div>
     <!-- DASHBOARD -->
-    <div class="panel active" id="panel-dashboard">
+    <div class="panel" id="panel-dashboard">
       <div class="stats-row">
         <div class="stat-card"><div class="stat-num" id="stat-new">—</div><div class="stat-label">New Requests</div></div>
         <div class="stat-card"><div class="stat-num" id="stat-confirmed">—</div><div class="stat-label">Confirmed</div></div>
@@ -675,12 +708,14 @@ async function doLogin(){
     return;
   }
   showApp();
+  
 }
 function showApp(){
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-CA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   loadAll();
+    loadTasks();
 }
 async function doLogout(){
   await db.auth.signOut();
@@ -1087,8 +1122,11 @@ function composeEmail(templateId){
     </div>`;
 }
 function openEmailForBooking(bookingId){
-  showTab('emails');
-  document.querySelector('.tab:nth-child(5)').click();
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector('.tabs .tab[onclick*="emails"]').classList.add('active');
+  document.getElementById('panel-emails').classList.add('active');
+  activeTab = 'emails';
 }
 function editTemplate(id){
   editingTemplateId=id;
@@ -1198,6 +1236,74 @@ function updatePromoPreview(){
 }
 // ── /PROMO BANNER MANAGEMENT ───────────────────────────────────────────
 
+</script>
+  <script>
+// ===== TASKS DASHBOARD =====
+let opsTasks = [];
+const STAGE_RANK  = { bookings:0, awareness:1, later:2 };
+const IMPACT_RANK = { high:0, med:1, low:2 };
+
+async function loadTasks(){
+  const { data, error } = await db.from('ops_tasks').select('*').order('sort_order');
+  if(error){ console.warn('tasks load failed', error); return; }
+  opsTasks = data || [];
+  renderTasks();
+}
+
+function renderTasks(){
+  const open = opsTasks.filter(t => t.status !== 'done');
+  const ranked = [...open].sort((a,b) =>
+    (STAGE_RANK[a.stage] ?? 9) - (STAGE_RANK[b.stage] ?? 9) ||
+    (IMPACT_RANK[a.impact] ?? 9) - (IMPACT_RANK[b.impact] ?? 9) ||
+    a.sort_order - b.sort_order
+  );
+  const labels = ['Start here','Needle-mover',"Don't skip this"];
+  const top3 = ranked.slice(0,3);
+  document.getElementById('tasks-top3').innerHTML = top3.length
+    ? top3.map((t,i)=>`<div class="top3-card"><div class="lbl">${labels[i]||'Focus'}</div><h4>${esc(t.title)}</h4><div>${pill(t.impact)} <span class="task-pill pill-low">${esc(t.effort||'')}</span></div></div>`).join('')
+    : '<div class="top3-card"><h4>All clear — add a task below 🎉</h4></div>';
+
+  const weekAgo = Date.now() - 7*864e5;
+  const doneWeek = opsTasks.filter(t => t.status==='done' && t.done_at && new Date(t.done_at).getTime() >= weekAgo).length;
+  document.getElementById('t-stat-open').textContent  = open.length;
+  document.getElementById('t-stat-done').textContent  = doneWeek;
+  document.getElementById('t-stat-book').textContent  = open.filter(t=>t.stage==='bookings').length;
+  document.getElementById('t-stat-aware').textContent = open.filter(t=>t.stage==='awareness').length;
+
+  ['bookings','awareness','later'].forEach(renderTaskCol);
+}
+
+function renderTaskCol(stage){
+  const el = document.getElementById('tcol-'+stage);
+  if(!el) return;
+  const rows = opsTasks.filter(t => t.stage === stage);
+  el.innerHTML = rows.length
+    ? rows.map(t=>`<div class="task-row${t.status==='done'?' done':''}"><input type="checkbox" ${t.status==='done'?'checked':''} onchange="toggleTask('${t.id}',this.checked)"/><span class="task-title">${esc(t.title)}</span>${pill(t.impact)}</div>`).join('')
+    : '<div style="font-size:13px;color:var(--hint)">Nothing here.</div>';
+}
+
+function pill(impact){
+  const c = impact==='high' ? 'pill-high' : impact==='low' ? 'pill-low' : 'pill-med';
+  return `<span class="task-pill ${c}">${impact||'med'}</span>`;
+}
+function esc(s){ return (s||'').replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+
+async function toggleTask(id, done){
+  await db.from('ops_tasks').update({ status: done?'done':'open', done_at: done?new Date().toISOString():null }).eq('id', id);
+  const t = opsTasks.find(x => x.id === id);
+  if(t){ t.status = done?'done':'open'; t.done_at = done?new Date().toISOString():null; }
+  renderTasks();
+  if(typeof toast === 'function') toast(done ? 'Nice — done ✓' : 'Reopened');
+}
+
+async function addTask(){
+  const inp = document.getElementById('new-task-input');
+  const title = inp.value.trim();
+  if(!title) return;
+  const stage = document.getElementById('new-task-stage').value;
+  const { data } = await db.from('ops_tasks').insert({ title, stage, impact:'med', effort:'medium', sort_order:999 }).select().single();
+  if(data){ opsTasks.push(data); inp.value=''; renderTasks(); if(typeof toast==='function') toast('Task added'); }
+}
 </script>
 </body>
 </html>
