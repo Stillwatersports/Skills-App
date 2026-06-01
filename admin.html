@@ -228,6 +228,13 @@ tr:hover td{background:rgba(0,200,212,.03)}
 <!-- TASKS DASHBOARD (default) -->
 <div class="panel active" id="panel-tasks">
   <div id="tasks-tagline">Pick one thing and start — momentum beats motivation.</div>
+  <div class="card" id="briefing-card" style="display:none;margin-bottom:24px;border-left:5px solid var(--gold)">
+  <div class="card-header" style="margin-bottom:12px">
+    <div class="card-title">☀️ Today's Briefing</div>
+    <span id="briefing-time" style="font-size:12px;color:var(--hint)"></span>
+  </div>
+  <pre id="briefing-content" style="white-space:pre-wrap;font-family:var(--sans);font-size:14px;line-height:1.8;color:var(--dark)"></pre>
+</div>
 
   <div class="sec-title">Today's Top 3</div>
   <div class="top3" id="tasks-top3"></div>
@@ -716,6 +723,7 @@ function showApp(){
   document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-CA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
   loadAll();
     loadTasks();
+  loadBriefing();
 }
 async function doLogout(){
   await db.auth.signOut();
@@ -1304,6 +1312,21 @@ async function addTask(){
   const { data } = await db.from('ops_tasks').insert({ title, stage, impact:'med', effort:'medium', sort_order:999 }).select().single();
   if(data){ opsTasks.push(data); inp.value=''; renderTasks(); if(typeof toast==='function') toast('Task added'); }
 }
+
+async function loadBriefing(){
+  const today = new Date().toISOString().split('T')[0];
+  const { data } = await db.from('ops_briefing')
+    .select('content,updated_at').eq('date', today).single();
+  const card = document.getElementById('briefing-card');
+  if(!card) return;
+  if(data?.content){
+    document.getElementById('briefing-content').textContent = data.content;
+    document.getElementById('briefing-time').textContent =
+      'Cowork · ' + new Date(data.updated_at).toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'});
+    card.style.display = 'block';
+  }
+}
+</script>
 </script>
 </body>
 </html>
