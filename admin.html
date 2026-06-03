@@ -219,6 +219,7 @@ tr:hover td{background:rgba(0,200,212,.03)}
   <div class="tab" onclick="showTab('dashboard')">Sports Dash</div>
   <div class="tab" onclick="showTab('calendar')">Calendar</div>
   <div class="tab" onclick="showTab('bookings')">Bookings <span class="tab-badge" id="new-badge">0</span></div>
+  <div class="tab" onclick="showTab('leads')">Leads <span class="tab-badge" id="leads-badge">0</span></div>
   <div class="tab" onclick="showTab('clients')">Clients</div>
   <div class="tab" onclick="showTab('emails')">Emails</div>
   <div class="tab" onclick="showTab('promo')">Promo Banner</div>
@@ -342,6 +343,18 @@ tr:hover td{background:rgba(0,200,212,.03)}
         <button class="btn btn-primary" onclick="openAddClient()">+ New Client</button>
       </div>
       <div class="client-grid" id="clients-grid"></div>
+    </div>
+
+    <!-- LEADS -->
+    <div class="panel" id="panel-leads">
+      <div class="bookings-toolbar">
+        <input type="text" id="search-leads" placeholder="Search leads by name or email..." oninput="filterLeads()"/>
+        <button class="btn btn-primary" onclick="openAddLead()">+ New Lead</button>
+      </div>
+      <div class="card" style="padding:0">
+        <table><thead><tr><th>Name</th><th>Contact</th><th>Sport</th><th>Inquiry</th><th>Status</th><th>Source</th><th>Actions</th></tr></thead>
+        <tbody id="leads-table"></tbody></table>
+      </div>
     </div>
 
     <!-- EMAILS -->
@@ -521,9 +534,12 @@ tr:hover td{background:rgba(0,200,212,.03)}
     <div class="minor-warning" id="minor-warning">⚠️ This class includes minors under 18 — ensure waivers are completed and parent/guardian is confirmed present on shore.</div>
     <button class="btn btn-ghost btn-sm" onclick="addParticipant()" style="margin-bottom:16px">+ Add Participant</button>
 
-    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px">
-      <button class="btn btn-ghost" onclick="closeModal('booking-modal')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveBooking()">Save Booking</button>
+    <div style="display:flex;gap:12px;justify-content:space-between;margin-top:24px">
+      <button class="btn btn-danger" id="booking-delete-btn" style="display:none" onclick="deleteBooking(editingBookingId)">Delete Booking</button>
+      <div style="display:flex;gap:12px;margin-left:auto">
+        <button class="btn btn-ghost" onclick="closeModal('booking-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveBooking()">Save Booking</button>
+      </div>
     </div>
   </div>
 </div>
@@ -544,9 +560,45 @@ tr:hover td{background:rgba(0,200,212,.03)}
     <div class="form-group"><label>Notes</label><textarea id="cl-notes"></textarea></div>
     <div class="section-label">Session History</div>
     <div id="cl-history" style="font-size:14px;color:var(--muted)">No sessions yet.</div>
-    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px">
-      <button class="btn btn-ghost" onclick="closeModal('client-modal')">Cancel</button>
-      <button class="btn btn-primary" onclick="saveClient()">Save Client</button>
+    <div style="display:flex;gap:12px;justify-content:space-between;margin-top:24px">
+      <button class="btn btn-danger" id="client-delete-btn" style="display:none" onclick="deleteClient(editingClientId)">Delete Client</button>
+      <div style="display:flex;gap:12px;margin-left:auto">
+        <button class="btn btn-ghost" onclick="closeModal('client-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveClient()">Save Client</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LEAD MODAL -->
+<div class="modal-overlay" id="lead-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('lead-modal')">✕</button>
+    <div class="modal-title" id="lead-modal-title">Lead</div>
+    <div class="form-row">
+      <div class="form-group"><label>Name *</label><input type="text" id="ld-name"/></div>
+      <div class="form-group"><label>Email</label><input type="email" id="ld-email"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Phone</label><input type="tel" id="ld-phone"/></div>
+      <div class="form-group"><label>Sport / Interest</label><input type="text" id="ld-sport" placeholder="Waterski, Wakeboard..."/></div>
+    </div>
+    <div class="form-group"><label>Status</label>
+      <select id="ld-status">
+        <option value="new">New</option>
+        <option value="contacted">Contacted</option>
+        <option value="archived">Archived</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Inquiry / Message</label><textarea id="ld-message" placeholder="What they reached out about..."></textarea></div>
+    <div class="form-group"><label>Notes</label><textarea id="ld-notes"></textarea></div>
+    <div style="display:flex;gap:12px;justify-content:space-between;margin-top:24px">
+      <button class="btn btn-danger" id="lead-delete-btn" style="display:none" onclick="deleteLead(editingLeadId)">Delete</button>
+      <div style="display:flex;gap:12px;margin-left:auto">
+        <button class="btn btn-pink" id="lead-convert-btn" style="display:none" onclick="convertLead(editingLeadId)">Convert to Client</button>
+        <button class="btn btn-ghost" onclick="closeModal('lead-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveLead()">Save Lead</button>
+      </div>
     </div>
   </div>
 </div>
@@ -605,9 +657,9 @@ const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 
 // ── STATE ─────────────────────────────────────────────────
-let bookings = [], clients = [], availability = [], templates = [], participants = {};
+let bookings = [], clients = [], availability = [], templates = [], participants = {}, leads = [];
 let calYear = new Date().getFullYear(), calMonth = new Date().getMonth();
-let editingBookingId = null, editingClientId = null, editingTemplateId = null;
+let editingBookingId = null, editingClientId = null, editingTemplateId = null, editingLeadId = null;
 let activeTab = 'dashboard';
 
 
@@ -739,12 +791,13 @@ async function doLogout(){
 
 // ── DATA LOAD ─────────────────────────────────────────────
 async function loadAll(){
-  await Promise.all([loadBookings(), loadClients(), loadAvailability(), loadTemplates(), loadHolidays(), loadPromo()]);
+  await Promise.all([loadBookings(), loadClients(), loadAvailability(), loadTemplates(), loadHolidays(), loadPromo(), loadLeads()]);
   renderDashboard();
   renderCalendar();
   renderBookingsTable();
   renderClients();
   renderTemplates();
+  renderLeads();
 }
 async function loadBookings(){
   const {data} = await db.from('bookings').select('*, clients(name,email,phone)').order('date');
@@ -904,9 +957,10 @@ function bookingRow(b, compact){
     <td style="font-size:13px">${b.location||'—'}</td>
     <td style="font-size:13px">${p.length} rider${p.length!==1?'s':''}${minors?` · <span style="color:var(--red)">${minors}⚠</span>`:''}${waivers?` · <span style="color:var(--orange)">${waivers} pending</span>`:p.length?' · ✓':''}</td>
     <td><span class="status-badge status-${b.status}">${b.status.replace('_',' ')}</span></td>
-    <td style="display:flex;gap:6px">
+    <td style="display:flex;gap:6px;flex-wrap:wrap">
       <button class="btn btn-primary btn-sm" onclick="openEditBooking('${b.id}')">Edit</button>
       <button class="btn btn-ghost btn-sm" onclick="openEmailForBooking('${b.id}')">Email</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteBooking('${b.id}')">Delete</button>
     </td>
   </tr>`;
 }
@@ -925,6 +979,7 @@ function openAddBooking(){
   clearBookingForm();
   populateClientSelect();
   document.getElementById('participants-list').innerHTML = '';
+  document.getElementById('booking-delete-btn').style.display = 'none';
   openModal('booking-modal');
 }
 function openEditBooking(id){
@@ -932,6 +987,7 @@ function openEditBooking(id){
   const b = bookings.find(x=>x.id===id);
   if(!b) return;
   document.getElementById('booking-modal-title').textContent = 'Edit Booking';
+  document.getElementById('booking-delete-btn').style.display = 'inline-block';
   populateClientSelect(b.client_id);
   document.getElementById('new-client-fields').style.display='none';
   document.getElementById('bk-date').value = b.date;
@@ -1036,6 +1092,16 @@ async function saveBooking(){
   await loadAll();
   toast('Booking saved ✓');
 }
+async function deleteBooking(id){
+  if(!id) return;
+  if(!confirm('Delete this booking? This also removes its participants and cannot be undone.')) return;
+  await db.from('participants').delete().eq('booking_id', id);
+  const { error } = await db.from('bookings').delete().eq('id', id);
+  if(error){ toast('Error deleting booking'); return; }
+  closeModal('booking-modal');
+  await loadAll();
+  toast('Booking deleted');
+}
 
 // ── CLIENTS ───────────────────────────────────────────────
 function renderClients(filter=''){
@@ -1058,12 +1124,14 @@ function openAddClient(){
   ['cl-name','cl-email','cl-phone','cl-location','cl-notes'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('cl-history').innerHTML='No sessions yet.';
   document.getElementById('client-modal-title').textContent='New Client';
+  document.getElementById('client-delete-btn').style.display='none';
   openModal('client-modal');
 }
 function openEditClient(id){
   editingClientId=id;
   const c=clients.find(x=>x.id===id); if(!c) return;
   document.getElementById('client-modal-title').textContent=c.name;
+  document.getElementById('client-delete-btn').style.display='inline-block';
   document.getElementById('cl-name').value=c.name||'';
   document.getElementById('cl-email').value=c.email||'';
   document.getElementById('cl-phone').value=c.phone||'';
@@ -1084,6 +1152,121 @@ async function saveClient(){
   await loadClients();
   renderClients();
   toast('Client saved ✓');
+}
+async function deleteClient(id){
+  if(!id) return;
+  const linked = bookings.filter(b=>b.client_id===id).length;
+  const msg = linked
+    ? `This client has ${linked} booking(s). Deleting will unlink those bookings (they remain, with no client attached). Continue?`
+    : 'Delete this client? This cannot be undone.';
+  if(!confirm(msg)) return;
+  if(linked){ await db.from('bookings').update({client_id:null}).eq('client_id', id); }
+  const { error } = await db.from('clients').delete().eq('id', id);
+  if(error){ toast('Error deleting client'); return; }
+  closeModal('client-modal');
+  await loadAll();
+  toast('Client deleted');
+}
+
+// ── LEADS ─────────────────────────────────────────────────
+async function loadLeads(){
+  const { data, error } = await db.from('leads').select('*').order('created_at',{ascending:false});
+  if(error){ console.warn('leads load failed', error); leads=[]; }
+  else leads = data || [];
+  const active = leads.filter(l=>l.status!=='converted'&&l.status!=='archived').length;
+  const badge = document.getElementById('leads-badge');
+  if(badge) badge.textContent = active;
+}
+function renderLeads(filter=''){
+  const tb = document.getElementById('leads-table');
+  if(!tb) return;
+  let list = leads.filter(l=>l.status!=='converted');
+  if(filter){
+    const f = filter.toLowerCase();
+    list = list.filter(l=>(l.name||'').toLowerCase().includes(f) || (l.email||'').toLowerCase().includes(f));
+  }
+  tb.innerHTML = list.length ? list.map(l=>`<tr>
+    <td><strong>${esc(l.name||'—')}</strong></td>
+    <td style="font-size:13px">${esc(l.email||'')}${l.phone?'<br>'+esc(l.phone):''}</td>
+    <td style="font-size:13px">${esc(l.sport||'—')}</td>
+    <td style="font-size:13px;max-width:260px">${esc((l.message||'').slice(0,140))}</td>
+    <td><span class="status-badge ${l.status==='new'?'status-new':l.status==='contacted'?'status-confirmed':'status-complete'}">${esc(l.status)}</span></td>
+    <td style="font-size:12px;color:var(--muted)">${esc(l.source||'')}</td>
+    <td style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn btn-primary btn-sm" onclick="openEditLead('${l.id}')">Edit</button>
+      <button class="btn btn-pink btn-sm" onclick="convertLead('${l.id}')">→ Client</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteLead('${l.id}')">Delete</button>
+    </td>
+  </tr>`).join('') : '<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:24px">No active leads. New booking inquiries land here automatically each morning.</td></tr>';
+}
+function filterLeads(){ renderLeads(document.getElementById('search-leads').value); }
+function openAddLead(){
+  editingLeadId = null;
+  ['ld-name','ld-email','ld-phone','ld-sport','ld-message','ld-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ld-status').value='new';
+  document.getElementById('lead-modal-title').textContent='New Lead';
+  document.getElementById('lead-delete-btn').style.display='none';
+  document.getElementById('lead-convert-btn').style.display='none';
+  openModal('lead-modal');
+}
+function openEditLead(id){
+  const l = leads.find(x=>x.id===id); if(!l) return;
+  editingLeadId = id;
+  document.getElementById('ld-name').value=l.name||'';
+  document.getElementById('ld-email').value=l.email||'';
+  document.getElementById('ld-phone').value=l.phone||'';
+  document.getElementById('ld-sport').value=l.sport||'';
+  document.getElementById('ld-message').value=l.message||'';
+  document.getElementById('ld-notes').value=l.notes||'';
+  document.getElementById('ld-status').value=l.status||'new';
+  document.getElementById('lead-modal-title').textContent='Edit Lead';
+  document.getElementById('lead-delete-btn').style.display='inline-block';
+  document.getElementById('lead-convert-btn').style.display='inline-block';
+  openModal('lead-modal');
+}
+async function saveLead(){
+  const data = {
+    name: document.getElementById('ld-name').value.trim(),
+    email: document.getElementById('ld-email').value.trim(),
+    phone: document.getElementById('ld-phone').value.trim(),
+    sport: document.getElementById('ld-sport').value.trim(),
+    message: document.getElementById('ld-message').value.trim(),
+    notes: document.getElementById('ld-notes').value.trim(),
+    status: document.getElementById('ld-status').value
+  };
+  if(!data.name){ toast('Lead name is required'); return; }
+  if(editingLeadId){ await db.from('leads').update(data).eq('id', editingLeadId); }
+  else { data.source='manual'; await db.from('leads').insert(data); }
+  closeModal('lead-modal');
+  await loadLeads(); renderLeads();
+  toast('Lead saved ✓');
+}
+async function deleteLead(id){
+  if(!id) return;
+  if(!confirm('Delete this lead? This cannot be undone.')) return;
+  await db.from('leads').delete().eq('id', id);
+  closeModal('lead-modal');
+  await loadLeads(); renderLeads();
+  toast('Lead deleted');
+}
+async function convertLead(id){
+  const l = leads.find(x=>x.id===id); if(!l) return;
+  if(!confirm(`Convert "${l.name}" into a client? They'll move from Leads to the Clients tab.`)) return;
+  let client = null;
+  if(l.email){
+    const { data:ex } = await db.from('clients').select('*').eq('email', l.email).maybeSingle();
+    if(ex) client = ex;
+  }
+  if(!client){
+    const { data, error } = await db.from('clients').insert({ name:l.name, email:l.email||null, phone:l.phone||null, notes:l.message||null }).select().single();
+    if(error){ toast('Error creating client'); return; }
+    client = data;
+  }
+  await db.from('leads').update({ status:'converted', converted_client_id: client.id }).eq('id', id);
+  closeModal('lead-modal');
+  await Promise.all([loadLeads(), loadClients()]);
+  renderLeads(); renderClients();
+  toast(`${l.name} is now a client ✓`);
 }
 
 // ── EMAILS ────────────────────────────────────────────────
@@ -1284,10 +1467,10 @@ function renderTasks(){
 function renderTaskCol(stage){
   const el = document.getElementById('tcol-'+stage);
   if(!el) return;
-  const rows = opsTasks.filter(t => t.stage === stage);
+  const rows = opsTasks.filter(t => t.stage === stage && t.status !== 'done');
   el.innerHTML = rows.length
-    ? rows.map(t=>`<div class="task-row${t.status==='done'?' done':''}"><input type="checkbox" ${t.status==='done'?'checked':''} onchange="toggleTask('${t.id}',this.checked)"/><span class="task-title">${esc(t.title)}</span>${pill(t.impact)}</div>`).join('')
-    : '<div style="font-size:13px;color:var(--hint)">Nothing here.</div>';
+    ? rows.map(t=>`<div class="task-row"><input type="checkbox" onchange="toggleTask('${t.id}',this.checked)"/><span class="task-title">${esc(t.title)}</span>${pill(t.impact)}</div>`).join('')
+    : '<div style="font-size:13px;color:var(--hint)">All clear — nothing open here.</div>';
 }
 
 function pill(impact){
@@ -1326,7 +1509,6 @@ async function loadBriefing(){
     card.style.display = 'block';
   }
 }
-</script>
 </script>
 </body>
 </html>
