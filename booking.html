@@ -120,8 +120,6 @@
 <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-9Z296M7ZLP');</script>
 </head>
 <body>
- 
-<!-- End of HubSpot Embed Code -->
 <div id="nav-placeholder"></div>
 <script src="./assets/js/nav.js"></script>
 
@@ -220,6 +218,11 @@
               <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px">Select Package</div>
               <div class="pkg-grid" id="pkg-grid-container"></div>
               <div id="slot-picker" style="margin-top:12px"></div>
+              <div style="margin-top:20px">
+                <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Promo Code</div>
+                <input type="text" id="b-promo" placeholder="Have a code? Enter it here" oninput="onPromoInput()" style="width:100%;max-width:280px;padding:11px 14px;border:1.5px solid rgba(0,200,212,0.25);border-radius:10px;font-size:14px;font-family:'Outfit',sans-serif;outline:none;text-transform:uppercase"/>
+                <div id="promo-feedback" style="font-size:12px;margin-top:8px;line-height:1.5"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -613,26 +616,71 @@ function getPkgPrice(pkgKey) {
   return prices[pkgKey] || 0;
 }
 
+// ── PROMO CODE ────────────────────────────────────────────
+let appliedPromo = null;
+let promoLookupTimer = null;
+
+function onPromoInput(){
+  const raw = (document.getElementById('b-promo').value || '').trim().toUpperCase();
+  clearTimeout(promoLookupTimer);
+  const fb = document.getElementById('promo-feedback');
+  if(!raw){ appliedPromo=null; if(fb) fb.textContent=''; updateSummary(); return; }
+  if(fb){ fb.textContent='Checking…'; fb.style.color='var(--muted)'; }
+  promoLookupTimer = setTimeout(()=>validatePromo(raw), 400);
+}
+async function validatePromo(code){
+  const fb = document.getElementById('promo-feedback');
+  if(!db){ appliedPromo=null; if(fb) fb.textContent=''; updateSummary(); return; }
+  try{
+    const { data, error } = await db.from('promo_codes').select('*').eq('code', code).maybeSingle();
+    if(error || !data){ appliedPromo=null; setPromoFeedback('That code isn’t valid.', false); updateSummary(); return; }
+    if(!data.active){ appliedPromo=null; setPromoFeedback('That code is no longer active.', false); updateSummary(); return; }
+    if(data.expires_at && new Date(data.expires_at) < new Date()){ appliedPromo=null; setPromoFeedback('That code has expired.', false); updateSummary(); return; }
+    appliedPromo = { code:data.code, discount_type:data.discount_type, discount_value:Number(data.discount_value) };
+    if(selectedPackage && selectedDay){ updateSummary(); }
+    else { setPromoFeedback('✓ Code valid — select a package to see your discount.', true); }
+  }catch(e){ appliedPromo=null; if(fb) fb.textContent=''; updateSummary(); }
+}
+function setPromoFeedback(msg, ok){
+  const fb = document.getElementById('promo-feedback');
+  if(!fb) return;
+  fb.textContent = msg;
+  fb.style.color = ok ? '#0b8a93' : 'var(--red)';
+}
+function computeDiscount(price){
+  if(!appliedPromo) return 0;
+  let d = appliedPromo.discount_type==='fixed' ? appliedPromo.discount_value : price * (appliedPromo.discount_value/100);
+  return Math.min(Math.max(Math.round(d), 0), price);
+}
+
 function updateSummary() {
   const el = document.getElementById('booking-summary');
   if (!el) return;
   if (!selectedPackage || !selectedDay) { el.innerHTML = '<div style="color:var(--muted);font-size:14px">Select a package and date to see your summary.</div>'; return; }
   const pkg = PACKAGES[selectedPackage];
   const price = getPkgPrice(selectedPackage);
-  const deposit = Math.round(price * 0.3);
+  const discount = computeDiscount(price);
+  const finalPrice = price - discount;
+  const deposit = Math.round(finalPrice * 0.3);
   const dateStr = MONTHS[calMonth]+' '+selectedDay+', '+calYear;
   const slotStr = selectedSlots.length ? selectedSlots.map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(' + ') : '—';
   const dates = selectedDates.length
     ? selectedDates.map(d=>d.toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric'})).join(', ')
     : dateStr;
+  const priceRows = discount > 0 ? `
+    <div class="sum-row"><span>Subtotal</span><strong>$${price.toLocaleString()}</strong></div>
+    <div class="sum-row"><span>Promo (${appliedPromo.code})</span><strong style="color:var(--pink)">−$${discount.toLocaleString()}</strong></div>
+    <div class="sum-row"><span>Total</span><strong>$${finalPrice.toLocaleString()}</strong></div>`
+    : `<div class="sum-row"><span>Total</span><strong>$${price.toLocaleString()}</strong></div>`;
   el.innerHTML = `
     <div class="sum-row"><span>Package</span><strong>${pkg.label}</strong></div>
     <div class="sum-row"><span>${selectedDates.length>1?'Dates':'Date'}</span><strong>${dates}</strong></div>
     <div class="sum-row"><span>Blocks</span><strong>${slotStr}</strong></div>
-    <div class="sum-row"><span>Total</span><strong>$${price.toLocaleString()}</strong></div>
+    ${priceRows}
     <div class="sum-divider"></div>
     <div class="sum-row"><span>Deposit (30%)</span><strong>$${deposit.toLocaleString()}</strong></div>
     <div style="font-size:11px;color:var(--muted);margin-top:4px">Non-refundable · Full payment due 48hrs before</div>`;
+  if(appliedPromo && discount > 0) setPromoFeedback(`✓ ${appliedPromo.code} applied — $${discount.toLocaleString()} off`, true);
 }
 
 // ── CALENDAR ──────────────────────────────────────────────
@@ -845,6 +893,10 @@ async function submitBooking(){
     ? window._dropinContext.pricePerSet * (window._dropinContext.sets||1) + ' (drop-in)'
     : '$' + getPkgPrice(selectedPackage).toLocaleString();
   const pkgDeposit = isDropin ? 'Full payment required' : '$' + Math.round(getPkgPrice(selectedPackage)*0.3).toLocaleString() + ' (30% deposit)';
+  const basePrice = isDropin ? 0 : getPkgPrice(selectedPackage);
+  const promoDiscount = (!isDropin && appliedPromo) ? computeDiscount(basePrice) : 0;
+  const finalTotal = basePrice - promoDiscount;
+  const promoLine = appliedPromo ? `${appliedPromo.code} (−$${promoDiscount.toLocaleString()})` : 'none';
   const requestedDate = isDropin
     ? window._dropinContext.dateStr
     : new Date(calYear,calMonth,selectedDay).toISOString().split('T')[0];
@@ -864,8 +916,9 @@ async function submitBooking(){
         slot: isDropin ? 'dropin' : (selectedSlots[0]||''),
         package: pkgLabel,
         sport: sport||null,
+        promo_code: appliedPromo ? appliedPromo.code : null,
         notes: (notes||'') + (allDates.length>1 ? '\nAll dates: '+allDates.join(', ') : ''),
-        raw_request: { name, email, phone, group, level, selectedSlots, allDates }
+        raw_request: { name, email, phone, group, level, selectedSlots, allDates, promo: appliedPromo || null }
       }});
     }catch(e){}
   }
@@ -886,6 +939,9 @@ async function submitBooking(){
         group_size:group||'not specified',
         skill_level:level||'not specified',
         sport:sport||'not specified',
+        promo_code:promoLine,
+        total_after_discount: isDropin ? pkgPrice : '$' + finalTotal.toLocaleString(),
+        deposit_after_discount: isDropin ? pkgDeposit : '$' + Math.round(finalTotal*0.3).toLocaleString(),
         notes:notes||'none',
         _subject:`New Booking Request — ${name} · ${requestedDate} · ${pkgLabel.split('—')[0].trim()}`
       })
@@ -991,7 +1047,5 @@ function closeBanner(){
 }
 </script>
 <!-- ══ /PROMO BANNER ══ -->
-   <!-- Start of HubSpot Embed Code -->
-  <script type="text/javascript" id="hs-script-loader" async defer src="//js-na3.hs-scripts.com/343281486.js"></script>
 </body>
 </html>
