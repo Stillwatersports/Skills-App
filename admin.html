@@ -223,6 +223,7 @@ tr:hover td{background:rgba(0,200,212,.03)}
   <div class="tab" onclick="showTab('clients')">Clients</div>
   <div class="tab" onclick="showTab('emails')">Emails</div>
   <div class="tab" onclick="showTab('promo')">Promo Banner</div>
+  <div class="tab" onclick="showTab('promocodes')">Promo Codes</div>
 </div>
 
   <div class="content">
@@ -331,7 +332,7 @@ tr:hover td{background:rgba(0,200,212,.03)}
         <button class="btn btn-primary" onclick="openAddBooking()">+ New Booking</button>
       </div>
       <div class="card" style="padding:0">
-        <table><thead><tr><th>Date</th><th>Slot</th><th>Client</th><th>Package</th><th>Location</th><th>Participants</th><th>Status</th><th>Actions</th></tr></thead>
+        <table><thead><tr><th>Date</th><th>Slot</th><th>Client</th><th>Package</th><th>Location</th><th>Participants</th><th>Promo</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody id="bookings-table"></tbody></table>
       </div>
     </div>
@@ -408,6 +409,18 @@ tr:hover td{background:rgba(0,200,212,.03)}
             <a id="promo-preview-cta" style="color:#FFFeb4;font-weight:800;text-decoration:underline"></a>
           </div>
         </div>
+      </div>
+    </div>
+
+    <!-- PROMO CODES -->
+    <div class="panel" id="panel-promocodes">
+      <div class="bookings-toolbar">
+        <input type="text" id="search-promocodes" placeholder="Search code or partner..." oninput="filterPromoCodes()"/>
+        <button class="btn btn-primary" onclick="openAddPromoCode()">+ New Code</button>
+      </div>
+      <div class="card" style="padding:0">
+        <table><thead><tr><th>Code</th><th>Discount</th><th>Partner / Label</th><th>Status</th><th>Expires</th><th>Actions</th></tr></thead>
+        <tbody id="promocodes-table"></tbody></table>
       </div>
     </div>
 
@@ -646,6 +659,37 @@ tr:hover td{background:rgba(0,200,212,.03)}
   </div>
 </div>
 
+<!-- PROMO CODE MODAL -->
+<div class="modal-overlay" id="promocode-modal">
+  <div class="modal" style="max-width:520px">
+    <button class="modal-close" onclick="closeModal('promocode-modal')">✕</button>
+    <div class="modal-title" id="promocode-modal-title">New Promo Code</div>
+    <div class="form-row">
+      <div class="form-group"><label>Code *</label><input type="text" id="pc-code" placeholder="e.g. CAFE10" style="text-transform:uppercase"/></div>
+      <div class="form-group"><label>Partner / Label</label><input type="text" id="pc-label" placeholder="e.g. Cafe on the Lake"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Discount Type</label>
+        <select id="pc-type"><option value="percent">Percent (%)</option><option value="fixed">Fixed ($)</option></select>
+      </div>
+      <div class="form-group"><label>Discount Value *</label><input type="number" id="pc-value" min="0" step="1" placeholder="10"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Expires (optional)</label><input type="date" id="pc-expires"/></div>
+      <div class="form-group"><label>Status</label>
+        <select id="pc-active"><option value="true">Active</option><option value="false">Inactive</option></select>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:space-between;margin-top:24px">
+      <button class="btn btn-danger" id="promocode-delete-btn" style="display:none" onclick="deletePromoCode(editingPromoCodeId)">Delete</button>
+      <div style="display:flex;gap:12px;margin-left:auto">
+        <button class="btn btn-ghost" onclick="closeModal('promocode-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="savePromoCode()">Save Code</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -660,6 +704,7 @@ const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 let bookings = [], clients = [], availability = [], templates = [], participants = {}, leads = [];
 let calYear = new Date().getFullYear(), calMonth = new Date().getMonth();
 let editingBookingId = null, editingClientId = null, editingTemplateId = null, editingLeadId = null;
+let promoCodes = [], editingPromoCodeId = null;
 let activeTab = 'dashboard';
 
 
@@ -791,13 +836,14 @@ async function doLogout(){
 
 // ── DATA LOAD ─────────────────────────────────────────────
 async function loadAll(){
-  await Promise.all([loadBookings(), loadClients(), loadAvailability(), loadTemplates(), loadHolidays(), loadPromo(), loadLeads()]);
+  await Promise.all([loadBookings(), loadClients(), loadAvailability(), loadTemplates(), loadHolidays(), loadPromo(), loadLeads(), loadPromoCodes()]);
   renderDashboard();
   renderCalendar();
   renderBookingsTable();
   renderClients();
   renderTemplates();
   renderLeads();
+  renderPromoCodes();
 }
 async function loadBookings(){
   const {data} = await db.from('bookings').select('*, clients(name,email,phone)').order('date');
@@ -934,7 +980,7 @@ function renderBookingsTable(filter='', status='', slot=''){
   list.sort((a,b)=>new Date(a.date)-new Date(b.date));
   document.getElementById('bookings-table').innerHTML = list.length
     ? list.map(b=>bookingRow(b,false)).join('')
-    : '<tr><td colspan="8" style="color:var(--muted);text-align:center;padding:24px">No bookings found</td></tr>';
+    : '<tr><td colspan="9" style="color:var(--muted);text-align:center;padding:24px">No bookings found</td></tr>';
 }
 function bookingRow(b, compact){
   const p = participants[b.id]||[];
@@ -956,6 +1002,7 @@ function bookingRow(b, compact){
     <td style="font-size:13px">${(b.package||'—').split('—')[0]}</td>
     <td style="font-size:13px">${b.location||'—'}</td>
     <td style="font-size:13px">${p.length} rider${p.length!==1?'s':''}${minors?` · <span style="color:var(--red)">${minors}⚠</span>`:''}${waivers?` · <span style="color:var(--orange)">${waivers} pending</span>`:p.length?' · ✓':''}</td>
+    <td style="font-size:13px">${b.promo_code?`<span class="status-badge" style="background:rgba(224,64,160,0.12);color:var(--pink)">${esc(b.promo_code)}</span>`:'—'}</td>
     <td><span class="status-badge status-${b.status}">${b.status.replace('_',' ')}</span></td>
     <td style="display:flex;gap:6px;flex-wrap:wrap">
       <button class="btn btn-primary btn-sm" onclick="openEditBooking('${b.id}')">Edit</button>
@@ -1426,6 +1473,97 @@ function updatePromoPreview(){
   document.getElementById('promo-preview-cta').textContent = ctaText;
 }
 // ── /PROMO BANNER MANAGEMENT ───────────────────────────────────────────
+
+// ── PROMO CODES MANAGEMENT ─────────────────────────────────────────────
+async function loadPromoCodes(){
+  const { data, error } = await db.from('promo_codes').select('*').order('created_at',{ascending:false});
+  if(error){ console.warn('promo codes load failed', error); promoCodes=[]; return; }
+  promoCodes = data || [];
+}
+function renderPromoCodes(filter=''){
+  const tb = document.getElementById('promocodes-table');
+  if(!tb) return;
+  let list = [...promoCodes];
+  if(filter){
+    const f = filter.toLowerCase();
+    list = list.filter(c=>(c.code||'').toLowerCase().includes(f) || (c.label||'').toLowerCase().includes(f));
+  }
+  tb.innerHTML = list.length ? list.map(c=>{
+    const disc = c.discount_type==='fixed' ? `$${c.discount_value}` : `${c.discount_value}%`;
+    const expired = c.expires_at && new Date(c.expires_at) < new Date();
+    const statusTxt = !c.active ? 'Inactive' : expired ? 'Expired' : 'Active';
+    const statusCls = (!c.active||expired) ? 'status-cancelled' : 'status-confirmed';
+    return `<tr>
+      <td><strong>${esc(c.code)}</strong></td>
+      <td>${disc} off</td>
+      <td style="font-size:13px">${esc(c.label||'—')}</td>
+      <td><span class="status-badge ${statusCls}">${statusTxt}</span></td>
+      <td style="font-size:13px">${c.expires_at?fmtDate(c.expires_at.split('T')[0]):'—'}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-primary btn-sm" onclick="openEditPromoCode('${c.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deletePromoCode('${c.id}')">Delete</button>
+      </td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:24px">No promo codes yet. Create one to share with a partner.</td></tr>';
+}
+function filterPromoCodes(){ renderPromoCodes(document.getElementById('search-promocodes').value); }
+function openAddPromoCode(){
+  editingPromoCodeId = null;
+  document.getElementById('promocode-modal-title').textContent = 'New Promo Code';
+  document.getElementById('pc-code').value = '';
+  document.getElementById('pc-label').value = '';
+  document.getElementById('pc-type').value = 'percent';
+  document.getElementById('pc-value').value = '';
+  document.getElementById('pc-expires').value = '';
+  document.getElementById('pc-active').value = 'true';
+  document.getElementById('promocode-delete-btn').style.display = 'none';
+  openModal('promocode-modal');
+}
+function openEditPromoCode(id){
+  const c = promoCodes.find(x=>x.id===id); if(!c) return;
+  editingPromoCodeId = id;
+  document.getElementById('promocode-modal-title').textContent = 'Edit Promo Code';
+  document.getElementById('pc-code').value = c.code || '';
+  document.getElementById('pc-label').value = c.label || '';
+  document.getElementById('pc-type').value = c.discount_type || 'percent';
+  document.getElementById('pc-value').value = c.discount_value ?? '';
+  document.getElementById('pc-expires').value = c.expires_at ? c.expires_at.split('T')[0] : '';
+  document.getElementById('pc-active').value = c.active ? 'true' : 'false';
+  document.getElementById('promocode-delete-btn').style.display = 'inline-block';
+  openModal('promocode-modal');
+}
+async function savePromoCode(){
+  const code = document.getElementById('pc-code').value.trim().toUpperCase();
+  const value = parseFloat(document.getElementById('pc-value').value);
+  if(!code){ toast('Code is required'); return; }
+  if(isNaN(value) || value < 0){ toast('Enter a valid discount value'); return; }
+  const expRaw = document.getElementById('pc-expires').value;
+  const data = {
+    code,
+    label: document.getElementById('pc-label').value.trim() || null,
+    discount_type: document.getElementById('pc-type').value,
+    discount_value: value,
+    active: document.getElementById('pc-active').value === 'true',
+    expires_at: expRaw ? new Date(expRaw+'T23:59:59').toISOString() : null
+  };
+  let error;
+  if(editingPromoCodeId){ ({ error } = await db.from('promo_codes').update(data).eq('id', editingPromoCodeId)); }
+  else { ({ error } = await db.from('promo_codes').insert(data)); }
+  if(error){ toast(error.code==='23505' ? 'That code already exists' : 'Error saving code'); return; }
+  closeModal('promocode-modal');
+  await loadPromoCodes(); renderPromoCodes();
+  toast('Promo code saved ✓');
+}
+async function deletePromoCode(id){
+  if(!id) return;
+  if(!confirm('Delete this promo code? Past bookings keep the code they recorded.')) return;
+  const { error } = await db.from('promo_codes').delete().eq('id', id);
+  if(error){ toast('Error deleting code'); return; }
+  closeModal('promocode-modal');
+  await loadPromoCodes(); renderPromoCodes();
+  toast('Promo code deleted');
+}
+// ── /PROMO CODES MANAGEMENT ────────────────────────────────────────────
 
 </script>
   <script>
