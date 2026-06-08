@@ -242,6 +242,16 @@ tr:hover td{background:rgba(0,200,212,.03)}
   </div>
   <pre id="briefing-content" style="white-space:pre-wrap;font-family:var(--sans);font-size:14px;line-height:1.8;color:var(--dark)"></pre>
 </div>
+  <div class="card" id="feedback-card" style="margin-bottom:24px;border-left:5px solid var(--pink)">
+    <div class="card-header" style="margin-bottom:12px">
+      <div class="card-title">📝 Notes for Cowork</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span id="feedback-save-status" style="font-size:12px;color:var(--hint)"></span>
+        <button class="btn btn-primary btn-sm" onclick="saveFeedback()">Save</button>
+      </div>
+    </div>
+    <textarea id="feedback-input" placeholder="Add notes, updates, or tasks for Cowork to pick up on its next run — e.g. 'Follow up with Jane re: July booking', 'Post about weekend availability'..." style="width:100%;min-height:100px;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:var(--sans);outline:none;resize:vertical;line-height:1.6;background:#fff"></textarea>
+  </div>
   <div class="sec-title">Today's Top 3</div>
   <div class="top3" id="tasks-top3"></div>
   <div class="sec-title">Where You Stand</div>
@@ -253,9 +263,9 @@ tr:hover td{background:rgba(0,200,212,.03)}
   </div>
   <div class="sec-title">The Backlog</div>
   <div class="task-cols">
-    <div class="task-col bookings"><h3>Bookings</h3><div class="count">Fill slots this season</div><div id="tcol-bookings"></div></div>
-    <div class="task-col awareness"><h3>Awareness</h3><div class="count">Grow social</div><div id="tcol-awareness"></div></div>
-    <div class="task-col later"><h3>Later</h3><div class="count">Matters, not now</div><div id="tcol-later"></div></div>
+    <div class="task-col bookings"><h3>Leads</h3><div class="count">Fill slots this season</div><div id="tcol-bookings"></div></div>
+    <div class="task-col awareness"><h3>Social</h3><div class="count">Grow social</div><div id="tcol-awareness"></div></div>
+    <div class="task-col later"><h3>To Do</h3><div class="count">Matters, not now</div><div id="tcol-later"></div></div>
   </div>
   <div class="card">
     <div class="add-task">
@@ -786,6 +796,7 @@ function showApp(){
   loadAll();
   loadTasks();
   loadBriefing();
+  loadFeedback();
 }
 async function doLogout(){
   await db.auth.signOut();
@@ -976,6 +987,16 @@ function filterBookings(){
     document.getElementById('filter-status').value,
     document.getElementById('filter-slot').value
   );
+}
+async function updateLeadStatus(id, status){
+  const { error } = await db.from('leads').update({ status }).eq('id', id);
+  if(error){ toast('Error updating lead status'); return; }
+  const l = leads.find(x => x.id === id);
+  if(l) l.status = status;
+  const active = leads.filter(l=>l.status!=='converted'&&l.status!=='archived').length;
+  document.getElementById('leads-badge').textContent = active;
+  renderLeads(document.getElementById('search-leads').value);
+  toast('Lead updated ✓');
 }
 async function updateBookingStatus(id, status){
   const { error } = await db.from('bookings').update({ status }).eq('id', id);
@@ -1219,7 +1240,7 @@ function renderLeads(filter=''){
     <td style="font-size:13px">${esc(l.email||'')}${l.phone?'<br>'+esc(l.phone):''}</td>
     <td style="font-size:13px">${esc(l.sport||'—')}</td>
     <td style="font-size:13px;max-width:260px">${esc((l.message||'').slice(0,140))}</td>
-    <td><span class="status-badge ${LEAD_STATUS_CLASS[l.status]||'status-complete'}">${esc(l.status)}</span></td>
+    <td><select class="booking-status-select" onchange="updateLeadStatus('${l.id}', this.value)">${['new','hot','warm','cold','archived'].map(s=>`<option value="${s}"${l.status===s?' selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}</select></td>
     <td style="font-size:12px;color:var(--muted)">${esc(l.source||'')}</td>
     <td style="display:flex;gap:6px;flex-wrap:wrap">
       <button class="btn btn-primary btn-sm" onclick="openEditLead('${l.id}')">Edit</button>
@@ -1598,6 +1619,30 @@ async function addTask(){
   const stage = document.getElementById('new-task-stage').value;
   const { data } = await db.from('ops_tasks').insert({ title, stage, impact:'med', effort:'medium', sort_order:999 }).select().single();
   if(data){ opsTasks.push(data); inp.value=''; renderTasks(); if(typeof toast==='function') toast('Task added'); }
+}
+async function loadFeedback(){
+  const today = new Date().toISOString().split('T')[0];
+  const { data } = await db.from('ops_briefing').select('feedback').eq('date', today).single();
+  if(data?.feedback){
+    document.getElementById('feedback-input').value = data.feedback;
+  }
+}
+async function saveFeedback(){
+  const today = new Date().toISOString().split('T')[0];
+  const feedback = document.getElementById('feedback-input').value.trim();
+  const status = document.getElementById('feedback-save-status');
+  const { error } = await db.from('ops_briefing').upsert(
+    { date: today, feedback },
+    { onConflict: 'date' }
+  );
+  if(error){
+    status.textContent = '✗ Save failed';
+    status.style.color = 'var(--red)';
+  } else {
+    status.textContent = '✓ Saved';
+    status.style.color = 'var(--cyan)';
+    setTimeout(()=>status.textContent='', 3000);
+  }
 }
 async function loadBriefing(){
   const today = new Date().toISOString().split('T')[0];
