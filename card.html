@@ -344,7 +344,7 @@ let qrCode = null;
 // ── INIT ───────────────────────────────────────────────────
 (async () => {
   const params = new URLSearchParams(window.location.search);
-  const srcSlug = params.get('src') || '';
+  const srcSlug = params.get('src') || params.get('q') || '';
   const promoParam = params.get('promo') || '';
 
   // Load card config
@@ -422,7 +422,7 @@ async function submitExchange(e) {
   btn.textContent = 'Saving...';
 
   const params = new URLSearchParams(window.location.search);
-  const srcSlug = params.get('src') || '';
+  const srcSlug = params.get('src') || params.get('q') || '';
   const phone = '+1' + rawPhone;
 
   try {
@@ -439,19 +439,6 @@ async function submitExchange(e) {
     if (contact && scanId) {
       await db.from('card_scans').update({ converted:true, contact_id:contact.id }).eq('id', scanId);
     }
-
-    // Fire-and-forget notification — credentials never exposed in client code
-    fetch('https://isbhflfmugfeqwhhqlkh.supabase.co/functions/v1/notify-new-contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name,
-        email: email || null,
-        phone,
-        promo_code: promo || null,
-        source: qrCode ? qrCode.name : (srcSlug || 'direct'),
-      }),
-    }).catch(() => {});
 
   } catch(err) {
     console.warn('Exchange save failed:', err);
