@@ -1,0 +1,613 @@
+<!-- © 2026 Christian Richards / Stillwater Sports. Digital Business Card. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Christian Richards · Stillwater Sports</title>
+<meta name="description" content="Certified waterski, wakeboard & wakesurf coach. Ottawa Valley & cottage country. Book a session today."/>
+<meta property="og:title" content="Christian Richards · Stillwater Sports"/>
+<meta property="og:description" content="Certified coach · 1000+ new riders · All ages & skill levels"/>
+<meta property="og:image" content="https://learnwatersports.ca/assets/card-hero.png"/>
+<meta property="og:type" content="website"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cyan:#00C8D4;--pink:#E040A0;--yellow:#FFFeb4;--offwhite:#FFFFF0;
+  --dark:#1a2a2a;--muted:#3a6a6a;--hint:#7aacac;--dark-band:#0a2828;
+  --border:#e0dfc0;
+}
+body{font-family:'Outfit',sans-serif;background:var(--yellow);color:var(--dark);min-height:100vh}
+
+/* ── LOADING ── */
+#loading{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--dark)}
+.spinner{width:44px;height:44px;border:4px solid rgba(0,200,212,.2);border-top-color:var(--cyan);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── GATE ── */
+#gate{
+  min-height:100vh;min-height:100dvh;
+  position:relative;display:none;
+  align-items:center;justify-content:center;
+  padding:20px;overflow:hidden;
+}
+#gate.visible{display:flex}
+#gate-bg{
+  position:absolute;inset:-20px;
+  background-size:cover;background-position:center;
+  filter:blur(8px) brightness(0.6);
+  z-index:0;
+}
+#gate-wrap{
+  position:relative;z-index:1;
+  width:100%;max-width:440px;
+  display:flex;flex-direction:column;
+  align-items:center;gap:0;
+}
+#gate-card{
+  background:var(--offwhite);
+  border-radius:20px;
+  padding:32px 28px 24px;
+  width:100%;
+  box-shadow:0 20px 60px rgba(10,40,40,.5);
+}
+#gate-eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:.14em;
+  color:var(--muted);text-transform:uppercase;
+  text-align:center;margin-bottom:8px;
+}
+#gate-headline{
+  font-size:30px;font-weight:900;color:var(--dark);
+  text-align:center;margin-bottom:6px;line-height:1.1;
+}
+#gate-description{
+  font-size:14px;color:var(--muted);
+  text-align:center;margin-bottom:22px;
+}
+.field-group{margin-bottom:14px}
+.field-group label{
+  display:block;font-size:10px;font-weight:700;
+  letter-spacing:.1em;color:var(--muted);
+  text-transform:uppercase;margin-bottom:5px;
+  line-height:1.4;
+}
+.field-group input{
+  width:100%;padding:13px 15px;
+  border:1.5px solid var(--border);border-radius:10px;
+  font-size:15px;font-family:'Outfit',sans-serif;
+  background:#fff;color:var(--dark);outline:none;
+  transition:border-color .15s;
+}
+.field-group input:focus{border-color:var(--cyan)}
+.phone-row{
+  display:flex;align-items:stretch;
+  border:1.5px solid var(--border);border-radius:10px;
+  overflow:hidden;background:#fff;transition:border-color .15s;
+}
+.phone-row:focus-within{border-color:var(--cyan)}
+.flag-prefix{
+  padding:0 12px;font-size:14px;font-weight:600;
+  color:var(--muted);border-right:1px solid var(--border);
+  background:#f8f8f0;display:flex;align-items:center;
+  white-space:nowrap;flex-shrink:0;
+}
+.phone-row input{
+  border:none;flex:1;padding:13px 12px;
+  font-size:15px;font-family:'Outfit',sans-serif;
+  outline:none;background:#fff;color:var(--dark);
+  min-width:0;
+}
+.btn-exchange{
+  width:100%;padding:16px;background:var(--pink);
+  color:var(--yellow);font-family:'Outfit',sans-serif;
+  font-size:15px;font-weight:800;border:none;
+  border-radius:50px;cursor:pointer;letter-spacing:.04em;
+  margin-top:6px;transition:background .15s;
+}
+.btn-exchange:hover{background:#cc3390}
+.btn-exchange:disabled{opacity:.6;cursor:wait}
+#gate-error{
+  color:#c0392b;font-size:12px;font-weight:600;
+  text-align:center;margin-top:8px;display:none;
+}
+.privacy-note{
+  font-size:11px;color:var(--hint);
+  text-align:center;margin-top:10px;line-height:1.5;
+}
+.privacy-note a{color:var(--muted)}
+#not-now-link{
+  display:block;text-align:center;font-size:12px;
+  font-weight:700;color:rgba(255,255,240,.75);
+  letter-spacing:.1em;text-transform:uppercase;
+  text-decoration:none;margin-top:22px;
+  text-shadow:0 1px 4px rgba(0,0,0,.4);
+  padding:8px;
+}
+#not-now-link:hover{color:#fff}
+
+/* ── CARD ── */
+#card{display:none;max-width:480px;margin:0 auto;background:var(--yellow)}
+#card.visible{display:block;animation:fadeUp .35s ease forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* HERO */
+#card-hero{position:relative;width:100%;padding-bottom:60%;overflow:hidden}
+#hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+#hero-overlay{position:absolute;inset:0}
+#hero-text{position:absolute;bottom:20px;left:20px;right:20px}
+#hero-eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:.16em;
+  color:var(--pink);text-transform:uppercase;margin-bottom:4px;
+}
+
+/* CARD BODY */
+#card-body{padding:20px 20px 0}
+#card-name{
+  font-size:34px;font-weight:900;color:var(--dark);
+  line-height:1.1;margin-bottom:16px;
+}
+.btn-save-contact{
+  display:block;width:100%;padding:16px;
+  background:var(--cyan);color:var(--dark);
+  font-family:'Outfit',sans-serif;font-size:16px;
+  font-weight:800;border:none;border-radius:50px;
+  cursor:pointer;letter-spacing:.02em;
+  margin-bottom:22px;transition:background .15s;
+}
+.btn-save-contact:hover{background:#00b3be}
+
+/* BLOCKS */
+.block-credentials{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.cred-pill{
+  display:inline-flex;align-items:center;
+  padding:6px 14px;border:1.5px solid var(--cyan);
+  border-radius:20px;font-size:12px;font-weight:700;color:var(--muted);
+}
+
+.block-description{margin-bottom:20px}
+.tagline{font-size:17px;font-weight:800;color:var(--dark);margin-bottom:10px;line-height:1.3}
+.desc-lines{margin-bottom:12px}
+.desc-line{font-size:15px;color:var(--dark);margin-bottom:4px;line-height:1.65}
+.cta-text{font-size:16px;font-weight:800;color:var(--pink);line-height:1.3}
+
+.block-numbers{display:flex;gap:10px;margin-bottom:20px}
+.num-card{flex:1;background:rgba(0,200,212,.1);border-radius:12px;padding:14px 8px;text-align:center}
+.num-val{font-size:20px;font-weight:900;color:var(--dark)}
+.num-cap{font-size:11px;font-weight:600;color:var(--muted);margin-top:3px}
+
+.section-label{
+  font-size:11px;font-weight:700;letter-spacing:.12em;
+  color:var(--muted);text-transform:uppercase;margin-bottom:12px;
+}
+
+.block-portfolio{margin-bottom:20px}
+.portfolio-scroll{
+  display:flex;gap:10px;overflow-x:auto;padding-bottom:6px;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.portfolio-scroll::-webkit-scrollbar{display:none}
+.portfolio-item{flex:0 0 140px;border-radius:10px;overflow:hidden;cursor:pointer}
+.portfolio-item img{width:140px;height:100px;object-fit:cover;display:block}
+.portfolio-caption{font-size:11px;color:var(--muted);padding:4px 2px;font-weight:600}
+
+.block-video{margin-bottom:20px}
+.video-wrapper{position:relative;padding-bottom:56.25%;height:0;overflow:hidden;border-radius:12px}
+.video-wrapper iframe,.video-wrapper video{position:absolute;inset:0;width:100%;height:100%}
+.video-caption{font-size:13px;color:var(--muted);margin-top:8px;text-align:center}
+
+.block-contact{margin-bottom:20px}
+.contact-line{
+  display:flex;align-items:center;gap:12px;
+  font-size:14px;color:var(--dark);text-decoration:none;
+  padding:8px 0;border-bottom:1px solid rgba(58,106,106,.12);
+}
+.contact-line:last-child{border-bottom:none}
+.contact-icon{width:18px;height:18px;color:var(--muted);flex-shrink:0;display:flex;align-items:center}
+.contact-icon svg{width:18px;height:18px}
+
+.block-socials{margin-bottom:20px}
+.socials-row{display:flex;gap:12px;flex-wrap:wrap}
+.social-btn{
+  display:flex;align-items:center;justify-content:center;
+  width:48px;height:48px;border-radius:50%;
+  background:rgba(0,200,212,.12);color:var(--muted);
+  text-decoration:none;transition:background .15s;
+}
+.social-btn:hover{background:rgba(0,200,212,.28)}
+.social-btn svg{width:22px;height:22px}
+
+/* FOOTER */
+#card-footer{
+  background:var(--dark-band);color:var(--cyan);
+  text-align:center;padding:22px 20px;
+  font-size:13px;font-weight:600;margin-top:20px;
+  line-height:1.6;
+}
+
+@media(min-width:520px){
+  #card{box-shadow:0 0 60px rgba(10,40,40,.15);margin:20px auto;border-radius:24px;overflow:hidden}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading"><div class="spinner"></div></div>
+
+<!-- EXCHANGE GATE -->
+<div id="gate">
+  <div id="gate-bg"></div>
+  <div id="gate-wrap">
+    <div id="gate-card">
+      <div id="gate-eyebrow">LET'S CONNECT</div>
+      <h1 id="gate-headline">LEARN MORE</h1>
+      <p id="gate-description">Your info for mine. Quick.</p>
+      <form id="exchange-form" onsubmit="submitExchange(event)" novalidate>
+        <div class="field-group">
+          <label for="f-name">NAME</label>
+          <input type="text" id="f-name" placeholder="Your name" autocomplete="name"/>
+        </div>
+        <div class="field-group">
+          <label for="f-email">EMAIL <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+          <input type="email" id="f-email" placeholder="you@email.com" autocomplete="email"/>
+        </div>
+        <div class="field-group">
+          <label for="f-phone">PHONE</label>
+          <div class="phone-row">
+            <span class="flag-prefix">🇨🇦 +1</span>
+            <input type="tel" id="f-phone" placeholder="613 555 0123" autocomplete="tel-national"/>
+          </div>
+        </div>
+        <div class="field-group">
+          <label for="f-promo" id="f-promo-label">PROMO CODE / WHERE DID YOU HEAR ABOUT US? (OPTIONAL)</label>
+          <input type="text" id="f-promo" placeholder="e.g. DuckLake15" autocomplete="off"/>
+        </div>
+        <div id="gate-error">Please enter your name and phone number.</div>
+        <button type="submit" class="btn-exchange" id="btn-exchange">COMPLETE EXCHANGE →</button>
+        <p class="privacy-note">By exchanging you agree to our <a href="/policies">privacy policy</a>.</p>
+      </form>
+    </div>
+    <a href="#" id="not-now-link" onclick="skipExchange(event)">NOT NOW</a>
+  </div>
+</div>
+
+<!-- FULL CARD -->
+<div id="card">
+  <div id="card-hero">
+    <img id="hero-img" src="/assets/card-hero.png" alt="Stillwater Sports"/>
+    <div id="hero-overlay"></div>
+    <div id="hero-text">
+      <div id="hero-eyebrow">HEAD COACH</div>
+    </div>
+  </div>
+  <div id="card-body">
+    <h1 id="card-name">Christian Richards</h1>
+    <button class="btn-save-contact" onclick="downloadVCard()">Save Contact</button>
+    <div id="card-blocks"></div>
+  </div>
+  <footer id="card-footer"></footer>
+</div>
+
+<script>
+// ── CONFIG ─────────────────────────────────────────────────
+const SUPABASE_URL = 'https://isbhflfmugfeqwhhqlkh.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzYmhmbGZtdWdmZXF3aGhxbGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDE0MzEsImV4cCI6MjA5MzA3NzQzMX0.TKMd_rSmJvoLiL5_1pFw9KqYHNne-eEdnGNR4zgZwFk';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ── DEFAULTS ────────────────────────────────────────────────
+const DEFAULT_CFG = {
+  hero_image_url:'/assets/card-hero.png',
+  eyebrow_text:'HEAD COACH',
+  display_name:'Christian Richards',
+  credentials:['Certified Coach','Insured','1000+ new riders'],
+  tagline:'WaterSki · WakeBoard · WakeSurf & More!',
+  description_lines:['All ages and skill levels','All Inclusive','Skis, Boards, Ropes, Life Jackets, Boat, Gas'],
+  cta_text:'All you need is you and your crew!',
+  key_numbers:[{number:'1000+',caption:'New Riders'},{number:'100%',caption:'Gear Included'},{number:'15+',caption:'Years Teaching'}],
+  portfolio_title:'Portfolio',portfolio_items:[],
+  contact_phone:'+1 613 299 5998',contact_email:'christian@learnwatersports.ca',contact_website:'https://learnwatersports.ca',
+  socials:[
+    {platform:'instagram',url:'https://www.instagram.com/stillwater.sports/',label:'Instagram'},
+    {platform:'facebook',url:'https://www.facebook.com/profile.php?id=61590102153193',label:'Facebook'}
+  ],
+  intro_video_url:null,intro_video_caption:null,
+  footer_text:'1000+ new riders · Everyone gets up – guaranteed!',
+  block_order:[
+    {block_id:'credentials',enabled:true,order:1},
+    {block_id:'description',enabled:true,order:2},
+    {block_id:'key_numbers',enabled:true,order:3},
+    {block_id:'portfolio',enabled:true,order:4},
+    {block_id:'intro_video',enabled:false,order:5},
+    {block_id:'contact_info',enabled:true,order:6},
+    {block_id:'socials',enabled:true,order:7}
+  ],
+  exchange_headline:"LET'S CONNECT",
+  exchange_subheadline:'LEARN MORE',
+  exchange_description:'Your info for mine. Quick.',
+  exchange_promo_field_label:'PROMO CODE / WHERE DID YOU HEAR ABOUT US? (OPTIONAL)',
+  vcard_org:'Stillwater Sports',vcard_title:'Head Coach',
+  vcard_url:'https://learnwatersports.ca',
+  vcard_note:'Premium private waterski, wakeboard & wakesurf coaching. Ottawa Valley & cottage country.',
+  hero_overlay_gradient:'linear-gradient(180deg, rgba(10,40,40,0.3) 0%, rgba(10,40,40,0.7) 100%)'
+};
+
+// ── STATE ──────────────────────────────────────────────────
+let cfg = null;
+let scanId = null;
+let qrCode = null;
+
+// ── INIT ───────────────────────────────────────────────────
+(async () => {
+  const params = new URLSearchParams(window.location.search);
+  const srcSlug = params.get('src') || '';
+  const promoParam = params.get('promo') || '';
+
+  // Load card config
+  try {
+    const { data } = await db.from('card_config').select('*').limit(1).single();
+    cfg = data || DEFAULT_CFG;
+  } catch(e) {
+    cfg = DEFAULT_CFG;
+  }
+
+  // Pre-fill promo from URL
+  if (promoParam) document.getElementById('f-promo').value = promoParam;
+
+  // Look up QR code & log scan
+  if (srcSlug) {
+    try {
+      const { data: qr } = await db.from('qr_codes')
+        .select('id,name,promo_code').eq('slug', srcSlug).eq('active', true).single();
+      if (qr) {
+        qrCode = qr;
+        // Pre-fill promo from QR if not already in URL
+        if (!promoParam && qr.promo_code) {
+          document.getElementById('f-promo').value = qr.promo_code;
+        }
+      }
+    } catch(e) { console.warn('QR lookup failed', e); }
+
+    try {
+      const { data: scan } = await db.from('card_scans').insert({
+        qr_code_id: qrCode ? qrCode.id : null,
+        source_slug: srcSlug,
+        converted: false,
+        user_agent: navigator.userAgent.substring(0,500),
+        referrer: document.referrer || null
+      }).select('id').single();
+      if (scan) scanId = scan.id;
+    } catch(e) { console.warn('Scan log failed', e); }
+  }
+
+  renderGate();
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('gate').classList.add('visible');
+})();
+
+// ── GATE ───────────────────────────────────────────────────
+function renderGate() {
+  const c = cfg || DEFAULT_CFG;
+  document.getElementById('gate-eyebrow').textContent = c.exchange_headline || "LET'S CONNECT";
+  document.getElementById('gate-headline').textContent = c.exchange_subheadline || 'LEARN MORE';
+  document.getElementById('gate-description').textContent = c.exchange_description || 'Your info for mine. Quick.';
+  document.getElementById('f-promo-label').textContent = c.exchange_promo_field_label || 'PROMO CODE / WHERE DID YOU HEAR ABOUT US? (OPTIONAL)';
+
+  const bg = document.getElementById('gate-bg');
+  const heroUrl = c.hero_image_url || '/assets/card-hero.png';
+  const gradient = c.hero_overlay_gradient || 'linear-gradient(180deg,rgba(10,40,40,.5) 0%,rgba(10,40,40,.85) 100%)';
+  bg.style.backgroundImage = `${gradient}, url('${heroUrl}')`;
+}
+
+async function submitExchange(e) {
+  e.preventDefault();
+  const name  = document.getElementById('f-name').value.trim();
+  const email = document.getElementById('f-email').value.trim();
+  const rawPhone = document.getElementById('f-phone').value.replace(/\D/g,'');
+  const promo = document.getElementById('f-promo').value.trim();
+  const errEl = document.getElementById('gate-error');
+
+  if (!name || !rawPhone) {
+    errEl.style.display = 'block';
+    return;
+  }
+  errEl.style.display = 'none';
+
+  const btn = document.getElementById('btn-exchange');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  const params = new URLSearchParams(window.location.search);
+  const srcSlug = params.get('src') || '';
+  const phone = '+1' + rawPhone;
+
+  try {
+    const { data: contact } = await db.from('card_contacts').insert({
+      name,
+      email: email || null,
+      phone,
+      promo_code: promo || null,
+      source_slug: srcSlug || null,
+      source_name: qrCode ? qrCode.name : null,
+      user_agent: navigator.userAgent.substring(0,500)
+    }).select('id').single();
+
+    if (contact && scanId) {
+      await db.from('card_scans').update({ converted:true, contact_id:contact.id }).eq('id', scanId);
+    }
+  } catch(err) {
+    console.warn('Exchange save failed:', err);
+    // Don't block the user — show card anyway
+  }
+
+  showCard();
+}
+
+function skipExchange(e) {
+  e.preventDefault();
+  showCard();
+}
+
+// ── CARD ───────────────────────────────────────────────────
+function showCard() {
+  document.getElementById('gate').style.display = 'none';
+  renderCard();
+  document.getElementById('card').classList.add('visible');
+  window.scrollTo(0, 0);
+}
+
+function renderCard() {
+  const c = cfg || DEFAULT_CFG;
+
+  // Hero
+  const heroImg = document.getElementById('hero-img');
+  heroImg.src = c.hero_image_url || '/assets/card-hero.png';
+
+  const overlay = document.getElementById('hero-overlay');
+  overlay.style.background = c.hero_overlay_gradient || 'linear-gradient(180deg,rgba(10,40,40,.3) 0%,rgba(10,40,40,.7) 100%)';
+
+  document.getElementById('hero-eyebrow').textContent = c.eyebrow_text || 'HEAD COACH';
+  document.getElementById('card-name').textContent = c.display_name || 'Christian Richards';
+
+  // Blocks
+  const blockOrder = c.block_order || DEFAULT_CFG.block_order;
+  const sorted = [...blockOrder].filter(b => b.enabled).sort((a,b) => a.order - b.order);
+  document.getElementById('card-blocks').innerHTML = sorted.map(b => renderBlock(b.block_id)).join('');
+
+  // Footer
+  document.getElementById('card-footer').textContent = c.footer_text || '1000+ new riders · Everyone gets up – guaranteed!';
+}
+
+function renderBlock(blockId) {
+  const c = cfg || DEFAULT_CFG;
+  switch(blockId) {
+    case 'credentials': {
+      const creds = c.credentials || [];
+      if (!creds.length) return '';
+      return `<div class="block-credentials">${creds.map(x=>`<span class="cred-pill">${esc(x)}</span>`).join('')}</div>`;
+    }
+    case 'description': {
+      const lines = c.description_lines || [];
+      return `<div class="block-description">
+        <div class="tagline">${esc(c.tagline||'')}</div>
+        <div class="desc-lines">${lines.map(l=>`<div class="desc-line">✅ ${esc(l)}</div>`).join('')}</div>
+        <div class="cta-text">${esc(c.cta_text||'')}</div>
+      </div>`;
+    }
+    case 'key_numbers': {
+      const nums = c.key_numbers || [];
+      if (!nums.length) return '';
+      return `<div class="block-numbers">${nums.map(n=>`<div class="num-card"><div class="num-val">${esc(n.number)}</div><div class="num-cap">${esc(n.caption)}</div></div>`).join('')}</div>`;
+    }
+    case 'portfolio': {
+      const items = c.portfolio_items || [];
+      const title = (c.portfolio_title || 'Portfolio').toUpperCase();
+      return `<div class="block-portfolio">
+        <div class="section-label">${esc(title)}</div>
+        ${items.length ? `<div class="portfolio-scroll">${items.map(item=>`
+          <div class="portfolio-item"${item.link?` onclick="window.open('${esc(item.link)}','_blank')"`:''} style="${item.link?'cursor:pointer':''}">
+            <img src="${esc(item.image_url||'')}" alt="${esc(item.title||'Portfolio photo')}" loading="lazy"/>
+            ${item.title?`<div class="portfolio-caption">${esc(item.title)}</div>`:''}
+          </div>`).join('')}</div>`
+        : '<div style="color:var(--hint);font-size:13px;padding:4px 0">No portfolio items yet.</div>'}
+      </div>`;
+    }
+    case 'intro_video': {
+      if (!c.intro_video_url) return '';
+      const url = c.intro_video_url;
+      let embed = '';
+      const ytMatch = url.match(/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([\w-]+)/);
+      const vmMatch = url.match(/vimeo\.com\/(\d+)/);
+      if (ytMatch) embed = `<iframe src="https://www.youtube.com/embed/${ytMatch[1]}" frameborder="0" allow="autoplay;encrypted-media" allowfullscreen></iframe>`;
+      else if (vmMatch) embed = `<iframe src="https://player.vimeo.com/video/${vmMatch[1]}" frameborder="0" allowfullscreen></iframe>`;
+      else embed = `<video src="${esc(url)}" controls playsinline></video>`;
+      return `<div class="block-video"><div class="video-wrapper">${embed}</div>${c.intro_video_caption?`<div class="video-caption">${esc(c.intro_video_caption)}</div>`:''}</div>`;
+    }
+    case 'contact_info': {
+      const phone = c.contact_phone || '';
+      const email = c.contact_email || '';
+      const website = c.contact_website || '';
+      return `<div class="block-contact">
+        <div class="section-label">CONTACT INFORMATION</div>
+        ${phone?`<a href="tel:${phone.replace(/\s/g,'')}" class="contact-line"><span class="contact-icon">${icoPhone}</span>${esc(phone)}</a>`:''}
+        ${email?`<a href="mailto:${esc(email)}" class="contact-line"><span class="contact-icon">${icoEmail}</span>${esc(email)}</a>`:''}
+        ${website?`<a href="${esc(website)}" target="_blank" rel="noopener" class="contact-line"><span class="contact-icon">${icoGlobe}</span>${esc(website.replace('https://',''))}</a>`:''}
+      </div>`;
+    }
+    case 'socials': {
+      const socials = c.socials || [];
+      if (!socials.length) return '';
+      return `<div class="block-socials">
+        <div class="section-label">SOCIALS</div>
+        <div class="socials-row">${socials.map(s=>`
+          <a href="${esc(s.url)}" target="_blank" rel="noopener" class="social-btn" title="${esc(s.label||s.platform)}">
+            ${socialIcon(s.platform)}
+          </a>`).join('')}
+        </div>
+      </div>`;
+    }
+    default: return '';
+  }
+}
+
+// ── VCARD ──────────────────────────────────────────────────
+function downloadVCard() {
+  const c = cfg || DEFAULT_CFG;
+  const nameParts = (c.display_name || 'Christian Richards').split(' ');
+  const last = nameParts.pop() || '';
+  const first = nameParts.join(' ');
+  const phone = (c.contact_phone || '+16132995998').replace(/\s/g,'');
+  const vcard = [
+    'BEGIN:VCARD',
+    'VERSION:3.0',
+    `N:${last};${first};;;`,
+    `FN:${c.display_name || 'Christian Richards'}`,
+    `ORG:${c.vcard_org || 'Stillwater Sports'}`,
+    `TITLE:${c.vcard_title || 'Head Coach'}`,
+    `TEL;TYPE=CELL:${phone}`,
+    `EMAIL:${c.contact_email || 'christian@learnwatersports.ca'}`,
+    `URL:${c.vcard_url || 'https://learnwatersports.ca'}`,
+    `NOTE:${(c.vcard_note || '').replace(/[,;]/g,m=>'\\'+m)}`,
+    'END:VCARD'
+  ].join('\r\n');
+
+  const blob = new Blob([vcard], { type:'text/vcard;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `${(c.display_name||'Christian_Richards').replace(/\s+/g,'_')}.vcf`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+// ── HELPERS ────────────────────────────────────────────────
+function esc(str) {
+  return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── ICONS (inline SVG, no external libraries) ─────────────
+const icoPhone = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.86 9.96 19.79 19.79 0 01.77 1.31 2 2 0 012.76 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 7.91a16 16 0 006 6l.91-.91a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>`;
+const icoEmail = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`;
+const icoGlobe = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>`;
+
+const SOCIAL_ICONS = {
+  instagram:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>`,
+  facebook:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`,
+  tiktok:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.84 1.55V6.79a4.85 4.85 0 01-1.07-.1z"/></svg>`,
+  youtube:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5a3 3 0 00-2.1 2.1A31.2 31.2 0 000 12a31.2 31.2 0 00.5 5.8 3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1A31.2 31.2 0 0024 12a31.2 31.2 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>`,
+  linkedin:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.57c0-1.327-.027-3.037-1.852-3.037-1.853 0-2.136 1.446-2.136 2.94v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.063 2.063 0 11.001-4.126 2.063 2.063 0 01-.001 4.126zm1.782 13.02H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`,
+  twitter:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.23-5.401 6.23H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`
+};
+
+function socialIcon(platform) {
+  return SOCIAL_ICONS[platform] || SOCIAL_ICONS.instagram;
+}
+</script>
+</body>
+</html>

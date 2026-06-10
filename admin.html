@@ -5,7 +5,7 @@
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <title>Stillwater Admin</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet"/><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet"/><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -194,6 +194,38 @@ tr:hover td{background:rgba(0,200,212,.03)}
   .client-grid{grid-template-columns:1fr}
   .form-row{grid-template-columns:1fr}
 }
+/* ── DIGITAL CARD / QR / CONTACTS ─────────────────────── */
+.dc-section{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.dc-section-header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:rgba(0,200,212,.04);cursor:pointer;font-weight:700;font-size:14px;user-select:none}
+.dc-section-header:hover{background:rgba(0,200,212,.08)}
+.dc-chevron{font-size:12px;color:var(--hint);transition:transform .2s}
+.dc-section-body{padding:16px 18px;border-top:1px solid var(--border)}
+.dc-section-body.collapsed{display:none}
+.dc-list-row{display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.dc-list-row input{flex:1;min-width:120px}
+.dc-list-row select{width:150px;flex:none;padding:11px 8px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans);font-size:14px;outline:none;background:#fff}
+.dc-list-row select:focus{border-color:var(--cyan)}
+.dc-num-val{width:90px!important;flex:none!important}
+.remove-btn{background:none;border:none;color:var(--hint);cursor:pointer;font-size:18px;padding:4px 8px;border-radius:6px;transition:color .15s;flex-shrink:0}
+.remove-btn:hover{color:var(--red);background:rgba(229,57,53,.06)}
+.toggle-sw{position:relative;display:inline-block;width:42px;height:24px;flex-shrink:0}
+.toggle-sw input{opacity:0;width:0;height:0}
+.toggle-sl{position:absolute;cursor:pointer;inset:0;background:#ccc;border-radius:12px;transition:.2s}
+.toggle-sl:before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.2s}
+.toggle-sw input:checked+.toggle-sl{background:var(--cyan)}
+.toggle-sw input:checked+.toggle-sl:before{transform:translateX(18px)}
+.block-order-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:8px}
+.block-order-label{flex:1;font-size:14px;font-weight:600;text-transform:capitalize}
+.block-order-btn{background:none;border:1px solid var(--border);border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:13px;color:var(--muted);transition:all .15s}
+.block-order-btn:hover:not(:disabled){background:var(--cyan);color:var(--dark);border-color:var(--cyan)}
+.block-order-btn:disabled{opacity:.3;cursor:default}
+.qr-canvas-cell img{width:44px!important;height:44px!important;border-radius:4px;border:1px solid var(--border)}
+.cc-badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.cc-badge.new{background:rgba(0,200,212,.12);color:#0b8a93}
+.cc-badge.contacted{background:rgba(100,120,200,.12);color:#3a4a90}
+.cc-badge.qualified{background:rgba(46,125,50,.1);color:var(--green)}
+.cc-badge.converted{background:rgba(245,216,122,.5);color:#9a6200}
+.cc-badge.archived{background:rgba(0,0,0,.07);color:var(--hint)}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9Z296M7ZLP"></script>
@@ -230,6 +262,9 @@ tr:hover td{background:rgba(0,200,212,.03)}
   <div class="tab" onclick="showTab('emails')">Emails</div>
   <div class="tab" onclick="showTab('promo')">Promo Banner</div>
   <div class="tab" onclick="showTab('promocodes')">Promo Codes</div>
+  <div class="tab" onclick="showTab('cardcontacts')">Card Contacts <span class="tab-badge" id="contacts-badge"></span></div>
+  <div class="tab" onclick="showTab('qrcodes')">QR Codes</div>
+  <div class="tab" onclick="showTab('digitalcard')">Digital Card</div>
 </div>
   <div class="content">
 <!-- TASKS DASHBOARD (default) -->
@@ -442,6 +477,175 @@ tr:hover td{background:rgba(0,200,212,.03)}
           <div style="color:var(--muted);font-size:15px;padding:40px;text-align:center">Select a template to compose an email</div>
         </div>
       </div>
+    </div>
+    <!-- CARD CONTACTS -->
+    <div class="panel" id="panel-cardcontacts">
+      <div class="stats-row" style="margin-bottom:20px">
+        <div class="stat-card"><div class="stat-num" id="cc-stat-total">—</div><div class="stat-label">Total Contacts</div></div>
+        <div class="stat-card"><div class="stat-num" id="cc-stat-week">—</div><div class="stat-label">New This Week</div></div>
+        <div class="stat-card"><div class="stat-num" id="cc-stat-rate">—</div><div class="stat-label">Promotion Rate</div></div>
+        <div class="stat-card"><div class="stat-num" id="cc-stat-source">—</div><div class="stat-label">Top Source</div></div>
+      </div>
+      <div class="bookings-toolbar">
+        <input type="text" id="cc-search" placeholder="Search name, email, phone..." oninput="renderCardContacts()" style="flex:1;min-width:180px"/>
+        <select id="cc-status-filter" onchange="renderCardContacts()">
+          <option value="">All statuses</option>
+          <option value="new">New</option>
+          <option value="contacted">Contacted</option>
+          <option value="qualified">Qualified</option>
+          <option value="converted">Converted</option>
+          <option value="archived">Archived</option>
+        </select>
+        <button class="btn btn-ghost" onclick="exportContactsCSV()">Export CSV</button>
+      </div>
+      <div class="card" style="padding:0">
+        <table>
+          <thead><tr><th>Name</th><th>Contact</th><th>Promo</th><th>Source</th><th>Status</th><th>Captured</th><th>Actions</th></tr></thead>
+          <tbody id="cc-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <!-- QR CODES -->
+    <div class="panel" id="panel-qrcodes">
+      <div class="stats-row" style="margin-bottom:20px">
+        <div class="stat-card"><div class="stat-num" id="qr-stat-active">—</div><div class="stat-label">Active Codes</div></div>
+        <div class="stat-card"><div class="stat-num" id="qr-stat-scans">—</div><div class="stat-label">Total Scans</div></div>
+        <div class="stat-card"><div class="stat-num" id="qr-stat-captures">—</div><div class="stat-label">Captures</div></div>
+        <div class="stat-card"><div class="stat-num" id="qr-stat-rate">—</div><div class="stat-label">Capture Rate</div></div>
+      </div>
+      <div class="bookings-toolbar">
+        <span style="flex:1;font-size:13px;color:var(--muted)">URL pattern: <code>https://learnwatersports.ca/card?q=<em>slug</em></code></span>
+        <button class="btn btn-primary" onclick="openQRModal()">+ New QR Code</button>
+      </div>
+      <div class="card" style="padding:0">
+        <table>
+          <thead><tr><th>Preview</th><th>Name</th><th>Slug</th><th>Promo</th><th>Status</th><th>Scans</th><th>Captures</th><th>Actions</th></tr></thead>
+          <tbody id="qr-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <!-- DIGITAL CARD EDITOR -->
+    <div class="panel" id="panel-digitalcard">
+      <div class="card" style="max-width:820px">
+        <div class="card-header" style="margin-bottom:4px">
+          <div class="card-title">Digital Card Content</div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <span id="dc-save-status" style="font-size:12px;color:var(--hint)"></span>
+            <a href="/card" target="_blank" class="btn btn-ghost btn-sm">Preview ↗</a>
+            <button class="btn btn-primary" onclick="saveCardConfig()">Save Changes</button>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Changes apply after saving. No redeploy needed.</p>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-hero')">Hero <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-hero">
+            <div class="form-row">
+              <div class="form-group"><label>Hero Image URL</label><input type="text" id="dc-hero-image" placeholder="/assets/card-hero.png"/></div>
+              <div class="form-group"><label>Eyebrow (e.g. HEAD COACH)</label><input type="text" id="dc-eyebrow"/></div>
+            </div>
+            <div class="form-group"><label>Display Name</label><input type="text" id="dc-display-name"/></div>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-creds')">Credentials <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-creds">
+            <div id="dc-creds-list"></div>
+            <button class="btn btn-ghost btn-sm" onclick="addDcCred()" style="margin-top:4px">+ Add Credential</button>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-desc')">Description <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-desc">
+            <div class="form-group"><label>Tagline</label><input type="text" id="dc-tagline"/></div>
+            <div class="form-group"><label>Description Lines (one per line)</label><textarea id="dc-desc-lines" rows="4"></textarea></div>
+            <div class="form-group"><label>CTA Text</label><input type="text" id="dc-cta"/></div>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-nums')">Key Numbers <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-nums">
+            <div id="dc-nums-list"></div>
+            <button class="btn btn-ghost btn-sm" onclick="addDcNum()" style="margin-top:4px">+ Add Number</button>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-portfolio')">Portfolio <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-portfolio">
+            <div class="form-group"><label>Section Title</label><input type="text" id="dc-portfolio-title"/></div>
+            <div id="dc-portfolio-list"></div>
+            <button class="btn btn-ghost btn-sm" onclick="addDcPortfolio()" style="margin-top:4px">+ Add Item</button>
+            <p style="font-size:11px;color:var(--hint);margin-top:6px">Image URL · caption · link URL (optional). Use /assets/ paths — no base64.</p>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-video')">Intro Video <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-video">
+            <div class="form-group"><label>Video URL (YouTube, Vimeo, or MP4)</label><input type="text" id="dc-video-url"/></div>
+            <div class="form-group"><label>Caption (optional)</label><input type="text" id="dc-video-caption"/></div>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-contact')">Contact Info <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-contact">
+            <div class="form-row">
+              <div class="form-group"><label>Phone</label><input type="text" id="dc-phone"/></div>
+              <div class="form-group"><label>Email</label><input type="text" id="dc-email"/></div>
+            </div>
+            <div class="form-group"><label>Website</label><input type="text" id="dc-website"/></div>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-socials')">Socials <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-socials">
+            <div id="dc-socials-list"></div>
+            <button class="btn btn-ghost btn-sm" onclick="addDcSocial()" style="margin-top:4px">+ Add Social Link</button>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-exchange')">Exchange Gate <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-exchange">
+            <div class="form-row">
+              <div class="form-group"><label>Eyebrow</label><input type="text" id="dc-ex-eyebrow"/></div>
+              <div class="form-group"><label>Headline</label><input type="text" id="dc-ex-headline"/></div>
+            </div>
+            <div class="form-group"><label>Description</label><input type="text" id="dc-ex-description"/></div>
+            <div class="form-group"><label>Promo field label</label><input type="text" id="dc-ex-promo-label"/></div>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-blocks')">Block Visibility &amp; Order <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-blocks">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Reorder with ↑↓. Toggle to show/hide on the card.</p>
+            <div id="dc-blocks-list"></div>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-footer')">Footer <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-footer">
+            <div class="form-group"><label>Footer Text</label><input type="text" id="dc-footer-text"/></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- QR CODE MODAL -->
+<div class="modal-overlay" id="qr-modal">
+  <div class="modal" style="max-width:480px">
+    <button class="modal-close" onclick="closeModal('qr-modal')">✕</button>
+    <div class="modal-title" id="qr-modal-title">New QR Code</div>
+    <input type="hidden" id="qr-editing-id"/>
+    <div class="form-group"><label>Name (e.g. Duck Lake Marina)</label><input type="text" id="qr-name"/></div>
+    <div class="form-group"><label>Slug (URL-safe, e.g. ducklake)</label><input type="text" id="qr-slug" placeholder="ducklake" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')"/></div>
+    <div class="form-group"><label>Default Promo Code (optional)</label><input type="text" id="qr-promo" placeholder="DuckLake15"/></div>
+    <div class="form-group"><label>Description / Location (optional)</label><input type="text" id="qr-desc" placeholder="Duck Lake boat launch kiosk"/></div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+      <label style="font-size:13px;font-weight:600;color:var(--muted)">Active</label>
+      <label class="toggle-sw"><input type="checkbox" id="qr-active" checked/><span class="toggle-sl"></span></label>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-primary" onclick="saveQRCode()" style="flex:1">Save</button>
+      <button class="btn btn-ghost" id="qr-delete-btn" onclick="deleteQRCode()" style="display:none;color:var(--red)">Delete</button>
     </div>
   </div>
 </div>
@@ -692,6 +896,8 @@ let bookings = [], clients = [], availability = [], templates = [], participants
 let calYear = new Date().getFullYear(), calMonth = new Date().getMonth();
 let editingBookingId = null, editingClientId = null, editingTemplateId = null, editingLeadId = null;
 let promoCodes = [], editingPromoCodeId = null;
+let cardContacts = [], qrCodes = [], cardConfig = null, cardConfigLoaded = false;
+let qrScanStats = {};
 let activeTab = 'dashboard';
 // ── HOLIDAYS ──────────────────────────────────────────────
 const ONTARIO_HOLIDAYS_2026 = [
@@ -811,7 +1017,7 @@ async function doLogout(){
 })();
 // ── DATA LOAD ─────────────────────────────────────────────
 async function loadAll(){
-  await Promise.all([loadBookings(), loadClients(), loadAvailability(), loadTemplates(), loadHolidays(), loadPromo(), loadLeads(), loadPromoCodes()]);
+  await Promise.all([loadBookings(), loadClients(), loadAvailability(), loadTemplates(), loadHolidays(), loadPromo(), loadLeads(), loadPromoCodes(), loadCardContacts(), loadQRCodes()]);
   renderDashboard();
   renderCalendar();
   renderBookingsTable();
@@ -819,6 +1025,8 @@ async function loadAll(){
   renderTemplates();
   renderLeads();
   renderPromoCodes();
+  renderCardContacts();
+  renderQRCodes();
 }
 async function loadBookings(){
   const {data} = await db.from('bookings').select('*, clients(name,email,phone)').order('date');
@@ -852,6 +1060,7 @@ function showTab(tab){
   event.target.classList.add('active');
   document.getElementById('panel-'+tab).classList.add('active');
   activeTab = tab;
+  if(tab==='digitalcard' && !cardConfigLoaded) loadCardConfig();
 }
 // ── DASHBOARD ─────────────────────────────────────────────
 function renderDashboard(){
@@ -1560,6 +1769,295 @@ async function deletePromoCode(id){
   toast('Promo code deleted');
 }
 // ── /PROMO CODES MANAGEMENT ────────────────────────────────────────────
+// ── CARD CONTACTS ─────────────────────────────────────────
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function loadCardContacts(){
+  const {data}=await db.from('card_contacts').select('*').order('created_at',{ascending:false});
+  cardContacts=data||[];
+  const newCount=cardContacts.filter(c=>c.status==='new').length;
+  document.getElementById('contacts-badge').textContent=newCount||'';
+  updateCCStats();
+}
+function updateCCStats(){
+  const total=cardContacts.length;
+  const now=Date.now();
+  const week=cardContacts.filter(c=>(now-new Date(c.created_at).getTime())<604800000).length;
+  const promoted=cardContacts.filter(c=>c.promoted_to_lead).length;
+  const rate=total?Math.round(promoted/total*100)+'%':'—';
+  const src={};
+  cardContacts.forEach(c=>{if(c.source_slug)src[c.source_slug]=(src[c.source_slug]||0)+1});
+  const topSrc=Object.entries(src).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('cc-stat-total').textContent=total||0;
+  document.getElementById('cc-stat-week').textContent=week||0;
+  document.getElementById('cc-stat-rate').textContent=rate;
+  document.getElementById('cc-stat-source').textContent=topSrc?topSrc[0]:'—';
+}
+function renderCardContacts(){
+  const q=(document.getElementById('cc-search')?.value||'').toLowerCase();
+  const sf=document.getElementById('cc-status-filter')?.value||'';
+  const rows=cardContacts.filter(c=>{
+    const m=!q||[c.name,c.email,c.phone].some(f=>(f||'').toLowerCase().includes(q));
+    return m&&(!sf||c.status===sf);
+  });
+  const tbody=document.getElementById('cc-tbody');
+  if(!tbody) return;
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--hint);padding:32px">No contacts yet.</td></tr>';return;}
+  tbody.innerHTML=rows.map(c=>`<tr>
+    <td style="font-weight:600">${esc(c.name||'—')}</td>
+    <td style="font-size:12px">${c.phone?`<div>${esc(c.phone)}</div>`:''}<div style="color:var(--hint)">${esc(c.email||'')}</div></td>
+    <td><code style="font-size:11px">${esc(c.promo_code||'—')}</code></td>
+    <td style="font-size:12px">${esc(c.source_name||c.source_slug||'—')}</td>
+    <td><select onchange="updateContactStatus('${c.id}',this.value)" style="padding:4px 8px;font-size:12px;border:1px solid var(--border);border-radius:6px;font-family:var(--sans)">
+      ${['new','contacted','qualified','converted','archived'].map(s=>`<option value="${s}"${c.status===s?' selected':''}>${cap(s)}</option>`).join('')}
+    </select></td>
+    <td style="font-size:12px;white-space:nowrap">${fmtDate(c.created_at?.slice(0,10))}</td>
+    <td>${!c.promoted_to_lead?`<button class="btn btn-ghost btn-sm" onclick="promoteToLead('${c.id}')" style="font-size:11px">→ Lead</button>`:'<span style="font-size:11px;color:var(--hint)">In Leads</span>'}</td>
+  </tr>`).join('');
+}
+async function updateContactStatus(id,status){
+  const {error}=await db.from('card_contacts').update({status}).eq('id',id);
+  if(error){toast('Error updating status');return;}
+  const c=cardContacts.find(x=>x.id===id);
+  if(c) c.status=status;
+  document.getElementById('contacts-badge').textContent=cardContacts.filter(c=>c.status==='new').length||'';
+  toast('Status updated ✓');
+}
+async function promoteToLead(id){
+  const c=cardContacts.find(x=>x.id===id);
+  if(!c) return;
+  if(!confirm(`Promote ${c.name||'this contact'} to a Lead?`)) return;
+  const {data:lead,error:le}=await db.from('leads').insert({
+    name:c.name,email:c.email||'',phone:c.phone||'',
+    source:'card:'+(c.source_slug||'card'),status:'new',notes:c.notes||''
+  }).select().single();
+  if(le){toast('Error: '+le.message);return;}
+  await db.from('card_contacts').update({promoted_to_lead:true,lead_id:lead?.id}).eq('id',id);
+  await loadCardContacts();
+  await loadLeads(); renderLeads();
+  renderCardContacts();
+  toast('Promoted to Lead ✓');
+}
+function exportContactsCSV(){
+  const headers=['Name','Email','Phone','Promo Code','Source','Status','Promoted','Captured'];
+  const rows=cardContacts.map(c=>[c.name,c.email,c.phone,c.promo_code,c.source_name||c.source_slug,c.status,c.promoted_to_lead?'yes':'no',c.created_at?.slice(0,10)]);
+  const csv=[headers,...rows].map(r=>r.map(f=>'"'+(f==null?'':f).toString().replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='card-contacts-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+}
+// ── QR CODES ──────────────────────────────────────────────
+async function loadQRCodes(){
+  const {data:codes}=await db.from('qr_codes').select('*').order('created_at',{ascending:false});
+  qrCodes=codes||[];
+  qrScanStats={};
+  const {data:scans}=await db.from('card_scans').select('source_slug,converted');
+  (scans||[]).forEach(s=>{
+    if(!qrScanStats[s.source_slug])qrScanStats[s.source_slug]={total:0,converted:0};
+    qrScanStats[s.source_slug].total++;
+    if(s.converted)qrScanStats[s.source_slug].converted++;
+  });
+  updateQRStats();
+}
+function updateQRStats(){
+  const active=qrCodes.filter(q=>q.active).length;
+  const scans=Object.values(qrScanStats).reduce((a,s)=>a+s.total,0);
+  const captures=Object.values(qrScanStats).reduce((a,s)=>a+s.converted,0);
+  document.getElementById('qr-stat-active').textContent=active;
+  document.getElementById('qr-stat-scans').textContent=scans;
+  document.getElementById('qr-stat-captures').textContent=captures;
+  document.getElementById('qr-stat-rate').textContent=scans?Math.round(captures/scans*100)+'%':'—';
+}
+function renderQRCodes(){
+  const tbody=document.getElementById('qr-tbody');
+  if(!tbody) return;
+  if(!qrCodes.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--hint);padding:32px">No QR codes yet. Click "+ New QR Code" to create one.</td></tr>';return;}
+  tbody.innerHTML=qrCodes.map(q=>{
+    const s=qrScanStats[q.slug]||{total:0,converted:0};
+    return `<tr>
+      <td class="qr-canvas-cell" id="qrcell-${q.slug}"></td>
+      <td style="font-weight:600">${esc(q.name)}</td>
+      <td style="font-size:12px"><code>${esc(q.slug)}</code></td>
+      <td><code style="font-size:11px">${esc(q.promo_code||'—')}</code></td>
+      <td style="font-weight:700;color:${q.active?'var(--green)':'var(--hint)'}">${q.active?'Active':'Paused'}</td>
+      <td style="text-align:center">${s.total}</td>
+      <td style="text-align:center">${s.converted}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="editQRCode('${q.id}')">Edit</button> <button class="btn btn-ghost btn-sm" onclick="downloadQR('${esc(q.slug)}','${esc(q.name)}')">↓ GIF</button></td>
+    </tr>`;
+  }).join('');
+  qrCodes.forEach(q=>{
+    const cell=document.getElementById('qrcell-'+q.slug);
+    if(!cell||typeof qrcode==='undefined') return;
+    try{const qr=qrcode(0,'M');qr.addData('https://learnwatersports.ca/card?q='+q.slug);qr.make();cell.innerHTML=qr.createImgTag(2,2);}catch(e){}
+  });
+}
+function openQRModal(editId){
+  document.getElementById('qr-modal-title').textContent=editId?'Edit QR Code':'New QR Code';
+  document.getElementById('qr-editing-id').value=editId||'';
+  document.getElementById('qr-delete-btn').style.display=editId?'':'none';
+  if(editId){
+    const q=qrCodes.find(x=>x.id===editId);
+    if(q){
+      document.getElementById('qr-name').value=q.name||'';
+      document.getElementById('qr-slug').value=q.slug||'';
+      document.getElementById('qr-promo').value=q.promo_code||'';
+      document.getElementById('qr-desc').value=q.description||'';
+      document.getElementById('qr-active').checked=!!q.active;
+    }
+  } else {
+    ['qr-name','qr-slug','qr-promo','qr-desc'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('qr-active').checked=true;
+  }
+  openModal('qr-modal');
+}
+function editQRCode(id){openQRModal(id);}
+async function saveQRCode(){
+  const editId=document.getElementById('qr-editing-id').value;
+  const name=document.getElementById('qr-name').value.trim();
+  const slug=document.getElementById('qr-slug').value.trim();
+  if(!name||!slug){toast('Name and slug are required');return;}
+  const payload={name,slug,promo_code:document.getElementById('qr-promo').value.trim()||null,description:document.getElementById('qr-desc').value.trim()||null,active:document.getElementById('qr-active').checked};
+  const {error}=editId?await db.from('qr_codes').update(payload).eq('id',editId):await db.from('qr_codes').insert(payload);
+  if(error){toast(error.code==='23505'?'Slug already exists':'Error: '+error.message);return;}
+  closeModal('qr-modal');
+  qrScanStats={};
+  await loadQRCodes();renderQRCodes();
+  toast('QR code saved ✓');
+}
+async function deleteQRCode(){
+  const editId=document.getElementById('qr-editing-id').value;
+  if(!editId||!confirm('Delete this QR code? Scan history is kept.')) return;
+  const {error}=await db.from('qr_codes').delete().eq('id',editId);
+  if(error){toast('Error deleting');return;}
+  closeModal('qr-modal');
+  qrScanStats={};
+  await loadQRCodes();renderQRCodes();
+  toast('QR code deleted');
+}
+function downloadQR(slug){
+  if(typeof qrcode==='undefined'){toast('QR library not loaded');return;}
+  try{
+    const qr=qrcode(0,'M');
+    qr.addData('https://learnwatersports.ca/card?q='+slug);
+    qr.make();
+    const tmp=document.createElement('div');
+    tmp.innerHTML=qr.createImgTag(8,4);
+    const img=tmp.querySelector('img');
+    if(!img){toast('QR generation failed');return;}
+    const a=document.createElement('a');
+    a.href=img.src;
+    a.download='qr-'+slug+'.gif';
+    a.click();
+  }catch(e){toast('Error: '+e.message);}
+}
+// ── DIGITAL CARD CONFIG ───────────────────────────────────
+async function loadCardConfig(){
+  document.getElementById('dc-save-status').textContent='Loading…';
+  const {data,error}=await db.from('card_config').select('*').limit(1).single();
+  if(error||!data){document.getElementById('dc-save-status').textContent='Load failed — check Supabase';return;}
+  cardConfig=data;cardConfigLoaded=true;
+  populateDCForm(data);
+  document.getElementById('dc-save-status').textContent='';
+}
+function populateDCForm(d){
+  const sv=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v||'';};
+  sv('dc-hero-image',d.hero_image_url);sv('dc-eyebrow',d.eyebrow_text);sv('dc-display-name',d.display_name);
+  const credList=document.getElementById('dc-creds-list');
+  credList.innerHTML='';
+  (d.credentials||[]).forEach((c,i)=>credList.insertAdjacentHTML('beforeend',dcCredRow(i,c.label||c)));
+  sv('dc-tagline',d.tagline);
+  document.getElementById('dc-desc-lines').value=(d.description_lines||[]).join('\n');
+  sv('dc-cta',d.cta_text);
+  const numList=document.getElementById('dc-nums-list');
+  numList.innerHTML='';
+  (d.key_numbers||[]).forEach((n,i)=>numList.insertAdjacentHTML('beforeend',dcNumRow(i,n)));
+  sv('dc-portfolio-title',d.portfolio_title);
+  const portList=document.getElementById('dc-portfolio-list');
+  portList.innerHTML='';
+  (d.portfolio_items||[]).forEach((p,i)=>portList.insertAdjacentHTML('beforeend',dcPortRow(i,p)));
+  sv('dc-video-url',d.intro_video_url);sv('dc-video-caption',d.intro_video_caption);
+  sv('dc-phone',d.contact_phone);sv('dc-email',d.contact_email);sv('dc-website',d.contact_website);
+  const socList=document.getElementById('dc-socials-list');
+  socList.innerHTML='';
+  (d.socials||[]).forEach((s,i)=>socList.insertAdjacentHTML('beforeend',dcSocialRow(i,s)));
+  sv('dc-ex-headline',d.exchange_headline);sv('dc-ex-eyebrow',d.exchange_subheadline);
+  sv('dc-ex-description',d.exchange_description);sv('dc-ex-promo-label',d.exchange_promo_field_label);
+  sv('dc-footer-text',d.footer_text);
+  renderBlockOrderList(d.block_order||['credentials','description','key_numbers','portfolio','intro_video','contact_info','socials'],{});
+}
+function dcCredRow(i,val){return `<div class="dc-list-row dc-cred-row" data-idx="${i}"><input type="text" class="dc-cred-val" placeholder="e.g. AWSI Certified Instructor" value="${esc(val)}"/><button class="remove-btn" onclick="this.closest('.dc-list-row').remove()">×</button></div>`;}
+function dcNumRow(i,n){return `<div class="dc-list-row dc-num-row" data-idx="${i}"><input type="text" class="dc-num-val" placeholder="25+" value="${esc(n.number||'')}"/><input type="text" class="dc-num-label" placeholder="label" value="${esc(n.caption||'')}"/><button class="remove-btn" onclick="this.closest('.dc-list-row').remove()">×</button></div>`;}
+function dcPortRow(i,p){return `<div class="dc-list-row dc-port-row" data-idx="${i}"><input type="text" class="dc-port-img" placeholder="Image URL" value="${esc(p.image||'')}"/><input type="text" class="dc-port-cap" placeholder="Caption" value="${esc(p.caption||'')}"/><input type="text" class="dc-port-url" placeholder="Link URL (opt)" value="${esc(p.link_url||'')}"/><button class="remove-btn" onclick="this.closest('.dc-list-row').remove()">×</button></div>`;}
+function dcSocialRow(i,s){
+  const nets=['instagram','facebook','tiktok','youtube','x','linkedin','snapchat'];
+  const sel=nets.map(n=>`<option value="${n}"${s.platform===n?' selected':''}>${cap(n)}</option>`).join('');
+  return `<div class="dc-list-row dc-social-row" data-idx="${i}"><select class="dc-soc-net">${sel}</select><input type="text" class="dc-soc-url" placeholder="https://..." value="${esc(s.url||'')}"/><button class="remove-btn" onclick="this.closest('.dc-list-row').remove()">×</button></div>`;
+}
+function addDcCred(){const l=document.getElementById('dc-creds-list');l.insertAdjacentHTML('beforeend',dcCredRow(l.children.length,''));l.lastElementChild.querySelector('input').focus();}
+function addDcNum(){const l=document.getElementById('dc-nums-list');l.insertAdjacentHTML('beforeend',dcNumRow(l.children.length,{}));}
+function addDcPortfolio(){const l=document.getElementById('dc-portfolio-list');l.insertAdjacentHTML('beforeend',dcPortRow(l.children.length,{}));}
+function addDcSocial(){const l=document.getElementById('dc-socials-list');l.insertAdjacentHTML('beforeend',dcSocialRow(l.children.length,{}));}
+function dcToggle(id){const b=document.getElementById(id);if(!b)return;const col=b.classList.toggle('collapsed');const ch=b.previousElementSibling?.querySelector('.dc-chevron');if(ch)ch.style.transform=col?'rotate(-90deg)':'';}
+function renderBlockOrderList(order,visible){
+  const labels={credentials:'Credentials',description:'Description',key_numbers:'Key Numbers',portfolio:'Portfolio',intro_video:'Intro Video',contact_info:'Contact Info',socials:'Socials'};
+  const list=document.getElementById('dc-blocks-list');
+  list.innerHTML='';
+  // Support both DB object format {block_id,enabled,order} and plain string format
+  const normalized=order.map(b=>typeof b==='object'?{id:b.block_id,on:b.enabled!==false}:{id:b,on:true});
+  normalized.forEach(({id,on},i)=>{
+    list.insertAdjacentHTML('beforeend',`<div class="block-order-row" data-block="${id}">
+      <label class="toggle-sw"><input type="checkbox" class="block-vis-cb"${on?' checked':''}><span class="toggle-sl"></span></label>
+      <span class="block-order-label">${labels[id]||id}</span>
+      <div class="block-order-btns">
+        <button class="block-order-btn" onclick="moveBlock(this,-1)"${i===0?' disabled':''}>↑</button>
+        <button class="block-order-btn" onclick="moveBlock(this,1)"${i===normalized.length-1?' disabled':''}>↓</button>
+      </div>
+    </div>`);
+  });
+}
+function moveBlock(btn,dir){
+  const row=btn.closest('.block-order-row');
+  const list=document.getElementById('dc-blocks-list');
+  const rows=[...list.querySelectorAll('.block-order-row')];
+  const idx=rows.indexOf(row);
+  const target=rows[idx+dir];
+  if(!target) return;
+  if(dir===-1)list.insertBefore(row,target);else list.insertBefore(target,row);
+  const nr=[...list.querySelectorAll('.block-order-row')];
+  nr.forEach((r,i)=>{const bs=r.querySelectorAll('.block-order-btn');bs[0].disabled=i===0;bs[1].disabled=i===nr.length-1;});
+}
+function collectDCConfig(){
+  const gv=id=>(document.getElementById(id)?.value||'').trim();
+  const creds=[...document.querySelectorAll('.dc-cred-row .dc-cred-val')].map(i=>i.value.trim()).filter(Boolean);
+  const descLines=(document.getElementById('dc-desc-lines')?.value||'').split('\n').map(l=>l.trim()).filter(Boolean);
+  const nums=[...document.querySelectorAll('.dc-num-row')].map(r=>({number:r.querySelector('.dc-num-val')?.value.trim(),caption:r.querySelector('.dc-num-label')?.value.trim()})).filter(n=>n.number&&n.caption);
+  const portItems=[...document.querySelectorAll('.dc-port-row')].map(r=>({image:r.querySelector('.dc-port-img')?.value.trim(),caption:r.querySelector('.dc-port-cap')?.value.trim(),link_url:r.querySelector('.dc-port-url')?.value.trim()||undefined})).filter(p=>p.image||p.caption);
+  const socs=[...document.querySelectorAll('.dc-social-row')].map(r=>{const p=r.querySelector('.dc-soc-net')?.value;return{platform:p,label:p?p.charAt(0).toUpperCase()+p.slice(1):'',url:r.querySelector('.dc-soc-url')?.value.trim()};}).filter(s=>s.url);
+  const blockRows=[...document.querySelectorAll('#dc-blocks-list .block-order-row')];
+  const block_order=blockRows.map((r,i)=>({block_id:r.dataset.block,enabled:r.querySelector('.block-vis-cb').checked,order:i+1}));
+  return {
+    hero_image_url:gv('dc-hero-image'),eyebrow_text:gv('dc-eyebrow'),display_name:gv('dc-display-name'),
+    credentials:creds,tagline:gv('dc-tagline'),description_lines:descLines,cta_text:gv('dc-cta'),
+    key_numbers:nums,portfolio_title:gv('dc-portfolio-title')||'Portfolio',portfolio_items:portItems,
+    intro_video_url:gv('dc-video-url'),intro_video_caption:gv('dc-video-caption'),
+    contact_phone:gv('dc-phone'),contact_email:gv('dc-email'),contact_website:gv('dc-website'),
+    socials:socs,
+    exchange_headline:gv('dc-ex-headline'),exchange_subheadline:gv('dc-ex-eyebrow'),
+    exchange_description:gv('dc-ex-description'),exchange_promo_field_label:gv('dc-ex-promo-label'),
+    footer_text:gv('dc-footer-text'),block_order
+  };
+}
+async function saveCardConfig(){
+  const st=document.getElementById('dc-save-status');
+  st.textContent='Saving…';
+  const cfg=collectDCConfig();
+  const {error}=await db.from('card_config').update(cfg).eq('id',cardConfig.id);
+  if(error){st.textContent='Error: '+error.message;toast('Save failed');return;}
+  cardConfig={...cardConfig,...cfg};
+  st.textContent='Saved ✓';
+  setTimeout(()=>{if(st.textContent==='Saved ✓')st.textContent='';},3000);
+  toast('Card config saved ✓');
+}
 </script>
   <script>
 // ===== TASKS DASHBOARD =====
