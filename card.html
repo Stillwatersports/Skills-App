@@ -439,6 +439,20 @@ async function submitExchange(e) {
     if (contact && scanId) {
       await db.from('card_scans').update({ converted:true, contact_id:contact.id }).eq('id', scanId);
     }
+
+    // Fire-and-forget notification — credentials never exposed in client code
+    fetch('https://isbhflfmugfeqwhhqlkh.supabase.co/functions/v1/notify-new-contact', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name,
+        email: email || null,
+        phone,
+        promo_code: promo || null,
+        source: qrCode ? qrCode.name : (srcSlug || 'direct'),
+      }),
+    }).catch(() => {});
+
   } catch(err) {
     console.warn('Exchange save failed:', err);
     // Don't block the user — show card anyway
