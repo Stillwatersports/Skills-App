@@ -119,15 +119,24 @@ body{font-family:'Outfit',sans-serif;background:var(--yellow);color:var(--dark);
   text-align:center;margin-top:10px;line-height:1.5;
 }
 .privacy-note a{color:var(--muted)}
-#not-now-link{
-  display:block;text-align:center;font-size:12px;
-  font-weight:700;color:rgba(255,255,240,.75);
-  letter-spacing:.1em;text-transform:uppercase;
-  text-decoration:none;margin-top:22px;
-  text-shadow:0 1px 4px rgba(0,0,0,.4);
-  padding:8px;
+#skip-btn{
+  position:absolute;top:14px;right:14px;
+  background:none;border:none;color:var(--hint);
+  font-size:17px;width:28px;height:28px;border-radius:50%;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:color .15s,background .15s;z-index:2;
 }
-#not-now-link:hover{color:#fff}
+#skip-btn:hover{color:var(--muted);background:rgba(58,106,106,.08)}
+.btn-cta{
+  display:block;width:100%;padding:16px;
+  background:var(--cyan);color:var(--yellow);
+  font-family:'Outfit',sans-serif;font-size:16px;
+  font-weight:800;border:none;border-radius:50px;
+  cursor:pointer;letter-spacing:.02em;
+  margin-bottom:12px;transition:background .15s;
+  text-decoration:none;text-align:center;
+}
+.btn-cta:hover{background:#00b3be}
 
 /* ── CARD ── */
 #card{display:none;max-width:480px;margin:0 auto;background:var(--yellow)}
@@ -242,7 +251,8 @@ body{font-family:'Outfit',sans-serif;background:var(--yellow);color:var(--dark);
 <div id="gate">
   <div id="gate-bg"></div>
   <div id="gate-wrap">
-    <div id="gate-card">
+    <div id="gate-card" style="position:relative">
+      <button id="skip-btn" onclick="skipExchange(event)" aria-label="Close">✕</button>
       <div id="gate-eyebrow">LET'S CONNECT</div>
       <h1 id="gate-headline">LEARN MORE</h1>
       <p id="gate-description">Your info for mine. Quick.</p>
@@ -252,15 +262,15 @@ body{font-family:'Outfit',sans-serif;background:var(--yellow);color:var(--dark);
           <input type="text" id="f-name" placeholder="Your name" autocomplete="name"/>
         </div>
         <div class="field-group">
-          <label for="f-email">EMAIL <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
-          <input type="email" id="f-email" placeholder="you@email.com" autocomplete="email"/>
-        </div>
-        <div class="field-group">
           <label for="f-phone">PHONE</label>
           <div class="phone-row">
             <span class="flag-prefix">🇨🇦 +1</span>
             <input type="tel" id="f-phone" placeholder="613 555 0123" autocomplete="tel-national"/>
           </div>
+        </div>
+        <div class="field-group">
+          <label for="f-email">EMAIL <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+          <input type="email" id="f-email" placeholder="you@email.com" autocomplete="email"/>
         </div>
         <div class="field-group">
           <label for="f-promo" id="f-promo-label">PROMO CODE / WHERE DID YOU HEAR ABOUT US? (OPTIONAL)</label>
@@ -271,7 +281,6 @@ body{font-family:'Outfit',sans-serif;background:var(--yellow);color:var(--dark);
         <p class="privacy-note">By exchanging you agree to our <a href="/policies">privacy policy</a>.</p>
       </form>
     </div>
-    <a href="#" id="not-now-link" onclick="skipExchange(event)">NOT NOW</a>
   </div>
 </div>
 
@@ -286,6 +295,7 @@ body{font-family:'Outfit',sans-serif;background:var(--yellow);color:var(--dark);
   </div>
   <div id="card-body">
     <h1 id="card-name">Christian Richards</h1>
+    <a id="btn-cta" class="btn-cta" href="#">Send Us a Text</a>
     <button class="btn-save-contact" onclick="downloadVCard()">Save Contact</button>
     <div id="card-blocks"></div>
   </div>
@@ -333,6 +343,8 @@ const DEFAULT_CFG = {
   vcard_org:'Stillwater Sports',vcard_title:'Head Coach',
   vcard_url:'https://learnwatersports.ca',
   vcard_note:'Premium private waterski, wakeboard & wakesurf coaching. Ottawa Valley & cottage country.',
+  cta_button_text:'Send Us a Text',
+  cta_button_sms_body:'Hi christian i saw your flyer for stillwater sports and wanted to know more!',
   hero_overlay_gradient:'linear-gradient(180deg, rgba(10,40,40,0.3) 0%, rgba(10,40,40,0.7) 100%)'
 };
 
@@ -473,6 +485,11 @@ function renderCard() {
 
   document.getElementById('hero-eyebrow').textContent = c.eyebrow_text || 'HEAD COACH';
   document.getElementById('card-name').textContent = c.display_name || 'Christian Richards';
+  const ctaBtn = document.getElementById('btn-cta');
+  ctaBtn.textContent = c.cta_button_text || 'Send Us a Text';
+  const ctaPhone = (c.contact_phone || '+16132995998').replace(/\s/g,'');
+  const ctaBody = encodeURIComponent(c.cta_button_sms_body || 'Hi christian i saw your flyer for stillwater sports and wanted to know more!');
+  ctaBtn.href = 'sms:' + ctaPhone + '?body=' + ctaBody;
 
   // Blocks
   const blockOrder = c.block_order || DEFAULT_CFG.block_order;

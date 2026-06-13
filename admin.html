@@ -90,7 +90,7 @@ h1,h2,h3,.card-title,.stat-num,.cal-nav h2,.modal-title{font-family:var(--serif)
 /* TABLES */
 .bookings-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
 .bookings-toolbar input,.bookings-toolbar select{padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:var(--sans);outline:none;background:#fff}
-.bookings-toolbar input:focus,.bookings-toolbar select:focus{border-color:var(--cyan)}
+.bookings-toolbar input:focus,.bookings-toolbar select:focus{border-color:var(--pink)}
 table{width:100%;border-collapse:collapse}
 th{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:10px 14px;text-align:left;border-bottom:2px solid var(--border);background:rgba(0,200,212,.04)}
 td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:14px;vertical-align:middle}
@@ -110,7 +110,7 @@ tr:hover td{background:rgba(0,200,212,.03)}
 
 /* Booking inline status select */
 .booking-status-select{padding:4px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--sans);outline:none;cursor:pointer;background:#fff;color:var(--dark)}
-.booking-status-select:focus{border-color:var(--cyan)}
+.booking-status-select:focus{border-color:var(--pink)}
 
 /* BUTTONS */
 .btn{padding:8px 16px;border-radius:8px;border:none;font-weight:600;font-size:13px;cursor:pointer;font-family:var(--sans);transition:all .15s}
@@ -130,8 +130,8 @@ tr:hover td{background:rgba(0,200,212,.03)}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
 .form-group{margin-bottom:16px}
 .form-group label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase}
-.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:var(--sans);outline:none;background:#fff}
-.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--cyan)}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 14px;border:1.5px solid rgba(224,64,160,.3);border-radius:8px;font-size:14px;font-family:var(--sans);outline:none;background:#fff}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--pink)}
 .form-group textarea{min-height:80px;resize:vertical;line-height:1.6}
 .section-label{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 
@@ -393,6 +393,9 @@ tr:hover td{background:rgba(0,200,212,.03)}
       <div class="bookings-toolbar">
         <input type="text" id="search-leads" placeholder="Search leads by name or email..." oninput="filterLeads()"/>
         <button class="btn btn-primary" onclick="openAddLead()">+ New Lead</button>
+        <button class="btn btn-ghost" onclick="exportLeadsCSV()">Export CSV</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('leads-csv-input').click()">Import CSV</button>
+        <input type="file" id="leads-csv-input" accept=".csv" style="display:none" onchange="importLeadsCSV(this)"/>
       </div>
       <div class="card" style="padding:0">
         <table>
@@ -547,6 +550,19 @@ tr:hover td{background:rgba(0,200,212,.03)}
           </div>
         </div>
         <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-ctabtn')">CTA Button <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body collapsed" id="dc-body-ctabtn">
+            <div class="form-row">
+              <div class="form-group"><label>Button Text</label><input type="text" id="dc-cta-btn-text" placeholder="Send Us a Text"/></div>
+            </div>
+            <div class="form-group">
+              <label>SMS Pre-filled Message</label>
+              <input type="text" id="dc-cta-sms-body" placeholder="Hi christian i saw your flyer for stillwater sports and wanted to know more!"/>
+              <p style="font-size:11px;color:var(--hint);margin-top:4px">Opens the SMS app with this message pre-filled when tapped.</p>
+            </div>
+          </div>
+        </div>
+        <div class="dc-section">
           <div class="dc-section-header" onclick="dcToggle('dc-body-creds')">Credentials <span class="dc-chevron">▾</span></div>
           <div class="dc-section-body" id="dc-body-creds">
             <div id="dc-creds-list"></div>
@@ -637,7 +653,7 @@ tr:hover td{background:rgba(0,200,212,.03)}
     <input type="hidden" id="qr-editing-id"/>
     <div class="form-group"><label>Name (e.g. Duck Lake Marina)</label><input type="text" id="qr-name"/></div>
     <div class="form-group"><label>Slug (URL-safe, e.g. ducklake)</label><input type="text" id="qr-slug" placeholder="ducklake" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')"/></div>
-    <div class="form-group"><label>Default Promo Code (optional)</label><input type="text" id="qr-promo" placeholder="DuckLake15"/></div>
+    <div class="form-group"><label>Default Promo Code (optional)</label><select id="qr-promo" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:var(--sans);background:#fff"><option value="">— None —</option></select></div>
     <div class="form-group"><label>Description / Location (optional)</label><input type="text" id="qr-desc" placeholder="Duck Lake boat launch kiosk"/></div>
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
       <label style="font-size:13px;font-weight:600;color:var(--muted)">Active</label>
@@ -792,14 +808,27 @@ tr:hover td{background:rgba(0,200,212,.03)}
       <div class="form-group"><label>Phone</label><input type="tel" id="ld-phone"/></div>
       <div class="form-group"><label>Sport / Interest</label><input type="text" id="ld-sport" placeholder="Waterski, Wakeboard..."/></div>
     </div>
-    <div class="form-group"><label>Status</label>
-      <select id="ld-status">
-        <option value="new">New</option>
-        <option value="hot">Hot</option>
-        <option value="warm">Warm</option>
-        <option value="cold">Cold</option>
-        <option value="archived">Archived</option>
-      </select>
+    <div class="form-row">
+      <div class="form-group"><label>Status</label>
+        <select id="ld-status">
+          <option value="new">New</option>
+          <option value="hot">Hot</option>
+          <option value="warm">Warm</option>
+          <option value="cold">Cold</option>
+          <option value="archived">Archived</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Source</label>
+        <select id="ld-source">
+          <option value="">—</option>
+          <option value="website">Website</option>
+          <option value="resort">Resort</option>
+          <option value="facebook">Facebook</option>
+          <option value="instagram">Instagram</option>
+          <option value="referral">Referral</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
     </div>
     <div class="form-group"><label>Inquiry / Message</label><textarea id="ld-message" placeholder="What they reached out about..."></textarea></div>
     <div class="form-group"><label>Notes</label><textarea id="ld-notes"></textarea></div>
@@ -1444,13 +1473,14 @@ function renderLeads(filter=''){
   }
   // Sort by LEAD_RANK, then by created_at descending within same rank
   list.sort((a,b) => (LEAD_RANK[a.status] ?? 9) - (LEAD_RANK[b.status] ?? 9));
+  const srcOpts = ['','website','resort','facebook','instagram','referral','other'];
   tb.innerHTML = list.length ? list.map(l=>`<tr>
     <td><strong>${esc(l.name||'—')}</strong></td>
     <td style="font-size:13px">${esc(l.email||'')}${l.phone?'<br>'+esc(l.phone):''}</td>
     <td style="font-size:13px">${esc(l.sport||'—')}</td>
-    <td style="font-size:13px;max-width:260px">${esc((l.message||'').slice(0,140))}</td>
+    <td style="font-size:13px;max-width:260px;cursor:pointer" onclick="inlineEditInquiry(this,'${l.id}')" title="Click to edit">${esc((l.message||'').slice(0,140))||'<span style=color:var(--hint)>click to add…</span>'}</td>
     <td><select class="booking-status-select" onchange="updateLeadStatus('${l.id}', this.value)">${['new','hot','warm','cold','archived'].map(s=>`<option value="${s}"${l.status===s?' selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}</select></td>
-    <td style="font-size:12px;color:var(--muted)">${esc(l.source||'')}</td>
+    <td><select class="booking-status-select" onchange="updateLeadSource('${l.id}', this.value)">${srcOpts.map(s=>`<option value="${s}"${(l.source||'')===s?' selected':''}>${s?s.charAt(0).toUpperCase()+s.slice(1):'—'}</option>`).join('')}${l.source&&!srcOpts.includes(l.source)?`<option value="${esc(l.source)}" selected>${esc(l.source)}</option>`:''}</select></td>
     <td style="display:flex;gap:6px;flex-wrap:wrap">
       <button class="btn btn-primary btn-sm" onclick="openEditLead('${l.id}')">Edit</button>
       <button class="btn btn-pink btn-sm" onclick="convertLead('${l.id}')">→ Client</button>
@@ -1459,10 +1489,36 @@ function renderLeads(filter=''){
   </tr>`).join('') : '<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:24px">No active leads. New booking inquiries land here automatically each morning.</td></tr>';
 }
 function filterLeads(){ renderLeads(document.getElementById('search-leads').value); }
+function inlineEditInquiry(td, id){
+  const l = leads.find(x=>x.id===id); if(!l) return;
+  const orig = l.message||'';
+  td.onclick = null;
+  td.innerHTML = `<textarea style="width:100%;min-height:60px;padding:6px 8px;border:1.5px solid var(--pink);border-radius:6px;font-size:13px;font-family:var(--sans);outline:none;resize:vertical;line-height:1.5">${esc(orig)}</textarea>`;
+  const ta = td.querySelector('textarea');
+  ta.focus();
+  ta.addEventListener('blur', async ()=>{
+    const val = ta.value.trim();
+    if(val !== orig){
+      const {error} = await db.from('leads').update({message:val}).eq('id',id);
+      if(error){ toast('Error saving inquiry'); }
+      else { l.message = val; toast('Inquiry updated ✓'); }
+    }
+    renderLeads(document.getElementById('search-leads').value);
+  });
+  ta.addEventListener('keydown', e=>{ if(e.key==='Escape'){ ta.value=orig; ta.blur(); } });
+}
+async function updateLeadSource(id, source){
+  const {error} = await db.from('leads').update({source}).eq('id',id);
+  if(error){ toast('Error updating source'); return; }
+  const l = leads.find(x=>x.id===id);
+  if(l) l.source = source;
+  toast('Source updated ✓');
+}
 function openAddLead(){
   editingLeadId = null;
   ['ld-name','ld-email','ld-phone','ld-sport','ld-message','ld-notes'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('ld-status').value='new';
+  document.getElementById('ld-source').value='';
   document.getElementById('lead-modal-title').textContent='New Lead';
   document.getElementById('lead-delete-btn').style.display='none';
   document.getElementById('lead-convert-btn').style.display='none';
@@ -1478,6 +1534,7 @@ function openEditLead(id){
   document.getElementById('ld-message').value=l.message||'';
   document.getElementById('ld-notes').value=l.notes||'';
   document.getElementById('ld-status').value=l.status||'new';
+  document.getElementById('ld-source').value=l.source||'';
   document.getElementById('lead-modal-title').textContent='Edit Lead';
   document.getElementById('lead-delete-btn').style.display='inline-block';
   document.getElementById('lead-convert-btn').style.display='inline-block';
@@ -1491,11 +1548,12 @@ async function saveLead(){
     sport: document.getElementById('ld-sport').value.trim(),
     message: document.getElementById('ld-message').value.trim(),
     notes: document.getElementById('ld-notes').value.trim(),
-    status: document.getElementById('ld-status').value
+    status: document.getElementById('ld-status').value,
+    source: document.getElementById('ld-source').value || 'manual'
   };
   if(!data.name){ toast('Lead name is required'); return; }
   if(editingLeadId){ await db.from('leads').update(data).eq('id', editingLeadId); }
-  else { data.source='manual'; await db.from('leads').insert(data); }
+  else { await db.from('leads').insert(data); }
   closeModal('lead-modal');
   await loadLeads(); renderLeads();
   toast('Lead saved ✓');
@@ -1507,6 +1565,55 @@ async function deleteLead(id){
   closeModal('lead-modal');
   await loadLeads(); renderLeads();
   toast('Lead deleted');
+}
+function exportLeadsCSV(){
+  const headers=['Name','Email','Phone','Sport','Source','Status','Inquiry','Notes','Created'];
+  const rows=leads.filter(l=>l.status!=='converted').map(l=>[l.name,l.email,l.phone,l.sport,l.source,l.status,l.message,l.notes,l.created_at?.slice(0,10)]);
+  const csv=[headers,...rows].map(r=>r.map(f=>'"'+(f==null?'':f).toString().replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='leads-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+  toast('Leads exported ✓');
+}
+async function importLeadsCSV(input){
+  const file=input.files[0]; if(!file) return;
+  const text=await file.text();
+  const lines=text.split('\n').map(l=>l.trim()).filter(Boolean);
+  if(lines.length<2){toast('CSV must have a header row and at least one data row');input.value='';return;}
+  const hdr=lines[0].split(',').map(h=>h.replace(/^"|"$/g,'').trim().toLowerCase());
+  const nameIdx=hdr.findIndex(h=>h==='name');
+  const emailIdx=hdr.findIndex(h=>h==='email');
+  const phoneIdx=hdr.findIndex(h=>h==='phone');
+  const sportIdx=hdr.findIndex(h=>h==='sport');
+  const sourceIdx=hdr.findIndex(h=>h==='source');
+  const statusIdx=hdr.findIndex(h=>h==='status');
+  const msgIdx=hdr.findIndex(h=>h==='inquiry'||h==='message');
+  const notesIdx=hdr.findIndex(h=>h==='notes');
+  if(nameIdx<0){toast('CSV must have a "Name" column');input.value='';return;}
+  const rows=[];
+  for(let i=1;i<lines.length;i++){
+    const cols=lines[i].match(/("(?:[^"]|"")*"|[^,]*)/g).map(c=>c.replace(/^"|"$/g,'').replace(/""/g,'"').trim());
+    const name=cols[nameIdx];
+    if(!name) continue;
+    rows.push({
+      name,
+      email:emailIdx>=0?cols[emailIdx]||null:null,
+      phone:phoneIdx>=0?cols[phoneIdx]||null:null,
+      sport:sportIdx>=0?cols[sportIdx]||null:null,
+      source:sourceIdx>=0?cols[sourceIdx]||'manual':'manual',
+      status:statusIdx>=0&&['new','hot','warm','cold','archived'].includes(cols[statusIdx])?cols[statusIdx]:'new',
+      message:msgIdx>=0?cols[msgIdx]||null:null,
+      notes:notesIdx>=0?cols[notesIdx]||null:null
+    });
+  }
+  if(!rows.length){toast('No valid rows found');input.value='';return;}
+  if(!confirm(`Import ${rows.length} lead(s)? Duplicates won't be merged.`)){input.value='';return;}
+  const {error}=await db.from('leads').insert(rows);
+  if(error){toast('Import error: '+error.message);input.value='';return;}
+  await loadLeads(); renderLeads();
+  input.value='';
+  toast(`${rows.length} lead(s) imported ✓`);
 }
 async function convertLead(id){
   const l = leads.find(x=>x.id===id); if(!l) return;
@@ -1811,7 +1918,7 @@ function renderCardContacts(){
       ${['new','contacted','qualified','converted','archived'].map(s=>`<option value="${s}"${c.status===s?' selected':''}>${cap(s)}</option>`).join('')}
     </select></td>
     <td style="font-size:12px;white-space:nowrap">${fmtDate(c.created_at?.slice(0,10))}</td>
-    <td>${!c.promoted_to_lead?`<button class="btn btn-ghost btn-sm" onclick="promoteToLead('${c.id}')" style="font-size:11px">→ Lead</button>`:'<span style="font-size:11px;color:var(--hint)">In Leads</span>'}</td>
+    <td style="display:flex;gap:4px;flex-wrap:wrap">${!c.promoted_to_lead?`<button class="btn btn-ghost btn-sm" onclick="promoteToLead('${c.id}')" style="font-size:11px">→ Lead</button>`:'<span style="font-size:11px;color:var(--hint)">In Leads</span>'}<button class="btn btn-danger btn-sm" onclick="deleteCardContact('${c.id}')" style="font-size:11px">Delete</button></td>
   </tr>`).join('');
 }
 async function updateContactStatus(id,status){
@@ -1826,9 +1933,12 @@ async function promoteToLead(id){
   const c=cardContacts.find(x=>x.id===id);
   if(!c) return;
   if(!confirm(`Promote ${c.name||'this contact'} to a Lead?`)) return;
+  const promoNote = c.promo_code ? `[Promo code: ${c.promo_code}]` : '';
+  const existingNotes = c.notes || '';
+  const combinedNotes = [promoNote, existingNotes].filter(Boolean).join('\n');
   const {data:lead,error:le}=await db.from('leads').insert({
     name:c.name,email:c.email||'',phone:c.phone||'',
-    source:'card:'+(c.source_slug||'card'),status:'new',notes:c.notes||''
+    source:'card:'+(c.source_slug||'card'),status:'new',notes:combinedNotes
   }).select().single();
   if(le){toast('Error: '+le.message);return;}
   await db.from('card_contacts').update({promoted_to_lead:true,lead_id:lead?.id}).eq('id',id);
@@ -1845,6 +1955,15 @@ function exportContactsCSV(){
   a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
   a.download='card-contacts-'+new Date().toISOString().slice(0,10)+'.csv';
   a.click();
+}
+async function deleteCardContact(id){
+  if(!id) return;
+  if(!confirm('Delete this contact? This cannot be undone.')) return;
+  const {error}=await db.from('card_contacts').delete().eq('id',id);
+  if(error){toast('Error deleting contact');return;}
+  await loadCardContacts();
+  renderCardContacts();
+  toast('Contact deleted');
 }
 // ── QR CODES ──────────────────────────────────────────────
 async function loadQRCodes(){
@@ -1895,17 +2014,21 @@ function openQRModal(editId){
   document.getElementById('qr-modal-title').textContent=editId?'Edit QR Code':'New QR Code';
   document.getElementById('qr-editing-id').value=editId||'';
   document.getElementById('qr-delete-btn').style.display=editId?'':'none';
+  // Populate promo dropdown from promo_codes table
+  const sel=document.getElementById('qr-promo');
+  sel.innerHTML='<option value="">— None —</option>'+(promoCodes||[]).map(p=>`<option value="${esc(p.code)}">${esc(p.code)}${p.label?' — '+esc(p.label):''}</option>`).join('');
   if(editId){
     const q=qrCodes.find(x=>x.id===editId);
     if(q){
       document.getElementById('qr-name').value=q.name||'';
       document.getElementById('qr-slug').value=q.slug||'';
-      document.getElementById('qr-promo').value=q.promo_code||'';
+      sel.value=q.promo_code||'';
       document.getElementById('qr-desc').value=q.description||'';
       document.getElementById('qr-active').checked=!!q.active;
     }
   } else {
-    ['qr-name','qr-slug','qr-promo','qr-desc'].forEach(id=>document.getElementById(id).value='');
+    ['qr-name','qr-slug','qr-desc'].forEach(id=>document.getElementById(id).value='');
+    sel.value='';
     document.getElementById('qr-active').checked=true;
   }
   openModal('qr-modal');
@@ -1953,8 +2076,9 @@ function downloadQR(slug){
 // ── DIGITAL CARD CONFIG ───────────────────────────────────
 async function loadCardConfig(){
   document.getElementById('dc-save-status').textContent='Loading…';
-  const {data,error}=await db.from('card_config').select('*').limit(1).single();
-  if(error||!data){document.getElementById('dc-save-status').textContent='Load failed — check Supabase';return;}
+  const {data:rows,error}=await db.from('card_config').select('*').limit(1);
+  const data=rows?.[0]||null;
+  if(error||!data){document.getElementById('dc-save-status').textContent='Load failed: '+(error?.message||error?.code||'no data');console.error('card_config load error',error);return;}
   cardConfig=data;cardConfigLoaded=true;
   populateDCForm(data);
   document.getElementById('dc-save-status').textContent='';
@@ -1982,6 +2106,7 @@ function populateDCForm(d){
   (d.socials||[]).forEach((s,i)=>socList.insertAdjacentHTML('beforeend',dcSocialRow(i,s)));
   sv('dc-ex-headline',d.exchange_headline);sv('dc-ex-eyebrow',d.exchange_subheadline);
   sv('dc-ex-description',d.exchange_description);sv('dc-ex-promo-label',d.exchange_promo_field_label);
+  sv('dc-cta-btn-text',d.cta_button_text);sv('dc-cta-sms-body',d.cta_button_sms_body);
   sv('dc-footer-text',d.footer_text);
   renderBlockOrderList(d.block_order||['credentials','description','key_numbers','portfolio','intro_video','contact_info','socials'],{});
 }
@@ -2044,6 +2169,7 @@ function collectDCConfig(){
     socials:socs,
     exchange_headline:gv('dc-ex-headline'),exchange_subheadline:gv('dc-ex-eyebrow'),
     exchange_description:gv('dc-ex-description'),exchange_promo_field_label:gv('dc-ex-promo-label'),
+    cta_button_text:gv('dc-cta-btn-text'),cta_button_sms_body:gv('dc-cta-sms-body'),
     footer_text:gv('dc-footer-text'),block_order
   };
 }
@@ -2129,18 +2255,31 @@ async function saveFeedback(){
   const today = new Date().toISOString().split('T')[0];
   const feedback = document.getElementById('feedback-input').value.trim();
   const status = document.getElementById('feedback-save-status');
-  const { error } = await db.from('ops_briefing').upsert(
-    { date: today, feedback },
-    { onConflict: 'date' }
-  );
-  if(error){
-    status.textContent = '✗ Save failed';
+  // Try update first to preserve existing briefing content
+  const { data, error: updateErr } = await db.from('ops_briefing')
+    .update({ feedback, updated_at: new Date().toISOString() })
+    .eq('date', today)
+    .select();
+  if(updateErr){
+    console.error('saveFeedback update error:', updateErr);
+    status.textContent = '✗ Save failed: ' + (updateErr.message || updateErr.code);
     status.style.color = 'var(--red)';
-  } else {
-    status.textContent = '✓ Saved';
-    status.style.color = 'var(--cyan)';
-    setTimeout(()=>status.textContent='', 3000);
+    return;
   }
+  if(!data || data.length === 0){
+    // No briefing row yet today — insert with placeholder content
+    const { error: insertErr } = await db.from('ops_briefing')
+      .insert({ date: today, feedback, content: '(No briefing yet today)' });
+    if(insertErr){
+      console.error('saveFeedback insert error:', insertErr);
+      status.textContent = '✗ Save failed: ' + (insertErr.message || insertErr.code);
+      status.style.color = 'var(--red)';
+      return;
+    }
+  }
+  status.textContent = '✓ Saved';
+  status.style.color = 'var(--cyan)';
+  setTimeout(()=>status.textContent='', 3000);
 }
 async function loadBriefing(){
   const today = new Date().toISOString().split('T')[0];
