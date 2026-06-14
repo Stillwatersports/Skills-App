@@ -2143,7 +2143,7 @@ function populateDCForm(d){
   sv('dc-ex-cta-text',d.exchange_cta_text);
   sv('dc-web-img',d.website_image_url);sv('dc-web-caption',d.website_caption);sv('dc-web-link',d.website_link_url);
   sv('dc-footer-text',d.footer_text);
-  renderBlockOrderList(d.block_order||['description','key_numbers','website','intro_video','contact_info','socials'],{});
+  renderBlockOrderList((d.block_order&&d.block_order.length)?d.block_order:['description','key_numbers','website','intro_video','contact_info','socials'],{});
 }
 function dcCredRow(i,val){return `<div class="dc-list-row dc-cred-row" data-idx="${i}"><input type="text" class="dc-cred-val" placeholder="e.g. AWSI Certified Instructor" value="${esc(val)}"/><button class="remove-btn" onclick="this.closest('.dc-list-row').remove()">×</button></div>`;}
 function dcNumRow(i,n){return `<div class="dc-list-row dc-num-row" data-idx="${i}"><input type="text" class="dc-num-val" placeholder="25+" value="${esc(n.number||'')}"/><input type="text" class="dc-num-label" placeholder="label" value="${esc(n.caption||'')}"/><button class="remove-btn" onclick="this.closest('.dc-list-row').remove()">×</button></div>`;}
