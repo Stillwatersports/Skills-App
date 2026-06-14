@@ -664,7 +664,10 @@ tr:hover td{background:rgba(0,200,212,.03)}
     <input type="hidden" id="qr-editing-id"/>
     <div class="form-group"><label>Name (e.g. Duck Lake Marina)</label><input type="text" id="qr-name"/></div>
     <div class="form-group"><label>Slug (URL-safe, e.g. ducklake)</label><input type="text" id="qr-slug" placeholder="ducklake" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')"/></div>
-    <div class="form-group"><label>Default Promo Code (optional)</label><select id="qr-promo" style="width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:var(--sans);background:#fff"><option value="">— None —</option></select></div>
+    <div class="form-row">
+      <div class="form-group"><label>Promo Code (optional)</label><input type="text" id="qr-promo-code" placeholder="e.g. Wood15"/></div>
+      <div class="form-group"><label>Discount %</label><input type="number" id="qr-promo-pct" placeholder="15" min="1" max="100"/></div>
+    </div>
     <div class="form-group"><label>Description / Location (optional)</label><input type="text" id="qr-desc" placeholder="Duck Lake boat launch kiosk"/></div>
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
       <label style="font-size:13px;font-weight:600;color:var(--muted)">Active</label>
@@ -747,7 +750,7 @@ tr:hover td{background:rgba(0,200,212,.03)}
     <div class="form-row">
       <div class="form-group">
         <label>Package</label>
-        <select id="bk-package">
+        <select id="bk-package" onchange="lookupPromo(document.getElementById('bk-promo').value)">
           <option>Half Day — $600 (weekday)</option>
           <option>Half Day — $750 (weekend/holiday)</option>
           <option>Full Day — $1,000</option>
@@ -766,6 +769,10 @@ tr:hover td{background:rgba(0,200,212,.03)}
     <div class="form-row">
       <div class="form-group"><label>Location / Lake</label><input type="text" id="bk-location" placeholder="Lake name, ON"/></div>
       <div class="form-group"><label>Deposit Link (Square)</label><input type="text" id="bk-deposit" placeholder="https://square.link/..."/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Promo Code</label><input type="text" id="bk-promo" placeholder="e.g. Wood15" oninput="lookupPromo(this.value)"/></div>
+      <div class="form-group" style="display:flex;align-items:flex-end"><div id="bk-promo-info" style="padding-bottom:10px;font-size:13px;font-weight:600;min-height:20px"></div></div>
     </div>
     <div class="form-group"><label>Notes</label><textarea id="bk-notes" placeholder="Any notes about this booking..."></textarea></div>
     <div class="section-label">Class Participants</div>
@@ -797,6 +804,12 @@ tr:hover td{background:rgba(0,200,212,.03)}
     <div class="form-group"><label>Notes</label><textarea id="cl-notes"></textarea></div>
     <div class="section-label">Session History</div>
     <div id="cl-history" style="font-size:14px;color:var(--muted)">No sessions yet.</div>
+    <div class="section-label">Participants / Roster</div>
+    <div id="cl-roster"></div>
+    <button class="btn btn-ghost btn-sm" onclick="addRosterRow()" style="margin:8px 0 4px">+ Add participant</button>
+    <div class="section-label">Waivers</div>
+    <div id="cl-waivers" style="font-size:13px;color:var(--muted)">—</div>
+    <button class="btn btn-primary btn-sm" id="cl-send-waivers" onclick="sendClientWaivers()" style="margin-top:10px;display:none">Send waivers</button>
     <div style="display:flex;gap:12px;justify-content:space-between;margin-top:24px">
       <button class="btn btn-danger" id="client-delete-btn" style="display:none" onclick="deleteClient(editingClientId)">Delete Client</button>
       <div style="display:flex;gap:12px;margin-left:auto">
@@ -1287,11 +1300,14 @@ function openEditBooking(id){
   document.getElementById('bk-deposit').value = b.deposit_link||'';
   document.getElementById('bk-status').value = b.status;
   document.getElementById('bk-notes').value = b.notes||'';
+  document.getElementById('bk-promo').value = b.promo_code||'';
+  if(b.promo_code) lookupPromo(b.promo_code); else document.getElementById('bk-promo-info').innerHTML='';
   renderParticipants(participants[id]||[]);
   openModal('booking-modal');
 }
 function clearBookingForm(){
-  ['bk-date','bk-sport','bk-location','bk-deposit','bk-notes'].forEach(id=>document.getElementById(id).value='');
+  ['bk-date','bk-sport','bk-location','bk-deposit','bk-notes','bk-promo'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('bk-promo-info').innerHTML='';
   document.getElementById('bk-slot').value='morning';
   document.getElementById('bk-status').value='new';
   document.getElementById('minor-warning').style.display='none';
@@ -1300,6 +1316,27 @@ function populateClientSelect(selectedId=''){
   const sel = document.getElementById('bk-client');
   sel.innerHTML = '<option value="">Select existing client...</option><option value="new">+ New Client</option>';
   clients.forEach(c=>{ const o=document.createElement('option'); o.value=c.id; o.textContent=`${c.name} — ${c.email||c.phone||''}`;if(c.id===selectedId)o.selected=true; sel.appendChild(o); });
+}
+function lookupPromo(code){
+  const infoEl=document.getElementById('bk-promo-info');
+  if(!infoEl) return;
+  if(!code){infoEl.innerHTML='';return;}
+  const pc=(promoCodes||[]).find(p=>p.code.toLowerCase()===code.toLowerCase()&&p.active);
+  if(pc){
+    const pkgText=document.getElementById('bk-package').value;
+    const priceMatch=pkgText.match(/\$([0-9,]+)/);
+    let extra='';
+    if(priceMatch&&pc.discount_type==='percent'){
+      const base=parseInt(priceMatch[1].replace(/,/g,''));
+      const disc=Math.round(base*parseFloat(pc.discount_value)/100);
+      extra=` — $${base.toLocaleString()} → <strong style="color:#16a34a">$${(base-disc).toLocaleString()}</strong>`;
+    }
+    infoEl.innerHTML=`<span style="color:#16a34a">✓ ${esc(pc.discount_value)}% off${extra}</span>`;
+  } else if(code.length>=3){
+    infoEl.innerHTML=`<span style="color:#ef4444">Code not found</span>`;
+  } else {
+    infoEl.innerHTML='';
+  }
 }
 function loadClientDetails(){
   const val = document.getElementById('bk-client').value;
@@ -1356,6 +1393,7 @@ async function saveBooking(){
     deposit_link:document.getElementById('bk-deposit').value,
     status:document.getElementById('bk-status').value,
     notes:document.getElementById('bk-notes').value,
+    promo_code:document.getElementById('bk-promo').value.trim()||null,
   };
   let bookingId;
   if(editingBookingId){
@@ -1374,7 +1412,7 @@ async function saveBooking(){
     const name = r.querySelector('input[type=text]').value.trim();
     const age = parseInt(r.querySelector('input[type=number]').value)||null;
     const waiver = r.querySelector('input[type=checkbox]').checked;
-    if(name) partData.push({booking_id:bookingId,name,age,waiver_signed:waiver});
+    if(name) partData.push({booking_id:bookingId,name,age,waiver_signed:waiver,is_minor:(age!=null?age<18:null)});
   });
   if(partData.length) await db.from('participants').insert(partData);
   closeModal('booking-modal');
@@ -1413,6 +1451,10 @@ function openAddClient(){
   document.getElementById('cl-history').innerHTML='No sessions yet.';
   document.getElementById('client-modal-title').textContent='New Client';
   document.getElementById('client-delete-btn').style.display='none';
+  clientRoster=[]; clientWaivers=[];
+  document.getElementById('cl-roster').innerHTML='<div style="color:var(--muted);font-size:13px">Save the client first to add participants and send waivers.</div>';
+  document.getElementById('cl-waivers').innerHTML='—';
+  document.getElementById('cl-send-waivers').style.display='none';
   openModal('client-modal');
 }
 function openEditClient(id){
@@ -1429,13 +1471,17 @@ function openEditClient(id){
   document.getElementById('cl-history').innerHTML = sessions.length
     ? sessions.map(b=>`<div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;font-size:13px"><span>${fmtDate(b.date)}</span><span style="color:var(--muted)">${cap(b.slot)}</span><span>${b.package||''}</span><span class="status-badge status-${b.status}">${b.status}</span></div>`).join('')
     : 'No sessions yet.';
+  document.getElementById('cl-send-waivers').style.display='inline-block';
+  loadClientExtras(id);
   openModal('client-modal');
 }
 async function saveClient(){
   const data={name:document.getElementById('cl-name').value.trim(),email:document.getElementById('cl-email').value,phone:document.getElementById('cl-phone').value,location:document.getElementById('cl-location').value,notes:document.getElementById('cl-notes').value};
   if(!data.name){ toast('Name is required'); return; }
-  if(editingClientId){ await db.from('clients').update(data).eq('id',editingClientId); }
-  else { const {data:d}=await db.from('clients').insert(data).select().single(); if(d) clients.push(d); }
+  let cid=editingClientId;
+  if(cid){ await db.from('clients').update(data).eq('id',cid); }
+  else { const {data:d}=await db.from('clients').insert(data).select().single(); if(d){ clients.push(d); cid=d.id; editingClientId=d.id; } }
+  if(cid) await saveClientRoster(cid);
   closeModal('client-modal');
   await loadClients();
   renderClients();
@@ -1454,6 +1500,109 @@ async function deleteClient(id){
   closeModal('client-modal');
   await loadAll();
   toast('Client deleted');
+}
+// ── CLIENT ROSTER + WAIVERS (Step E) ──────────────────────
+let clientRoster = [];   // participants for the open client (client_id-scoped)
+let clientWaivers = [];  // waivers for the open client
+
+function ageFromDob(dob){ if(!dob) return null; const b=new Date(dob+'T00:00:00'); const n=new Date(); let a=n.getFullYear()-b.getFullYear(); const m=n.getMonth()-b.getMonth(); if(m<0||(m===0&&n.getDate()<b.getDate()))a--; return a; }
+
+async function loadClientExtras(clientId){
+  document.getElementById('cl-roster').innerHTML='Loading…';
+  document.getElementById('cl-waivers').innerHTML='Loading…';
+  const [{data:parts},{data:wv}] = await Promise.all([
+    db.from('participants').select('*').eq('client_id',clientId).order('name'),
+    db.from('waivers').select('*').eq('client_id',clientId).order('created_at',{ascending:false})
+  ]);
+  clientRoster = parts||[]; clientWaivers = wv||[];
+  renderRoster(); renderClientWaivers();
+}
+
+function rosterRowHtml(p={}){
+  return `<div class="roster-row" data-id="${p.id||''}" style="display:grid;grid-template-columns:1.2fr 1.3fr 130px 1.3fr 78px 26px;gap:8px;align-items:center;margin-bottom:8px">
+    <input type="text" class="r-name" placeholder="Name" value="${esc(p.name||'')}"/>
+    <input type="email" class="r-email" placeholder="Email (adult)" value="${esc(p.email||'')}"/>
+    <input type="date" class="r-dob" value="${p.date_of_birth||''}"/>
+    <input type="email" class="r-gemail" placeholder="Guardian email" value="${esc(p.guardian_email||'')}"/>
+    <label style="font-size:11px;display:flex;gap:4px;align-items:center;color:var(--muted)"><input type="checkbox" class="r-guard" ${p.guardian_on_site===false?'':'checked'}/>on-site</label>
+    <button onclick="this.closest('.roster-row').remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:15px">✕</button>
+  </div>`;
+}
+function renderRoster(){
+  const head=`<div style="display:grid;grid-template-columns:1.2fr 1.3fr 130px 1.3fr 78px 26px;gap:8px;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:4px"><span>Name</span><span>Email</span><span>Date of birth</span><span>Guardian email</span><span>Guardian</span><span></span></div>`;
+  const wrap=document.getElementById('cl-roster');
+  wrap.innerHTML = head + (clientRoster.length?clientRoster.map(rosterRowHtml).join(''):'<div style="color:var(--muted);font-size:13px;padding:4px 0">No participants yet.</div>');
+}
+function addRosterRow(){ document.getElementById('cl-roster').insertAdjacentHTML('beforeend', rosterRowHtml()); }
+
+async function saveClientRoster(clientId){
+  const rows=[...document.querySelectorAll('#cl-roster .roster-row')];
+  const keep=[];
+  for(const r of rows){
+    const name=r.querySelector('.r-name').value.trim(); if(!name) continue;
+    const dob=r.querySelector('.r-dob').value||null;
+    const rec={ client_id:clientId, name,
+      email:r.querySelector('.r-email').value.trim()||null,
+      guardian_email:r.querySelector('.r-gemail').value.trim()||null,
+      date_of_birth:dob,
+      is_minor: dob? (ageFromDob(dob)<18) : null,
+      guardian_on_site: r.querySelector('.r-guard').checked };
+    const id=r.getAttribute('data-id');
+    if(id){ await db.from('participants').update(rec).eq('id',id); keep.push(id); }
+    else { const {data:d}=await db.from('participants').insert(rec).select('id').single(); if(d) keep.push(d.id); }
+  }
+  for(const p of clientRoster){ if(!keep.includes(p.id)) await db.from('participants').delete().eq('id',p.id); }
+}
+
+function renderClientWaivers(){
+  const wrap=document.getElementById('cl-waivers');
+  if(!clientWaivers.length){ wrap.innerHTML='No waivers yet.'; return; }
+  const col={signed:'var(--green)',sent:'var(--orange)',viewed:'var(--cyan)',expired:'var(--muted)',void:'var(--muted)'};
+  wrap.innerHTML=clientWaivers.map(w=>{
+    const who=clientRoster.find(p=>p.id===w.participant_id);
+    const view=w.pdf_path?`<button class="btn btn-ghost btn-sm" onclick="viewWaiverPdf('${w.pdf_path}')">View PDF</button>`:'';
+    return `<div style="display:flex;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)"><span style="flex:1">${esc(who?who.name:(w.signer_name||'—'))} · ${w.waiver_type} · ${w.season}</span><span style="color:${col[w.status]||'var(--muted)'};font-weight:700;text-transform:uppercase;font-size:11px">${w.status}</span>${view}</div>`;
+  }).join('');
+}
+async function viewWaiverPdf(path){
+  const {data,error}=await db.storage.from('waivers').createSignedUrl(path,300);
+  if(error||!data){ toast('Could not open PDF'); return; }
+  window.open(data.signedUrl,'_blank');
+}
+
+async function sendClientWaivers(){
+  const clientId=editingClientId; if(!clientId){ toast('Save the client first'); return; }
+  await saveClientRoster(clientId);
+  await loadClientExtras(clientId);
+  const c=clients.find(x=>x.id===clientId)||{};
+  const season=new Date().getFullYear();
+  const signed=new Set(clientWaivers.filter(w=>w.season===season&&w.status==='signed').map(w=>w.participant_id+'|'+w.waiver_type));
+  const pending=new Set(clientWaivers.filter(w=>w.season===season&&['sent','viewed'].includes(w.status)&&(!w.token_expires_at||new Date(w.token_expires_at)>new Date())).map(w=>w.participant_id+'|'+w.waiver_type));
+  const invites=[], skips=[], needDob=[];
+  clientRoster.forEach(p=>{
+    const age=ageFromDob(p.date_of_birth);
+    if(age==null){ needDob.push(p.name); return; }
+    const types = age>=18 ? ['adult'] : (p.guardian_on_site===false ? ['minor','parental_consent'] : ['minor']);
+    types.forEach(t=>{
+      const key=p.id+'|'+t;
+      if(signed.has(key)){ skips.push(`${p.name}: ${t} already signed`); return; }
+      if(pending.has(key)){ skips.push(`${p.name}: ${t} already sent`); return; }
+      const isMinorType = t!=='adult';
+      const email = isMinorType ? (p.guardian_email||c.email) : (p.email||c.email);
+      if(!email){ skips.push(`${p.name}: missing ${isMinorType?'guardian ':''}email`); return; }
+      invites.push({participant_id:p.id, client_id:clientId, waiver_type:t, signer_name:isMinorType?(c.name||p.name):p.name, signer_email:email, is_guardian_signature:isMinorType});
+    });
+  });
+  let note='';
+  if(needDob.length) note+=`Missing DOB (skipped): ${needDob.join(', ')}\n`;
+  if(skips.length) note+=`Skipped: ${skips.join('; ')}\n`;
+  if(!invites.length){ alert(note||'Nothing to send — everyone is signed or already invited.'); return; }
+  if(!confirm(`Send ${invites.length} waiver link(s)?\n`+invites.map(i=>`• ${i.waiver_type} → ${i.signer_email}`).join('\n')+(note?'\n\n'+note:''))) return;
+  const {data,error}=await db.functions.invoke('send-waiver-invite',{body:{base_url:'https://learnwatersports.ca', invites}});
+  if(error){ toast('Send failed'); return; }
+  const okN=(data&&data.results?data.results.filter(r=>r.ok).length:0);
+  toast(`Sent ${okN} waiver link(s) ✓`);
+  await loadClientExtras(clientId);
 }
 // ── LEADS ─────────────────────────────────────────────────
 // Lead status sort rank: new → hot → warm → cold → archived
@@ -2046,21 +2195,21 @@ function openQRModal(editId){
   document.getElementById('qr-modal-title').textContent=editId?'Edit QR Code':'New QR Code';
   document.getElementById('qr-editing-id').value=editId||'';
   document.getElementById('qr-delete-btn').style.display=editId?'':'none';
-  // Populate promo dropdown from promo_codes table
-  const sel=document.getElementById('qr-promo');
-  sel.innerHTML='<option value="">— None —</option>'+(promoCodes||[]).map(p=>`<option value="${esc(p.code)}">${esc(p.code)}${p.label?' — '+esc(p.label):''}</option>`).join('');
   if(editId){
     const q=qrCodes.find(x=>x.id===editId);
     if(q){
       document.getElementById('qr-name').value=q.name||'';
       document.getElementById('qr-slug').value=q.slug||'';
-      sel.value=q.promo_code||'';
+      document.getElementById('qr-promo-code').value=q.promo_code||'';
+      const pc=promoCodes.find(p=>p.code===q.promo_code);
+      document.getElementById('qr-promo-pct').value=pc?pc.discount_value:'';
       document.getElementById('qr-desc').value=q.description||'';
       document.getElementById('qr-active').checked=!!q.active;
     }
   } else {
     ['qr-name','qr-slug','qr-desc'].forEach(id=>document.getElementById(id).value='');
-    sel.value='';
+    document.getElementById('qr-promo-code').value='';
+    document.getElementById('qr-promo-pct').value='';
     document.getElementById('qr-active').checked=true;
   }
   openModal('qr-modal');
@@ -2071,9 +2220,16 @@ async function saveQRCode(){
   const name=document.getElementById('qr-name').value.trim();
   const slug=document.getElementById('qr-slug').value.trim();
   if(!name||!slug){toast('Name and slug are required');return;}
-  const payload={name,slug,promo_code:document.getElementById('qr-promo').value.trim()||null,description:document.getElementById('qr-desc').value.trim()||null,active:document.getElementById('qr-active').checked};
+  const promoCode=document.getElementById('qr-promo-code').value.trim()||null;
+  const promoPct=document.getElementById('qr-promo-pct').value.trim();
+  const payload={name,slug,promo_code:promoCode,description:document.getElementById('qr-desc').value.trim()||null,active:document.getElementById('qr-active').checked};
   const {error}=editId?await db.from('qr_codes').update(payload).eq('id',editId):await db.from('qr_codes').insert(payload);
   if(error){toast(error.code==='23505'?'Slug already exists':'Error: '+error.message);return;}
+  // Auto-create promo code entry if it doesn't already exist
+  if(promoCode && promoPct && !promoCodes.find(p=>p.code===promoCode)){
+    await db.from('promo_codes').insert({code:promoCode,discount_type:'percent',discount_value:promoPct,label:name,active:true});
+    await loadPromoCodes();renderPromoCodes();
+  }
   closeModal('qr-modal');
   qrScanStats={};
   await loadQRCodes();renderQRCodes();

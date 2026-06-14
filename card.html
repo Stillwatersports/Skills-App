@@ -28,106 +28,6 @@ body{font-family:'Outfit',sans-serif;background:var(--yellow);color:var(--dark);
 .spinner{width:44px;height:44px;border:4px solid rgba(0,200,212,.2);border-top-color:var(--cyan);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ── GATE ── */
-#gate{
-  min-height:100vh;min-height:100dvh;
-  position:relative;display:none;
-  align-items:center;justify-content:center;
-  padding:20px;overflow:hidden;
-}
-#gate.visible{display:flex}
-#gate-bg{
-  position:absolute;inset:-20px;
-  background-size:cover;background-position:center;
-  filter:blur(8px) brightness(0.6);
-  z-index:0;
-}
-#gate-wrap{
-  position:relative;z-index:1;
-  width:100%;max-width:440px;
-  display:flex;flex-direction:column;
-  align-items:center;gap:0;
-}
-#gate-card{
-  background:var(--offwhite);
-  border-radius:20px;
-  padding:32px 28px 24px;
-  width:100%;
-  box-shadow:0 20px 60px rgba(10,40,40,.5);
-}
-#gate-eyebrow{
-  font-size:11px;font-weight:700;letter-spacing:.14em;
-  color:var(--muted);text-transform:uppercase;
-  text-align:center;margin-bottom:8px;
-}
-#gate-headline{
-  font-size:30px;font-weight:900;color:var(--dark);
-  text-align:center;margin-bottom:6px;line-height:1.1;
-}
-#gate-description{
-  font-size:14px;color:var(--muted);
-  text-align:center;margin-bottom:22px;
-}
-.field-group{margin-bottom:14px}
-.field-group label{
-  display:block;font-size:10px;font-weight:700;
-  letter-spacing:.1em;color:var(--muted);
-  text-transform:uppercase;margin-bottom:5px;
-  line-height:1.4;
-}
-.field-group input{
-  width:100%;padding:13px 15px;
-  border:1.5px solid var(--border);border-radius:10px;
-  font-size:15px;font-family:'Outfit',sans-serif;
-  background:#fff;color:var(--dark);outline:none;
-  transition:border-color .15s;
-}
-.field-group input:focus{border-color:var(--cyan)}
-.phone-row{
-  display:flex;align-items:stretch;
-  border:1.5px solid var(--border);border-radius:10px;
-  overflow:hidden;background:#fff;transition:border-color .15s;
-}
-.phone-row:focus-within{border-color:var(--cyan)}
-.flag-prefix{
-  padding:0 12px;font-size:14px;font-weight:600;
-  color:var(--muted);border-right:1px solid var(--border);
-  background:#f8f8f0;display:flex;align-items:center;
-  white-space:nowrap;flex-shrink:0;
-}
-.phone-row input{
-  border:none;flex:1;padding:13px 12px;
-  font-size:15px;font-family:'Outfit',sans-serif;
-  outline:none;background:#fff;color:var(--dark);
-  min-width:0;
-}
-.btn-exchange{
-  width:100%;padding:16px;background:var(--pink);
-  color:var(--yellow);font-family:'Outfit',sans-serif;
-  font-size:15px;font-weight:800;border:none;
-  border-radius:50px;cursor:pointer;letter-spacing:.04em;
-  margin-top:6px;transition:background .15s;
-}
-.btn-exchange:hover{background:#cc3390}
-.btn-exchange:disabled{opacity:.6;cursor:wait}
-#gate-error{
-  color:#c0392b;font-size:12px;font-weight:600;
-  text-align:center;margin-top:8px;display:none;
-}
-.privacy-note{
-  font-size:11px;color:var(--hint);
-  text-align:center;margin-top:10px;line-height:1.5;
-}
-.privacy-note a{color:var(--muted)}
-#skip-btn{
-  position:absolute;top:14px;right:14px;
-  background:none;border:none;color:var(--hint);
-  font-size:17px;width:28px;height:28px;border-radius:50%;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:color .15s,background .15s;z-index:2;
-}
-#skip-btn:hover{color:var(--muted);background:rgba(58,106,106,.08)}
-
 /* ── CARD ── */
 #card{display:none;max-width:480px;margin:0 auto;background:var(--yellow)}
 #card.visible{display:block;animation:fadeUp .35s ease forwards}
@@ -149,23 +49,35 @@ body{font-family:'Outfit',sans-serif;background:var(--yellow);color:var(--dark);
   font-size:34px;font-weight:900;color:var(--pink);
   line-height:1.1;margin-bottom:16px;
 }
+
+/* PROMO BUTTON — shown above the 3 CTAs */
+#promo-btn-wrap{margin-bottom:10px;display:none}
+#btn-promo{
+  width:100%;padding:16px;
+  font-family:'Outfit',sans-serif;font-size:15px;font-weight:800;
+  border:none;border-radius:50px;cursor:pointer;letter-spacing:.04em;
+  transition:filter .15s;
+}
+#btn-promo:hover{filter:brightness(0.9)}
+
+/* 3 CTA BUTTONS */
 .cta-buttons{display:flex;gap:8px;margin-bottom:14px}
 .btn-cta-item{
   flex:1;padding:13px 6px;
-  background:var(--cyan);color:var(--yellow);
   font-family:'Outfit',sans-serif;font-size:13px;
   font-weight:800;border:none;border-radius:50px;
-  cursor:pointer;letter-spacing:.02em;transition:background .15s;
+  cursor:pointer;letter-spacing:.02em;transition:filter .15s;
   text-decoration:none;text-align:center;
   display:flex;align-items:center;justify-content:center;line-height:1.2;
 }
-.btn-cta-item:hover{background:#00b3be}
+.btn-cta-item:hover{filter:brightness(0.9)}
+
+/* BLOCKS */
 .block-website{margin-bottom:20px}
 .website-img{width:100%;border-radius:12px;display:block;object-fit:cover;cursor:pointer;transition:opacity .15s}
 .website-img:hover{opacity:.92}
 .website-caption{font-size:14px;font-weight:700;color:var(--pink);text-align:center;margin-top:8px}
 
-/* BLOCKS */
 .block-credentials{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
 .cred-pill{
   display:inline-flex;align-items:center;
@@ -233,8 +145,111 @@ body{font-family:'Outfit',sans-serif;background:var(--yellow);color:var(--dark);
   line-height:1.6;
 }
 
+/* ── EXCHANGE MODAL ── */
+#exchange-modal{
+  display:none;
+  position:fixed;inset:0;z-index:1000;
+  align-items:flex-end;justify-content:center;
+}
+#exchange-modal.open{display:flex}
+#modal-backdrop{
+  position:absolute;inset:0;
+  background:rgba(10,40,40,.55);
+  backdrop-filter:blur(4px);
+}
+#modal-sheet{
+  position:relative;z-index:1;
+  width:100%;max-width:480px;
+  background:var(--offwhite);
+  border-radius:24px 24px 0 0;
+  padding:28px 24px 32px;
+  box-shadow:0 -20px 60px rgba(10,40,40,.3);
+  animation:slideUp .28s ease forwards;
+  max-height:92dvh;overflow-y:auto;
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+#modal-drag-handle{
+  width:40px;height:4px;border-radius:2px;
+  background:var(--border);margin:0 auto 20px;
+}
+#modal-close{
+  position:absolute;top:16px;right:16px;
+  background:none;border:none;color:var(--hint);
+  font-size:17px;width:28px;height:28px;border-radius:50%;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:color .15s,background .15s;
+}
+#modal-close:hover{color:var(--muted);background:rgba(58,106,106,.08)}
+
+#modal-eyebrow{
+  font-size:11px;font-weight:700;letter-spacing:.14em;
+  color:var(--muted);text-transform:uppercase;
+  text-align:center;margin-bottom:8px;
+}
+#modal-headline{
+  font-size:26px;font-weight:900;color:var(--dark);
+  text-align:center;margin-bottom:6px;line-height:1.1;
+}
+#modal-description{
+  font-size:14px;color:var(--muted);
+  text-align:center;margin-bottom:20px;
+}
+
+.field-group{margin-bottom:14px}
+.field-group label{
+  display:block;font-size:10px;font-weight:700;
+  letter-spacing:.1em;color:var(--muted);
+  text-transform:uppercase;margin-bottom:5px;line-height:1.4;
+}
+.field-group input{
+  width:100%;padding:13px 15px;
+  border:1.5px solid var(--border);border-radius:10px;
+  font-size:15px;font-family:'Outfit',sans-serif;
+  background:#fff;color:var(--dark);outline:none;
+  transition:border-color .15s;
+}
+.field-group input:focus{border-color:var(--cyan)}
+.phone-row{
+  display:flex;align-items:stretch;
+  border:1.5px solid var(--border);border-radius:10px;
+  overflow:hidden;background:#fff;transition:border-color .15s;
+}
+.phone-row:focus-within{border-color:var(--cyan)}
+.flag-prefix{
+  padding:0 12px;font-size:14px;font-weight:600;
+  color:var(--muted);border-right:1px solid var(--border);
+  background:#f8f8f0;display:flex;align-items:center;
+  white-space:nowrap;flex-shrink:0;
+}
+.phone-row input{
+  border:none;flex:1;padding:13px 12px;
+  font-size:15px;font-family:'Outfit',sans-serif;
+  outline:none;background:#fff;color:var(--dark);min-width:0;
+}
+#btn-exchange-submit{
+  width:100%;padding:16px;
+  font-family:'Outfit',sans-serif;font-size:15px;font-weight:800;
+  border:none;border-radius:50px;cursor:pointer;letter-spacing:.04em;
+  margin-top:6px;transition:filter .15s;
+  background:var(--pink);color:var(--yellow);
+}
+#btn-exchange-submit:hover{filter:brightness(0.9)}
+#btn-exchange-submit:disabled{opacity:.6;cursor:wait}
+#modal-error{
+  color:#c0392b;font-size:12px;font-weight:600;
+  text-align:center;margin-top:8px;display:none;
+}
+.privacy-note{
+  font-size:11px;color:var(--hint);
+  text-align:center;margin-top:10px;line-height:1.5;
+}
+.privacy-note a{color:var(--muted)}
+
 @media(min-width:520px){
   #card{box-shadow:0 0 60px rgba(10,40,40,.15);margin:20px auto;border-radius:24px;overflow:hidden}
+  #exchange-modal{align-items:center}
+  #modal-sheet{border-radius:24px;max-height:85dvh}
+  @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
 }
 </style>
 </head>
@@ -243,44 +258,7 @@ body{font-family:'Outfit',sans-serif;background:var(--yellow);color:var(--dark);
 <!-- LOADING -->
 <div id="loading"><div class="spinner"></div></div>
 
-<!-- EXCHANGE GATE -->
-<div id="gate">
-  <div id="gate-bg"></div>
-  <div id="gate-wrap">
-    <div id="gate-card" style="position:relative">
-      <button id="skip-btn" onclick="skipExchange(event)" aria-label="Close">✕</button>
-      <div id="gate-eyebrow">LET'S CONNECT</div>
-      <h1 id="gate-headline">LEARN MORE</h1>
-      <p id="gate-description">Your info for mine. Quick.</p>
-      <form id="exchange-form" onsubmit="submitExchange(event)" novalidate>
-        <div class="field-group">
-          <label for="f-name">NAME</label>
-          <input type="text" id="f-name" placeholder="Your name" autocomplete="name"/>
-        </div>
-        <div class="field-group">
-          <label for="f-phone">PHONE</label>
-          <div class="phone-row">
-            <span class="flag-prefix">🇨🇦 +1</span>
-            <input type="tel" id="f-phone" placeholder="613 555 0123" autocomplete="tel-national"/>
-          </div>
-        </div>
-        <div class="field-group">
-          <label for="f-email">EMAIL <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
-          <input type="email" id="f-email" placeholder="you@email.com" autocomplete="email"/>
-        </div>
-        <div class="field-group">
-          <label for="f-promo" id="f-promo-label">PROMO CODE / WHERE DID YOU HEAR ABOUT US? (OPTIONAL)</label>
-          <input type="text" id="f-promo" placeholder="e.g. DuckLake15" autocomplete="off"/>
-        </div>
-        <div id="gate-error">Please enter your name and phone number.</div>
-        <button type="submit" class="btn-exchange" id="btn-exchange">COMPLETE EXCHANGE →</button>
-        <p class="privacy-note">By exchanging you agree to our <a href="/policies">privacy policy</a>.</p>
-      </form>
-    </div>
-  </div>
-</div>
-
-<!-- FULL CARD -->
+<!-- FULL CARD — shown immediately on scan -->
 <div id="card">
   <div id="card-hero">
     <img id="hero-img" src="/assets/card-hero.png" alt="Stillwater Sports"/>
@@ -291,15 +269,61 @@ body{font-family:'Outfit',sans-serif;background:var(--yellow);color:var(--dark);
   </div>
   <div id="card-body">
     <h1 id="card-name">Christian Richards</h1>
+
+    <!-- PROMO BUTTON (e.g. "Get 15% Off") — above the 3 CTAs -->
+    <div id="promo-btn-wrap">
+      <button id="btn-promo" onclick="openExchangeModal('promo')">Get 15% Off 🎉</button>
+    </div>
+
+    <!-- 3 CONTACT BUTTONS -->
     <div class="cta-buttons">
       <button id="btn-save" class="btn-cta-item" onclick="downloadVCard()">Save Contact</button>
       <a id="btn-sms" class="btn-cta-item" href="#">Send Us a Text</a>
       <a id="btn-dm" class="btn-cta-item" href="#" target="_blank" rel="noopener">DM Us</a>
     </div>
+
     <div id="card-credentials"></div>
     <div id="card-blocks"></div>
   </div>
   <footer id="card-footer"></footer>
+</div>
+
+<!-- EXCHANGE MODAL -->
+<div id="exchange-modal" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+  <div id="modal-backdrop" onclick="closeExchangeModal()"></div>
+  <div id="modal-sheet">
+    <div id="modal-drag-handle"></div>
+    <button id="modal-close" onclick="closeExchangeModal()" aria-label="Close">✕</button>
+    <div id="modal-eyebrow">LET'S CONNECT</div>
+    <h2 id="modal-headline">LEARN MORE</h2>
+    <p id="modal-description">Your info for mine. Quick.</p>
+    <form id="exchange-form" onsubmit="submitExchange(event)" novalidate>
+      <div class="field-group">
+        <label for="f-name">NAME</label>
+        <input type="text" id="f-name" placeholder="Your name" autocomplete="name"/>
+      </div>
+      <div class="field-group">
+        <label for="f-phone">PHONE</label>
+        <div class="phone-row">
+          <span class="flag-prefix">🇨🇦 +1</span>
+          <input type="tel" id="f-phone" placeholder="613 555 0123" autocomplete="tel-national"/>
+        </div>
+      </div>
+      <div class="field-group">
+        <label for="f-email">EMAIL <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+        <input type="email" id="f-email" placeholder="you@email.com" autocomplete="email"/>
+      </div>
+      <div class="field-group">
+        <label for="f-source" id="f-source-label">WHERE DID YOU HEAR ABOUT US? (OPTIONAL)</label>
+        <input type="text" id="f-source" placeholder="e.g. Facebook, a friend, the dock…" autocomplete="off"/>
+      </div>
+      <!-- Hidden: promo from QR code — tracked server-side, never shown to user -->
+      <input type="hidden" id="f-promo-hidden"/>
+      <div id="modal-error">Please enter your name and phone number.</div>
+      <button type="submit" id="btn-exchange-submit">COMPLETE EXCHANGE →</button>
+      <p class="privacy-note">By exchanging you agree to our <a href="/policies">privacy policy</a>.</p>
+    </form>
+  </div>
 </div>
 
 <script>
@@ -335,35 +359,70 @@ const DEFAULT_CFG = {
     {block_id:'contact_info',enabled:true,order:5},
     {block_id:'socials',enabled:true,order:6}
   ],
+
+  // ── EXCHANGE MODAL COPY ──
   exchange_headline:"LET'S CONNECT",
   exchange_subheadline:'LEARN MORE',
   exchange_description:'Your info for mine. Quick.',
-  exchange_promo_field_label:'PROMO CODE / WHERE DID YOU HEAR ABOUT US? (OPTIONAL)',
+  exchange_source_field_label:'WHERE DID YOU HEAR ABOUT US? (OPTIONAL)',
+  exchange_cta_text:'COMPLETE EXCHANGE →',
+
+  // ── PROMO BUTTON (above exchange + CTAs) ──
+  promo_btn_enabled:true,
+  promo_btn_text:'Get 15% Off 🎉',
+  promo_btn_bg:'#E040A0',
+  promo_btn_color:'#FFFEB4',
+  promo_btn_radius:'50px',
+  promo_btn_font_size:'15px',
+  promo_btn_font_weight:'800',
+
+  // ── MODAL SUBMIT BUTTON ──
+  exchange_submit_bg:'#E040A0',
+  exchange_submit_color:'#FFFEB4',
+
+  // ── 3 CONTACT CTA BUTTONS (individual overrides; null = use shared default) ──
+  cta_btn_bg:'#00C8D4',
+  cta_btn_color:'#FFFEB4',
+  cta_btn_radius:'50px',
+  cta_btn_font_size:'13px',
+  cta_btn_font_weight:'800',
+
+  cta_save_text:'Save Contact',
+  cta_save_bg:null,
+  cta_save_color:null,
+
+  cta_button_text:'Send Us a Text',
+  cta_sms_bg:null,
+  cta_sms_color:null,
+  cta_button_sms_body:'Hi christian i saw your flyer for stillwater sports and wanted to know more!',
+
+  cta_dm_text:'DM Us',
+  cta_dm_bg:null,
+  cta_dm_color:null,
+  cta_dm_url:'https://www.instagram.com/stillwater.sports/',
+
+  // ── VCARD ──
   vcard_org:'Stillwater Sports',vcard_title:'Head Coach',
   vcard_url:'https://learnwatersports.ca',
   vcard_note:'Premium private waterski, wakeboard & wakesurf coaching. Ottawa Valley & cottage country.',
-  cta_save_text:'Save Contact',
-  cta_button_text:'Send Us a Text',
-  cta_button_sms_body:'Hi christian i saw your flyer for stillwater sports and wanted to know more!',
-  cta_dm_text:'DM Us',
-  cta_dm_url:'https://www.instagram.com/stillwater.sports/',
+
+  // ── WEBSITE BLOCK ──
   website_image_url:'/assets/FB-main.jpg',
   website_caption:'tap to visit our website',
   website_link_url:'https://learnwatersports.ca',
-  exchange_cta_text:'COMPLETE EXCHANGE →',
+
   hero_overlay_gradient:'linear-gradient(180deg, rgba(10,40,40,0.3) 0%, rgba(10,40,40,0.7) 100%)'
 };
 
 // ── STATE ──────────────────────────────────────────────────
 let cfg = null;
 let scanId = null;
-let qrCode = null;
+let qrPromoCode = null;   // hidden — from QR, never shown to user
 
-// ── INIT ───────────────────────────────────────────────────
+// ── INIT: go straight to card ──────────────────────────────
 (async () => {
   const params = new URLSearchParams(window.location.search);
   const srcSlug = params.get('src') || params.get('q') || '';
-  const promoParam = params.get('promo') || '';
 
   // Load card config
   try {
@@ -373,26 +432,24 @@ let qrCode = null;
     cfg = DEFAULT_CFG;
   }
 
-  // Pre-fill promo from URL
-  if (promoParam) document.getElementById('f-promo').value = promoParam;
-
-  // Look up QR code & log scan
+  // Look up QR code & capture promo silently
   if (srcSlug) {
     try {
       const { data: qr } = await db.from('qr_codes')
         .select('id,name,promo_code').eq('slug', srcSlug).eq('active', true).single();
       if (qr) {
-        qrCode = qr;
-        // Pre-fill promo from QR if not already in URL
-        if (!promoParam && qr.promo_code) {
-          document.getElementById('f-promo').value = qr.promo_code;
+        qrPromoCode = qr.promo_code || null;
+        // Store in hidden field for form submission — never shown to user
+        if (qrPromoCode) {
+          document.getElementById('f-promo-hidden').value = qrPromoCode;
         }
       }
     } catch(e) { console.warn('QR lookup failed', e); }
 
+    // Log scan
     try {
       const { data: scan } = await db.from('card_scans').insert({
-        qr_code_id: qrCode ? qrCode.id : null,
+        qr_code_id: null, // resolved below if qr found
         source_slug: srcSlug,
         converted: false,
         user_agent: navigator.userAgent.substring(0,500),
@@ -402,33 +459,134 @@ let qrCode = null;
     } catch(e) { console.warn('Scan log failed', e); }
   }
 
-  renderGate();
+  // Show card immediately — no gate
+  renderCard();
   document.getElementById('loading').style.display = 'none';
-  document.getElementById('gate').classList.add('visible');
+  document.getElementById('card').classList.add('visible');
 })();
 
-// ── GATE ───────────────────────────────────────────────────
-function renderGate() {
+// ── RENDER CARD ────────────────────────────────────────────
+function renderCard() {
   const c = cfg || DEFAULT_CFG;
-  document.getElementById('gate-eyebrow').textContent = c.exchange_headline || "LET'S CONNECT";
-  document.getElementById('gate-headline').textContent = c.exchange_subheadline || 'LEARN MORE';
-  document.getElementById('gate-description').textContent = c.exchange_description || 'Your info for mine. Quick.';
-  document.getElementById('f-promo-label').textContent = c.exchange_promo_field_label || 'PROMO CODE / WHERE DID YOU HEAR ABOUT US? (OPTIONAL)';
-  document.getElementById('btn-exchange').textContent = c.exchange_cta_text || 'COMPLETE EXCHANGE →';
 
-  const bg = document.getElementById('gate-bg');
-  const heroUrl = c.hero_image_url || '/assets/card-hero.png';
-  const gradient = c.hero_overlay_gradient || 'linear-gradient(180deg,rgba(10,40,40,.5) 0%,rgba(10,40,40,.85) 100%)';
-  bg.style.backgroundImage = `${gradient}, url('${heroUrl}')`;
+  // Hero
+  document.getElementById('hero-img').src = c.hero_image_url || '/assets/card-hero.png';
+  document.getElementById('hero-overlay').style.background =
+    c.hero_overlay_gradient || 'linear-gradient(180deg,rgba(10,40,40,.3) 0%,rgba(10,40,40,.7) 100%)';
+  document.getElementById('hero-eyebrow').textContent = c.eyebrow_text || 'HEAD COACH';
+  document.getElementById('card-name').textContent = c.display_name || 'Christian Richards';
+
+  // ── PROMO BUTTON ──
+  const promoBtnWrap = document.getElementById('promo-btn-wrap');
+  const promoBtn = document.getElementById('btn-promo');
+  const promoEnabled = c.promo_btn_enabled !== false;
+  if (promoEnabled) {
+    promoBtn.textContent = c.promo_btn_text || 'Get 15% Off 🎉';
+    promoBtn.style.cssText = `
+      background:${c.promo_btn_bg||'#E040A0'};
+      color:${c.promo_btn_color||'#FFFEB4'};
+      border-radius:${c.promo_btn_radius||'50px'};
+      font-size:${c.promo_btn_font_size||'15px'};
+      font-weight:${c.promo_btn_font_weight||'800'};
+    `;
+    promoBtnWrap.style.display = 'block';
+  } else {
+    promoBtnWrap.style.display = 'none';
+  }
+
+  // ── 3 CONTACT BUTTONS ──
+  const sharedBg    = c.cta_btn_bg    || '#00C8D4';
+  const sharedColor = c.cta_btn_color || '#FFFEB4';
+  const sharedR     = c.cta_btn_radius || '50px';
+  const sharedFS    = c.cta_btn_font_size || '13px';
+  const sharedFW    = c.cta_btn_font_weight || '800';
+
+  function applyCtaStyle(el, bgOverride, colorOverride) {
+    el.style.background   = bgOverride || sharedBg;
+    el.style.color        = colorOverride || sharedColor;
+    el.style.borderRadius = sharedR;
+    el.style.fontSize     = sharedFS;
+    el.style.fontWeight   = sharedFW;
+  }
+
+  const btnSave = document.getElementById('btn-save');
+  btnSave.textContent = c.cta_save_text || 'Save Contact';
+  applyCtaStyle(btnSave, c.cta_save_bg, c.cta_save_color);
+
+  const btnSms = document.getElementById('btn-sms');
+  btnSms.textContent = c.cta_button_text || 'Send Us a Text';
+  applyCtaStyle(btnSms, c.cta_sms_bg, c.cta_sms_color);
+  const ctaPhone = (c.contact_phone || '+16132995998').replace(/\s/g,'');
+  const ctaBody = encodeURIComponent(c.cta_button_sms_body || 'Hi christian i saw your flyer for stillwater sports and wanted to know more!');
+  btnSms.href = 'sms:' + ctaPhone + '?body=' + ctaBody;
+
+  const btnDm = document.getElementById('btn-dm');
+  btnDm.textContent = c.cta_dm_text || 'DM Us';
+  applyCtaStyle(btnDm, c.cta_dm_bg, c.cta_dm_color);
+  btnDm.href = c.cta_dm_url || 'https://www.instagram.com/stillwater.sports/';
+
+  // ── MODAL SUBMIT BUTTON ──
+  const submitBtn = document.getElementById('btn-exchange-submit');
+  submitBtn.style.background = c.exchange_submit_bg || '#E040A0';
+  submitBtn.style.color      = c.exchange_submit_color || '#FFFEB4';
+
+  // ── CREDENTIALS ──
+  const creds = c.credentials || [];
+  document.getElementById('card-credentials').innerHTML = creds.length
+    ? `<div class="block-credentials">${creds.map(x=>`<span class="cred-pill">${esc(x)}</span>`).join('')}</div>`
+    : '';
+
+  // ── BLOCKS ──
+  const blockOrder = c.block_order || DEFAULT_CFG.block_order;
+  const sorted = [...blockOrder].filter(b => b.enabled).sort((a,b) => a.order - b.order);
+  document.getElementById('card-blocks').innerHTML = sorted.map(b => renderBlock(b.block_id)).join('');
+
+  // ── FOOTER ──
+  document.getElementById('card-footer').textContent = c.footer_text || '1000+ new riders · Everyone gets up – guaranteed!';
+
+  // ── MODAL COPY ──
+  document.getElementById('modal-eyebrow').textContent    = c.exchange_headline   || "LET'S CONNECT";
+  document.getElementById('modal-headline').textContent   = c.exchange_subheadline|| 'LEARN MORE';
+  document.getElementById('modal-description').textContent= c.exchange_description|| 'Your info for mine. Quick.';
+  document.getElementById('f-source-label').textContent   = c.exchange_source_field_label || 'WHERE DID YOU HEAR ABOUT US? (OPTIONAL)';
+  submitBtn.textContent = c.exchange_cta_text || 'COMPLETE EXCHANGE →';
 }
 
+// ── EXCHANGE MODAL ─────────────────────────────────────────
+function openExchangeModal(trigger) {
+  // If opened via promo button, optionally customise modal headline
+  const c = cfg || DEFAULT_CFG;
+  if (trigger === 'promo' && c.promo_btn_text) {
+    document.getElementById('modal-description').textContent =
+      `Share your info to claim your discount.`;
+  } else {
+    document.getElementById('modal-description').textContent =
+      c.exchange_description || 'Your info for mine. Quick.';
+  }
+  document.getElementById('exchange-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('f-name').focus();
+}
+
+function closeExchangeModal() {
+  document.getElementById('exchange-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// Close on Escape
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeExchangeModal();
+});
+
+// ── SUBMIT EXCHANGE ────────────────────────────────────────
 async function submitExchange(e) {
   e.preventDefault();
-  const name  = document.getElementById('f-name').value.trim();
-  const email = document.getElementById('f-email').value.trim();
+  const name     = document.getElementById('f-name').value.trim();
+  const email    = document.getElementById('f-email').value.trim();
   const rawPhone = document.getElementById('f-phone').value.replace(/\D/g,'');
-  const promo = document.getElementById('f-promo').value.trim();
-  const errEl = document.getElementById('gate-error');
+  const source   = document.getElementById('f-source').value.trim();   // visible "heard about us"
+  const promoHidden = document.getElementById('f-promo-hidden').value; // hidden QR promo
+  const errEl    = document.getElementById('modal-error');
 
   if (!name || !rawPhone) {
     errEl.style.display = 'block';
@@ -436,7 +594,7 @@ async function submitExchange(e) {
   }
   errEl.style.display = 'none';
 
-  const btn = document.getElementById('btn-exchange');
+  const btn = document.getElementById('btn-exchange-submit');
   btn.disabled = true;
   btn.textContent = 'Saving...';
 
@@ -449,81 +607,35 @@ async function submitExchange(e) {
       name,
       email: email || null,
       phone,
-      promo_code: promo || null,
+      promo_code:  promoHidden || null,   // QR tracking code — hidden from user
       source_slug: srcSlug || null,
-      source_name: qrCode ? qrCode.name : null,
-      user_agent: navigator.userAgent.substring(0,500)
+      source_name: source || null,        // what user typed in "heard about us"
+      user_agent:  navigator.userAgent.substring(0,500)
     }).select('id').single();
 
     if (contact && scanId) {
       await db.from('card_scans').update({ converted:true, contact_id:contact.id }).eq('id', scanId);
     }
-
   } catch(err) {
     console.warn('Exchange save failed:', err);
-    // Don't block the user — show card anyway
   }
 
-  showCard();
+  closeExchangeModal();
+  // Brief confirmation
+  btn.textContent = '✓ Got it — thanks!';
+  setTimeout(() => {
+    const c = cfg || DEFAULT_CFG;
+    btn.textContent = c.exchange_cta_text || 'COMPLETE EXCHANGE →';
+    btn.disabled = false;
+  }, 2500);
 }
 
-function skipExchange(e) {
-  e.preventDefault();
-  showCard();
-}
-
-// ── CARD ───────────────────────────────────────────────────
-function showCard() {
-  document.getElementById('gate').style.display = 'none';
-  renderCard();
-  document.getElementById('card').classList.add('visible');
-  window.scrollTo(0, 0);
-}
-
-function renderCard() {
-  const c = cfg || DEFAULT_CFG;
-
-  // Hero
-  const heroImg = document.getElementById('hero-img');
-  heroImg.src = c.hero_image_url || '/assets/card-hero.png';
-
-  const overlay = document.getElementById('hero-overlay');
-  overlay.style.background = c.hero_overlay_gradient || 'linear-gradient(180deg,rgba(10,40,40,.3) 0%,rgba(10,40,40,.7) 100%)';
-
-  document.getElementById('hero-eyebrow').textContent = c.eyebrow_text || 'HEAD COACH';
-  document.getElementById('card-name').textContent = c.display_name || 'Christian Richards';
-
-  // 3 CTA buttons
-  document.getElementById('btn-save').textContent = c.cta_save_text || 'Save Contact';
-  const btnSms = document.getElementById('btn-sms');
-  btnSms.textContent = c.cta_button_text || 'Send Us a Text';
-  const ctaPhone = (c.contact_phone || '+16132995998').replace(/\s/g,'');
-  const ctaBody = encodeURIComponent(c.cta_button_sms_body || 'Hi christian i saw your flyer for stillwater sports and wanted to know more!');
-  btnSms.href = 'sms:' + ctaPhone + '?body=' + ctaBody;
-  const btnDm = document.getElementById('btn-dm');
-  btnDm.textContent = c.cta_dm_text || 'DM Us';
-  btnDm.href = c.cta_dm_url || 'https://www.instagram.com/stillwater.sports/';
-
-  // Credentials fixed below name
-  const creds = c.credentials || [];
-  document.getElementById('card-credentials').innerHTML = creds.length
-    ? `<div class="block-credentials">${creds.map(x=>`<span class="cred-pill">${esc(x)}</span>`).join('')}</div>`
-    : '';
-
-  // Blocks
-  const blockOrder = c.block_order || DEFAULT_CFG.block_order;
-  const sorted = [...blockOrder].filter(b => b.enabled).sort((a,b) => a.order - b.order);
-  document.getElementById('card-blocks').innerHTML = sorted.map(b => renderBlock(b.block_id)).join('');
-
-  // Footer
-  document.getElementById('card-footer').textContent = c.footer_text || '1000+ new riders · Everyone gets up – guaranteed!';
-}
-
+// ── BLOCK RENDERER ─────────────────────────────────────────
 function renderBlock(blockId) {
   const c = cfg || DEFAULT_CFG;
   switch(blockId) {
-    case 'credentials': return ''; // rendered fixed above card-blocks
-    case 'portfolio':   return ''; // replaced by website block
+    case 'credentials': return '';
+    case 'portfolio':   return '';
     case 'website': {
       const imgUrl  = c.website_image_url  || '/assets/FB-main.jpg';
       const caption = c.website_caption    || 'tap to visit our website';
@@ -548,7 +660,6 @@ function renderBlock(blockId) {
       if (!nums.length) return '';
       return `<div class="block-numbers">${nums.map(n=>`<div class="num-card"><div class="num-val">${esc(n.number)}</div><div class="num-cap">${esc(n.caption)}</div></div>`).join('')}</div>`;
     }
-    // portfolio removed — see 'portfolio' case above
     case 'intro_video': {
       if (!c.intro_video_url) return '';
       const url = c.intro_video_url;
@@ -561,8 +672,8 @@ function renderBlock(blockId) {
       return `<div class="block-video"><div class="video-wrapper">${embed}</div>${c.intro_video_caption?`<div class="video-caption">${esc(c.intro_video_caption)}</div>`:''}</div>`;
     }
     case 'contact_info': {
-      const phone = c.contact_phone || '';
-      const email = c.contact_email || '';
+      const phone   = c.contact_phone   || '';
+      const email   = c.contact_email   || '';
       const website = c.contact_website || '';
       return `<div class="block-contact">
         <div class="section-label">CONTACT INFORMATION</div>
@@ -624,7 +735,7 @@ function esc(str) {
   return String(str||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ── ICONS (inline SVG, no external libraries) ─────────────
+// ── ICONS ──────────────────────────────────────────────────
 const icoPhone = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.86 9.96 19.79 19.79 0 01.77 1.31 2 2 0 012.76 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 7.91a16 16 0 006 6l.91-.91a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>`;
 const icoEmail = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`;
 const icoGlobe = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>`;
@@ -634,7 +745,7 @@ const SOCIAL_ICONS = {
   facebook:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>`,
   tiktok:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.18 8.18 0 004.84 1.55V6.79a4.85 4.85 0 01-1.07-.1z"/></svg>`,
   youtube:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5a3 3 0 00-2.1 2.1A31.2 31.2 0 000 12a31.2 31.2 0 00.5 5.8 3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1A31.2 31.2 0 0024 12a31.2 31.2 0 00-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>`,
-  linkedin:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.57c0-1.327-.027-3.037-1.852-3.037-1.853 0-2.136 1.446-2.136 2.94v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.063 2.063 0 11.001-4.126 2.063 2.063 0 01-.001 4.126zm1.782 13.02H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`,
+  linkedin:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.57c0-1.327-.027-3.037-1.852-3.037-1.853 0-2.136 1.446-2.136 2.94v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.063 2.063 0 11.001-4.126 2.063 2.063 0 01-.001 4.126zm1.782 13.02H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 23.2 0 22.222 0h.003z"/></svg>`,
   twitter:`<svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.23-5.401 6.23H2.744l7.737-8.835L1.254 2.25H8.08l4.259 5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`
 };
 

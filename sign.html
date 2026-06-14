@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title>Sign your waiver — Stillwater Sports</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="./assets/css/styles.css"/>
+<style>
+  body{background:#f4fafb;color:var(--text);font-family:'Outfit',sans-serif;margin:0}
+  .wrap{max-width:680px;margin:0 auto;padding:24px 16px 80px}
+  .card{background:#fff;border:1.5px solid var(--cyan);border-radius:18px;padding:24px;margin-bottom:18px}
+  .brand{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:4px}
+  h1{font-size:22px;font-weight:800;margin:0 0 6px}
+  h2{font-size:16px;font-weight:800;margin:22px 0 8px;color:var(--text)}
+  .legal{font-size:13.5px;line-height:1.62;color:#2a3a3a}
+  .legal ul{margin:8px 0 8px 18px;padding:0}
+  .legal li{margin-bottom:6px}
+  .warn{background:#fff7e6;border:1px solid #f0c869;border-radius:10px;padding:10px 14px;font-size:13px;font-weight:600;color:#8a5a00;margin:12px 0}
+  label{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:14px 0 6px}
+  input[type=text],input[type=email],input[type=tel],input[type=date],textarea{width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid rgba(0,200,212,.25);border-radius:10px;font-size:16px;font-family:'Outfit',sans-serif;outline:none;background:#fff;color:var(--text)}
+  input:focus,textarea:focus{border-color:var(--cyan)}
+  textarea{min-height:70px;resize:vertical;line-height:1.5}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:520px){.grid2{grid-template-columns:1fr}}
+  .check{display:flex;gap:10px;align-items:flex-start;margin:12px 0;font-size:14px;line-height:1.45}
+  .check input{width:20px;height:20px;margin-top:1px;flex-shrink:0;accent-color:var(--cyan)}
+  .sig-tabs{display:flex;gap:8px;margin:6px 0}
+  .sig-tab{flex:1;padding:9px;border:1.5px solid rgba(0,200,212,.3);background:#fff;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;font-family:'Outfit',sans-serif;color:var(--muted)}
+  .sig-tab.active{background:var(--cyan);color:#fff;border-color:var(--cyan)}
+  .sig-pane{display:none}.sig-pane.active{display:block}
+  canvas.sigpad{width:100%;height:150px;border:1.5px dashed rgba(0,200,212,.5);border-radius:10px;background:#fdffff;touch-action:none;display:block}
+  .sig-clear{font-size:12px;color:var(--pink);background:none;border:none;cursor:pointer;font-weight:700;margin-top:6px;font-family:'Outfit',sans-serif}
+  .typed-sig{font-family:'Outfit',cursive;font-size:26px;font-weight:600}
+  .media-opt{border:1.5px solid rgba(0,200,212,.25);border-radius:10px;padding:12px;margin:8px 0;cursor:pointer}
+  .media-opt.sel{border-color:var(--cyan);background:rgba(0,200,212,.06)}
+  .btn{width:100%;padding:16px;border:none;border-radius:12px;background:var(--pink);color:#fff;font-size:17px;font-weight:800;font-family:'Outfit',sans-serif;cursor:pointer;margin-top:10px}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .muted{color:var(--muted);font-size:13px}
+  .msg{padding:14px;border-radius:10px;font-size:14px;margin:10px 0;display:none}
+  .msg.err{background:#fdecec;border:1px solid #e88;color:#a22;display:block}
+  .hide{display:none}
+  .center{text-align:center}
+  .big-emoji{font-size:46px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="loading" class="card center"><div class="muted">Loading your waiver…</div></div>
+  <div id="gate" class="card hide"></div>
+  <div id="app" class="hide">
+    <div class="card">
+      <div class="brand">Stillwater Sports</div>
+      <h1 id="doc-title">Waiver</h1>
+      <div class="muted" id="doc-sub"></div>
+    </div>
+    <div class="card legal" id="legal-card"></div>
+    <div class="card" id="fields-card"></div>
+    <div id="form-msg" class="msg"></div>
+    <button class="btn" id="submitBtn">Sign &amp; submit</button>
+    <p class="muted center" style="margin-top:14px">By submitting, a server-side record (date, time, and device) is stored as proof of signature. A signed PDF copy will be emailed to you.</p>
+  </div>
+  <div id="done" class="card center hide">
+    <div class="big-emoji">🌊</div>
+    <h1>You're all set</h1>
+    <p class="muted" id="done-msg">Your signed waiver has been recorded. A copy is on its way to your email.</p>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL='https://isbhflfmugfeqwhhqlkh.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzYmhmbGZtdWdmZXF3aGhxbGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDE0MzEsImV4cCI6MjA5MzA3NzQzMX0.TKMd_rSmJvoLiL5_1pFw9KqYHNne-eEdnGNR4zgZwFk';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const params = new URLSearchParams(location.search);
+const TOKEN = params.get('t') || params.get('token');
+let WAIVER = null;
+const sigPads = {}; // fieldName -> {mode, canvas, getData, isEmpty, typedEl}
+
+function todayMDY(){const d=new Date();return String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+'/'+d.getFullYear();}
+function el(id){return document.getElementById(id);}
+function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+function showGate(msg){
+  el('loading').classList.add('hide');
+  const g=el('gate'); g.classList.remove('hide');
+  g.innerHTML='<div class="brand">Stillwater Sports</div><h1>Waiver link</h1><p class="muted">'+esc(msg)+'</p><p class="muted">If you think this is a mistake, reply to the email you received or contact christian@learnwatersports.ca.</p>';
+}
+
+// ---------- verbatim legal text (insurer wording — do not edit) ----------
+const LEGAL = {
+adult: `
+<h2>Release of Liability, Waiver of Claims and Indemnity Agreement</h2>
+<p class="muted">For participants 18 years of age and older · Province of Ontario, Canada</p>
+<div class="warn">WARNING! By signing this document you will waive certain legal rights, including the right to sue. Please read carefully.</div>
+<p class="legal">This is a binding legal agreement. Clarify any questions or concerns before signing. As a participant in activities organized by Christian Richards / Stillwater Sports ("Stillwater Sports"), including waterski, wakeboard, wakesurf, slalom, barefoot skiing, tubing, and related instruction and on-water activities (the "Activities"), the undersigned acknowledges and agrees to the following:</p>
+<h2>1. Disclaimer</h2>
+<p class="legal">Stillwater Sports, Christian Richards, and their respective coaches, instructors, agents, volunteers, and representatives (the "Organization") are not responsible for any injury, damage, property damage, expense, loss of income, or loss of any kind suffered by a Participant during or as a result of the Activities, caused in any manner whatsoever including the negligence of the Organization.</p>
+<h2>2. Description of Risks</h2>
+<p class="legal">I am participating voluntarily. I acknowledge that I am aware of the risks, dangers and hazards including but not limited to:</p>
+<ul class="legal">
+<li>Hazards particular to towed water sports at high speeds — waterski, wakeboard, wakesurf, slalom, barefoot skiing and tubing;</li>
+<li>Strenuous physical techniques, rapid movements, and vigorous physical exertion;</li>
+<li>Water hazards, waves, unstable surfaces, boat wakes, and extreme weather conditions;</li>
+<li>Jumps, water features, buoys, obstacles and structures placed in the water;</li>
+<li>Failure to properly use equipment, or mechanical failure of any piece of equipment;</li>
+<li>Contact, collision, falling, or being struck by other participants, the boat, or equipment;</li>
+<li>Blunt force trauma, soft tissue injuries, broken bones, or spinal cord injuries which may render the Participant permanently paralyzed;</li>
+<li>Drowning, including equipment failure, entanglement, falling from the boat, or being knocked unconscious.</li>
+</ul>
+<h2>3. Release of Liability</h2>
+<p class="legal">In consideration of Stillwater Sports allowing me to participate, I agree:</p>
+<ul class="legal">
+<li>To ASSUME all risks arising out of or related to my participation in the Activities;</li>
+<li>To WAIVE any and all claims I may have now or in the future against the Organization;</li>
+<li>To FOREVER RELEASE Stillwater Sports and Christian Richards from any and all liability for any claims, damages (including direct, indirect, special and/or consequential), losses, and costs (including legal fees) arising out of or relating to my participation, even if caused by negligence or breach of any duty of care;</li>
+<li>That all instructions from the coach must be followed at all times on and around the water;</li>
+<li>That participants under the influence of alcohol or drugs will not be permitted to participate — no refund will be issued.</li>
+</ul>
+<h2>4. Jurisdiction</h2>
+<p class="legal">This Agreement is governed by the laws of the Province of Ontario. Any lawsuit must be filed solely in the Province of Ontario.</p>
+<h2>5. Acknowledgement</h2>
+<p class="legal">I acknowledge that I have read and understand this agreement, that I have executed it voluntarily, and that it is binding upon myself, my heirs, spouse, children, parents, guardians, next of kin, executors, administrators and legal or personal representatives.</p>`,
+minor: `
+<h2>Informed Consent and Assumption of Risk Agreement</h2>
+<p class="muted">To be executed by the Parent or Guardian of a Participant under 18 years of age</p>
+<div class="warn">WARNING! Please read carefully. By signing you assume certain risks and responsibilities on behalf of the minor Participant.</div>
+<p class="legal">This is a binding legal agreement. Clarify any questions before signing. As a towed water sports participant in activities organized by Christian Richards / Stillwater Sports, the undersigned being the Participant and the Participant's Parent or Guardian (the "Parties") acknowledge and agree to the following:</p>
+<h2>1. Disclaimer</h2>
+<p class="legal">Stillwater Sports, Christian Richards, and their respective coaches, instructors, agents, and representatives (the "Organization") are not responsible for any injury, property damage, death, expense, or loss of any kind suffered by the Participant during or as a result of the Activities.</p>
+<h2>2. Description and Acknowledgement of Risks</h2>
+<p class="legal">The Parties understand that the Activities have foreseeable and unforeseeable inherent risks that no amount of care or expertise can eliminate, including serious bodily injury, permanent disability, paralysis, and loss of life. Risks include but are not limited to:</p>
+<ul class="legal">
+<li>Hazards particular to towed water sports at high speeds;</li>
+<li>Water hazards, waves, unstable surfaces, boat wakes, and extreme weather;</li>
+<li>Failure to properly use equipment or mechanical failure of equipment;</li>
+<li>Spinal cord injuries which may render the Participant permanently paralyzed;</li>
+<li>Serious injury to bones, joints, ligaments, muscles, and tendons;</li>
+<li>Concussion or other head injuries including closed head injury or blunt head trauma;</li>
+<li>Drowning due to equipment failure, entanglement, or being knocked unconscious;</li>
+<li>Negligence of other persons including other participants or employees.</li>
+</ul>
+<h2>3. Terms and Conditions</h2>
+<p class="legal">The Parties agree:</p>
+<ul class="legal">
+<li>That the Participant is expected to wear an appropriate PFD at all times in the water;</li>
+<li>That the Participant's mental and physical condition is appropriate to participate and the Parties assume all related risks;</li>
+<li>To comply with all rules and instructions established by the coach at all times;</li>
+<li>That participants who have consumed alcohol or drugs will not be permitted to participate;</li>
+<li>To FOREVER RELEASE Stillwater Sports and Christian Richards from any and all liability for any claims, damages, losses, and costs (including legal fees) arising out of or relating to the Activities, even if caused by negligence or breach of any duty of care.</li>
+</ul>
+<h2>4. Jurisdiction</h2>
+<p class="legal">The Parties agree that any lawsuit must be filed solely in the Province of Ontario and that Ontario law will apply.</p>
+<h2>5. Acknowledgement</h2>
+<p class="legal">The Parties acknowledge that they have read and understand this agreement, that they have executed it voluntarily, and that this Agreement is binding upon themselves, their heirs, spouses, parents, guardians, next of kin, executors, administrators, and legal or personal representatives.</p>`,
+parental_consent: `
+<h2>Parental Consent and Authorization Form</h2>
+<p class="muted">For minors participating without their parent or guardian present on-site. Complete before the session date.</p>
+<h2>Section F — Parental Authorization and Consent</h2>
+<p class="legal">I, the undersigned parent or legal guardian of the named minor, hereby:</p>
+<ul class="legal">
+<li>AUTHORIZE my child to participate in waterski, wakeboard, wakesurf, slalom, barefoot skiing, tubing, and related on-water activities operated by Stillwater Sports on the date and at the location specified;</li>
+<li>AUTHORIZE the supervising adult named below to act in loco parentis for the duration of the session and to make reasonable decisions regarding the minor's participation and safety;</li>
+<li>AUTHORIZE Stillwater Sports to seek emergency medical treatment for the minor if neither the parent/guardian nor the supervising adult can be reached;</li>
+<li>CONFIRM that I have read and agreed to the Stillwater Sports Minor Participant Waiver and agree to all terms on behalf of myself and the minor;</li>
+<li>CONFIRM the supervising adult has been made aware of the risks associated with water sports and accepts responsibility for supervising the minor on shore;</li>
+<li>CONFIRM that the minor is in good physical and mental health and is fit to participate.</li>
+</ul>
+<p class="legal">By signing below, I confirm that I have read, understood, and voluntarily agree to all of the above, and that I am the legal parent or guardian of the minor named below.</p>`
+};
+
+// ---------- signature widget ----------
+function sigWidget(fieldName, label){
+  return `<label>${esc(label)}</label>
+  <div class="sig-tabs">
+    <button type="button" class="sig-tab active" data-sig="${fieldName}" data-mode="type">Type</button>
+    <button type="button" class="sig-tab" data-sig="${fieldName}" data-mode="draw">Draw</button>
+  </div>
+  <div class="sig-pane active" id="${fieldName}-type">
+    <input type="text" id="${fieldName}-typed" placeholder="Type your full name" oninput="document.getElementById('${fieldName}-preview').textContent=this.value"/>
+    <div class="typed-sig" id="${fieldName}-preview" style="margin-top:8px;color:var(--text)"></div>
+  </div>
+  <div class="sig-pane" id="${fieldName}-draw">
+    <canvas class="sigpad" id="${fieldName}-canvas"></canvas>
+    <button type="button" class="sig-clear" data-clear="${fieldName}">Clear</button>
+  </div>`;
+}
+function initSigPad(fieldName){
+  const canvas=el(fieldName+'-canvas'); if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  function resize(){const r=canvas.getBoundingClientRect();canvas.width=r.width;canvas.height=r.height;ctx.lineWidth=2.2;ctx.lineCap='round';ctx.strokeStyle='#0a2a2a';}
+  resize(); window.addEventListener('resize',resize);
+  let drawing=false,empty=true;
+  function pos(e){const r=canvas.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:t.clientX-r.left,y:t.clientY-r.top};}
+  function start(e){drawing=true;empty=false;const p=pos(e);ctx.beginPath();ctx.moveTo(p.x,p.y);e.preventDefault();}
+  function move(e){if(!drawing)return;const p=pos(e);ctx.lineTo(p.x,p.y);ctx.stroke();e.preventDefault();}
+  function end(){drawing=false;}
+  canvas.addEventListener('mousedown',start);canvas.addEventListener('mousemove',move);window.addEventListener('mouseup',end);
+  canvas.addEventListener('touchstart',start,{passive:false});canvas.addEventListener('touchmove',move,{passive:false});canvas.addEventListener('touchend',end);
+  sigPads[fieldName]={mode:'type',canvas,isEmpty:()=>empty,clear:()=>{ctx.clearRect(0,0,canvas.width,canvas.height);empty=true;},getData:()=>canvas.toDataURL('image/png')};
+}
+
+// ---------- media release block (adult + minor) ----------
+function mediaBlock(prefix){ // prefix 'adult' or 'minor'
+  return `<h2>Media Release <span class="muted" style="font-weight:600">(optional)</span></h2>
+  <p class="muted">Separate and optional — your waiver is valid whether or not you grant this. Refusal has no effect on participation.</p>
+  <div class="media-opt" id="${prefix}-media-yes-opt"><label style="margin:0"><input type="radio" name="${prefix}_media" value="yes" style="width:auto;margin-right:8px"/>YES — I grant media consent (images/video may be used for website &amp; social media marketing)</label></div>
+  <div class="media-opt" id="${prefix}-media-no-opt"><label style="margin:0"><input type="radio" name="${prefix}_media" value="no" style="width:auto;margin-right:8px"/>NO — I do not grant media consent</label></div>
+  <div id="${prefix}-media-extra" class="hide">
+    <div class="grid2">
+      <div><label>Name(s) this applies to</label><input type="text" id="${prefix}_media_names"/></div>
+      <div><label>Initials</label><input type="text" id="${prefix}_media_initials"/></div>
+    </div>
+    <label>Additional restrictions (e.g. no faces, no names)</label>
+    <input type="text" id="${prefix}_media_restrictions"/>
+  </div>`;
+}
+function wireMedia(prefix){
+  document.querySelectorAll('input[name="'+prefix+'_media"]').forEach(r=>{
+    r.addEventListener('change',()=>{
+      el(prefix+'-media-yes-opt').classList.toggle('sel', r.value==='yes' && r.checked);
+      el(prefix+'-media-no-opt').classList.toggle('sel', r.value==='no' && r.checked);
+      // show extra fields only when YES
+      const yes=document.querySelector('input[name="'+prefix+'_media"][value=yes]');
+      el(prefix+'-media-extra').classList.toggle('hide', !(yes&&yes.checked));
+    });
+  });
+}
+
+// ---------- field renderers ----------
+function fieldsAdult(){
+  return `<h2>Your details</h2>
+  <label>Participant name (print)</label><input type="text" id="p1_name" value="${esc(WAIVER.signer_name||'')}"/>
+  ${sigWidget('p1_sig','Signature of participant')}
+  <details style="margin-top:14px"><summary class="muted" style="cursor:pointer">Add another adult from the same immediate family (optional)</summary>
+    <label>Name (print)</label><input type="text" id="p2_name"/>
+    ${sigWidget('p2_sig','Signature')}
+    <label>Name (print)</label><input type="text" id="p3_name"/>
+    ${sigWidget('p3_sig','Signature')}
+  </details>
+  ${mediaBlock('adult')}`;
+}
+function fieldsMinor(){
+  return `<h2>Minor participant</h2>
+  <div class="grid2">
+    <div><label>Participant's name (print)</label><input type="text" id="minor_name"/></div>
+    <div><label>Date of birth</label><input type="text" id="minor_dob" placeholder="MM/DD/YYYY"/></div>
+  </div>
+  <label>Age</label><input type="text" id="minor_age" style="max-width:120px"/>
+  <div class="check"><input type="checkbox" id="ack_paras"/><span>We have read and agree to be bound by paragraphs 1, 2 and 3 above.</span></div>
+  <h2>Parent / guardian signature <span class="muted" style="font-weight:600">(required)</span></h2>
+  <label>Parent / guardian name (print)</label><input type="text" id="guardian_name" value="${esc(WAIVER.signer_name||'')}"/>
+  ${sigWidget('guardian_sig','Signature of parent / guardian')}
+  <details style="margin-top:14px"><summary class="muted" style="cursor:pointer">Minor's signature (optional, age 13+)</summary>
+    ${sigWidget('minor_sig_optional','Participant signature')}
+  </details>
+  ${mediaBlock('minor')}`;
+}
+function fieldsConsent(){
+  return `<h2>Section A — Minor participant</h2>
+  <div class="grid2">
+    <div><label>Minor's full name (print)</label><input type="text" id="minor_full_name"/></div>
+    <div><label>Date of birth</label><input type="text" id="minor_dob" placeholder="MM/DD/YYYY"/></div>
+  </div>
+  <div class="grid2"><div><label>Age</label><input type="text" id="minor_age"/></div><div><label>Home address</label><input type="text" id="minor_address"/></div></div>
+  <div class="grid2"><div><label>City</label><input type="text" id="minor_city"/></div><div><label>Province / postal</label><input type="text" id="minor_prov"/></div></div>
+  <h2>Section B — Parent / legal guardian</h2>
+  <div class="grid2"><div><label>Full name (print)</label><input type="text" id="guardian_full_name" value="${esc(WAIVER.signer_name||'')}"/></div><div><label>Relationship to minor</label><input type="text" id="guardian_relationship"/></div></div>
+  <div class="grid2"><div><label>Phone</label><input type="tel" id="guardian_phone"/></div><div><label>Email</label><input type="email" id="guardian_email" value="${esc(WAIVER.signer_email||'')}"/></div></div>
+  <label>City / province</label><input type="text" id="guardian_city"/>
+  <h2>Section C — Supervising adult (on shore)</h2>
+  <div class="grid2"><div><label>Full name (print)</label><input type="text" id="supervisor_name"/></div><div><label>Relationship to minor</label><input type="text" id="supervisor_rel"/></div></div>
+  <label>Phone</label><input type="tel" id="supervisor_phone"/>
+  <h2>Section D — Session details</h2>
+  <div class="grid2"><div><label>Session date</label><input type="text" id="session_date" placeholder="MM/DD/YYYY"/></div><div><label>Location / lake</label><input type="text" id="session_location"/></div></div>
+  <label>Package</label><input type="text" id="session_package"/>
+  <h2>Section E — Emergency contact &amp; medical</h2>
+  <div class="grid2"><div><label>Emergency contact name</label><input type="text" id="emerg_name"/></div><div><label>Relationship</label><input type="text" id="emerg_rel"/></div></div>
+  <label>Phone</label><input type="tel" id="emerg_phone"/>
+  <label>Medical conditions, allergies, or medications the coach should know about</label><textarea id="medical_notes"></textarea>
+  <h2>Section G — Signature</h2>
+  <label>Parent / guardian name (print)</label><input type="text" id="consent_guardian_name" value="${esc(WAIVER.signer_name||'')}"/>
+  ${sigWidget('consent_guardian_sig','Signature of parent / guardian')}`;
+}
+
+function consentBlock(){
+  return `<div class="check"><input type="checkbox" id="consent_terms"/><span>I have read and agree to the terms of this ${WAIVER.waiver_type==='parental_consent'?'consent form':'waiver'} above.</span></div>
+  <div class="check"><input type="checkbox" id="consent_esign"/><span>I consent to signing electronically, and agree my electronic signature is legally binding.</span></div>`;
+}
+
+function render(){
+  el('loading').classList.add('hide');
+  el('app').classList.remove('hide');
+  const titles={adult:'Liability Waiver',minor:'Minor Participant Waiver',parental_consent:'Parental Consent Form'};
+  el('doc-title').textContent=titles[WAIVER.waiver_type]||'Waiver';
+  el('doc-sub').textContent=(WAIVER.signer_name?('For '+WAIVER.signer_name+' · '):'')+'Season '+WAIVER.season;
+  el('legal-card').innerHTML=LEGAL[WAIVER.waiver_type]||'';
+  let fields = WAIVER.waiver_type==='adult'?fieldsAdult():WAIVER.waiver_type==='minor'?fieldsMinor():fieldsConsent();
+  el('fields-card').innerHTML = fields + consentBlock();
+  // init signature pads + tabs
+  Object.keys(sigPads).forEach(k=>delete sigPads[k]);
+  document.querySelectorAll('canvas.sigpad').forEach(c=>initSigPad(c.id.replace('-canvas','')));
+  document.querySelectorAll('.sig-tab').forEach(t=>t.addEventListener('click',()=>{
+    const f=t.dataset.sig,m=t.dataset.mode;
+    document.querySelectorAll('.sig-tab[data-sig="'+f+'"]').forEach(x=>x.classList.toggle('active',x.dataset.mode===m));
+    el(f+'-type').classList.toggle('active',m==='type');
+    el(f+'-draw').classList.toggle('active',m==='draw');
+    if(sigPads[f]) sigPads[f].mode=m;
+  }));
+  document.querySelectorAll('[data-clear]').forEach(b=>b.addEventListener('click',()=>{const f=b.dataset.clear;if(sigPads[f])sigPads[f].clear();}));
+  if(WAIVER.waiver_type==='adult') wireMedia('adult');
+  if(WAIVER.waiver_type==='minor') wireMedia('minor');
+}
+
+// collect a signature: returns {text, dataUrl}
+function collectSig(field){
+  const pad=sigPads[field]; const mode=pad?pad.mode:'type';
+  if(mode==='draw' && pad && !pad.isEmpty()) return {dataUrl:pad.getData()};
+  const typed=el(field+'-typed'); return {text:typed?typed.value.trim():''};
+}
+function val(id){const e=el(id);return e?e.value.trim():'';}
+function showErr(m){const x=el('form-msg');x.textContent=m;x.className='msg err';window.scrollTo({top:0,behavior:'smooth'});}
+
+async function submit(){
+  const btn=el('submitBtn');
+  // consent required
+  if(!el('consent_terms').checked || !el('consent_esign').checked){return showErr('Please tick both consent boxes to continue.');}
+  const form={}; const sigs={};
+  let isGuardian=false, primarySig=null, mediaPrefix=null;
+
+  if(WAIVER.waiver_type==='adult'){
+    form.p1_name=val('p1_name'); form.p1_date=todayMDY();
+    if(!form.p1_name) return showErr('Please enter the participant name.');
+    primarySig=collectSig('p1_sig');
+    if(primarySig.dataUrl) sigs.p1_sig=primarySig.dataUrl; else form.p1_sig=primarySig.text;
+    if(!primarySig.dataUrl && !primarySig.text) return showErr('Please add your signature.');
+    ['p2','p3'].forEach(p=>{const n=val(p+'_name'); if(n){form[p+'_name']=n; const s=collectSig(p+'_sig'); if(s.dataUrl)sigs[p+'_sig']=s.dataUrl; else if(s.text)form[p+'_sig']=s.text;}});
+    mediaPrefix='adult';
+  } else if(WAIVER.waiver_type==='minor'){
+    isGuardian=true;
+    form.minor_name=val('minor_name'); form.minor_dob=val('minor_dob'); form.minor_age=val('minor_age');
+    if(!form.minor_name) return showErr('Please enter the minor participant name.');
+    if(!el('ack_paras').checked) return showErr('Please confirm you have read paragraphs 1–3.');
+    form.ack_We_have_re=true;
+    form.guardian_name=val('guardian_name'); form.guardian_date=todayMDY();
+    if(!form.guardian_name) return showErr('Please enter the parent / guardian name.');
+    const gs=collectSig('guardian_sig');
+    if(gs.dataUrl) sigs.guardian_sig=gs.dataUrl; else form.guardian_sig=gs.text;
+    if(!gs.dataUrl && !gs.text) return showErr('Parent / guardian signature is required.');
+    const ms=collectSig('minor_sig_optional'); if(ms.dataUrl){sigs.minor_sig_optional=ms.dataUrl;form.minor_sig_date=todayMDY();} else if(ms.text){form.minor_sig_optional=ms.text;form.minor_sig_date=todayMDY();}
+    mediaPrefix='minor';
+  } else { // parental_consent
+    isGuardian=true;
+    ['minor_full_name','minor_dob','minor_age','minor_address','minor_city','minor_prov','guardian_full_name','guardian_relationship','guardian_phone','guardian_email','guardian_city','supervisor_name','supervisor_rel','supervisor_phone','session_date','session_location','session_package','emerg_name','emerg_rel','emerg_phone','medical_notes'].forEach(id=>{const v=val(id); if(v)form[id]=v;});
+    if(!form.minor_full_name) return showErr("Please enter the minor's full name.");
+    if(!form.guardian_full_name) return showErr('Please enter the parent / guardian name.');
+    form.consent_guardian_name=val('consent_guardian_name')||form.guardian_full_name; form.consent_date=todayMDY();
+    const cs=collectSig('consent_guardian_sig');
+    if(cs.dataUrl) sigs.consent_guardian_sig=cs.dataUrl; else form.consent_guardian_sig=cs.text;
+    if(!cs.dataUrl && !cs.text) return showErr('Parent / guardian signature is required.');
+  }
+
+  // media release (adult/minor only)
+  let media_consent=null, media_restrictions=null;
+  if(mediaPrefix){
+    const sel=document.querySelector('input[name="'+mediaPrefix+'_media"]:checked');
+    if(sel){
+      media_consent=sel.value;
+      form[mediaPrefix+'_media_'+(sel.value==='yes'?'grant':'deny')]='Yes';
+      form[mediaPrefix+'_media_date']=todayMDY();
+      if(sel.value==='yes'){
+        const nm=val(mediaPrefix+'_media_names'), ini=val(mediaPrefix+'_media_initials'), rstr=val(mediaPrefix+'_media_restrictions');
+        if(nm)form[mediaPrefix+'_media_names']=nm; if(ini)form[mediaPrefix+'_media_initials']=ini;
+        if(rstr){form[mediaPrefix+'_media_restrictions']=rstr; media_restrictions=rstr;}
+      }
+    }
+  }
+  if(Object.keys(sigs).length) form._signatures=sigs;
+
+  const signer_name = form.p1_name || form.guardian_name || form.consent_guardian_name || WAIVER.signer_name || null;
+  const signer_email = WAIVER.signer_email || form.guardian_email || null;
+
+  btn.disabled=true; btn.textContent='Submitting…';
+  const {error}=await db.rpc('submit_waiver',{p_token:TOKEN,p_payload:{
+    form_data:form, consent_esign:true, consent_terms:true,
+    signer_name, signer_email, is_guardian_signature:isGuardian,
+    media_consent, media_restrictions
+  }});
+  if(error){btn.disabled=false;btn.textContent='Sign & submit';return showErr(error.message||'Something went wrong. Please try again.');}
+  el('app').classList.add('hide'); el('done').classList.remove('hide');
+  if(signer_email) el('done-msg').textContent='Your signed waiver has been recorded. A copy is on its way to '+signer_email+'.';
+}
+
+async function init(){
+  if(!TOKEN){return showGate('This link is missing its access code.');}
+  const {data,error}=await db.rpc('get_waiver_for_signing',{p_token:TOKEN});
+  if(error){return showGate(error.message||'This link could not be opened.');}
+  WAIVER=data; render();
+  el('submitBtn').addEventListener('click',submit);
+}
+init();
+</script>
+</body>
+</html>
