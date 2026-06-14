@@ -2127,10 +2127,6 @@ function populateDCForm(d){
   const numList=document.getElementById('dc-nums-list');
   numList.innerHTML='';
   (d.key_numbers||[]).forEach((n,i)=>numList.insertAdjacentHTML('beforeend',dcNumRow(i,n)));
-  sv('dc-portfolio-title',d.portfolio_title);
-  const portList=document.getElementById('dc-portfolio-list');
-  portList.innerHTML='';
-  (d.portfolio_items||[]).forEach((p,i)=>portList.insertAdjacentHTML('beforeend',dcPortRow(i,p)));
   sv('dc-video-url',d.intro_video_url);sv('dc-video-caption',d.intro_video_caption);
   sv('dc-phone',d.contact_phone);sv('dc-email',d.contact_email);sv('dc-website',d.contact_website);
   const socList=document.getElementById('dc-socials-list');
@@ -2192,14 +2188,13 @@ function collectDCConfig(){
   const creds=[...document.querySelectorAll('.dc-cred-row .dc-cred-val')].map(i=>i.value.trim()).filter(Boolean);
   const descLines=(document.getElementById('dc-desc-lines')?.value||'').split('\n').map(l=>l.trim()).filter(Boolean);
   const nums=[...document.querySelectorAll('.dc-num-row')].map(r=>({number:r.querySelector('.dc-num-val')?.value.trim(),caption:r.querySelector('.dc-num-label')?.value.trim()})).filter(n=>n.number&&n.caption);
-  const portItems=[...document.querySelectorAll('.dc-port-row')].map(r=>({image:r.querySelector('.dc-port-img')?.value.trim(),caption:r.querySelector('.dc-port-cap')?.value.trim(),link_url:r.querySelector('.dc-port-url')?.value.trim()||undefined})).filter(p=>p.image||p.caption);
   const socs=[...document.querySelectorAll('.dc-social-row')].map(r=>{const p=r.querySelector('.dc-soc-net')?.value;return{platform:p,label:p?p.charAt(0).toUpperCase()+p.slice(1):'',url:r.querySelector('.dc-soc-url')?.value.trim()};}).filter(s=>s.url);
   const blockRows=[...document.querySelectorAll('#dc-blocks-list .block-order-row')];
   const block_order=blockRows.map((r,i)=>({block_id:r.dataset.block,enabled:r.querySelector('.block-vis-cb').checked,order:i+1}));
   return {
     hero_image_url:gv('dc-hero-image'),eyebrow_text:gv('dc-eyebrow'),display_name:gv('dc-display-name'),
     credentials:creds,tagline:gv('dc-tagline'),description_lines:descLines,cta_text:gv('dc-cta'),
-    key_numbers:nums,portfolio_title:gv('dc-portfolio-title')||'Portfolio',portfolio_items:portItems,
+    key_numbers:nums,
     intro_video_url:gv('dc-video-url'),intro_video_caption:gv('dc-video-caption'),
     contact_phone:gv('dc-phone'),contact_email:gv('dc-email'),contact_website:gv('dc-website'),
     socials:socs,
