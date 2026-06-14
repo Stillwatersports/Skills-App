@@ -408,7 +408,12 @@ tr:hover td{background:rgba(0,200,212,.03)}
           <col style="width:8%">
           <col style="width:8%">
         </colgroup>
-        <thead><tr><th>Name</th><th>Contact</th><th>Sport</th><th>Inquiry</th><th>Status</th><th>Source</th><th>Actions</th></tr></thead>
+        <thead><tr>
+          <th onclick="setLeadSort('name')" style="cursor:pointer;user-select:none">Name <span id="lsort-name" style="opacity:.4">↕</span></th>
+          <th>Contact</th><th>Sport</th><th>Inquiry</th>
+          <th onclick="setLeadSort('status')" style="cursor:pointer;user-select:none">Status <span id="lsort-status" style="color:var(--cyan)">↑</span></th>
+          <th>Source</th><th>Actions</th>
+        </tr></thead>
         <tbody id="leads-table"></tbody></table>
       </div>
     </div>
@@ -553,12 +558,18 @@ tr:hover td{background:rgba(0,200,212,.03)}
           <div class="dc-section-header" onclick="dcToggle('dc-body-ctabtn')">CTA Button <span class="dc-chevron">▾</span></div>
           <div class="dc-section-body collapsed" id="dc-body-ctabtn">
             <div class="form-row">
-              <div class="form-group"><label>Button Text</label><input type="text" id="dc-cta-btn-text" placeholder="Send Us a Text"/></div>
+              <div class="form-group"><label>Save Contact Button Text</label><input type="text" id="dc-cta-save-text" placeholder="Save Contact"/></div>
+              <div class="form-group"><label>SMS Button Text</label><input type="text" id="dc-cta-btn-text" placeholder="Send Us a Text"/></div>
+              <div class="form-group"><label>DM Button Text</label><input type="text" id="dc-cta-dm-text" placeholder="DM Us"/></div>
             </div>
             <div class="form-group">
               <label>SMS Pre-filled Message</label>
               <input type="text" id="dc-cta-sms-body" placeholder="Hi christian i saw your flyer for stillwater sports and wanted to know more!"/>
               <p style="font-size:11px;color:var(--hint);margin-top:4px">Opens the SMS app with this message pre-filled when tapped.</p>
+            </div>
+            <div class="form-group">
+              <label>DM Link URL (Instagram)</label>
+              <input type="text" id="dc-cta-dm-url" placeholder="https://www.instagram.com/stillwater.sports/"/>
             </div>
           </div>
         </div>
@@ -585,12 +596,11 @@ tr:hover td{background:rgba(0,200,212,.03)}
           </div>
         </div>
         <div class="dc-section">
-          <div class="dc-section-header" onclick="dcToggle('dc-body-portfolio')">Portfolio <span class="dc-chevron">▾</span></div>
-          <div class="dc-section-body" id="dc-body-portfolio">
-            <div class="form-group"><label>Section Title</label><input type="text" id="dc-portfolio-title"/></div>
-            <div id="dc-portfolio-list"></div>
-            <button class="btn btn-ghost btn-sm" onclick="addDcPortfolio()" style="margin-top:4px">+ Add Item</button>
-            <p style="font-size:11px;color:var(--hint);margin-top:6px">Image URL · caption · link URL (optional). Use /assets/ paths — no base64.</p>
+          <div class="dc-section-header" onclick="dcToggle('dc-body-website')">Website Block <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-website">
+            <div class="form-group"><label>Image URL</label><input type="text" id="dc-web-img" placeholder="/assets/FB-main.jpg"/></div>
+            <div class="form-group"><label>Caption (pink text below image)</label><input type="text" id="dc-web-caption" placeholder="tap to visit our website"/></div>
+            <div class="form-group"><label>Link URL</label><input type="text" id="dc-web-link" placeholder="https://learnwatersports.ca"/></div>
           </div>
         </div>
         <div class="dc-section">
@@ -626,6 +636,7 @@ tr:hover td{background:rgba(0,200,212,.03)}
             </div>
             <div class="form-group"><label>Description</label><input type="text" id="dc-ex-description"/></div>
             <div class="form-group"><label>Promo field label</label><input type="text" id="dc-ex-promo-label"/></div>
+            <div class="form-group"><label>Submit Button Text</label><input type="text" id="dc-ex-cta-text" placeholder="COMPLETE EXCHANGE →"/></div>
           </div>
         </div>
         <div class="dc-section">
@@ -1447,6 +1458,19 @@ async function deleteClient(id){
 // ── LEADS ─────────────────────────────────────────────────
 // Lead status sort rank: new → hot → warm → cold → archived
 const LEAD_RANK = { new:0, hot:1, warm:2, cold:3, archived:4 };
+let leadSort = { col:'status', dir:1 }; // dir: 1=asc, -1=desc
+function setLeadSort(col){
+  if(leadSort.col===col){ leadSort.dir *= -1; }
+  else { leadSort = { col, dir: col==='status' ? 1 : 1 }; }
+  // Update header indicators
+  ['name','status'].forEach(c=>{
+    const el = document.getElementById('lsort-'+c);
+    if(!el) return;
+    if(c===leadSort.col){ el.textContent = leadSort.dir===1 ? '↑' : '↓'; el.style.opacity='1'; el.style.color='var(--cyan)'; }
+    else { el.textContent = '↕'; el.style.opacity='.4'; el.style.color=''; }
+  });
+  filterLeads();
+}
 // Lead status → CSS badge class
 const LEAD_STATUS_CLASS = {
   new:      'status-new',
@@ -1471,8 +1495,16 @@ function renderLeads(filter=''){
     const f = filter.toLowerCase();
     list = list.filter(l=>(l.name||'').toLowerCase().includes(f) || (l.email||'').toLowerCase().includes(f));
   }
-  // Sort by LEAD_RANK, then by created_at descending within same rank
-  list.sort((a,b) => (LEAD_RANK[a.status] ?? 9) - (LEAD_RANK[b.status] ?? 9));
+  // Sort by active column
+  list.sort((a,b) => {
+    let va, vb;
+    if(leadSort.col==='status'){ va = LEAD_RANK[a.status] ?? 9; vb = LEAD_RANK[b.status] ?? 9; }
+    else if(leadSort.col==='name'){ va = (a.name||'').toLowerCase(); vb = (b.name||'').toLowerCase(); }
+    if(va < vb) return -1 * leadSort.dir;
+    if(va > vb) return  1 * leadSort.dir;
+    // secondary sort: newest first within same rank
+    return new Date(b.created_at) - new Date(a.created_at);
+  });
   const srcOpts = ['','website','resort','facebook','instagram','referral','other'];
   tb.innerHTML = list.length ? list.map(l=>`<tr>
     <td><strong>${esc(l.name||'—')}</strong></td>
@@ -2106,9 +2138,12 @@ function populateDCForm(d){
   (d.socials||[]).forEach((s,i)=>socList.insertAdjacentHTML('beforeend',dcSocialRow(i,s)));
   sv('dc-ex-headline',d.exchange_headline);sv('dc-ex-eyebrow',d.exchange_subheadline);
   sv('dc-ex-description',d.exchange_description);sv('dc-ex-promo-label',d.exchange_promo_field_label);
-  sv('dc-cta-btn-text',d.cta_button_text);sv('dc-cta-sms-body',d.cta_button_sms_body);
+  sv('dc-cta-save-text',d.cta_save_text);sv('dc-cta-btn-text',d.cta_button_text);sv('dc-cta-sms-body',d.cta_button_sms_body);
+  sv('dc-cta-dm-text',d.cta_dm_text);sv('dc-cta-dm-url',d.cta_dm_url);
+  sv('dc-ex-cta-text',d.exchange_cta_text);
+  sv('dc-web-img',d.website_image_url);sv('dc-web-caption',d.website_caption);sv('dc-web-link',d.website_link_url);
   sv('dc-footer-text',d.footer_text);
-  renderBlockOrderList(d.block_order||['credentials','description','key_numbers','portfolio','intro_video','contact_info','socials'],{});
+  renderBlockOrderList(d.block_order||['description','key_numbers','website','intro_video','contact_info','socials'],{});
 }
 function dcCredRow(i,val){return `<div class="dc-list-row dc-cred-row" data-idx="${i}"><input type="text" class="dc-cred-val" placeholder="e.g. AWSI Certified Instructor" value="${esc(val)}"/><button class="remove-btn" onclick="this.closest('.dc-list-row').remove()">×</button></div>`;}
 function dcNumRow(i,n){return `<div class="dc-list-row dc-num-row" data-idx="${i}"><input type="text" class="dc-num-val" placeholder="25+" value="${esc(n.number||'')}"/><input type="text" class="dc-num-label" placeholder="label" value="${esc(n.caption||'')}"/><button class="remove-btn" onclick="this.closest('.dc-list-row').remove()">×</button></div>`;}
@@ -2124,11 +2159,12 @@ function addDcPortfolio(){const l=document.getElementById('dc-portfolio-list');l
 function addDcSocial(){const l=document.getElementById('dc-socials-list');l.insertAdjacentHTML('beforeend',dcSocialRow(l.children.length,{}));}
 function dcToggle(id){const b=document.getElementById(id);if(!b)return;const col=b.classList.toggle('collapsed');const ch=b.previousElementSibling?.querySelector('.dc-chevron');if(ch)ch.style.transform=col?'rotate(-90deg)':'';}
 function renderBlockOrderList(order,visible){
-  const labels={credentials:'Credentials',description:'Description',key_numbers:'Key Numbers',portfolio:'Portfolio',intro_video:'Intro Video',contact_info:'Contact Info',socials:'Socials'};
+  const labels={description:'Description',key_numbers:'Key Numbers',website:'Website',intro_video:'Intro Video',contact_info:'Contact Info',socials:'Socials'};
   const list=document.getElementById('dc-blocks-list');
   list.innerHTML='';
   // Support both DB object format {block_id,enabled,order} and plain string format
-  const normalized=order.map(b=>typeof b==='object'?{id:b.block_id,on:b.enabled!==false}:{id:b,on:true});
+  const normalized=order.map(b=>typeof b==='object'?{id:b.block_id,on:b.enabled!==false}:{id:b,on:true})
+    .filter(b=>b.id!=='credentials'&&b.id!=='portfolio');
   normalized.forEach(({id,on},i)=>{
     list.insertAdjacentHTML('beforeend',`<div class="block-order-row" data-block="${id}">
       <label class="toggle-sw"><input type="checkbox" class="block-vis-cb"${on?' checked':''}><span class="toggle-sl"></span></label>
@@ -2169,7 +2205,10 @@ function collectDCConfig(){
     socials:socs,
     exchange_headline:gv('dc-ex-headline'),exchange_subheadline:gv('dc-ex-eyebrow'),
     exchange_description:gv('dc-ex-description'),exchange_promo_field_label:gv('dc-ex-promo-label'),
-    cta_button_text:gv('dc-cta-btn-text'),cta_button_sms_body:gv('dc-cta-sms-body'),
+    cta_save_text:gv('dc-cta-save-text'),cta_button_text:gv('dc-cta-btn-text'),cta_button_sms_body:gv('dc-cta-sms-body'),
+    cta_dm_text:gv('dc-cta-dm-text'),cta_dm_url:gv('dc-cta-dm-url'),
+    exchange_cta_text:gv('dc-ex-cta-text'),
+    website_image_url:gv('dc-web-img'),website_caption:gv('dc-web-caption'),website_link_url:gv('dc-web-link'),
     footer_text:gv('dc-footer-text'),block_order
   };
 }

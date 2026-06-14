@@ -127,16 +127,6 @@ body{font-family:'Outfit',sans-serif;background:var(--yellow);color:var(--dark);
   transition:color .15s,background .15s;z-index:2;
 }
 #skip-btn:hover{color:var(--muted);background:rgba(58,106,106,.08)}
-.btn-cta{
-  display:block;width:100%;padding:16px;
-  background:var(--cyan);color:var(--yellow);
-  font-family:'Outfit',sans-serif;font-size:16px;
-  font-weight:800;border:none;border-radius:50px;
-  cursor:pointer;letter-spacing:.02em;
-  margin-bottom:12px;transition:background .15s;
-  text-decoration:none;text-align:center;
-}
-.btn-cta:hover{background:#00b3be}
 
 /* ── CARD ── */
 #card{display:none;max-width:480px;margin:0 auto;background:var(--yellow)}
@@ -156,18 +146,24 @@ body{font-family:'Outfit',sans-serif;background:var(--yellow);color:var(--dark);
 /* CARD BODY */
 #card-body{padding:20px 20px 0}
 #card-name{
-  font-size:34px;font-weight:900;color:var(--dark);
+  font-size:34px;font-weight:900;color:var(--pink);
   line-height:1.1;margin-bottom:16px;
 }
-.btn-save-contact{
-  display:block;width:100%;padding:16px;
-  background:var(--cyan);color:var(--dark);
-  font-family:'Outfit',sans-serif;font-size:16px;
+.cta-buttons{display:flex;gap:8px;margin-bottom:14px}
+.btn-cta-item{
+  flex:1;padding:13px 6px;
+  background:var(--cyan);color:var(--yellow);
+  font-family:'Outfit',sans-serif;font-size:13px;
   font-weight:800;border:none;border-radius:50px;
-  cursor:pointer;letter-spacing:.02em;
-  margin-bottom:22px;transition:background .15s;
+  cursor:pointer;letter-spacing:.02em;transition:background .15s;
+  text-decoration:none;text-align:center;
+  display:flex;align-items:center;justify-content:center;line-height:1.2;
 }
-.btn-save-contact:hover{background:#00b3be}
+.btn-cta-item:hover{background:#00b3be}
+.block-website{margin-bottom:20px}
+.website-img{width:100%;border-radius:12px;display:block;object-fit:cover;cursor:pointer;transition:opacity .15s}
+.website-img:hover{opacity:.92}
+.website-caption{font-size:14px;font-weight:700;color:var(--pink);text-align:center;margin-top:8px}
 
 /* BLOCKS */
 .block-credentials{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
@@ -295,8 +291,12 @@ body{font-family:'Outfit',sans-serif;background:var(--yellow);color:var(--dark);
   </div>
   <div id="card-body">
     <h1 id="card-name">Christian Richards</h1>
-    <a id="btn-cta" class="btn-cta" href="#">Send Us a Text</a>
-    <button class="btn-save-contact" onclick="downloadVCard()">Save Contact</button>
+    <div class="cta-buttons">
+      <button id="btn-save" class="btn-cta-item" onclick="downloadVCard()">Save Contact</button>
+      <a id="btn-sms" class="btn-cta-item" href="#">Send Us a Text</a>
+      <a id="btn-dm" class="btn-cta-item" href="#" target="_blank" rel="noopener">DM Us</a>
+    </div>
+    <div id="card-credentials"></div>
     <div id="card-blocks"></div>
   </div>
   <footer id="card-footer"></footer>
@@ -328,13 +328,12 @@ const DEFAULT_CFG = {
   intro_video_url:null,intro_video_caption:null,
   footer_text:'1000+ new riders · Everyone gets up – guaranteed!',
   block_order:[
-    {block_id:'credentials',enabled:true,order:1},
-    {block_id:'description',enabled:true,order:2},
-    {block_id:'key_numbers',enabled:true,order:3},
-    {block_id:'portfolio',enabled:true,order:4},
-    {block_id:'intro_video',enabled:false,order:5},
-    {block_id:'contact_info',enabled:true,order:6},
-    {block_id:'socials',enabled:true,order:7}
+    {block_id:'description',enabled:true,order:1},
+    {block_id:'key_numbers',enabled:true,order:2},
+    {block_id:'website',enabled:true,order:3},
+    {block_id:'intro_video',enabled:false,order:4},
+    {block_id:'contact_info',enabled:true,order:5},
+    {block_id:'socials',enabled:true,order:6}
   ],
   exchange_headline:"LET'S CONNECT",
   exchange_subheadline:'LEARN MORE',
@@ -343,8 +342,15 @@ const DEFAULT_CFG = {
   vcard_org:'Stillwater Sports',vcard_title:'Head Coach',
   vcard_url:'https://learnwatersports.ca',
   vcard_note:'Premium private waterski, wakeboard & wakesurf coaching. Ottawa Valley & cottage country.',
+  cta_save_text:'Save Contact',
   cta_button_text:'Send Us a Text',
   cta_button_sms_body:'Hi christian i saw your flyer for stillwater sports and wanted to know more!',
+  cta_dm_text:'DM Us',
+  cta_dm_url:'https://www.instagram.com/stillwater.sports/',
+  website_image_url:'/assets/FB-main.jpg',
+  website_caption:'tap to visit our website',
+  website_link_url:'https://learnwatersports.ca',
+  exchange_cta_text:'COMPLETE EXCHANGE →',
   hero_overlay_gradient:'linear-gradient(180deg, rgba(10,40,40,0.3) 0%, rgba(10,40,40,0.7) 100%)'
 };
 
@@ -408,6 +414,7 @@ function renderGate() {
   document.getElementById('gate-headline').textContent = c.exchange_subheadline || 'LEARN MORE';
   document.getElementById('gate-description').textContent = c.exchange_description || 'Your info for mine. Quick.';
   document.getElementById('f-promo-label').textContent = c.exchange_promo_field_label || 'PROMO CODE / WHERE DID YOU HEAR ABOUT US? (OPTIONAL)';
+  document.getElementById('btn-exchange').textContent = c.exchange_cta_text || 'COMPLETE EXCHANGE →';
 
   const bg = document.getElementById('gate-bg');
   const heroUrl = c.hero_image_url || '/assets/card-hero.png';
@@ -485,11 +492,23 @@ function renderCard() {
 
   document.getElementById('hero-eyebrow').textContent = c.eyebrow_text || 'HEAD COACH';
   document.getElementById('card-name').textContent = c.display_name || 'Christian Richards';
-  const ctaBtn = document.getElementById('btn-cta');
-  ctaBtn.textContent = c.cta_button_text || 'Send Us a Text';
+
+  // 3 CTA buttons
+  document.getElementById('btn-save').textContent = c.cta_save_text || 'Save Contact';
+  const btnSms = document.getElementById('btn-sms');
+  btnSms.textContent = c.cta_button_text || 'Send Us a Text';
   const ctaPhone = (c.contact_phone || '+16132995998').replace(/\s/g,'');
   const ctaBody = encodeURIComponent(c.cta_button_sms_body || 'Hi christian i saw your flyer for stillwater sports and wanted to know more!');
-  ctaBtn.href = 'sms:' + ctaPhone + '?body=' + ctaBody;
+  btnSms.href = 'sms:' + ctaPhone + '?body=' + ctaBody;
+  const btnDm = document.getElementById('btn-dm');
+  btnDm.textContent = c.cta_dm_text || 'DM Us';
+  btnDm.href = c.cta_dm_url || 'https://www.instagram.com/stillwater.sports/';
+
+  // Credentials fixed below name
+  const creds = c.credentials || [];
+  document.getElementById('card-credentials').innerHTML = creds.length
+    ? `<div class="block-credentials">${creds.map(x=>`<span class="cred-pill">${esc(x)}</span>`).join('')}</div>`
+    : '';
 
   // Blocks
   const blockOrder = c.block_order || DEFAULT_CFG.block_order;
@@ -503,10 +522,18 @@ function renderCard() {
 function renderBlock(blockId) {
   const c = cfg || DEFAULT_CFG;
   switch(blockId) {
-    case 'credentials': {
-      const creds = c.credentials || [];
-      if (!creds.length) return '';
-      return `<div class="block-credentials">${creds.map(x=>`<span class="cred-pill">${esc(x)}</span>`).join('')}</div>`;
+    case 'credentials': return ''; // rendered fixed above card-blocks
+    case 'portfolio':   return ''; // replaced by website block
+    case 'website': {
+      const imgUrl  = c.website_image_url  || '/assets/FB-main.jpg';
+      const caption = c.website_caption    || 'tap to visit our website';
+      const link    = c.website_link_url   || 'https://learnwatersports.ca';
+      return `<div class="block-website">
+        <a href="${esc(link)}" target="_blank" rel="noopener">
+          <img class="website-img" src="${esc(imgUrl)}" alt="Visit our website" loading="lazy"/>
+        </a>
+        <div class="website-caption">${esc(caption)}</div>
+      </div>`;
     }
     case 'description': {
       const lines = c.description_lines || [];
@@ -521,19 +548,7 @@ function renderBlock(blockId) {
       if (!nums.length) return '';
       return `<div class="block-numbers">${nums.map(n=>`<div class="num-card"><div class="num-val">${esc(n.number)}</div><div class="num-cap">${esc(n.caption)}</div></div>`).join('')}</div>`;
     }
-    case 'portfolio': {
-      const items = c.portfolio_items || [];
-      const title = (c.portfolio_title || 'Portfolio').toUpperCase();
-      return `<div class="block-portfolio">
-        <div class="section-label">${esc(title)}</div>
-        ${items.length ? `<div class="portfolio-scroll">${items.map(item=>`
-          <div class="portfolio-item"${item.link?` onclick="window.open('${esc(item.link)}','_blank')"`:''} style="${item.link?'cursor:pointer':''}">
-            <img src="${esc(item.image_url||'')}" alt="${esc(item.title||'Portfolio photo')}" loading="lazy"/>
-            ${item.title?`<div class="portfolio-caption">${esc(item.title)}</div>`:''}
-          </div>`).join('')}</div>`
-        : '<div style="color:var(--hint);font-size:13px;padding:4px 0">No portfolio items yet.</div>'}
-      </div>`;
-    }
+    // portfolio removed — see 'portfolio' case above
     case 'intro_video': {
       if (!c.intro_video_url) return '';
       const url = c.intro_video_url;
