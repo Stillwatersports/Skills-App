@@ -809,6 +809,7 @@ tr:hover td{background:rgba(0,200,212,.03)}
     <button class="btn btn-ghost btn-sm" onclick="addRosterRow()" style="margin:8px 0 4px">+ Add participant</button>
     <div class="section-label">Waivers</div>
     <div id="cl-waivers" style="font-size:13px;color:var(--muted)">—</div>
+    <button class="btn btn-ghost btn-sm" id="cl-send-intake" onclick="sendIntakeForm()" style="margin-top:10px;display:none">Send intake form</button>
     <button class="btn btn-primary btn-sm" id="cl-send-waivers" onclick="sendClientWaivers()" style="margin-top:10px;display:none">Send waivers</button>
     <div style="display:flex;gap:12px;justify-content:space-between;margin-top:24px">
       <button class="btn btn-danger" id="client-delete-btn" style="display:none" onclick="deleteClient(editingClientId)">Delete Client</button>
@@ -1455,6 +1456,7 @@ function openAddClient(){
   document.getElementById('cl-roster').innerHTML='<div style="color:var(--muted);font-size:13px">Save the client first to add participants and send waivers.</div>';
   document.getElementById('cl-waivers').innerHTML='—';
   document.getElementById('cl-send-waivers').style.display='none';
+  document.getElementById('cl-send-intake').style.display='none';
   openModal('client-modal');
 }
 function openEditClient(id){
@@ -1472,6 +1474,7 @@ function openEditClient(id){
     ? sessions.map(b=>`<div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;font-size:13px"><span>${fmtDate(b.date)}</span><span style="color:var(--muted)">${cap(b.slot)}</span><span>${b.package||''}</span><span class="status-badge status-${b.status}">${b.status}</span></div>`).join('')
     : 'No sessions yet.';
   document.getElementById('cl-send-waivers').style.display='inline-block';
+  document.getElementById('cl-send-intake').style.display='inline-block';
   loadClientExtras(id);
   openModal('client-modal');
 }
@@ -1519,17 +1522,18 @@ async function loadClientExtras(clientId){
 }
 
 function rosterRowHtml(p={}){
-  return `<div class="roster-row" data-id="${p.id||''}" style="display:grid;grid-template-columns:1.2fr 1.3fr 130px 1.3fr 78px 26px;gap:8px;align-items:center;margin-bottom:8px">
+  return `<div class="roster-row" data-id="${p.id||''}" style="display:grid;grid-template-columns:1.1fr 1.2fr 120px 1.2fr 66px 52px 22px;gap:8px;align-items:center;margin-bottom:8px">
     <input type="text" class="r-name" placeholder="Name" value="${esc(p.name||'')}"/>
     <input type="email" class="r-email" placeholder="Email (adult)" value="${esc(p.email||'')}"/>
     <input type="date" class="r-dob" value="${p.date_of_birth||''}"/>
     <input type="email" class="r-gemail" placeholder="Guardian email" value="${esc(p.guardian_email||'')}"/>
     <label style="font-size:11px;display:flex;gap:4px;align-items:center;color:var(--muted)"><input type="checkbox" class="r-guard" ${p.guardian_on_site===false?'':'checked'}/>on-site</label>
+    <button onclick="signNow('${p.id||''}')" title="Sign on this device now" style="background:none;border:1px solid var(--cyan);border-radius:6px;cursor:pointer;color:var(--cyan);font-size:11px;font-weight:700;padding:5px 4px">Sign</button>
     <button onclick="this.closest('.roster-row').remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:15px">✕</button>
   </div>`;
 }
 function renderRoster(){
-  const head=`<div style="display:grid;grid-template-columns:1.2fr 1.3fr 130px 1.3fr 78px 26px;gap:8px;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:4px"><span>Name</span><span>Email</span><span>Date of birth</span><span>Guardian email</span><span>Guardian</span><span></span></div>`;
+  const head=`<div style="display:grid;grid-template-columns:1.1fr 1.2fr 120px 1.2fr 66px 52px 22px;gap:8px;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:4px"><span>Name</span><span>Email</span><span>Date of birth</span><span>Guardian email</span><span>Guardian</span><span>On-site</span><span></span></div>`;
   const wrap=document.getElementById('cl-roster');
   wrap.innerHTML = head + (clientRoster.length?clientRoster.map(rosterRowHtml).join(''):'<div style="color:var(--muted);font-size:13px;padding:4px 0">No participants yet.</div>');
 }
@@ -1570,6 +1574,12 @@ async function viewWaiverPdf(path){
   window.open(data.signedUrl,'_blank');
 }
 
+const SIGN_BASE='https://learnwatersports.ca';
+function mdyJS(d){ if(!d) return null; const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(d); return m?`${m[2]}/${m[3]}/${m[1]}`:d; }
+
+// Sends immediately on click (no confirm). Minors are grouped into ONE guardian
+// session; adults each get their own; parental-consent (guardian off-site) is a
+// separate link per minor. Skips anyone already signed/sent this season.
 async function sendClientWaivers(){
   const clientId=editingClientId; if(!clientId){ toast('Save the client first'); return; }
   await saveClientRoster(clientId);
@@ -1578,31 +1588,74 @@ async function sendClientWaivers(){
   const season=new Date().getFullYear();
   const signed=new Set(clientWaivers.filter(w=>w.season===season&&w.status==='signed').map(w=>w.participant_id+'|'+w.waiver_type));
   const pending=new Set(clientWaivers.filter(w=>w.season===season&&['sent','viewed'].includes(w.status)&&(!w.token_expires_at||new Date(w.token_expires_at)>new Date())).map(w=>w.participant_id+'|'+w.waiver_type));
-  const invites=[], skips=[], needDob=[];
+  const invites=[], minors=[], skips=[], needDob=[];
+  let guardianEmail=null; const guardianName=c.name||null;
   clientRoster.forEach(p=>{
     const age=ageFromDob(p.date_of_birth);
     if(age==null){ needDob.push(p.name); return; }
-    const types = age>=18 ? ['adult'] : (p.guardian_on_site===false ? ['minor','parental_consent'] : ['minor']);
-    types.forEach(t=>{
-      const key=p.id+'|'+t;
-      if(signed.has(key)){ skips.push(`${p.name}: ${t} already signed`); return; }
-      if(pending.has(key)){ skips.push(`${p.name}: ${t} already sent`); return; }
-      const isMinorType = t!=='adult';
-      const email = isMinorType ? (p.guardian_email||c.email) : (p.email||c.email);
-      if(!email){ skips.push(`${p.name}: missing ${isMinorType?'guardian ':''}email`); return; }
-      invites.push({participant_id:p.id, client_id:clientId, waiver_type:t, signer_name:isMinorType?(c.name||p.name):p.name, signer_email:email, is_guardian_signature:isMinorType});
-    });
+    if(age>=18){
+      const key=p.id+'|adult';
+      if(signed.has(key)){ skips.push(`${p.name}: already signed`); return; }
+      if(pending.has(key)){ skips.push(`${p.name}: already sent`); return; }
+      const email=p.email||c.email;
+      if(!email){ skips.push(`${p.name}: no email`); return; }
+      invites.push({participant_id:p.id, client_id:clientId, waiver_type:'adult', signer_name:p.name, signer_email:email, is_guardian_signature:false});
+    } else {
+      const gemail=p.guardian_email||c.email;
+      const mkey=p.id+'|minor';
+      if(signed.has(mkey)) skips.push(`${p.name}: minor already signed`);
+      else if(pending.has(mkey)) skips.push(`${p.name}: minor already sent`);
+      else if(!gemail) skips.push(`${p.name}: missing guardian email`);
+      else { minors.push({participant_id:p.id, minor_name:p.name, minor_dob:p.date_of_birth, minor_age:age}); if(!guardianEmail) guardianEmail=gemail; }
+      if(p.guardian_on_site===false){
+        const ck=p.id+'|parental_consent';
+        if(signed.has(ck)) skips.push(`${p.name}: consent already signed`);
+        else if(pending.has(ck)) skips.push(`${p.name}: consent already sent`);
+        else if(!gemail) skips.push(`${p.name}: consent needs guardian email`);
+        else invites.push({participant_id:p.id, client_id:clientId, waiver_type:'parental_consent', signer_name:c.name||p.name, signer_email:gemail, is_guardian_signature:true});
+      }
+    }
   });
-  let note='';
-  if(needDob.length) note+=`Missing DOB (skipped): ${needDob.join(', ')}\n`;
-  if(skips.length) note+=`Skipped: ${skips.join('; ')}\n`;
-  if(!invites.length){ alert(note||'Nothing to send — everyone is signed or already invited.'); return; }
-  if(!confirm(`Send ${invites.length} waiver link(s)?\n`+invites.map(i=>`• ${i.waiver_type} → ${i.signer_email}`).join('\n')+(note?'\n\n'+note:''))) return;
-  const {data,error}=await db.functions.invoke('send-waiver-invite',{body:{base_url:'https://learnwatersports.ca', invites}});
+  const body={base_url:SIGN_BASE};
+  if(invites.length) body.invites=invites;
+  if(minors.length) body.minor_group={client_id:clientId, signer_name:guardianName, signer_email:guardianEmail, minors};
+  if(!invites.length && !minors.length){ toast(needDob.length?'Add DOBs first — nothing sent':'Nothing to send (all signed/sent)'); return; }
+  const {data,error}=await db.functions.invoke('send-waiver-invite',{body});
   if(error){ toast('Send failed'); return; }
   const okN=(data&&data.results?data.results.filter(r=>r.ok).length:0);
-  toast(`Sent ${okN} waiver link(s) ✓`);
+  toast(`Sent ${okN} ✓`+((skips.length||needDob.length)?' (some skipped)':''));
   await loadClientExtras(clientId);
+}
+
+// "Send intake form" — emails the client a tokened link to add participants.
+async function sendIntakeForm(){
+  const clientId=editingClientId; if(!clientId){ toast('Save the client first'); return; }
+  const {data,error}=await db.functions.invoke('send-intake-invite',{body:{client_id:clientId, base_url:SIGN_BASE}});
+  if(error||(data&&data.error)){ toast((data&&data.error)||'Could not send intake form'); return; }
+  toast('Intake form sent ✓');
+}
+
+// On-site "Sign now" — creates a waiver for this saved participant and opens the
+// signing page on this device (no email).
+async function signNow(id){
+  if(!id){ toast('Save the client first, then Sign'); return; }
+  const p=clientRoster.find(x=>x.id===id);
+  if(!p){ toast('Save the client first, then Sign'); return; }
+  const age=ageFromDob(p.date_of_birth);
+  if(age==null){ toast('Add a date of birth first'); return; }
+  const type=age>=18?'adult':'minor';
+  const c=clients.find(x=>x.id===editingClientId)||{};
+  const season=new Date().getFullYear();
+  const token=(crypto.randomUUID()+crypto.randomUUID()).replace(/-/g,'');
+  const rec={ participant_id:p.id, client_id:editingClientId, waiver_type:type, season,
+    template_version:`${type}-v1-${season}`, status:'sent',
+    signer_name: type==='minor'?(c.name||p.name):p.name,
+    signer_email: type==='minor'?(p.guardian_email||c.email||null):(p.email||c.email||null),
+    is_guardian_signature: type==='minor', sign_token:token,
+    token_expires_at:new Date(Date.now()+30*86400000).toISOString() };
+  const {error}=await db.from('waivers').insert(rec);
+  if(error){ toast('Could not start signing'); return; }
+  window.open(SIGN_BASE+'/sign?t='+token,'_blank');
 }
 // ── LEADS ─────────────────────────────────────────────────
 // Lead status sort rank: new → hot → warm → cold → archived

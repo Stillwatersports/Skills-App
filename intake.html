@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="robots" content="noindex,nofollow"/>
+<title>Add your participants — Stillwater Sports</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="./assets/css/styles.css"/>
+<style>
+  body{background:#f4fafb;color:var(--text);font-family:'Outfit',sans-serif;margin:0}
+  .wrap{max-width:680px;margin:0 auto;padding:24px 16px 80px}
+  .card{background:#fff;border:1.5px solid var(--cyan);border-radius:18px;padding:24px;margin-bottom:18px}
+  .brand{font-size:13px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:4px}
+  h1{font-size:22px;font-weight:800;margin:0 0 6px}
+  label{display:block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin:12px 0 6px}
+  input[type=text],input[type=email],input[type=date]{width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid rgba(0,200,212,.25);border-radius:10px;font-size:16px;font-family:'Outfit',sans-serif;outline:none;background:#fff;color:var(--text)}
+  input:focus{border-color:var(--cyan)}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:520px){.grid2{grid-template-columns:1fr}}
+  .pcard{border:1.5px solid rgba(0,200,212,.25);border-radius:12px;padding:16px;margin-bottom:14px;position:relative}
+  .pcard h3{margin:0 0 4px;font-size:15px;font-weight:700}
+  .rm{position:absolute;top:10px;right:12px;background:none;border:none;color:var(--muted);font-size:16px;cursor:pointer}
+  .check{display:flex;gap:9px;align-items:flex-start;margin:12px 0;font-size:14px;line-height:1.4}
+  .check input{width:19px;height:19px;margin-top:1px;accent-color:var(--cyan)}
+  .hide{display:none}
+  .btn{width:100%;padding:16px;border:none;border-radius:12px;background:var(--pink);color:#fff;font-size:17px;font-weight:800;font-family:'Outfit',sans-serif;cursor:pointer;margin-top:6px}
+  .btn:disabled{opacity:.5}
+  .btn-ghost{background:#fff;color:var(--cyan);border:1.5px solid var(--cyan)}
+  .muted{color:var(--muted);font-size:13px}
+  .msg{padding:14px;border-radius:10px;font-size:14px;margin:10px 0;display:none}
+  .msg.err{background:#fdecec;border:1px solid #e88;color:#a22;display:block}
+  .center{text-align:center}.big-emoji{font-size:46px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div id="loading" class="card center"><div class="muted">Loading…</div></div>
+  <div id="gate" class="card hide"></div>
+  <div id="app" class="hide">
+    <div class="card">
+      <div class="brand">Stillwater Sports</div>
+      <h1 id="title">Who's riding?</h1>
+      <div class="muted">Add everyone joining your session. For anyone under 19 we'll need a birthdate; if a parent/guardian won't be on-site, we'll need their email too.</div>
+    </div>
+    <div id="people"></div>
+    <button class="btn btn-ghost" id="addBtn" type="button">+ Add another participant</button>
+    <div id="msg" class="msg"></div>
+    <button class="btn" id="submitBtn">Submit</button>
+  </div>
+  <div id="done" class="card center hide">
+    <div class="big-emoji">🌊</div><h1>Thanks!</h1>
+    <p class="muted">Your participants are saved. We'll send the waivers to sign shortly. See you on the water.</p>
+  </div>
+</div>
+<script>
+const SUPABASE_URL='https://isbhflfmugfeqwhhqlkh.supabase.co';
+const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzYmhmbGZtdWdmZXF3aGhxbGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDE0MzEsImV4cCI6MjA5MzA3NzQzMX0.TKMd_rSmJvoLiL5_1pFw9KqYHNne-eEdnGNR4zgZwFk';
+const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const TOKEN=new URLSearchParams(location.search).get('t');
+const el=id=>document.getElementById(id);
+const esc=s=>(s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let idx=0;
+
+function gate(m){el('loading').classList.add('hide');const g=el('gate');g.classList.remove('hide');g.innerHTML='<div class="brand">Stillwater Sports</div><h1>Intake link</h1><p class="muted">'+esc(m)+'</p><p class="muted">If you think this is a mistake, contact christian@learnwatersports.ca.</p>';}
+
+function personCard(){
+  const i=++idx;
+  const div=document.createElement('div');
+  div.className='pcard'; div.dataset.i=i;
+  div.innerHTML=`<button class="rm" title="Remove" onclick="this.closest('.pcard').remove()">✕</button>
+    <h3>Participant</h3>
+    <div class="grid2">
+      <div><label>First name</label><input type="text" class="p-first"/></div>
+      <div><label>Last name</label><input type="text" class="p-last"/></div>
+    </div>
+    <label>Email</label><input type="email" class="p-email"/>
+    <div class="check"><input type="checkbox" class="p-minor" onchange="toggleMinor(this)"/><span>This participant is under 19</span></div>
+    <div class="p-minorbox hide">
+      <label>Date of birth</label><input type="date" class="p-dob"/>
+      <div class="check"><input type="checkbox" class="p-noguard" onchange="toggleGuard(this)"/><span>A parent/guardian will <strong>not</strong> be on-site during the session</span></div>
+      <div class="p-guardbox hide"><label>Parent / guardian email</label><input type="email" class="p-gemail"/></div>
+    </div>`;
+  el('people').appendChild(div);
+}
+function toggleMinor(cb){ cb.closest('.pcard').querySelector('.p-minorbox').classList.toggle('hide', !cb.checked); }
+function toggleGuard(cb){ cb.closest('.pcard').querySelector('.p-guardbox').classList.toggle('hide', !cb.checked); }
+function showErr(m){const x=el('msg');x.textContent=m;x.className='msg err';window.scrollTo({top:0,behavior:'smooth'});}
+
+async function submitAll(){
+  const cards=[...document.querySelectorAll('.pcard')];
+  const participants=[];
+  for(const c of cards){
+    const first=c.querySelector('.p-first').value.trim();
+    const last=c.querySelector('.p-last').value.trim();
+    if(!first&&!last) continue;
+    const minor=c.querySelector('.p-minor').checked;
+    const dob=minor?c.querySelector('.p-dob').value||null:null;
+    if(minor && !dob) return showErr(`Please add a date of birth for ${first||'the under-19 participant'}.`);
+    const noguard=minor?c.querySelector('.p-noguard').checked:false;
+    const gemail=noguard?c.querySelector('.p-gemail').value.trim():'';
+    if(noguard && !gemail) return showErr(`Please add a parent/guardian email for ${first||'the participant'}.`);
+    participants.push({first_name:first,last_name:last,email:c.querySelector('.p-email').value.trim(),is_minor:minor,dob,guardian_not_present:noguard,guardian_email:gemail});
+  }
+  if(!participants.length) return showErr('Please add at least one participant.');
+  const btn=el('submitBtn'); btn.disabled=true; btn.textContent='Submitting…';
+  const {data,error}=await db.functions.invoke('submit-intake',{body:{token:TOKEN,participants}});
+  if(error||(data&&data.error)){ btn.disabled=false; btn.textContent='Submit'; return showErr((data&&data.error)||error.message||'Something went wrong.'); }
+  el('app').classList.add('hide'); el('done').classList.remove('hide');
+}
+
+async function init(){
+  if(!TOKEN) return gate('This link is missing its access code.');
+  const {data,error}=await db.rpc('get_intake',{p_token:TOKEN});
+  if(error) return gate(error.message||'This link could not be opened.');
+  el('loading').classList.add('hide'); el('app').classList.remove('hide');
+  if(data&&data.client_name) el('title').textContent=`Who's riding, ${data.client_name}?`;
+  personCard();
+  el('addBtn').addEventListener('click',personCard);
+  el('submitBtn').addEventListener('click',submitAll);
+}
+init();
+</script>
+</body>
+</html>

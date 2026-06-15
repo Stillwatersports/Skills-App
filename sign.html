@@ -76,7 +76,8 @@ const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSI
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 const params = new URLSearchParams(location.search);
 const TOKEN = params.get('t') || params.get('token');
-let WAIVER = null;
+const GROUP = params.get('g');
+let WAIVER = null, GROUPDATA = null;
 const sigPads = {}; // fieldName -> {mode, canvas, getData, isEmpty, typedEl}
 
 function todayMDY(){const d=new Date();return String(d.getMonth()+1).padStart(2,'0')+'/'+String(d.getDate()).padStart(2,'0')+'/'+d.getFullYear();}
@@ -199,7 +200,7 @@ function initSigPad(fieldName){
   function end(){drawing=false;}
   canvas.addEventListener('mousedown',start);canvas.addEventListener('mousemove',move);window.addEventListener('mouseup',end);
   canvas.addEventListener('touchstart',start,{passive:false});canvas.addEventListener('touchmove',move,{passive:false});canvas.addEventListener('touchend',end);
-  sigPads[fieldName]={mode:'type',canvas,isEmpty:()=>empty,clear:()=>{ctx.clearRect(0,0,canvas.width,canvas.height);empty=true;},getData:()=>canvas.toDataURL('image/png')};
+  sigPads[fieldName]={mode:'type',canvas,resize,isEmpty:()=>empty,clear:()=>{ctx.clearRect(0,0,canvas.width,canvas.height);empty=true;},getData:()=>canvas.toDataURL('image/png')};
 }
 
 // ---------- media release block (adult + minor) ----------
@@ -234,12 +235,6 @@ function fieldsAdult(){
   return `<h2>Your details</h2>
   <label>Participant name (print)</label><input type="text" id="p1_name" value="${esc(WAIVER.signer_name||'')}"/>
   ${sigWidget('p1_sig','Signature of participant')}
-  <details style="margin-top:14px"><summary class="muted" style="cursor:pointer">Add another adult from the same immediate family (optional)</summary>
-    <label>Name (print)</label><input type="text" id="p2_name"/>
-    ${sigWidget('p2_sig','Signature')}
-    <label>Name (print)</label><input type="text" id="p3_name"/>
-    ${sigWidget('p3_sig','Signature')}
-  </details>
   ${mediaBlock('adult')}`;
 }
 function fieldsMinor(){
@@ -299,7 +294,11 @@ function render(){
   el('legal-card').innerHTML=LEGAL[WAIVER.waiver_type]||'';
   let fields = WAIVER.waiver_type==='adult'?fieldsAdult():WAIVER.waiver_type==='minor'?fieldsMinor():fieldsConsent();
   el('fields-card').innerHTML = fields + consentBlock();
-  // init signature pads + tabs
+  wireSignatures();
+  if(WAIVER.waiver_type==='adult') wireMedia('adult');
+  if(WAIVER.waiver_type==='minor') wireMedia('minor');
+}
+function wireSignatures(){
   Object.keys(sigPads).forEach(k=>delete sigPads[k]);
   document.querySelectorAll('canvas.sigpad').forEach(c=>initSigPad(c.id.replace('-canvas','')));
   document.querySelectorAll('.sig-tab').forEach(t=>t.addEventListener('click',()=>{
@@ -307,11 +306,49 @@ function render(){
     document.querySelectorAll('.sig-tab[data-sig="'+f+'"]').forEach(x=>x.classList.toggle('active',x.dataset.mode===m));
     el(f+'-type').classList.toggle('active',m==='type');
     el(f+'-draw').classList.toggle('active',m==='draw');
-    if(sigPads[f]) sigPads[f].mode=m;
+    if(sigPads[f]){ sigPads[f].mode=m; if(m==='draw' && sigPads[f].resize) requestAnimationFrame(()=>sigPads[f].resize()); }
   }));
   document.querySelectorAll('[data-clear]').forEach(b=>b.addEventListener('click',()=>{const f=b.dataset.clear;if(sigPads[f])sigPads[f].clear();}));
-  if(WAIVER.waiver_type==='adult') wireMedia('adult');
-  if(WAIVER.waiver_type==='minor') wireMedia('minor');
+}
+// ---------- grouped minor signing (one guardian, all their minors) ----------
+function renderGroup(){
+  el('loading').classList.add('hide'); el('app').classList.remove('hide');
+  el('doc-title').textContent='Minor Waivers';
+  el('doc-sub').textContent=(GROUPDATA.signer_name?('Guardian: '+GROUPDATA.signer_name+' · '):'')+'Season '+GROUPDATA.season;
+  el('legal-card').innerHTML=LEGAL.minor;
+  const minors=(GROUPDATA.minors||[]).map(m=>`<li>${esc(m.name)}</li>`).join('')||'<li>(none)</li>';
+  el('fields-card').innerHTML =
+    `<h2>Children covered by this waiver</h2><ul class="legal">${minors}</ul>
+     <div class="check"><input type="checkbox" id="ack_paras"/><span>We have read and agree to be bound by paragraphs 1, 2 and 3 above, on behalf of all the children listed.</span></div>
+     <h2>Parent / guardian signature <span class="muted" style="font-weight:600">(required)</span></h2>
+     <label>Parent / guardian name (print)</label><input type="text" id="guardian_name" value="${esc(GROUPDATA.signer_name||'')}"/>
+     ${sigWidget('guardian_sig','Signature of parent / guardian')}
+     ${mediaBlock('minor')}
+     <div class="check"><input type="checkbox" id="consent_terms"/><span>I have read and agree to the terms of the minor waiver above, for all the children listed.</span></div>
+     <div class="check"><input type="checkbox" id="consent_esign"/><span>I consent to signing electronically, and agree my electronic signature is legally binding.</span></div>`;
+  wireSignatures();
+  wireMedia('minor');
+}
+async function submitGroup(){
+  const btn=el('submitBtn');
+  if(!el('consent_terms').checked||!el('consent_esign').checked) return showErr('Please tick both consent boxes to continue.');
+  if(!el('ack_paras').checked) return showErr('Please confirm you have read paragraphs 1–3.');
+  const gname=val('guardian_name'); if(!gname) return showErr('Please enter the parent / guardian name.');
+  const gs=collectSig('guardian_sig');
+  if(!gs.dataUrl && !gs.text) return showErr('Parent / guardian signature is required.');
+  let media_consent=null, media_restrictions=null;
+  const sel=document.querySelector('input[name="minor_media"]:checked');
+  if(sel){ media_consent=sel.value; if(sel.value==='yes'){ const r=val('minor_media_restrictions'); if(r) media_restrictions=r; } }
+  btn.disabled=true; btn.textContent='Submitting…';
+  const {error}=await db.rpc('submit_waiver_group',{p_group_token:GROUP,p_payload:{
+    guardian_name:gname,
+    guardian_sig_text: gs.dataUrl?null:gs.text,
+    guardian_sig_image: gs.dataUrl||null,
+    ack:true, consent_esign:true, consent_terms:true,
+    media_consent, media_restrictions
+  }});
+  if(error){btn.disabled=false;btn.textContent='Sign & submit';return showErr(error.message||'Something went wrong. Please try again.');}
+  el('app').classList.add('hide'); el('done').classList.remove('hide');
 }
 
 // collect a signature: returns {text, dataUrl}
@@ -336,7 +373,6 @@ async function submit(){
     primarySig=collectSig('p1_sig');
     if(primarySig.dataUrl) sigs.p1_sig=primarySig.dataUrl; else form.p1_sig=primarySig.text;
     if(!primarySig.dataUrl && !primarySig.text) return showErr('Please add your signature.');
-    ['p2','p3'].forEach(p=>{const n=val(p+'_name'); if(n){form[p+'_name']=n; const s=collectSig(p+'_sig'); if(s.dataUrl)sigs[p+'_sig']=s.dataUrl; else if(s.text)form[p+'_sig']=s.text;}});
     mediaPrefix='adult';
   } else if(WAIVER.waiver_type==='minor'){
     isGuardian=true;
