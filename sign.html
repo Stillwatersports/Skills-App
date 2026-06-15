@@ -241,10 +241,13 @@ function fieldsMinor(){
   return `<h2>Minor participant</h2>
   <div class="grid2">
     <div><label>Participant's name (print)</label><input type="text" id="minor_name"/></div>
-    <div><label>Date of birth</label><input type="text" id="minor_dob" placeholder="MM/DD/YYYY"/></div>
+    <div><label>Date of birth</label><input type="date" id="minor_dob" onchange="syncAge('minor_dob','minor_age')"/></div>
   </div>
-  <label>Age</label><input type="text" id="minor_age" style="max-width:120px"/>
-  <div class="check"><input type="checkbox" id="ack_paras"/><span>We have read and agree to be bound by paragraphs 1, 2 and 3 above.</span></div>
+  <label>Age</label><input type="text" id="minor_age" readonly style="max-width:120px;background:#f4fafb"/>
+  <h2 style="font-size:15px">Please confirm you have read and agree:</h2>
+  <div class="check"><input type="checkbox" id="ack1"/><span>Paragraph 1 — Disclaimer</span></div>
+  <div class="check"><input type="checkbox" id="ack2"/><span>Paragraph 2 — Description and acknowledgement of risks</span></div>
+  <div class="check"><input type="checkbox" id="ack3"/><span>Paragraph 3 — Terms and conditions</span></div>
   <h2>Parent / guardian signature <span class="muted" style="font-weight:600">(required)</span></h2>
   <label>Parent / guardian name (print)</label><input type="text" id="guardian_name" value="${esc(WAIVER.signer_name||'')}"/>
   ${sigWidget('guardian_sig','Signature of parent / guardian')}
@@ -257,9 +260,9 @@ function fieldsConsent(){
   return `<h2>Section A — Minor participant</h2>
   <div class="grid2">
     <div><label>Minor's full name (print)</label><input type="text" id="minor_full_name"/></div>
-    <div><label>Date of birth</label><input type="text" id="minor_dob" placeholder="MM/DD/YYYY"/></div>
+    <div><label>Date of birth</label><input type="date" id="minor_dob" onchange="syncAge('minor_dob','minor_age')"/></div>
   </div>
-  <div class="grid2"><div><label>Age</label><input type="text" id="minor_age"/></div><div><label>Home address</label><input type="text" id="minor_address"/></div></div>
+  <div class="grid2"><div><label>Age</label><input type="text" id="minor_age" readonly style="background:#f4fafb"/></div><div><label>Home address</label><input type="text" id="minor_address"/></div></div>
   <div class="grid2"><div><label>City</label><input type="text" id="minor_city"/></div><div><label>Province / postal</label><input type="text" id="minor_prov"/></div></div>
   <h2>Section B — Parent / legal guardian</h2>
   <div class="grid2"><div><label>Full name (print)</label><input type="text" id="guardian_full_name" value="${esc(WAIVER.signer_name||'')}"/></div><div><label>Relationship to minor</label><input type="text" id="guardian_relationship"/></div></div>
@@ -269,8 +272,7 @@ function fieldsConsent(){
   <div class="grid2"><div><label>Full name (print)</label><input type="text" id="supervisor_name"/></div><div><label>Relationship to minor</label><input type="text" id="supervisor_rel"/></div></div>
   <label>Phone</label><input type="tel" id="supervisor_phone"/>
   <h2>Section D — Session details</h2>
-  <div class="grid2"><div><label>Session date</label><input type="text" id="session_date" placeholder="MM/DD/YYYY"/></div><div><label>Location / lake</label><input type="text" id="session_location"/></div></div>
-  <label>Package</label><input type="text" id="session_package"/>
+  <div class="grid2"><div><label>Session date</label><input type="date" id="session_date"/></div><div><label>Location / lake</label><input type="text" id="session_location"/></div></div>
   <h2>Section E — Emergency contact &amp; medical</h2>
   <div class="grid2"><div><label>Emergency contact name</label><input type="text" id="emerg_name"/></div><div><label>Relationship</label><input type="text" id="emerg_rel"/></div></div>
   <label>Phone</label><input type="tel" id="emerg_phone"/>
@@ -294,6 +296,10 @@ function render(){
   el('legal-card').innerHTML=LEGAL[WAIVER.waiver_type]||'';
   let fields = WAIVER.waiver_type==='adult'?fieldsAdult():WAIVER.waiver_type==='minor'?fieldsMinor():fieldsConsent();
   el('fields-card').innerHTML = fields + consentBlock();
+  // autopopulate any fields prefilled from intake/admin
+  const fd=WAIVER.form_data||{};
+  Object.keys(fd).forEach(k=>{ if(k[0]==='_'||fd[k]==null) return; const e=el(k); if(e) e.value=(e.type==='date')?toYMD(String(fd[k])):fd[k]; });
+  if(el('minor_dob')&&el('minor_age')) syncAge('minor_dob','minor_age');
   wireSignatures();
   if(WAIVER.waiver_type==='adult') wireMedia('adult');
   if(WAIVER.waiver_type==='minor') wireMedia('minor');
@@ -319,7 +325,10 @@ function renderGroup(){
   const minors=(GROUPDATA.minors||[]).map(m=>`<li>${esc(m.name)}</li>`).join('')||'<li>(none)</li>';
   el('fields-card').innerHTML =
     `<h2>Children covered by this waiver</h2><ul class="legal">${minors}</ul>
-     <div class="check"><input type="checkbox" id="ack_paras"/><span>We have read and agree to be bound by paragraphs 1, 2 and 3 above, on behalf of all the children listed.</span></div>
+     <p class="muted" style="margin:6px 0 0">On behalf of all the children listed, we confirm we have read and agree to:</p>
+     <div class="check"><input type="checkbox" id="ack1"/><span>Paragraph 1 — Disclaimer</span></div>
+     <div class="check"><input type="checkbox" id="ack2"/><span>Paragraph 2 — Description and acknowledgement of risks</span></div>
+     <div class="check"><input type="checkbox" id="ack3"/><span>Paragraph 3 — Terms and conditions</span></div>
      <h2>Parent / guardian signature <span class="muted" style="font-weight:600">(required)</span></h2>
      <label>Parent / guardian name (print)</label><input type="text" id="guardian_name" value="${esc(GROUPDATA.signer_name||'')}"/>
      ${sigWidget('guardian_sig','Signature of parent / guardian')}
@@ -332,7 +341,7 @@ function renderGroup(){
 async function submitGroup(){
   const btn=el('submitBtn');
   if(!el('consent_terms').checked||!el('consent_esign').checked) return showErr('Please tick both consent boxes to continue.');
-  if(!el('ack_paras').checked) return showErr('Please confirm you have read paragraphs 1–3.');
+  if(!(el('ack1').checked&&el('ack2').checked&&el('ack3').checked)) return showErr('Please confirm all three paragraphs.');
   const gname=val('guardian_name'); if(!gname) return showErr('Please enter the parent / guardian name.');
   const gs=collectSig('guardian_sig');
   if(!gs.dataUrl && !gs.text) return showErr('Parent / guardian signature is required.');
@@ -359,6 +368,10 @@ function collectSig(field){
 }
 function val(id){const e=el(id);return e?e.value.trim():'';}
 function showErr(m){const x=el('form-msg');x.textContent=m;x.className='msg err';window.scrollTo({top:0,behavior:'smooth'});}
+function toMDY(v){ if(!v) return ''; let m=/^(\d{4})-(\d{2})-(\d{2})/.exec(v); if(m) return `${m[2]}/${m[3]}/${m[1]}`; return v; }
+function toYMD(v){ if(!v) return ''; let m=/^(\d{2})\/(\d{2})\/(\d{4})/.exec(v); if(m) return `${m[3]}-${m[1]}-${m[2]}`; m=/^(\d{4})-(\d{2})-(\d{2})/.exec(v); return m? v.slice(0,10):''; }
+function ageFromYMD(v){ if(!v) return null; const b=new Date(v+'T00:00:00'); if(isNaN(+b)) return null; const n=new Date(); let a=n.getFullYear()-b.getFullYear(); const mo=n.getMonth()-b.getMonth(); if(mo<0||(mo===0&&n.getDate()<b.getDate()))a--; return a; }
+function syncAge(dobId,ageId){ const d=el(dobId),ag=el(ageId); if(!d||!ag) return; const a=ageFromYMD(d.value); ag.value=(a==null?'':a); }
 
 async function submit(){
   const btn=el('submitBtn');
@@ -376,9 +389,9 @@ async function submit(){
     mediaPrefix='adult';
   } else if(WAIVER.waiver_type==='minor'){
     isGuardian=true;
-    form.minor_name=val('minor_name'); form.minor_dob=val('minor_dob'); form.minor_age=val('minor_age');
+    form.minor_name=val('minor_name'); form.minor_dob=toMDY(val('minor_dob')); form.minor_age=val('minor_age');
     if(!form.minor_name) return showErr('Please enter the minor participant name.');
-    if(!el('ack_paras').checked) return showErr('Please confirm you have read paragraphs 1–3.');
+    if(!(el('ack1').checked&&el('ack2').checked&&el('ack3').checked)) return showErr('Please confirm all three paragraphs.');
     form.ack_We_have_re=true;
     form.guardian_name=val('guardian_name'); form.guardian_date=todayMDY();
     if(!form.guardian_name) return showErr('Please enter the parent / guardian name.');
@@ -389,7 +402,9 @@ async function submit(){
     mediaPrefix='minor';
   } else { // parental_consent
     isGuardian=true;
-    ['minor_full_name','minor_dob','minor_age','minor_address','minor_city','minor_prov','guardian_full_name','guardian_relationship','guardian_phone','guardian_email','guardian_city','supervisor_name','supervisor_rel','supervisor_phone','session_date','session_location','session_package','emerg_name','emerg_rel','emerg_phone','medical_notes'].forEach(id=>{const v=val(id); if(v)form[id]=v;});
+    ['minor_full_name','minor_dob','minor_age','minor_address','minor_city','minor_prov','guardian_full_name','guardian_relationship','guardian_phone','guardian_email','guardian_city','supervisor_name','supervisor_rel','supervisor_phone','session_date','session_location','emerg_name','emerg_rel','emerg_phone','medical_notes'].forEach(id=>{const v=val(id); if(v)form[id]=v;});
+    if(form.minor_dob) form.minor_dob=toMDY(form.minor_dob);
+    if(form.session_date) form.session_date=toMDY(form.session_date);
     if(!form.minor_full_name) return showErr("Please enter the minor's full name.");
     if(!form.guardian_full_name) return showErr('Please enter the parent / guardian name.');
     form.consent_guardian_name=val('consent_guardian_name')||form.guardian_full_name; form.consent_date=todayMDY();

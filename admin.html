@@ -1522,20 +1522,26 @@ async function loadClientExtras(clientId){
 }
 
 function rosterRowHtml(p={}){
-  return `<div class="roster-row" data-id="${p.id||''}" style="display:grid;grid-template-columns:1.1fr 1.2fr 120px 1.2fr 66px 52px 22px;gap:8px;align-items:center;margin-bottom:8px">
-    <input type="text" class="r-name" placeholder="Name" value="${esc(p.name||'')}"/>
-    <input type="email" class="r-email" placeholder="Email (adult)" value="${esc(p.email||'')}"/>
-    <input type="date" class="r-dob" value="${p.date_of_birth||''}"/>
-    <input type="email" class="r-gemail" placeholder="Guardian email" value="${esc(p.guardian_email||'')}"/>
-    <label style="font-size:11px;display:flex;gap:4px;align-items:center;color:var(--muted)"><input type="checkbox" class="r-guard" ${p.guardian_on_site===false?'':'checked'}/>on-site</label>
-    <button onclick="signNow('${p.id||''}')" title="Sign on this device now" style="background:none;border:1px solid var(--cyan);border-radius:6px;cursor:pointer;color:var(--cyan);font-size:11px;font-weight:700;padding:5px 4px">Sign</button>
-    <button onclick="this.closest('.roster-row').remove()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:15px">✕</button>
+  const minor = p.is_minor===true;
+  return `<div class="roster-row" data-id="${p.id||''}" style="border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-bottom:8px">
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+      <input type="text" class="r-name" placeholder="Name" value="${esc(p.name||'')}" style="flex:2;min-width:120px"/>
+      <input type="email" class="r-email" placeholder="Email" value="${esc(p.email||'')}" style="flex:2;min-width:140px"/>
+      <label style="font-size:12px;display:flex;gap:4px;align-items:center;white-space:nowrap"><input type="checkbox" class="r-minor" ${minor?'checked':''} onchange="toggleRosterMinor(this)"/>Minor</label>
+      <button onclick="signNow('${p.id||''}')" title="Sign on this device now" style="background:none;border:1px solid var(--cyan);border-radius:6px;cursor:pointer;color:var(--cyan);font-size:11px;font-weight:700;padding:6px 10px">Sign</button>
+      <button onclick="this.closest('.roster-row').remove()" title="Remove" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:15px">✕</button>
+    </div>
+    <div class="r-minorbox" style="display:${minor?'flex':'none'};gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px">
+      <label style="font-size:10px;color:var(--muted)">DOB <input type="date" class="r-dob" value="${p.date_of_birth||''}" style="display:block"/></label>
+      <input type="email" class="r-gemail" placeholder="Guardian email" value="${esc(p.guardian_email||'')}" style="flex:1;min-width:160px"/>
+      <label style="font-size:11px;display:flex;gap:4px;align-items:center;color:var(--muted);white-space:nowrap"><input type="checkbox" class="r-guard" ${p.guardian_on_site===false?'':'checked'}/>guardian on-site</label>
+    </div>
   </div>`;
 }
+function toggleRosterMinor(cb){ cb.closest('.roster-row').querySelector('.r-minorbox').style.display = cb.checked?'flex':'none'; }
 function renderRoster(){
-  const head=`<div style="display:grid;grid-template-columns:1.1fr 1.2fr 120px 1.2fr 66px 52px 22px;gap:8px;font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:4px"><span>Name</span><span>Email</span><span>Date of birth</span><span>Guardian email</span><span>Guardian</span><span>On-site</span><span></span></div>`;
   const wrap=document.getElementById('cl-roster');
-  wrap.innerHTML = head + (clientRoster.length?clientRoster.map(rosterRowHtml).join(''):'<div style="color:var(--muted);font-size:13px;padding:4px 0">No participants yet.</div>');
+  wrap.innerHTML = clientRoster.length?clientRoster.map(rosterRowHtml).join(''):'<div style="color:var(--muted);font-size:13px;padding:4px 0">No participants yet.</div>';
 }
 function addRosterRow(){ document.getElementById('cl-roster').insertAdjacentHTML('beforeend', rosterRowHtml()); }
 
@@ -1544,13 +1550,14 @@ async function saveClientRoster(clientId){
   const keep=[];
   for(const r of rows){
     const name=r.querySelector('.r-name').value.trim(); if(!name) continue;
-    const dob=r.querySelector('.r-dob').value||null;
+    const minor=r.querySelector('.r-minor').checked;
+    const dob=minor?(r.querySelector('.r-dob').value||null):null;
     const rec={ client_id:clientId, name,
       email:r.querySelector('.r-email').value.trim()||null,
-      guardian_email:r.querySelector('.r-gemail').value.trim()||null,
+      guardian_email:minor?(r.querySelector('.r-gemail').value.trim()||null):null,
       date_of_birth:dob,
-      is_minor: dob? (ageFromDob(dob)<18) : null,
-      guardian_on_site: r.querySelector('.r-guard').checked };
+      is_minor: minor,
+      guardian_on_site: minor?r.querySelector('.r-guard').checked:true };
     const id=r.getAttribute('data-id');
     if(id){ await db.from('participants').update(rec).eq('id',id); keep.push(id); }
     else { const {data:d}=await db.from('participants').insert(rec).select('id').single(); if(d) keep.push(d.id); }
@@ -1588,12 +1595,11 @@ async function sendClientWaivers(){
   const season=new Date().getFullYear();
   const signed=new Set(clientWaivers.filter(w=>w.season===season&&w.status==='signed').map(w=>w.participant_id+'|'+w.waiver_type));
   const pending=new Set(clientWaivers.filter(w=>w.season===season&&['sent','viewed'].includes(w.status)&&(!w.token_expires_at||new Date(w.token_expires_at)>new Date())).map(w=>w.participant_id+'|'+w.waiver_type));
-  const invites=[], minors=[], skips=[], needDob=[];
+  const invites=[], minors=[], skips=[];
   let guardianEmail=null; const guardianName=c.name||null;
   clientRoster.forEach(p=>{
-    const age=ageFromDob(p.date_of_birth);
-    if(age==null){ needDob.push(p.name); return; }
-    if(age>=18){
+    const isMinor = p.is_minor===true; // classified by the Minor toggle (DOB optional)
+    if(!isMinor){
       const key=p.id+'|adult';
       if(signed.has(key)){ skips.push(`${p.name}: already signed`); return; }
       if(pending.has(key)){ skips.push(`${p.name}: already sent`); return; }
@@ -1602,11 +1608,12 @@ async function sendClientWaivers(){
       invites.push({participant_id:p.id, client_id:clientId, waiver_type:'adult', signer_name:p.name, signer_email:email, is_guardian_signature:false});
     } else {
       const gemail=p.guardian_email||c.email;
+      const age=ageFromDob(p.date_of_birth);
       const mkey=p.id+'|minor';
       if(signed.has(mkey)) skips.push(`${p.name}: minor already signed`);
       else if(pending.has(mkey)) skips.push(`${p.name}: minor already sent`);
       else if(!gemail) skips.push(`${p.name}: missing guardian email`);
-      else { minors.push({participant_id:p.id, minor_name:p.name, minor_dob:p.date_of_birth, minor_age:age}); if(!guardianEmail) guardianEmail=gemail; }
+      else { minors.push({participant_id:p.id, minor_name:p.name, minor_dob:p.date_of_birth||null, minor_age:age}); if(!guardianEmail) guardianEmail=gemail; }
       if(p.guardian_on_site===false){
         const ck=p.id+'|parental_consent';
         if(signed.has(ck)) skips.push(`${p.name}: consent already signed`);
@@ -1619,7 +1626,7 @@ async function sendClientWaivers(){
   const body={base_url:SIGN_BASE};
   if(invites.length) body.invites=invites;
   if(minors.length) body.minor_group={client_id:clientId, signer_name:guardianName, signer_email:guardianEmail, minors};
-  if(!invites.length && !minors.length){ toast(needDob.length?'Add DOBs first — nothing sent':'Nothing to send (all signed/sent)'); return; }
+  if(!invites.length && !minors.length){ toast('Nothing to send (all signed/sent)'); return; }
   const {data,error}=await db.functions.invoke('send-waiver-invite',{body});
   if(error){ toast('Send failed'); return; }
   const okN=(data&&data.results?data.results.filter(r=>r.ok).length:0);
@@ -1641,9 +1648,7 @@ async function signNow(id){
   if(!id){ toast('Save the client first, then Sign'); return; }
   const p=clientRoster.find(x=>x.id===id);
   if(!p){ toast('Save the client first, then Sign'); return; }
-  const age=ageFromDob(p.date_of_birth);
-  if(age==null){ toast('Add a date of birth first'); return; }
-  const type=age>=18?'adult':'minor';
+  const type=p.is_minor===true?'minor':'adult';
   const c=clients.find(x=>x.id===editingClientId)||{};
   const season=new Date().getFullYear();
   const token=(crypto.randomUUID()+crypto.randomUUID()).replace(/-/g,'');
