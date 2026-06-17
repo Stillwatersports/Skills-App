@@ -287,6 +287,13 @@ tr:hover td{background:rgba(0,200,212,.03)}
     </div>
     <textarea id="feedback-input" placeholder="Add notes, updates, or tasks for Cowork to pick up on its next run — e.g. 'Follow up with Jane re: July booking', 'Post about weekend availability'..." style="width:100%;min-height:100px;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:var(--sans);outline:none;resize:vertical;line-height:1.6;background:#fff"></textarea>
   </div>
+  <div class="card" id="lead-notes-card" style="margin-bottom:24px;border-left:5px solid var(--cyan);display:none">
+    <div class="card-header" style="margin-bottom:12px">
+      <div class="card-title">🔥 Lead Updates</div>
+      <span style="font-size:12px;color:var(--hint)">Notes append to each lead's inquiry log</span>
+    </div>
+    <div id="briefing-leads-list" style="display:flex;flex-direction:column;gap:12px"></div>
+  </div>
   <div class="sec-title">Today's Top 3</div>
   <div class="top3" id="tasks-top3"></div>
   <div class="sec-title">Where You Stand</div>
@@ -1057,6 +1064,7 @@ function showApp(){
   loadTasks();
   loadBriefing();
   loadFeedback();
+  loadLeadNotes();
 }
 async function doLogout(){
   await db.auth.signOut();
@@ -2493,14 +2501,14 @@ async function addTask(){
   if(data){ opsTasks.push(data); inp.value=''; renderTasks(); if(typeof toast==='function') toast('Task added'); }
 }
 async function loadFeedback(){
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toLocaleDateString('en-CA');
   const { data } = await db.from('ops_briefing').select('feedback').eq('date', today).single();
   if(data?.feedback){
     document.getElementById('feedback-input').value = data.feedback;
   }
 }
 async function saveFeedback(){
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toLocaleDateString('en-CA');
   const feedback = document.getElementById('feedback-input').value.trim();
   const status = document.getElementById('feedback-save-status');
   // Try update first to preserve existing briefing content
@@ -2530,7 +2538,7 @@ async function saveFeedback(){
   setTimeout(()=>status.textContent='', 3000);
 }
 async function loadBriefing(){
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date().toLocaleDateString('en-CA');
   const { data } = await db.from('ops_briefing')
     .select('content,updated_at').eq('date', today).single();
   const card = document.getElementById('briefing-card');
@@ -2540,6 +2548,52 @@ async function loadBriefing(){
     document.getElementById('briefing-time').textContent =
       'Cowork · ' + new Date(data.updated_at).toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'});
     card.style.display = 'block';
+  }
+}
+async function loadLeadNotes(){
+  const card = document.getElementById('lead-notes-card');
+  if(!card) return;
+  const { data } = await db.from('leads')
+    .select('id,name,status,inquiry,email')
+    .not('status','in','("converted","archived")')
+    .order('updated_at',{ascending:false})
+    .limit(8);
+  if(!data?.length){ card.style.display='none'; return; }
+  card.style.display='block';
+  const list = document.getElementById('briefing-leads-list');
+  list.innerHTML = data.map(l => {
+    const lines = (l.inquiry||'').split('\n').filter(Boolean);
+    const lastLine = lines.slice(-1)[0]||'';
+    const statusColor = l.status==='hot'?'var(--red)':l.status==='warm'?'var(--gold)':'var(--cyan)';
+    return `<div style="border:1px solid var(--border);border-radius:10px;padding:12px 14px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+        <span style="font-size:11px;font-weight:700;text-transform:uppercase;color:${statusColor};background:${statusColor}22;border-radius:20px;padding:2px 8px">${esc(l.status||'lead')}</span>
+        <strong style="font-size:14px">${esc(l.name)}</strong>
+        ${l.email&&l.email!=='FB chat'?`<span style="font-size:11px;color:var(--hint)">${esc(l.email)}</span>`:''}
+      </div>
+      ${lastLine?`<div style="font-size:11px;color:var(--muted);background:#f4faf9;border-left:2px solid var(--cyan);padding:4px 8px;border-radius:0 4px 4px 0;margin-bottom:8px;line-height:1.5">${esc(lastLine)}</div>`:''}
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <textarea id="lnote-${l.id}" placeholder="Add update…" rows="2" style="flex:1;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;font-family:var(--sans);resize:vertical;outline:none;line-height:1.5;background:#fff"></textarea>
+        <button class="btn btn-primary btn-sm" onclick="saveLeadQuickNote('${l.id}')">Save</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+async function saveLeadQuickNote(id){
+  const el = document.getElementById('lnote-'+id);
+  const val = el?.value.trim();
+  if(!val) return;
+  const today = new Date().toLocaleDateString('en-CA');
+  const { data:existing } = await db.from('leads').select('inquiry').eq('id',id).single();
+  const prev = existing?.inquiry||'';
+  const updated = prev ? prev+'\n['+today+'] '+val : '['+today+'] '+val;
+  const { error } = await db.from('leads').update({inquiry:updated,updated_at:new Date().toISOString()}).eq('id',id);
+  if(!error){
+    el.value='';
+    toast('Lead updated ✓');
+    loadLeadNotes();
+  } else {
+    toast('Save failed: '+(error.message||'unknown'));
   }
 }
 </script>
