@@ -66,17 +66,20 @@ let idx=0;
 
 function gate(m){el('loading').classList.add('hide');const g=el('gate');g.classList.remove('hide');g.innerHTML='<div class="brand">Stillwater Sports</div><h1>Intake link</h1><p class="muted">'+esc(m)+'</p><p class="muted">If you think this is a mistake, contact christian@learnwatersports.ca.</p>';}
 
-function personCard(){
+function personCard(prefill){
   const i=++idx;
   const div=document.createElement('div');
   div.className='pcard'; div.dataset.i=i;
+  const first=prefill?.first||'';
+  const last=prefill?.last||'';
+  const email=prefill?.email||'';
   div.innerHTML=`<button class="rm" title="Remove" onclick="this.closest('.pcard').remove()">✕</button>
     <h3>Participant</h3>
     <div class="grid2">
-      <div><label>First name</label><input type="text" class="p-first"/></div>
-      <div><label>Last name</label><input type="text" class="p-last"/></div>
+      <div><label>First name</label><input type="text" class="p-first" value="${esc(first)}"/></div>
+      <div><label>Last name</label><input type="text" class="p-last" value="${esc(last)}"/></div>
     </div>
-    <label>Email</label><input type="email" class="p-email"/>
+    <label>Email</label><input type="email" class="p-email" value="${esc(email)}"/>
     <div class="check"><input type="checkbox" class="p-minor" onchange="toggleMinor(this)"/><span>This participant is under 19</span></div>
     <div class="p-minorbox hide">
       <label>Date of birth</label><input type="date" class="p-dob"/>
@@ -117,8 +120,9 @@ async function init(){
   if(error) return gate(error.message||'This link could not be opened.');
   el('loading').classList.add('hide'); el('app').classList.remove('hide');
   if(data&&data.client_name) el('title').textContent=`Who's riding, ${data.client_name}?`;
-  personCard();
-  el('addBtn').addEventListener('click',personCard);
+  // Pre-fill first card with the client's own info
+  personCard({first:data?.client_first||'', last:data?.client_last||'', email:data?.client_email||''});
+  el('addBtn').addEventListener('click',()=>personCard());
   el('submitBtn').addEventListener('click',submitAll);
 }
 init();

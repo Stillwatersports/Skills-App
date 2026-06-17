@@ -452,6 +452,14 @@ async function submit(){
 }
 
 async function init(){
+  if(GROUP){
+    const {data,error}=await db.rpc('get_waiver_group',{p_group_token:GROUP});
+    if(error){return showGate(error.message||'This link could not be opened.');}
+    if(!data){return showGate('This group signing link is not valid or has already been used.');}
+    GROUPDATA=data; renderGroup();
+    el('submitBtn').addEventListener('click',submitGroup);
+    return;
+  }
   if(!TOKEN){return showGate('This link is missing its access code.');}
   const {data,error}=await db.rpc('get_waiver_for_signing',{p_token:TOKEN});
   if(error){return showGate(error.message||'This link could not be opened.');}

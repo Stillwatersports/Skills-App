@@ -4,8 +4,8 @@
 <meta charset="UTF-8"/>
 <meta name="google-site-verification" content="_ymjlW_Dw-AhwY4WSTsuzvuAlaIJYNpKvLNRo2aS4Js"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<meta name="description" content="Book a private waterski, wakeboard or wakesurf lesson with Christian Richards across Ontario cottage country."/>
-<title>Booking — Stillwater Sports</title>
+<meta name="description" content="Plan a private waterski, wakeboard or wakesurf session with Christian Richards. Tell me about your group and I'll be in touch to plan your day on the water."/>
+<title>Plan Your Session — Stillwater Sports</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
@@ -20,100 +20,81 @@
 .info-icon{width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(0,200,212,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--cyan);font-size:14px}
 .info-key{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text);text-shadow:-1px -1px 0 var(--cyan),1px -1px 0 var(--cyan),-1px 1px 0 var(--cyan),1px 1px 0 var(--cyan);margin-bottom:2px}
 .info-val{font-size:13px;color:var(--muted);line-height:1.5}
-.price-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(0,0,0,0.05)}
-.price-row:last-child{border:none}
-.price-label{font-size:13px;color:var(--muted)}
-.price-val{font-size:14px;font-weight:700;color:var(--text)}
-.price-val.hl{color:var(--cyan)}
-.step-indicator{display:flex;gap:0;margin-bottom:28px}
-.step{display:flex;align-items:center;gap:8px;flex:1}
-.step-num{width:28px;height:28px;border-radius:50%;background:rgba(0,200,212,0.1);border:1.5px solid rgba(0,200,212,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--muted);flex-shrink:0}
-.step-num.active{background:var(--pink);border-color:var(--pink);color:var(--yellow)}
-.step-num.done{background:var(--cyan);border-color:var(--cyan);color:#fff}
-.step-label{font-size:12px;font-weight:600;color:var(--muted)}
-.step-label.active{color:var(--cyan)}
-.step-divider{flex:1;height:1px;background:rgba(0,200,212,0.2);margin:0 8px}
-.cal-card-full{background:var(--white);border-radius:20px;padding:32px;border:1.5px solid var(--cyan);margin-bottom:24px}
-.form-section{background:var(--white);border-radius:20px;padding:32px;border:1.5px solid var(--cyan);margin-bottom:24px;display:none}
-.form-section.visible{display:block}
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.form-full{grid-column:1/-1}
-.form-field label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase}
-.form-field input,.form-field select,.form-field textarea{width:100%;padding:12px 16px;border:1.5px solid rgba(0,200,212,0.2);border-radius:10px;font-size:15px;font-family:'Outfit',sans-serif;outline:none;background:#fff;color:var(--text);transition:border-color .15s}
-.form-field input:focus,.form-field select:focus,.form-field textarea:focus{border-color:var(--cyan)}
-.form-field textarea{resize:vertical;min-height:80px;line-height:1.5}
-.form-field select{-webkit-appearance:none}
-.success-card{background:var(--white);border-radius:20px;padding:48px 32px;border:1.5px solid var(--cyan);text-align:center;display:none}
-.success-card.visible{display:block}
-.faq-item{border-bottom:1px solid rgba(0,0,0,0.07)}
-.faq-item:last-child{border:none}
-.faq-q{width:100%;background:none;border:none;text-align:left;padding:16px 0;font-size:14px;font-weight:600;color:var(--text);cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-family:'Outfit',sans-serif}
-.faq-q::after{content:'＋';font-size:16px;color:var(--cyan);flex-shrink:0}
-.faq-q.open::after{content:'－'}
-.faq-a{font-size:13px;color:var(--muted);line-height:1.7;padding-bottom:16px;display:none}
-.faq-a.open{display:block}
-@media(max-width:960px){.booking-layout{grid-template-columns:1fr}.sticky-sidebar{position:static}.form-grid{grid-template-columns:1fr}}
+
+/* ── FORM SHELL ───────────────────────────────────────── */
+.form-card{background:var(--white);border-radius:20px;padding:32px;border:1.5px solid var(--cyan);margin-bottom:24px}
+.form-card.success-card{text-align:center;display:none}
+.form-card.success-card.visible{display:block}
+.fld-group{margin-bottom:28px}
+.fld-group:last-of-type{margin-bottom:8px}
+.fld-q{font-size:15px;font-weight:800;color:var(--text);letter-spacing:-.01em;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.fld-q .step-dot{width:22px;height:22px;border-radius:50%;background:rgba(0,200,212,0.12);color:var(--cyan);font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+.fld-hint{font-size:12.5px;color:var(--muted);margin:0 0 12px 30px;line-height:1.5}
+.fld-body{margin-left:30px}
+@media(max-width:520px){.fld-hint,.fld-body{margin-left:0}}
+
+/* choice cards (location) */
+.choice-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:520px){.choice-grid{grid-template-columns:1fr}}
+.choice{border:1.5px solid rgba(0,200,212,0.3);border-radius:14px;padding:18px 16px;cursor:pointer;transition:all .15s;background:#fff;text-align:left}
+.choice:hover{border-color:var(--cyan)}
+.choice.sel{border-color:var(--pink);background:rgba(0,200,212,0.05);box-shadow:0 2px 14px rgba(0,200,212,0.12)}
+.choice-emoji{font-size:24px;margin-bottom:8px;display:block}
+.choice-t{font-size:14px;font-weight:700;color:var(--text)}
+.choice-s{font-size:12px;color:var(--muted);margin-top:3px;line-height:1.4}
+
+/* chips (sports, experience, flexibility) */
+.chip-row{display:flex;flex-wrap:wrap;gap:9px}
+.chip{border:1.5px solid rgba(0,200,212,0.3);border-radius:50px;padding:9px 16px;font-size:13.5px;font-weight:600;color:var(--text);cursor:pointer;transition:all .15s;background:#fff;font-family:'Outfit',sans-serif;user-select:none}
+.chip:hover{border-color:var(--cyan)}
+.chip.sel{border-color:var(--pink);background:var(--pink);color:#fff}
+
+/* steppers */
+.stepper-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:520px){.stepper-grid{grid-template-columns:1fr}}
+.stepper{border:1.5px solid rgba(0,200,212,0.2);border-radius:12px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;background:#fff}
+.stepper-lbl{font-size:13px;font-weight:700;color:var(--text)}
+.stepper-lbl span{display:block;font-size:11px;font-weight:500;color:var(--muted)}
+.stepper-ctrl{display:flex;align-items:center;gap:14px}
+.stepper-btn{width:32px;height:32px;border-radius:50%;border:1.5px solid var(--cyan);background:#fff;color:var(--cyan);font-size:20px;font-weight:700;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;flex-shrink:0}
+.stepper-btn:hover{background:rgba(0,200,212,0.08)}
+.stepper-val{font-size:18px;font-weight:800;color:var(--text);min-width:20px;text-align:center}
+
+/* inputs */
+.fld label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase}
+.fld input,.fld select,.fld textarea{width:100%;box-sizing:border-box;padding:13px 16px;border:1.5px solid rgba(0,200,212,0.22);border-radius:10px;font-size:16px;font-family:'Outfit',sans-serif;outline:none;background:#fff;color:var(--text);transition:border-color .15s}
+.fld input:focus,.fld select:focus,.fld textarea:focus{border-color:var(--cyan)}
+.fld textarea{resize:vertical;min-height:84px;line-height:1.5}
+.fld select{-webkit-appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path fill='%234a7a7a' d='M6 8L0 0h12z'/></svg>");background-repeat:no-repeat;background-position:right 16px center}
+.fld-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:520px){.fld-2{grid-template-columns:1fr}}
+.date-row{display:flex;gap:10px;align-items:center;margin-bottom:10px}
+.date-row input{flex:1}
+.date-rm{background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:4px 8px;flex-shrink:0}
+.add-date{background:none;border:none;color:var(--cyan);font-size:13px;font-weight:700;cursor:pointer;font-family:'Outfit',sans-serif;padding:4px 0}
+
+/* phone emphasis */
+.phone-card{background:rgba(224,64,160,0.05);border:1.5px solid rgba(224,64,160,0.25);border-radius:14px;padding:18px}
+.phone-note{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:var(--text);line-height:1.5;margin-top:6px}
+.phone-note .pn-ico{font-size:15px;flex-shrink:0}
+.req-star{color:var(--pink)}
+
+.submit-wrap{background:rgba(0,200,212,0.04);border-radius:var(--rsm);padding:20px;border:1px solid rgba(0,200,212,0.12);margin-top:8px}
+.price-ref{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:rgba(255,254,180,0.5);border:1px solid rgba(0,200,212,0.2);border-radius:12px;padding:14px 18px;margin-bottom:24px}
+.price-ref-t{font-size:13px;color:var(--text);font-weight:600}
+.price-ref a{font-size:13px;font-weight:700;color:var(--cyan);text-decoration:none;white-space:nowrap}
+
+@media(max-width:960px){.booking-layout{grid-template-columns:1fr}.sticky-sidebar{position:static}}
 @media(max-width:960px){.booking-layout > div:first-child{order:2}.booking-layout > div:last-child{order:1}}
 @media(max-width:960px){.booking-outer-section{padding:56px 16px!important}}
 
-/* ── PACKAGE CARDS ────────────────────────────────────── */
-.pkg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
-.pkg-card{padding:14px 16px;border:1.5px solid var(--cyan);border-radius:12px;cursor:pointer;transition:all .15s;background:#fff}
-.pkg-card:hover{border-color:var(--cyan)}
-.pkg-card.selected{border-color:var(--pink);background:rgba(0,200,212,0.04);box-shadow:0 2px 12px rgba(0,200,212,0.1)}
-.pkg-unavailable{opacity:.4;cursor:not-allowed!important;pointer-events:none}
-.pkg-card-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
-.pkg-card-price{font-size:13px;color:var(--cyan);font-weight:600}
-.pkg-card-note{font-size:11px;color:var(--muted);margin-top:3px}
+img{pointer-events:none;user-select:none;-webkit-user-drag:none}
 
-/* ── SLOT PICKER ──────────────────────────────────────── */
-.slot-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
-.slot-opt{padding:14px 18px;border:1.5px solid var(--cyan);border-radius:12px;cursor:pointer;margin-bottom:8px;transition:all .15s;background:#fff}
-.slot-opt:hover{border-color:var(--cyan)}
-.slot-opt.active{border-color:var(--pink);background:rgba(0,200,212,0.04)}
-.slot-opt-label{font-size:14px;font-weight:700;color:var(--text)}
-.slot-opt-sub{font-size:12px;color:var(--muted);margin-top:2px}
-.slot-blocked-opt{opacity:.5;cursor:not-allowed}
-.slot-blocked-opt:hover{border-color:rgba(229,57,53,0.3)}
-.rule-error{background:rgba(229,57,53,0.08);border:1px solid rgba(229,57,53,0.25);border-radius:10px;padding:14px 16px;font-size:14px;color:#c62828;margin-bottom:12px;line-height:1.6}
-.rule-info{background:rgba(0,200,212,0.07);border:1px solid rgba(0,200,212,0.2);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6}
-.slot-dates-preview{font-size:13px;font-weight:600;color:var(--cyan);padding:10px 14px;background:rgba(0,200,212,0.06);border-radius:8px;margin-bottom:16px;line-height:1.8}
-
-/* ── BOOKING SUMMARY ──────────────────────────────────── */
-.sum-row{display:flex;justify-content:space-between;align-items:center;font-size:14px;margin-bottom:10px;color:var(--muted)}
-.sum-row strong{color:var(--text);font-weight:700;text-align:right;max-width:55%}
-.sum-divider{border-top:1px solid rgba(0,200,212,0.2);margin:12px 0}
-
-</style>
-<style>img{pointer-events:none;user-select:none;-webkit-user-drag:none}body{-webkit-user-select:none;user-select:none}
-/* ── PACKAGE CARDS ────────────────────────────────────── */
-.pkg-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
-.pkg-card{padding:14px 16px;border:1.5px solid var(--cyan);border-radius:12px;cursor:pointer;transition:all .15s;background:#fff}
-.pkg-card:hover{border-color:var(--cyan)}
-.pkg-card.selected{border-color:var(--pink);background:rgba(0,200,212,0.04);box-shadow:0 2px 12px rgba(0,200,212,0.1)}
-.pkg-unavailable{opacity:.4;cursor:not-allowed!important;pointer-events:none}
-.pkg-card-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:2px}
-.pkg-card-price{font-size:13px;color:var(--cyan);font-weight:600}
-.pkg-card-note{font-size:11px;color:var(--muted);margin-top:3px}
-
-/* ── SLOT PICKER ──────────────────────────────────────── */
-.slot-label{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px}
-.slot-opt{padding:14px 18px;border:1.5px solid var(--cyan);border-radius:12px;cursor:pointer;margin-bottom:8px;transition:all .15s;background:#fff}
-.slot-opt:hover{border-color:var(--cyan)}
-.slot-opt.active{border-color:var(--pink);background:rgba(0,200,212,0.04)}
-.slot-opt-label{font-size:14px;font-weight:700;color:var(--text)}
-.slot-opt-sub{font-size:12px;color:var(--muted);margin-top:2px}
-.slot-blocked-opt{opacity:.5;cursor:not-allowed}
-.slot-blocked-opt:hover{border-color:rgba(229,57,53,0.3)}
-.rule-error{background:rgba(229,57,53,0.08);border:1px solid rgba(229,57,53,0.25);border-radius:10px;padding:14px 16px;font-size:14px;color:#c62828;margin-bottom:12px;line-height:1.6}
-.rule-info{background:rgba(0,200,212,0.07);border:1px solid rgba(0,200,212,0.2);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--muted);margin-bottom:12px;line-height:1.6}
-.slot-dates-preview{font-size:13px;font-weight:600;color:var(--cyan);padding:10px 14px;background:rgba(0,200,212,0.06);border-radius:8px;margin-bottom:16px;line-height:1.8}
-
-/* ── BOOKING SUMMARY ──────────────────────────────────── */
-.sum-row{display:flex;justify-content:space-between;align-items:center;font-size:14px;margin-bottom:10px;color:var(--muted)}
-.sum-row strong{color:var(--text);font-weight:700;text-align:right;max-width:55%}
-.sum-divider{border-top:1px solid rgba(0,200,212,0.2);margin:12px 0}
-
+/* Booking hero — mobile image sizing (1: retune focal point, 2: shorter hero) */
+@media(max-width:680px){
+  .hero.hero-tall{min-height:64dvh}
+  .hero-tall .hero-bg{background-position:center 30%!important}
+}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9Z296M7ZLP"></script>
@@ -127,35 +108,25 @@
   <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,0) 100%),url('./assets/images/webp/booking-hero.webp') center 40%/cover no-repeat;background-color:var(--cyan)"></div>
   <div class="hero-coords">N 45°<br>OTTAWA</div>
   <div class="hero-content" style="margin-left:auto;max-width:660px">
-    <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)" data-content="booking_hero_badge"></div>
-    <h1><span class="l1" data-content="booking_hero_l1"></span><span class="l3" data-content="booking_hero_l3"></span></h1>
-    <p class="hero-sub" data-content="booking_hero_sub"></p>
+    <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)" data-content="booking_hero_badge">Let's plan your day</div>
+    <h1><span class="l1" data-content="booking_hero_l1">Tell me about</span><span class="l3" data-content="booking_hero_l3">your group.</span></h1>
+    <p class="hero-sub" data-content="booking_hero_sub">No locked-in calendar, no checkout. Just a few quick questions so I can plan the right session for you — your lake or mine, your dates, your crew.</p>
   </div>
   <div class="hero-bottom">
-    <div class="hero-scroll">Select a Date Below</div>
+    <div class="hero-scroll">Start Below ↓</div>
     <div class="hero-stats-mini">
-      <div class="hero-stat-mini"><div class="hero-stat-mini-num"><span style="-webkit-text-fill-color:var(--cyan)">✓</span> No payment required now &nbsp;<span style="-webkit-text-fill-color:var(--cyan)">✓</span> Fully insured &nbsp;<span style="-webkit-text-fill-color:var(--cyan)">✓</span> Certified Lifeguard</div><div class="hero-stat-mini-lbl"></div></div>
+      <div class="hero-stat-mini"><div class="hero-stat-mini-num"><span style="-webkit-text-fill-color:var(--cyan)">✓</span> No payment required &nbsp;<span style="-webkit-text-fill-color:var(--cyan)">✓</span> Fully insured &nbsp;<span style="-webkit-text-fill-color:var(--cyan)">✓</span> Certified Lifeguard</div><div class="hero-stat-mini-lbl"></div></div>
     </div>
-    <a href="mailto:christian@learnwatersports.ca" class="hero-contact-link">Stillwater Sports · Coach</a>
+    <a href="tel:+16132995998" class="hero-contact-link">Or just call/text · 613-299-5998</a>
   </div>
 </section>
 
 <section style="background:var(--yellow);padding:80px 48px" class="booking-outer-section">
   <div style="max-width:1200px;margin:0 auto;overflow:hidden">
 
-    <!-- Step indicator — sits above everything, always visible -->
-    <div class="step-indicator" id="stepIndicator" style="margin-bottom:32px">
-      <div class="step"><div class="step-num active" id="s1">1</div><span class="step-label active">Pick a Date</span></div>
-      <div class="step-divider"></div>
-      <div class="step"><div class="step-num" id="s2">2</div><span class="step-label" id="s2l">Your Details</span></div>
-      <div class="step-divider"></div>
-      <div class="step"><div class="step-num" id="s3">3</div><span class="step-label" id="s3l">Confirm</span></div>
-    </div>
-
-    <!-- Steps 1 + 2 inside the two-column grid -->
     <div class="booking-layout" id="booking-grid">
 
-      <!-- LEFT: sticky sidebar -->
+      <!-- LEFT: trust sidebar (unchanged) -->
       <div>
         <div class="sticky-sidebar">
           <div class="info-card">
@@ -171,7 +142,6 @@
             <div class="info-row"><div class="info-icon">📞</div><div><div class="info-key">Call or Text</div><div class="info-val"><a href="tel:+16132995998" style="color:var(--cyan);font-weight:700;text-decoration:none">613-299-5998</a></div></div></div>
             <div class="info-row"><div class="info-icon">📅</div><div><div class="info-key">Season</div><div class="info-val" data-content="booking_info_season_val">May through September — weekdays and weekends</div></div></div>
             <div class="info-row"><div class="info-icon">⛅</div><div><div class="info-key">Weather</div><div class="info-val" data-content="booking_info_weather_val">Light rain proceeds. Heavy rain or thunder = reschedule with full credit</div></div></div>
-           
             <div class="info-row"><div class="info-icon">💳</div><div><div class="info-key">Deposit</div><div class="info-val" data-content="booking_info_deposit_val">Deposit required to secure your date</div></div></div>
             <div class="info-row"><div class="info-icon">📆</div><div><div class="info-key">Payment</div><div class="info-val" data-content="booking_info_payment_val">Full balance due 48 hours before your session via Square</div></div></div>
             <div style="border-top:1px solid rgba(0,200,212,0.15);margin-top:16px;padding-top:14px;display:flex;flex-wrap:wrap;gap:8px">
@@ -184,104 +154,190 @@
         </div>
       </div>
 
-      <!-- RIGHT: step 1 + step 2 -->
+      <!-- RIGHT: inquiry form -->
       <div>
+        <div class="form-card" id="inquiry-card">
 
-        <!-- STEP 1: Calendar -->
-        <div class="cal-card-full" id="step1" style="overflow:hidden;min-width:0">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-            <div><div class="eyebrow" style="margin-bottom:4px">Step 1</div><div style="font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.01em">Select a Date</div></div>
-            <div style="display:flex;gap:12px;font-size:11px;color:var(--muted)">
-              <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:var(--cyan)"></div>Open</div>
-              <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:#f0a030"></div>Limited</div>
-              <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:var(--pink)"></div>Holiday</div>
-              <div style="display:flex;align-items:center;gap:4px"><div style="width:8px;height:8px;border-radius:50%;background:#ddd"></div>Unavail.</div>
-            </div>
+          <div style="margin-bottom:24px">
+            <div class="eyebrow" style="margin-bottom:4px">Plan Your Session</div>
+            <div style="font-size:24px;font-weight:800;color:var(--text);letter-spacing:-.01em">A few quick questions</div>
+            <div style="font-size:13.5px;color:var(--muted);margin-top:6px;line-height:1.55">Takes under a minute. I'll personally get back to you to lock in the details — no payment needed to send this.</div>
           </div>
-          <div class="cal-nav">
-            <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
-            <div class="cal-month" id="calMonth"></div>
-            <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
-          </div>
-          <div class="cal-grid" id="calGrid"></div>
-          <div id="calSelected" style="display:none;margin-top:20px">
-            <div style="background:rgba(0,200,212,0.07);border:1.5px solid rgba(0,200,212,0.2);border-radius:12px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center">
-              <div>
-                <div style="font-size:11px;font-weight:700;color:var(--pink);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px">Your Booking Summary</div>
-                <div id="booking-summary"><div style="color:var(--muted);font-size:14px">Select a package and date to see your summary.</div></div>
-                <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px;margin-top:16px">Selected Date</div>
-                <div style="font-size:18px;font-weight:700;color:var(--text)" id="calSelectedDate"></div>
+
+          <!-- 1. WHERE -->
+          <div class="fld-group">
+            <div class="fld-q"><span class="step-dot">1</span> Where would you like to ride?</div>
+            <div class="fld-hint">I can launch on the Rideau River, or bring the boat to your own lake or cottage anywhere in cottage country.</div>
+            <div class="fld-body">
+              <div class="choice-grid">
+                <button type="button" class="choice" data-loc="Rideau River" onclick="pickLoc(this)">
+                  <div class="choice-t">Rideau River</div>
+                  <div class="choice-s">I launch us — Manotick area</div>
+                </button>
+                <button type="button" class="choice" data-loc="Your lake / cottage" onclick="pickLoc(this)">
+                  <div class="choice-t">At your lake / cottage</div>
+                  <div class="choice-s">I come to you</div>
+                </button>
               </div>
-              <button onclick="goToStep2()" class="btn-pink">Continue →</button>
-            </div>
-            <div style="margin-top:24px">
-              <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.08em;text-transform:uppercase;margin-bottom:12px">Select Package</div>
-              <div class="pkg-grid" id="pkg-grid-container"></div>
-              <div id="slot-picker" style="margin-top:12px"></div>
-              <div style="margin-top:20px">
-                <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px">Promo Code</div>
-                <input type="text" id="b-promo" placeholder="Have a code? Enter it here" oninput="onPromoInput()" style="width:100%;max-width:280px;padding:11px 14px;border:1.5px solid rgba(0,200,212,0.25);border-radius:10px;font-size:14px;font-family:'Outfit',sans-serif;outline:none;text-transform:uppercase"/>
-                <div id="promo-feedback" style="font-size:12px;margin-top:8px;line-height:1.5"></div>
+              <div class="fld" id="lake-wrap" style="margin-top:14px;display:none">
+                <label>Which lake or town?</label>
+                <input type="text" id="b-lake" placeholder="e.g. White Lake, Calabogie, Big Rideau..."/>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- STEP 2: Details form -->
-        <div class="form-section" id="step2">
-          <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:24px">
-            <div>
-              <div class="eyebrow" style="margin-bottom:4px">Step 2</div>
-              <div style="font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.01em">Your Details</div>
-              <div style="font-size:13px;color:var(--muted);margin-top:4px">Booking for <span id="formDateLabel" style="color:var(--cyan);font-weight:700"></span></div>
+          <!-- 2. SPORTS -->
+          <div class="fld-group">
+            <div class="fld-q"><span class="step-dot">2</span> What are you interested in?</div>
+            <div class="fld-hint">Pick any that apply — totally fine to be unsure.</div>
+            <div class="fld-body">
+              <div class="chip-row" id="sport-chips">
+                <div class="chip" onclick="toggleChip(this)">Waterski</div>
+                <div class="chip" onclick="toggleChip(this)">Wakeboard</div>
+                <div class="chip" onclick="toggleChip(this)">Wakesurf</div>
+                <div class="chip" onclick="toggleChip(this)">Slalom</div>
+                <div class="chip" onclick="toggleChip(this)">Barefoot</div>
+                <div class="chip" onclick="toggleChip(this)">Tubing</div>
+                <div class="chip" onclick="toggleChip(this)">Not sure yet</div>
+              </div>
             </div>
-            <button onclick="goToStep1()" style="background:none;border:1.5px solid rgba(0,200,212,0.3);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;font-family:'Outfit',sans-serif">← Change Date</button>
           </div>
-          <div class="form-grid">
-            <div class="form-field form-full"><label>Your Name *</label><input type="text" id="b-name" placeholder="First and last name"/></div>
-            <div class="form-field"><label>Email</label><input type="email" id="b-email" placeholder="you@email.com"/></div>
-            <div class="form-field"><label>Phone</label><input type="tel" id="b-phone" placeholder="(613) 299-5998 or yours"/></div>
-            <div class="form-field form-full"><label>Lake / Location *</label><input type="text" id="b-location" placeholder="e.g. White Lake, Calabogie, Rideau River..."/></div>
-            <div class="form-field"><label>Group Size</label>
-              <select id="b-group"><option value="">Select...</option><option>1 person</option><option>2 people</option><option>3–4 people</option><option>5–6 people</option><option>7+ people</option></select>
+
+          <!-- 3. DATES -->
+          <div class="fld-group">
+            <div class="fld-q"><span class="step-dot">3</span> When works for you?</div>
+            <div class="fld-hint">Give me a rough first choice — you can change it later. Add a couple of backups if you have them.</div>
+            <div class="fld-body">
+              <div id="date-rows">
+                <div class="date-row">
+                  <input type="date" class="b-date" id="b-date-0"/>
+                </div>
+              </div>
+              <button type="button" class="add-date" id="add-date-btn" onclick="addDateRow()">+ Add another possible date</button>
+              <div class="fld" style="margin-top:14px">
+                <label>How flexible are you?</label>
+                <select id="b-flex">
+                  <option value="These dates work best">These dates work best</option>
+                  <option value="Flexible by a few days">Flexible by a few days either way</option>
+                  <option value="Pretty open — that whole month works">Pretty open — that whole month works</option>
+                  <option value="Just exploring — no firm dates yet">Just exploring — no firm dates yet</option>
+                </select>
+              </div>
             </div>
-            <div class="form-field"><label>Sport(s)</label>
-              <select id="b-sport"><option value="">Select...</option><option>Waterski</option><option>Wakeboard</option><option>Wakesurf</option><option>Slalom</option><option>Barefoot</option><option>Tubing</option><option>Multiple / Not sure</option></select>
-            </div>
-            <div class="form-field"><label>Skill Level</label>
-              <select id="b-level"><option value="">Select...</option><option>Complete beginner</option><option>Tried it a few times</option><option>Intermediate</option><option>Advanced</option><option>Mixed group</option></select>
-            </div>
-            <div class="form-field form-full"><label>Anything Else?</label><textarea id="b-notes" placeholder="Ages of riders, goals, questions, AM or PM preference for half days..."></textarea></div>
           </div>
-          <div style="background:rgba(0,200,212,0.04);border-radius:var(--rsm);padding:20px;border:1px solid rgba(0,200,212,0.12);margin-top:8px">
-            <button id="b-submit" onclick="submitBooking()" class="btn-pink" style="width:100%;justify-content:center;font-size:16px;padding:16px">Submit Booking Request →</button>
-            <p style="font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6">By submitting you agree to our <a href="/policies" style="color:var(--cyan)">booking policies</a>. Full payment due 48 hours before session. No payment required to submit.</p>
+
+          <!-- 4 + 5. GROUP -->
+          <div class="fld-group">
+            <div class="fld-q"><span class="step-dot">4</span> Who's coming?</div>
+            <div class="fld-hint">Helps me bring the right gear and PFD sizes.</div>
+            <div class="fld-body">
+              <div class="stepper-grid">
+                <div class="stepper">
+                  <div class="stepper-lbl">Adults<span>Age 19+</span></div>
+                  <div class="stepper-ctrl">
+                    <button type="button" class="stepper-btn" onclick="bump('adults',-1)">−</button>
+                    <span class="stepper-val" id="adults-val">1</span>
+                    <button type="button" class="stepper-btn" onclick="bump('adults',1)">+</button>
+                  </div>
+                </div>
+                <div class="stepper">
+                  <div class="stepper-lbl">Kids<span>Under 19</span></div>
+                  <div class="stepper-ctrl">
+                    <button type="button" class="stepper-btn" onclick="bump('kids',-1)">−</button>
+                    <span class="stepper-val" id="kids-val">0</span>
+                    <button type="button" class="stepper-btn" onclick="bump('kids',1)">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. EXPERIENCE -->
+          <div class="fld-group">
+            <div class="fld-q"><span class="step-dot">5</span> Experience level?</div>
+            <div class="fld-hint">No experience needed — I coach all levels, first-timers welcome.</div>
+            <div class="fld-body">
+              <div class="chip-row" id="level-chips" data-single="1">
+                <div class="chip" onclick="toggleChip(this,true)">First-timers</div>
+                <div class="chip" onclick="toggleChip(this,true)">Tried it a few times</div>
+                <div class="chip" onclick="toggleChip(this,true)">Intermediate</div>
+                <div class="chip" onclick="toggleChip(this,true)">Advanced</div>
+                <div class="chip" onclick="toggleChip(this,true)">Mixed group</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONTACT (phone-first) -->
+          <div class="fld-group">
+            <div class="fld-q"><span class="step-dot">6</span> How do I reach you?</div>
+            <div class="fld-body">
+              <div class="phone-card">
+                <div class="fld" style="margin-bottom:14px">
+                  <label>Your Name <span class="req-star">*</span></label>
+                  <input type="text" id="b-name" placeholder="First and last name"/>
+                </div>
+                <div class="fld">
+                  <label>Phone <span class="req-star">*</span></label>
+                  <input type="tel" id="b-phone" placeholder="(613) 555-1234"/>
+                </div>
+                <div class="phone-note">
+                  <span>Phone is best — a quick call or text is the fastest way to plan your day, and email sometimes slips into spam where I'd hate to miss you.</span>
+                </div>
+              </div>
+              <div class="fld" style="margin-top:14px">
+                <label>Email <span style="color:var(--muted);font-weight:500;text-transform:none;letter-spacing:0">(optional)</span></label>
+                <input type="email" id="b-email" placeholder="you@email.com"/>
+              </div>
+            </div>
+          </div>
+
+          <!-- NOTES -->
+          <div class="fld-group">
+            <div class="fld-q"><span class="step-dot">7</span> Anything else? <span style="font-size:12px;color:var(--muted);font-weight:500">(optional)</span></div>
+            <div class="fld-body">
+              <div class="fld">
+                <textarea id="b-notes" placeholder="Ages of the kids, what you're hoping to get out of it, a special occasion, time-of-day preference..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <div class="submit-wrap">
+            <button id="b-submit" onclick="submitInquiry()" class="btn-pink" style="width:100%;justify-content:center;font-size:16px;padding:16px">Send My Inquiry →</button>
+            <p style="font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6">No payment now. I'll reach out (usually within 24 hours) to plan your session. By sending you agree to our <a href="/policies" style="color:var(--cyan)">booking policies</a>.</p>
+          </div>
+
+          <div class="price-ref" style="margin-top:24px;margin-bottom:0">
+            <div class="price-ref-t">Want ballpark pricing before you reach out?</div>
+            <a href="/pricing">See full pricing →</a>
+          </div>
+
+        </div><!-- /inquiry-card -->
+
+        <!-- SUCCESS -->
+        <div class="form-card success-card" id="success-card" style="max-width:680px">
+          <div class="eyebrow" style="text-align:center;margin-bottom:8px">Got it!</div>
+          <h2 style="font-size:32px;font-weight:800;color:var(--pink);margin-bottom:12px;letter-spacing:-.02em">Talk soon.</h2>
+          <p style="font-size:15px;color:var(--muted);line-height:1.7;max-width:480px;margin:0 auto 8px">Thanks <span id="thanks-name"></span> — your inquiry's in. I'll call or text you (usually within 24 hours) to plan the details and find the perfect day on the water.</p>
+          <div style="background:rgba(0,200,212,0.06);border:1px solid rgba(0,200,212,0.15);border-radius:var(--rsm);padding:16px 20px;max-width:480px;margin:20px auto 0;text-align:left">
+            <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">What Happens Next</div>
+            <div style="font-size:13px;color:var(--muted);line-height:1.8">
+              ① I reach out to plan your session<br>
+              ② We lock in your date &amp; details<br>
+              ③ Small deposit secures it<br>
+              ④ I bring the boat &amp; gear — you just show up
+            </div>
+          </div>
+          <div style="background:rgba(224,64,160,0.05);border:1px solid rgba(224,64,160,0.2);border-radius:var(--rsm);padding:14px 18px;max-width:480px;margin:14px auto 0;text-align:center;font-size:13px;color:var(--text)">
+            Can't wait? Call or text me directly: <a href="tel:+16132995998" style="color:var(--pink);font-weight:800;text-decoration:none">613-299-5998</a>
+          </div>
+          <div style="margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <a href="/" class="btn-outline">Back to Home</a>
+            <a href="/pricing" class="btn-pink">View Pricing →</a>
           </div>
         </div>
 
       </div>
     </div><!-- end booking-grid -->
-
-    <!-- STEP 3 — outside the grid, always full width, never collapses -->
-    <div class="success-card" id="step3" style="max-width:680px;margin:0 auto">
-      <div style="font-size:64px;margin-bottom:20px">🌊</div>
-      <div class="eyebrow" style="text-align:center;margin-bottom:8px">Request Received</div>
-      <h2 style="font-size:32px;font-weight:800;color:var(--pink);margin-bottom:12px;letter-spacing:-.02em">You're on the water.</h2>
-      <p style="font-size:15px;color:var(--muted);line-height:1.7;max-width:480px;margin:0 auto 8px">We will be in touch within 24 hours to confirm your session and send a deposit link.</p>
-      <div style="background:rgba(0,200,212,0.06);border:1px solid rgba(0,200,212,0.15);border-radius:var(--rsm);padding:16px 20px;max-width:480px;margin:20px auto 0;text-align:left">
-        <div style="font-size:11px;font-weight:700;color:var(--cyan);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">What Happens Next</div>
-        <div style="font-size:13px;color:var(--muted);line-height:1.8">
-          ① We confirm within 24 hours<br>
-          ② Deposit link sent via Square<br>
-          ③ Full payment due 48hrs before session<br>
-          ④ We come to your lake — just show up
-        </div>
-      </div>
-      <div style="margin-top:28px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-        <a href="/" class="btn-outline">Back to Home</a>
-        <a href="/pricing" class="btn-pink">View Pricing →</a>
-      </div>
-    </div>
 
   </div>
 </section>
@@ -289,694 +345,175 @@
 <script src="./assets/js/footer.js"></script>
 <div id="toast"></div>
 
-
-
 <script>
 // ── SUPABASE ──────────────────────────────────────────────
 let db=null;
 try{db=supabase.createClient('https://isbhflfmugfeqwhhqlkh.supabase.co','eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzYmhmbGZtdWdmZXF3aGhxbGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDE0MzEsImV4cCI6MjA5MzA3NzQzMX0.TKMd_rSmJvoLiL5_1pFw9KqYHNne-eEdnGNR4zgZwFk');}catch(e){}
 
-// ── CALENDAR STATE ────────────────────────────────────────
-let calYear=2026, calMonth=4, selectedDay=null, bookedDates={}, blockedSlots={};
-const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
-const DAYS=['SU','MO','TU','WE','TH','FR','SA'];
+// ── STATE ─────────────────────────────────────────────────
+let selectedLoc = null;     // 'Rideau River' | 'Your lake / cottage'
+let counts = { adults:1, kids:0 };
+let dateRowCount = 1;
+const MAX_DATES = 4;
 
-// ── PACKAGE RULES ─────────────────────────────────────────
-const PACKAGES = {
-  // Single day packages — aligned with pricing page
-  'half-day':       { label:'Half Day',                      days:1, slotMode:'pick1',       weekdayOnly:false },
-  // Full Day weekday ($1,000) — consecutive slots only, no split
-  'full-day':       { label:'Full Day — $1,000',             days:1, slotMode:'fullday',     weekdayOnly:true  },
-  // Full Day weekend/holiday ($1,250) — any 2 slots
-  'full-day-wknd':  { label:'Full Day — $1,250',             days:1, slotMode:'any2-single', weekdayOnly:false, weekendOnly:true },
-  // Full Day Split weekday ($1,250) — morning + evening only, not on holidays (included free)
-  'full-day-split': { label:'Full Day Split — $1,250',       days:1, slotMode:'split',       weekdayOnly:false },
-  // Multi-day packages
-  'double-weekday': { label:'Double Weekday — $1,750',       days:2, slotMode:'any2',        weekdayOnly:true, multiStart:true },
-  'full-weekend':   { label:'Full Weekend — $2,100',         days:2, slotMode:'any2',        weekdayOnly:false, multiStart:true, forceWeekend:true },
-  'three-day-week': { label:'3 Day Work Week — $2,500',      days:3, slotMode:'any2',        weekdayOnly:true, multiStart:true },
-  'holiday-weekend':{ label:'Holiday Weekend — $3,000',      days:3, slotMode:'any2',        weekdayOnly:false, multiStart:true },
-  'five-day':       { label:'5 Day Week — $4,500',           days:5, slotMode:'any2',        weekdayOnly:false, multiStart:true },
-};
-
-// slotMode meanings:
-// pick1       → choose any 1 of 3 slots (Half Day)
-// fullday     → morning+afternoon OR afternoon+evening (weekday Full Day — no split)
-// any2-single → any 2 slots for single-day weekend/holiday Full Day
-// split       → morning+evening only (weekday split, +$250 vs consecutive)
-// any2        → any 2 slots per day (multi-day packages)
-
-let selectedPackage = null;
-let selectedSlots   = [];   // for single-day: ['morning','evening'] etc
-let selectedDates   = [];   // for multi-day: computed from start date
-
-// ── SLOT / PACKAGE SELECTION UI ───────────────────────────
-function selectPackage(pkg) {
-  selectedPackage = pkg;
-  selectedSlots = [];
-  selectedDates = [];
-  renderPackageCards();
-  renderSlotPicker();
-  updateSummary();
+// ── LOCATION ──────────────────────────────────────────────
+function pickLoc(btn){
+  document.querySelectorAll('.choice').forEach(c=>c.classList.remove('sel'));
+  btn.classList.add('sel');
+  selectedLoc = btn.dataset.loc;
+  const lakeWrap = document.getElementById('lake-wrap');
+  lakeWrap.style.display = (selectedLoc === 'Your lake / cottage') ? 'block' : 'none';
 }
 
-function renderPackageCards() {
-  const date = selectedDay ? new Date(calYear, calMonth, selectedDay) : null;
-  const dow = date ? date.getDay() : -1;
-  const isWD = dow >= 1 && dow <= 5;
-  const isWE = dow === 0 || dow === 6;
-  const isSat = dow === 6;
-
-  const isHol = selectedDay ? !!holidayDates[selectedDay] : false;
-
-  // Define which packages are valid for the selected day
-  const validPkgs = {
-    // Half Day: weekday $600, weekend $750, not on holidays
-    'half-day':       !isHol,
-    // Full Day weekday ($1,000): Mon–Fri only, not holidays
-    'full-day':       isWD && !isHol,
-    // Full Day weekend/holiday ($1,250): weekends and holidays only
-    'full-day-wknd':  isWE || isHol,
-    // Full Day Split ($1,250): any day except holidays (split included free on holidays)
-    'full-day-split': !isHol,
-    // Multi-day
-    'double-weekday': isWD,
-    'full-weekend':   isSat,
-    'three-day-week': isWD,
-    'holiday-weekend':true,
-    'five-day':       true,
-  };
-
-  const container = document.getElementById('pkg-grid-container');
-  if (!container) return;
-  container.innerHTML = '';
-
-  const pkgDefs = [
-    // Single day
-    { key:'half-day',       name:'Half Day',                    price: isWE||isHol ? '$750' : '$600', note: isWE ? 'Any 1 block · +$150 weekend premium' : 'Any 1 block · morning, afternoon, or evening' },
-    { key:'full-day',       name:'Full Day',                    price:'$1,000', note:'2 consecutive blocks · Mon–Fri only' },
-    { key:'full-day-wknd',  name:'Full Day',                    price:'$1,250', note: isHol ? 'Holiday · any 2 blocks including split — $1,250 covers all' : 'Weekend · any 2 consecutive blocks' },
-    { key:'full-day-split', name:'Full Day — Primetime ⭐',         price:'$1,250', note:'[Morning + Evening] · Best conditions · +$250 weekday only' },
-    // Multi-day
-    { key:'double-weekday', name:'Double Weekday',              price:'$1,750', note:'2 consecutive weekdays · save $250' },
-    { key:'full-weekend',   name:'Full Weekend',                price:'$2,100', note:'Sat + Sun · save $400' },
-    { key:'three-day-week', name:'3 Day Work Week',             price:'$2,500', note:'Any 3 weekdays · save $500' },
-    { key:'holiday-weekend',name:'Holiday Weekend',             price:'$3,000', note:'3-day long weekend · Fri/Mon + Sat + Sun' },
-    { key:'five-day',       name:'5 Day Week 🔥',               price:'$4,500', note:'Any 5 of 7 days · biggest savings' },
-  ];
-
-  pkgDefs.forEach(pkg => {
-    const available = !date || validPkgs[pkg.key];
-    const div = document.createElement('div');
-    div.className = 'pkg-card' + (selectedPackage===pkg.key?' selected':'') + (!available?' pkg-unavailable':'');
-    div.dataset.pkg = pkg.key;
-    if (available) div.onclick = () => selectPackage(pkg.key);
-    div.innerHTML = `
-      <div class="pkg-card-name">${pkg.name}${!available?'<span style="color:var(--muted);font-size:10px;font-weight:400"> — not available this day</span>':''}</div>
-      <div class="pkg-card-price">${pkg.price}</div>
-      <div class="pkg-card-note">${pkg.note}</div>`;
-    container.appendChild(div);
-  });
-
-  // If selected package is no longer valid, clear it
-  if (selectedPackage && date && !validPkgs[selectedPackage]) {
-    selectedPackage = null;
-    selectedSlots = [];
-    document.getElementById('slot-picker').innerHTML = '<div class="rule-info">ℹ️ The previously selected package is not available on this day. Please choose a new package above.</div>';
-    updateSummary();
-  }
-
-  renderSlotPicker();
-  updateSummary();
-}
-
-// ── RIDEAU LAUNCH LOCATIONS ───────────────────────────────
-const RIDEAU_LOCATIONS = {
-  alfred_taylor:   { label:'Alfred Taylor Recreation Area',    address:'1480 River Rd, Manotick, ON', lat:45.2195, lng:-75.6862, note:'Free parking · boat ramp · washrooms on site' },
-  eccolands:       { label:'Eccolands Park',                    address:'130 Rideau Valley Dr S, Manotick, ON', lat:45.2221, lng:-75.6771, note:'Free parking · grassy launch area · good access' },
-  rideau_provincial:{ label:'Rideau River Provincial Park',    address:'6335 Roger Stevens Dr, Manotick, ON', lat:45.1638, lng:-75.6821, note:'Day-use fee may apply · boat launch · picnic area' },
-};
-
-
-function isWeekday(date) {
-  const dow = date.getDay();
-  return dow >= 1 && dow <= 5;
-}
-function isWeekend(date) {
-  const dow = date.getDay();
-  return dow === 0 || dow === 6;
-}
-
-function renderSlotPicker() {
-  const el = document.getElementById('slot-picker');
-  if (!el) return;
-  if (!selectedPackage || !selectedDay) { el.innerHTML = ''; return; }
-
-  const pkg = PACKAGES[selectedPackage];
-  const date = new Date(calYear, calMonth, selectedDay);
-  const dow = date.getDay();
-  const isWD = isWeekday(date);
-  const isWE = isWeekend(date);
-  const isHol = !!holidayDates[selectedDay];
-
-  // Guard: weekday-only package on weekend/holiday
-  if (pkg.weekdayOnly && (isWE || isHol)) {
-    el.innerHTML = `<div class="rule-error">⚠️ <strong>${pkg.label.split('—')[0].trim()}</strong> is only available on weekdays (Mon–Fri, excluding holidays). Please choose a different package or date.</div>`;
-    selectedSlots = [];
-    return;
-  }
-  // Guard: weekend-only package on weekday
-  if (pkg.weekendOnly && isWD && !isHol) {
-    el.innerHTML = `<div class="rule-error">⚠️ <strong>${pkg.label.split('—')[0].trim()}</strong> is only available on weekends and holidays. Please select a weekend or holiday date.</div>`;
-    selectedSlots = [];
-    return;
-  }
-
-
-  let html = '';
-
-  if (pkg.multiStart) {
-    // Multi-day: show what dates will be booked
-    const dates = computeDates(selectedPackage, date);
-    selectedDates = dates;
-    const dateList = dates.map(d => d.toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric'})).join(' · ');
-    html += `<div class="slot-label">Session Dates</div>
-    <div class="slot-dates-preview">${dateList}</div>
-    <div class="slot-label" style="margin-top:16px">Time Slots (choose 2 per day)</div>`;
-
-    if (pkg.slotMode === 'consecutive') {
-      html += slotOptionHTML('consecutive-am', 'Morning + Afternoon', '~8am–4pm', ['morning','afternoon']);
-      html += slotOptionHTML('consecutive-pm', 'Afternoon + Evening', '~12pm–8pm', ['afternoon','evening']);
-    } else {
-      // any2
-      html += slotOptionHTML('slots-ma', 'Morning + Afternoon', '~8am–4pm', ['morning','afternoon']);
-      html += slotOptionHTML('slots-ae', 'Afternoon + Evening', '~12pm–8pm', ['afternoon','evening']);
-      html += slotOptionHTML('slots-me', 'Morning + Evening (Split)', '~8am–12pm & ~4pm–8pm', ['morning','evening']);
-    }
-    html += `<p style="font-size:13px;color:var(--muted);margin-top:8px;line-height:1.6">Same slot selection applies to all days in your package. If you need different slots on different days, let us know in the notes.</p>`;
-
-  } else if (pkg.slotMode === 'pick1') {
-    // Half Day — pick any one 4-hr block
-    html += `<div class="slot-label">Choose Your Block</div>`;
-    html += slotOptionHTML('slot-morn', 'Morning',   '~8am–12pm', ['morning']);
-    html += slotOptionHTML('slot-aft',  'Afternoon', '~12pm–4pm', ['afternoon']);
-    html += slotOptionHTML('slot-eve',  'Evening',   '~4pm–8pm',  ['evening']);
-
-  } else if (pkg.slotMode === 'fullday') {
-    // Full Day weekday — 2 consecutive blocks only (no split)
-    html += `<div class="slot-label">Choose Your 2 Blocks</div>`;
-    html += `<div class="rule-info">ℹ️ Full Day is any 2 consecutive blocks. For Morning + Evening (split), select <strong>Full Day Split</strong> above.</div>`;
-    html += slotOptionHTML('consec-am', 'Morning + Afternoon', '~8am–4pm',   ['morning','afternoon']);
-    html += slotOptionHTML('consec-pm', 'Afternoon + Evening', '~12pm–8pm',  ['afternoon','evening']);
-
-  } else if (pkg.slotMode === 'any2-single') {
-    // Full Day weekend/holiday — consecutive blocks (for split, use Full Day Split card)
-    html += `<div class="slot-label">Choose Your 2 Blocks</div>`;
-    if (isHol) {
-      html += `<div class="rule-info">⭐ <strong>Holiday pricing ($1,250)</strong> covers everything — consecutive blocks or Morning + Evening split, your choice. No double premium.</div>`;
-    } else {
-      html += `<div class="rule-info">ℹ️ For Morning + Evening split, use the <strong>Full Day Split</strong> card — same price.</div>`;
-    }
-    html += slotOptionHTML('wknd-ma',    'Morning + Afternoon',       '~8am–4pm',             ['morning','afternoon']);
-    html += slotOptionHTML('wknd-ae',    'Afternoon + Evening',       '~12pm–8pm',            ['afternoon','evening']);
-    if(isHol) html += slotOptionHTML('wknd-split', 'Morning + Evening (Split)', '~8am–12pm & ~4pm–8pm', ['morning','evening']);
-
-  } else if (pkg.slotMode === 'split') {
-    // Full Day Split weekday — morning + evening only
-    html += `<div class="slot-label">Your Blocks</div>`;
-    html += `<div class="rule-info">⭐ <strong>Best water conditions</strong> — morning and evening have the least boat traffic and smoothest water.</div>`;
-    html += slotOptionHTML('split-me', 'Morning + Evening', '~8am–12pm & ~4pm–8pm', ['morning','evening']);
-  }
-
-  el.innerHTML = html;
-
-  // Auto-select if only one option
-  const opts = el.querySelectorAll('.slot-opt');
-  if (opts.length === 1) opts[0].click();
-}
-
-function slotOptionHTML(id, label, sublabel, slots) {
-  const blocked = slots.some(s => isSlotBlocked(selectedDay, s));
-  return `<div class="slot-opt${blocked?' slot-blocked-opt':''}" id="${id}" onclick="pickSlot(this)" data-slots='${JSON.stringify(slots)}'>
-    <div class="slot-opt-label">${label}${blocked?` <span style="color:var(--red);font-size:11px">— Unavailable</span>`:''}</div>
-    <div class="slot-opt-sub">${sublabel}</div>
-  </div>`;
-}
-
-function pickSlot(el) {
-  if (el.classList.contains('slot-blocked-opt')) {
-    showToast('That slot is not available on this date — please choose another');
-    return;
-  }
-  const slots = JSON.parse(el.dataset.slots || '[]');
-  document.querySelectorAll('.slot-opt').forEach(o => o.classList.remove('active'));
-  el.classList.add('active');
-  selectedSlots = slots;
-  updateSummary();
-}
-
-function computeDates(pkg, startDate) {
-  const dates = [new Date(startDate)];
-  const d = new Date(startDate);
-
-  if (pkg === 'double-weekday') {
-    // 2 consecutive weekdays — skip weekends
-    d.setDate(d.getDate()+1);
-    while(!isWeekday(d)) d.setDate(d.getDate()+1);
-    dates.push(new Date(d));
-
-  } else if (pkg === 'three-day-week') {
-    // Any 3 weekdays — skip weekends
-    for(let i=0;i<2;i++){
-      d.setDate(d.getDate()+1);
-      while(!isWeekday(d)) d.setDate(d.getDate()+1);
-      dates.push(new Date(d));
-    }
-
-  } else if (pkg === 'full-weekend') {
-    // Must start Saturday — Sat + Sun
-    const sat = new Date(startDate);
-    while(sat.getDay()!==6) sat.setDate(sat.getDate()+1);
-    const sun = new Date(sat); sun.setDate(sun.getDate()+1);
-    return [sat, sun];
-
-  } else if (pkg === 'holiday-weekend') {
-    // 3 days: the selected day (Fri or Mon) + Sat + Sun
-    // If start is Friday: add Sat, Sun
-    // If start is Monday: add the preceding Sat, Sun (or next Sat, Sun)
-    const dow = startDate.getDay();
-    if (dow === 5) {
-      // Friday → Fri, Sat, Sun
-      const sat = new Date(d); sat.setDate(sat.getDate()+1);
-      const sun = new Date(d); sun.setDate(sun.getDate()+2);
-      return [new Date(startDate), sat, sun];
-    } else if (dow === 1) {
-      // Monday → Sat, Sun, Mon
-      const sat = new Date(d); sat.setDate(sat.getDate()-2);
-      const sun = new Date(d); sun.setDate(sun.getDate()-1);
-      return [sat, sun, new Date(startDate)];
-    } else {
-      // Fallback: just add 2 consecutive days
-      d.setDate(d.getDate()+1); dates.push(new Date(d));
-      d.setDate(d.getDate()+1); dates.push(new Date(d));
-    }
-
-  } else if (pkg === 'five-day') {
-    // Any 5 of 7 days — add 4 consecutive calendar days (can include weekends)
-    for(let i=0;i<4;i++){
-      d.setDate(d.getDate()+1);
-      dates.push(new Date(d));
-    }
-  }
-  return dates;
-}
-
-function isSlotBlocked(day, slot) {
-  const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-  return !!(blockedSlots[dateStr] && blockedSlots[dateStr].includes(slot));
-}
-
-function getPkgPrice(pkgKey) {
-  // Returns the actual price integer for a given package and selected day
-  const date = selectedDay ? new Date(calYear, calMonth, selectedDay) : null;
-  const dow  = date ? date.getDay() : -1;
-  const isWE = dow===0||dow===6;
-  const isHol = selectedDay ? !!holidayDates[selectedDay] : false;
-  const prices = {
-    'half-day':        (()=>{ const dow=date?date.getDay():-1; return (dow===0||dow===6)?750:600; })(),
-    'full-day':        1000,
-    'full-day-wknd':   1250,
-    'full-day-split':  1250,
-    'double-weekday':  1750,
-    'full-weekend':    2100,
-    'three-day-week':  2500,
-    'holiday-weekend': 3000,
-    'five-day':        4500,
-  };
-  return prices[pkgKey] || 0;
-}
-
-// ── PROMO CODE ────────────────────────────────────────────
-let appliedPromo = null;
-let promoLookupTimer = null;
-
-function onPromoInput(){
-  const raw = (document.getElementById('b-promo').value || '').trim().toUpperCase();
-  clearTimeout(promoLookupTimer);
-  const fb = document.getElementById('promo-feedback');
-  if(!raw){ appliedPromo=null; if(fb) fb.textContent=''; updateSummary(); return; }
-  if(fb){ fb.textContent='Checking…'; fb.style.color='var(--muted)'; }
-  promoLookupTimer = setTimeout(()=>validatePromo(raw), 400);
-}
-async function validatePromo(code){
-  const fb = document.getElementById('promo-feedback');
-  if(!db){ appliedPromo=null; if(fb) fb.textContent=''; updateSummary(); return; }
-  try{
-    const { data, error } = await db.from('promo_codes').select('*').eq('code', code).maybeSingle();
-    if(error || !data){ appliedPromo=null; setPromoFeedback('That code isn’t valid.', false); updateSummary(); return; }
-    if(!data.active){ appliedPromo=null; setPromoFeedback('That code is no longer active.', false); updateSummary(); return; }
-    if(data.expires_at && new Date(data.expires_at) < new Date()){ appliedPromo=null; setPromoFeedback('That code has expired.', false); updateSummary(); return; }
-    appliedPromo = { code:data.code, discount_type:data.discount_type, discount_value:Number(data.discount_value) };
-    if(selectedPackage && selectedDay){ updateSummary(); }
-    else { setPromoFeedback('✓ Code valid — select a package to see your discount.', true); }
-  }catch(e){ appliedPromo=null; if(fb) fb.textContent=''; updateSummary(); }
-}
-function setPromoFeedback(msg, ok){
-  const fb = document.getElementById('promo-feedback');
-  if(!fb) return;
-  fb.textContent = msg;
-  fb.style.color = ok ? '#0b8a93' : 'var(--red)';
-}
-function computeDiscount(price){
-  if(!appliedPromo) return 0;
-  let d = appliedPromo.discount_type==='fixed' ? appliedPromo.discount_value : price * (appliedPromo.discount_value/100);
-  return Math.min(Math.max(Math.round(d), 0), price);
-}
-
-function updateSummary() {
-  const el = document.getElementById('booking-summary');
-  if (!el) return;
-  if (!selectedPackage || !selectedDay) { el.innerHTML = '<div style="color:var(--muted);font-size:14px">Select a package and date to see your summary.</div>'; return; }
-  const pkg = PACKAGES[selectedPackage];
-  const price = getPkgPrice(selectedPackage);
-  const discount = computeDiscount(price);
-  const finalPrice = price - discount;
-  const deposit = Math.round(finalPrice * 0.3);
-  const dateStr = MONTHS[calMonth]+' '+selectedDay+', '+calYear;
-  const slotStr = selectedSlots.length ? selectedSlots.map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(' + ') : '—';
-  const dates = selectedDates.length
-    ? selectedDates.map(d=>d.toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric'})).join(', ')
-    : dateStr;
-  const priceRows = discount > 0 ? `
-    <div class="sum-row"><span>Subtotal</span><strong>$${price.toLocaleString()}</strong></div>
-    <div class="sum-row"><span>Promo (${appliedPromo.code})</span><strong style="color:var(--pink)">−$${discount.toLocaleString()}</strong></div>
-    <div class="sum-row"><span>Total</span><strong>$${finalPrice.toLocaleString()}</strong></div>`
-    : `<div class="sum-row"><span>Total</span><strong>$${price.toLocaleString()}</strong></div>`;
-  el.innerHTML = `
-    <div class="sum-row"><span>Package</span><strong>${pkg.label}</strong></div>
-    <div class="sum-row"><span>${selectedDates.length>1?'Dates':'Date'}</span><strong>${dates}</strong></div>
-    <div class="sum-row"><span>Blocks</span><strong>${slotStr}</strong></div>
-    ${priceRows}
-    <div class="sum-divider"></div>
-    <div class="sum-row"><span>Deposit (30%)</span><strong>$${deposit.toLocaleString()}</strong></div>
-    <div style="font-size:11px;color:var(--muted);margin-top:4px">Non-refundable · Full payment due 48hrs before</div>`;
-  if(appliedPromo && discount > 0) setPromoFeedback(`✓ ${appliedPromo.code} applied — $${discount.toLocaleString()} off`, true);
-}
-
-// ── CALENDAR ──────────────────────────────────────────────
-function setRegion(btn){
-  document.querySelectorAll('.cal-region').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  selectedDay=null;
-  document.getElementById('calSelected').style.display='none';
-  renderCal();
-}
-function changeMonth(dir){
-  calMonth+=dir;
-  if(calMonth>11){calMonth=0;calYear++}
-  if(calMonth<0){calMonth=11;calYear--}
-  selectedDay=null;
-  document.getElementById('calSelected').style.display='none';
-  loadBookedDates();
-}
-let holidayDates = {}; // day → label
-
-async function loadBookedDates(){
-  const start=new Date(calYear,calMonth,1).toISOString().split('T')[0];
-  const end=new Date(calYear,calMonth+1,0).toISOString().split('T')[0];
-  if(!db){renderCal();return}
-  const{data:bk}=await db.rpc('get_calendar',{p_start:start,p_end:end});
-  const{data:av}=await db.from('availability').select('date,slot,is_blocked,holiday_label,location_label,location_key').gte('date',start).lte('date',end);
-  bookedDates={};blockedSlots={};holidayDates={};
-
-  if(bk) bk.forEach(r=>{
-    const d=new Date(r.date+'T12:00:00').getDate();
-    if(!bookedDates[d]) bookedDates[d]=[];
-    bookedDates[d].push(r.status);
-    if(!blockedSlots[r.date]) blockedSlots[r.date]=[];
-    blockedSlots[r.date].push(r.slot);
-  });
-
-  if(av) av.forEach(r=>{
-    if(r.slot==='holiday_marker'&&r.holiday_label){
-      const d=new Date(r.date+'T12:00:00').getDate();
-      holidayDates[d]=r.holiday_label;
-      return;
-    }
-
-    if(r.is_blocked){
-      if(!blockedSlots[r.date]) blockedSlots[r.date]=[];
-      if(!blockedSlots[r.date].includes(r.slot)) blockedSlots[r.date].push(r.slot);
-      const d=new Date(r.date+'T12:00:00').getDate();
-      if(!bookedDates[d]) bookedDates[d]=[];
-      bookedDates[d].push('blocked');
-    }
-  });
-
-  renderCal();
-}
-function renderCal(){
-  document.getElementById('calMonth').textContent=MONTHS[calMonth]+' '+calYear;
-  const grid=document.getElementById('calGrid');
-  grid.innerHTML='';
-  DAYS.forEach(d=>{const h=document.createElement('div');h.className='cal-day-header';h.textContent=d;grid.appendChild(h)});
-  const first=new Date(calYear,calMonth,1).getDay();
-  const total=new Date(calYear,calMonth+1,0).getDate();
-  const today=new Date();
-  for(let i=0;i<first;i++){const e=document.createElement('div');e.className='cal-day empty';grid.appendChild(e)}
-  for(let d=1;d<=total;d++){
-    const cell=document.createElement('div');
-    const dt=new Date(calYear,calMonth,d);
-    const isPast=dt<new Date(today.getFullYear(),today.getMonth(),today.getDate());
-    const isHoliday=!!holidayDates[d];
-    const b=bookedDates[d]||[];
-    const dateStr2=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const bookedSlotCount=(blockedSlots[dateStr2]||[]).filter(s=>['morning','afternoon','evening'].includes(s)).length;
-    const allSlotsBlocked=bookedSlotCount>=3;
-    const someBooked=bookedSlotCount>0&&bookedSlotCount<3;
-
-    // Determine calendar status
-    let status='open';
-    if(isPast) status='unavailable';
-    else if(allSlotsBlocked) status='unavailable';
-    else if(isHoliday) status='holiday';
-    else if(someBooked) status='limited';
-    // else open
-
-    cell.className='cal-day'+(selectedDay===d?' selected':'');
-    if(status==='unavailable') cell.style.opacity='.35';
-    const num=document.createElement('span');num.textContent=d;cell.appendChild(num);
-    if(status!=='unavailable'){
-      const dot=document.createElement('div');
-      dot.className='cal-day-dot '+(status==='limited'?'limited':status==='holiday'?'holiday':'open');
-      if(status==='holiday') dot.title=holidayDates[d];
-      if(status==='limited') dot.title=`${3-bookedSlotCount} of 3 blocks still available`;
-      cell.appendChild(dot);
-      cell.onclick=()=>selectDay(d);
-    }
-    grid.appendChild(cell);
+// ── CHIPS ─────────────────────────────────────────────────
+function toggleChip(el, single){
+  if(single){
+    el.parentElement.querySelectorAll('.chip').forEach(c=>c.classList.remove('sel'));
+    el.classList.add('sel');
+  } else {
+    el.classList.toggle('sel');
   }
 }
-function selectDay(d){
-  selectedDay=d;
-  selectedSlots=[];
-  renderCal();
-  const dateStr=MONTHS[calMonth]+' '+d+', '+calYear;
-  document.getElementById('calSelectedDate').textContent=dateStr;
-  document.getElementById('calSelected').style.display='block';
-  renderPackageCards();
-  renderSlotPicker();
-  updateSummary();
+function chipValues(containerId){
+  return [...document.querySelectorAll('#'+containerId+' .chip.sel')].map(c=>c.textContent.trim());
 }
 
-// ── STEP NAVIGATION ───────────────────────────────────────
-function goToStep2(){
-  if(!selectedDay){ showToast('Please select a date first'); return; }
-  if(!selectedPackage){ showToast('Please select a package above'); return; }
-  if(!selectedSlots.length){ showToast('Please select a time slot'); return; }
-
-  const pkg = PACKAGES[selectedPackage];
-  const date = new Date(calYear, calMonth, selectedDay);
-  const isSat = date.getDay() === 6;
-
-  // Final rule validation
-  const isHolDay = !!holidayDates[selectedDay];
-  if(pkg.weekdayOnly && (!isWeekday(date) || isHolDay)){
-    showToast('That package is weekdays only (Mon–Fri, excluding holidays) — please pick a weekday');
-    return;
-  }
-  if(pkg.weekendOnly && (isWeekday(date) && !isHolDay)){
-    showToast('That package is for weekends and holidays only');
-    return;
-  }
-  if(selectedPackage==='full-day-split' && isHolDay){
-    showToast('On holidays the $1,250 Full Day covers any 2 blocks including split — select Full Day (Weekend/Holiday) and choose Morning + Evening.');
-    return;
-  }
-  if(selectedPackage==='full-weekend' && !isSat){
-    showToast('Full Weekend must start on a Saturday');
-    return;
-  }
-  if(selectedPackage==='holiday-weekend' && ![1,5].includes(date.getDay())){
-    showToast('Holiday Weekend should start on a Friday or Monday adjacent to the weekend');
-    return;
-  }
-
-  // Set summary for step 2 display
-  const dateStr = MONTHS[calMonth]+' '+selectedDay+', '+calYear;
-  document.getElementById('formDateLabel').textContent = dateStr;
-  // Hide step1 content but keep it as an invisible spacer so the grid column stays alive
-  const s1 = document.getElementById('step1');
-  s1.style.visibility = 'hidden';
-  s1.style.height = '0';
-  s1.style.overflow = 'hidden';
-  s1.style.padding = '0';
-  s1.style.margin = '0';
-  document.getElementById('step2').classList.add('visible');
-  document.getElementById('s1').classList.remove('active');
-  document.getElementById('s1').classList.add('done');
-  document.getElementById('s1').textContent='✓';
-  document.getElementById('s2').classList.add('active');
-  document.getElementById('s2l').classList.add('active');
-  requestAnimationFrame(()=>{
-    document.getElementById('step2').scrollIntoView({behavior:'smooth', block:'start'});
-  });
+// ── STEPPERS ──────────────────────────────────────────────
+function bump(key, dir){
+  const min = key==='adults' ? 0 : 0;
+  counts[key] = Math.max(min, Math.min(30, counts[key]+dir));
+  document.getElementById(key+'-val').textContent = counts[key];
 }
-function goToStep1(){
-  document.getElementById('step2').classList.remove('visible');
-  const s1 = document.getElementById('step1');
-  s1.style.visibility = '';
-  s1.style.height = '';
-  s1.style.overflow = '';
-  s1.style.padding = '';
-  s1.style.margin = '';
-  s1.style.display = 'block';
-  window._dropinContext = null;
-  document.getElementById('s1').classList.add('active');
-  document.getElementById('s1').classList.remove('done');
-  document.getElementById('s1').textContent='1';
-  document.getElementById('s2').classList.remove('active');
-  document.getElementById('s2l').classList.remove('active');
-  requestAnimationFrame(()=>{
-    document.getElementById('step1').scrollIntoView({behavior:'smooth', block:'start'});
-  });
+
+// ── DATE ROWS ─────────────────────────────────────────────
+function addDateRow(){
+  if(dateRowCount >= MAX_DATES) return;
+  const wrap = document.getElementById('date-rows');
+  const row = document.createElement('div');
+  row.className = 'date-row';
+  const i = dateRowCount;
+  row.innerHTML = `<input type="date" class="b-date" id="b-date-${i}"/>
+    <button type="button" class="date-rm" title="Remove" onclick="this.closest('.date-row').remove();dateRowCount--;document.getElementById('add-date-btn').style.display='block'">✕</button>`;
+  wrap.appendChild(row);
+  row.querySelector('input').min = new Date().toISOString().split('T')[0];
+  dateRowCount++;
+  if(dateRowCount >= MAX_DATES) document.getElementById('add-date-btn').style.display='none';
+}
+function collectDates(){
+  return [...document.querySelectorAll('.b-date')].map(i=>i.value).filter(Boolean);
 }
 
 // ── SUBMIT ────────────────────────────────────────────────
-async function submitBooking(){
-  const isDropin = !!window._dropinContext;
+async function submitInquiry(){
+  const name  = document.getElementById('b-name').value.trim();
+  const phone = document.getElementById('b-phone').value.trim();
+  const email = document.getElementById('b-email').value.trim();
+  const lake  = document.getElementById('b-lake').value.trim();
+  const flex  = document.getElementById('b-flex').value;
+  const notes = document.getElementById('b-notes').value.trim();
+  const sports = chipValues('sport-chips');
+  const level  = chipValues('level-chips')[0] || '';
+  const dates  = collectDates();
+  const btn   = document.getElementById('b-submit');
 
-  if(!isDropin){
-    if(!selectedPackage){ showToast('Please select a package'); return; }
-    if(!selectedSlots.length){ showToast('Please select a time slot for your package'); return; }
-  }
+  // Validation — phone-first
+  if(!name){ showToast('Please add your name'); return; }
+  if(!phone){ showToast('Please add a phone number so I can reach you'); return; }
+  if(!selectedLoc){ showToast('Please choose where you\'d like to ride'); return; }
+  if(!dates.length){ showToast('Please add at least one possible date'); return; }
 
-  const name     = document.getElementById('b-name').value.trim();
-  const email    = document.getElementById('b-email').value.trim();
-  const phone    = document.getElementById('b-phone').value.trim();
-  const location = document.getElementById('b-location').value.trim();
-  const group    = document.getElementById('b-group').value;
-  const sport    = document.getElementById('b-sport').value;
-  const level    = document.getElementById('b-level').value;
-  const notes    = document.getElementById('b-notes').value.trim();
-  const btn      = document.getElementById('b-submit');
+  btn.disabled = true; btn.textContent = 'Sending...';
 
-  if(!name||!location){ showToast('Please enter your name and location'); return; }
-  if(!email&&!phone){ showToast('Please enter an email or phone number'); return; }
+  // Build location string + a friendly notes summary
+  const locationStr = selectedLoc === 'Your lake / cottage'
+    ? (lake ? `Your lake/cottage: ${lake}` : 'Your lake / cottage (TBD)')
+    : 'Rideau River';
 
-  btn.disabled=true; btn.textContent='Sending...';
+  const sportStr = sports.length ? sports.join(', ') : 'Not specified';
+  const primaryDate = dates[0]; // satisfies NOT NULL bookings.date
+  const altDates = dates.slice(1);
 
-  const pkgLabel = isDropin
-    ? `Drop-In: ${window._dropinContext.tier}`
-    : (PACKAGES[selectedPackage]?.label || '');
-  const pkgPrice = isDropin
-    ? window._dropinContext.pricePerSet * (window._dropinContext.sets||1) + ' (drop-in)'
-    : '$' + getPkgPrice(selectedPackage).toLocaleString();
-  const pkgDeposit = isDropin ? 'Full payment required' : '$' + Math.round(getPkgPrice(selectedPackage)*0.3).toLocaleString() + ' (30% deposit)';
-  const basePrice = isDropin ? 0 : getPkgPrice(selectedPackage);
-  const promoDiscount = (!isDropin && appliedPromo) ? computeDiscount(basePrice) : 0;
-  const finalTotal = basePrice - promoDiscount;
-  const promoLine = appliedPromo ? `${appliedPromo.code} (−$${promoDiscount.toLocaleString()})` : 'none';
-  const requestedDate = isDropin
-    ? window._dropinContext.dateStr
-    : new Date(calYear,calMonth,selectedDay).toISOString().split('T')[0];
-  const slotStr = isDropin
-    ? `Drop-In @ ${window._dropinContext.loc}`
-    : selectedSlots.map(s=>s.charAt(0).toUpperCase()+s.slice(1)).join(' + ');
-  const allDates = isDropin
-    ? [requestedDate]
-    : (selectedDates.length ? selectedDates.map(d=>d.toISOString().split('T')[0]) : [requestedDate]);
+  const notesSummary =
+    `INQUIRY (not a locked booking)\n` +
+    `Where: ${locationStr}\n` +
+    `Sport(s): ${sportStr}\n` +
+    `Group: ${counts.adults} adult(s), ${counts.kids} kid(s)\n` +
+    `Experience: ${level || 'Not specified'}\n` +
+    `Preferred date: ${primaryDate}` + (altDates.length ? `\nAlternate date(s): ${altDates.join(', ')}` : '') +
+    `\nFlexibility: ${flex}` +
+    (notes ? `\n\nNotes: ${notes}` : '');
 
-// Write to Supabase via secure function (no direct customer-data access)
+  // 1) Supabase (anon-safe RPC → bookings + clients), same path as before
   if(db){
     try{
       await db.rpc('submit_booking', { p_payload: {
-        name, email, phone, location,
-        date: requestedDate,
-        slot: isDropin ? 'dropin' : (selectedSlots[0]||''),
-        package: pkgLabel,
-        sport: sport||null,
-        promo_code: appliedPromo ? appliedPromo.code : null,
-        notes: (notes||'') + (allDates.length>1 ? '\nAll dates: '+allDates.join(', ') : ''),
-        raw_request: { name, email, phone, group, level, selectedSlots, allDates, promo: appliedPromo || null }
+        name, email, phone,
+        location: locationStr,
+        date: primaryDate,
+        slot: 'inquiry',
+        package: 'Website Inquiry',
+        sport: sportStr,
+        promo_code: null,
+        notes: notesSummary,
+        raw_request: {
+          type:'inquiry',
+          location_type: selectedLoc,
+          lake: lake || null,
+          sports,
+          level,
+          adults: counts.adults,
+          kids: counts.kids,
+          preferred_dates: dates,
+          flexibility: flex,
+          name, email, phone
+        }
       }});
     }catch(e){}
   }
 
-  // Formspree email to you
+  // 2) Formspree email notification (phone front and centre)
   try{
     await fetch('https://formspree.io/f/mwvwzdwj',{
       method:'POST',
       headers:{'Content-Type':'application/json','Accept':'application/json'},
       body:JSON.stringify({
-        name, email:email||'not provided', phone:phone||'not provided', location,
-        package:pkgLabel,
-        price:pkgPrice,
-        deposit_required:pkgDeposit,
-        date:requestedDate,
-        all_dates:allDates.join(', '),
-        slots:slotStr,
-        group_size:group||'not specified',
-        skill_level:level||'not specified',
-        sport:sport||'not specified',
-        promo_code:promoLine,
-        total_after_discount: isDropin ? pkgPrice : '$' + finalTotal.toLocaleString(),
-        deposit_after_discount: isDropin ? pkgDeposit : '$' + Math.round(finalTotal*0.3).toLocaleString(),
-        notes:notes||'none',
-        _subject:`New Booking Request — ${name} · ${requestedDate} · ${pkgLabel.split('—')[0].trim()}`
+        name,
+        phone: phone,
+        email: email || 'not provided',
+        where: locationStr,
+        sports: sportStr,
+        experience: level || 'not specified',
+        adults: counts.adults,
+        kids: counts.kids,
+        preferred_date: primaryDate,
+        alternate_dates: altDates.length ? altDates.join(', ') : 'none',
+        flexibility: flex,
+        notes: notes || 'none',
+        _subject:`New Inquiry — ${name} · ${phone} · ${locationStr}`
       })
     });
   }catch(e){}
 
-  // Move to step 3 — hide the whole booking grid, show confirmation outside it
-  document.getElementById('step2').classList.remove('visible');
-  document.getElementById('step1').style.display = 'none';
-  document.querySelector('.booking-layout').style.display = 'none';
-  document.getElementById('step3').classList.add('visible');
-  document.getElementById('s2').classList.remove('active');
-  document.getElementById('s2').classList.add('done');
-  document.getElementById('s2').textContent = '✓';
-  document.getElementById('s2l').classList.remove('active');
-  document.getElementById('s3').classList.add('active');
-  document.getElementById('s3l').classList.add('active');
-  btn.disabled = false; btn.textContent = 'Request This Date →';
-  window._dropinContext = null;
+  // Success
+  document.getElementById('thanks-name').textContent = name.split(' ')[0] || '';
+  document.getElementById('inquiry-card').style.display = 'none';
+  document.getElementById('success-card').classList.add('visible');
+  btn.disabled = false; btn.textContent = 'Send My Inquiry →';
   requestAnimationFrame(()=>{
-    document.getElementById('step3').scrollIntoView({behavior:'smooth', block:'start'});
+    document.getElementById('success-card').scrollIntoView({behavior:'smooth', block:'start'});
   });
 }
 
-function toggleFaq(btn){ const a=btn.nextElementSibling; btn.classList.toggle('open'); a.classList.toggle('open'); }
 function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3500); }
 
-renderCal();
-loadBookedDates();
-renderPackageCards();
+// Set min date on the first picker to today
+(function(){
+  const today = new Date().toISOString().split('T')[0];
+  document.querySelectorAll('.b-date').forEach(i=>i.min=today);
+})();
 </script>
 
-
 <script src="./assets/js/content.js"></script>
-
 
 <!-- ══ PROMO BANNER ══ -->
 <div id="promo-banner" role="alert">
@@ -987,12 +524,9 @@ renderPackageCards();
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
-  // Banner reads from Supabase promo_config (admin-editable).
-  // Falls back to window.PROMO_CONFIG in content.js if Supabase is down.
   var SUPABASE_URL = 'https://isbhflfmugfeqwhhqlkh.supabase.co';
   var SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzYmhmbGZtdWdmZXF3aGhxbGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDE0MzEsImV4cCI6MjA5MzA3NzQzMX0.TKMd_rSmJvoLiL5_1pFw9KqYHNne-eEdnGNR4zgZwFk';
   var done = false;
-
   function render(cfg){
     if(done) return;
     done = true;
@@ -1012,34 +546,21 @@ renderPackageCards();
     window._promoActiveId = id;
     setTimeout(function(){ b.classList.add('visible'); }, 800);
   }
-
   function fallback(){ render(window.PROMO_CONFIG); }
-
-  // Wait briefly for Supabase library to be ready
   function tryFetch(){
     if(typeof supabase === 'undefined'){ fallback(); return; }
     try {
       var db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       db.from('promo_config').select('*').eq('id',1).single().then(function(r){
         if(r && r.data && !r.error){
-          render({
-            promo_id: r.data.promo_id,
-            active:   r.data.active,
-            text:     r.data.text,
-            cta_text: r.data.cta_text,
-            cta_url:  r.data.cta_url
-          });
+          render({ promo_id:r.data.promo_id, active:r.data.active, text:r.data.text, cta_text:r.data.cta_text, cta_url:r.data.cta_url });
         } else { fallback(); }
       }).catch(fallback);
     } catch(e){ fallback(); }
   }
-
-  // Supabase script loads sync above this block, so it should be ready.
-  // But cover edge cases with a tiny defer.
   if(typeof supabase !== 'undefined'){ tryFetch(); }
   else { setTimeout(tryFetch, 50); }
 })();
-
 function closeBanner(){
   sessionStorage.setItem('promo-dismissed-'+(window._promoActiveId||'promo'), '1');
   var b = document.getElementById('promo-banner');
