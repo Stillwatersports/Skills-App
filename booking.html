@@ -206,15 +206,23 @@ img{pointer-events:none;user-select:none;-webkit-user-drag:none}
           <!-- 3. DATES -->
           <div class="fld-group">
             <div class="fld-q"><span class="step-dot">3</span> When works for you?</div>
-            <div class="fld-hint">Give me a rough first choice — you can change it later. Add a couple of backups if you have them.</div>
+            <div class="fld-hint">Pick a start date to aim for. If you're flexible across a range, add an end date too.</div>
             <div class="fld-body">
               <div id="date-rows">
                 <div class="date-row">
-                  <input type="date" class="b-date" id="b-date-0"/>
+                  <input type="text" class="b-date" id="b-date-0" placeholder="Tap to choose start date" onfocus="dateOn(this)" onblur="dateOff(this)"/>
                 </div>
               </div>
-              <button type="button" class="add-date" id="add-date-btn" onclick="addDateRow()">+ Add another possible date</button>
-              <div class="fld" style="margin-top:14px">
+              <button type="button" class="add-date" id="add-date-btn" onclick="addDateRow()">+ Add end date range</button>
+              <div style="margin-top:18px">
+                <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:8px;letter-spacing:.06em;text-transform:uppercase">Preferred time of day <span style="font-weight:500;text-transform:none;letter-spacing:0">(optional)</span></label>
+                <div class="chip-row" id="tod-chips">
+                  <div class="chip" onclick="toggleChip(this)">Morning</div>
+                  <div class="chip" onclick="toggleChip(this)">Afternoon</div>
+                  <div class="chip" onclick="toggleChip(this)">Evening</div>
+                </div>
+              </div>
+              <div class="fld" style="margin-top:16px">
                 <label>How flexible are you?</label>
                 <select id="b-flex">
                   <option value="These dates work best">These dates work best</option>
@@ -354,7 +362,15 @@ try{db=supabase.createClient('https://isbhflfmugfeqwhhqlkh.supabase.co','eyJhbGc
 let selectedLoc = null;     // 'Rideau River' | 'Your lake / cottage'
 let counts = { adults:1, kids:0 };
 let dateRowCount = 1;
-const MAX_DATES = 4;
+const MAX_DATES = 2;        // start date + optional end-of-range date
+
+// ── DATE INPUTS (text placeholder → date picker) ──────────
+function dateOn(el){
+  el.type = 'date';
+  el.min = new Date().toISOString().split('T')[0];
+  if(el.showPicker){ try{ el.showPicker(); }catch(e){} }
+}
+function dateOff(el){ if(!el.value) el.type = 'text'; }
 
 // ── LOCATION ──────────────────────────────────────────────
 function pickLoc(btn){
@@ -392,10 +408,9 @@ function addDateRow(){
   const row = document.createElement('div');
   row.className = 'date-row';
   const i = dateRowCount;
-  row.innerHTML = `<input type="date" class="b-date" id="b-date-${i}"/>
+  row.innerHTML = `<input type="text" class="b-date" id="b-date-${i}" placeholder="Tap to choose end date" onfocus="dateOn(this)" onblur="dateOff(this)"/>
     <button type="button" class="date-rm" title="Remove" onclick="this.closest('.date-row').remove();dateRowCount--;document.getElementById('add-date-btn').style.display='block'">✕</button>`;
   wrap.appendChild(row);
-  row.querySelector('input').min = new Date().toISOString().split('T')[0];
   dateRowCount++;
   if(dateRowCount >= MAX_DATES) document.getElementById('add-date-btn').style.display='none';
 }
@@ -413,6 +428,7 @@ async function submitInquiry(){
   const notes = document.getElementById('b-notes').value.trim();
   const sports = chipValues('sport-chips');
   const level  = chipValues('level-chips')[0] || '';
+  const tod    = chipValues('tod-chips');
   const dates  = collectDates();
   const btn   = document.getElementById('b-submit');
 
@@ -430,8 +446,9 @@ async function submitInquiry(){
     : 'Rideau River';
 
   const sportStr = sports.length ? sports.join(', ') : 'Not specified';
+  const todStr = tod.length ? tod.join(', ') : 'Any';
   const primaryDate = dates[0]; // satisfies NOT NULL bookings.date
-  const altDates = dates.slice(1);
+  const dateStr = dates.length > 1 ? `${dates[0]} → ${dates[dates.length-1]} (range)` : primaryDate;
 
   const notesSummary =
     `INQUIRY (not a locked booking)\n` +
@@ -439,60 +456,49 @@ async function submitInquiry(){
     `Sport(s): ${sportStr}\n` +
     `Group: ${counts.adults} adult(s), ${counts.kids} kid(s)\n` +
     `Experience: ${level || 'Not specified'}\n` +
-    `Preferred date: ${primaryDate}` + (altDates.length ? `\nAlternate date(s): ${altDates.join(', ')}` : '') +
-    `\nFlexibility: ${flex}` +
+    `Dates: ${dateStr}\n` +
+    `Time of day: ${todStr}\n` +
+    `Flexibility: ${flex}` +
     (notes ? `\n\nNotes: ${notes}` : '');
 
-  // 1) Supabase (anon-safe RPC → bookings + clients), same path as before
+  // Submit via anon-safe RPC → bookings + clients. A DB trigger then emails
+  // you (and the customer, if they gave an email) via Resend. We check the
+  // result and only show success if it actually saved — no false confirmations.
+  let saved = false;
   if(db){
-    try{
-      await db.rpc('submit_booking', { p_payload: {
-        name, email, phone,
-        location: locationStr,
-        date: primaryDate,
-        slot: 'inquiry',
-        package: 'Website Inquiry',
-        sport: sportStr,
-        promo_code: null,
-        notes: notesSummary,
-        raw_request: {
-          type:'inquiry',
-          location_type: selectedLoc,
-          lake: lake || null,
-          sports,
-          level,
-          adults: counts.adults,
-          kids: counts.kids,
-          preferred_dates: dates,
-          flexibility: flex,
-          name, email, phone
-        }
-      }});
-    }catch(e){}
-  }
-
-  // 2) Formspree email notification (phone front and centre)
-  try{
-    await fetch('https://formspree.io/f/mwvwzdwj',{
-      method:'POST',
-      headers:{'Content-Type':'application/json','Accept':'application/json'},
-      body:JSON.stringify({
-        name,
-        phone: phone,
-        email: email || 'not provided',
-        where: locationStr,
-        sports: sportStr,
-        experience: level || 'not specified',
+    const { error } = await db.rpc('submit_booking', { p_payload: {
+      name, email, phone,
+      location: locationStr,
+      date: primaryDate,
+      slot: 'inquiry',
+      package: 'Website Inquiry',
+      sport: sportStr,
+      promo_code: null,
+      notes: notesSummary,
+      raw_request: {
+        type:'inquiry',
+        location_type: selectedLoc,
+        lake: lake || null,
+        sports,
+        level,
         adults: counts.adults,
         kids: counts.kids,
-        preferred_date: primaryDate,
-        alternate_dates: altDates.length ? altDates.join(', ') : 'none',
+        preferred_dates: dates,
+        date_range: dates.length>1 ? { start:dates[0], end:dates[dates.length-1] } : null,
+        time_of_day: tod,
         flexibility: flex,
-        notes: notes || 'none',
-        _subject:`New Inquiry — ${name} · ${phone} · ${locationStr}`
-      })
-    });
-  }catch(e){}
+        name, email, phone
+      }
+    }});
+    saved = !error;
+    if(error) console.error('submit_booking failed:', error);
+  }
+
+  if(!saved){
+    btn.disabled = false; btn.textContent = 'Send My Inquiry →';
+    showToast('Something went wrong sending your inquiry — please call or text 613-299-5998 and I’ll get you booked.');
+    return;
+  }
 
   // Success
   document.getElementById('thanks-name').textContent = name.split(' ')[0] || '';
@@ -505,12 +511,6 @@ async function submitInquiry(){
 }
 
 function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3500); }
-
-// Set min date on the first picker to today
-(function(){
-  const today = new Date().toISOString().split('T')[0];
-  document.querySelectorAll('.b-date').forEach(i=>i.min=today);
-})();
 </script>
 
 <script src="./assets/js/content.js"></script>

@@ -818,6 +818,13 @@ tr:hover td{background:rgba(0,200,212,.03)}
     <div id="cl-waivers" style="font-size:13px;color:var(--muted)">—</div>
     <button class="btn btn-ghost btn-sm" id="cl-send-intake" onclick="sendIntakeForm()" style="margin-top:10px;display:none">Send intake form</button>
     <button class="btn btn-primary btn-sm" id="cl-send-waivers" onclick="sendClientWaivers()" style="margin-top:10px;display:none">Send waivers</button>
+    <div id="cl-intake-status" style="font-size:12px;margin-top:8px"></div>
+    <div class="section-label">Send a guide / message</div>
+    <select id="cl-msg-template" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'Outfit',sans-serif;font-size:13px;background:#fff"></select>
+    <div style="font-size:11px;color:var(--muted);margin:6px 0 2px">Optional attachment(s):</div>
+    <input type="file" id="cl-msg-file" multiple style="font-size:12px"/>
+    <button class="btn btn-ghost btn-sm" id="cl-send-msg" onclick="sendClientMessage()" style="margin-top:10px;display:none">Send to participants</button>
+    <div id="cl-msg-status" style="font-size:12px;margin-top:6px;color:var(--muted)"></div>
     <div style="display:flex;gap:12px;justify-content:space-between;margin-top:24px">
       <button class="btn btn-danger" id="client-delete-btn" style="display:none" onclick="deleteClient(editingClientId)">Delete Client</button>
       <div style="display:flex;gap:12px;margin-left:auto">
@@ -1444,11 +1451,14 @@ function renderClients(filter=''){
   document.getElementById('clients-grid').innerHTML = list.length
     ? list.map(c=>{
         const sessions = bookings.filter(b=>b.client_id===c.id).length;
+        const st = intakeState(c);
+        const badge = st ? `<span style="display:inline-block;margin-top:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#fff;background:${st.color};border-radius:10px;padding:2px 9px">${st.label}</span>` : '';
         return `<div class="client-card" onclick="openEditClient('${c.id}')">
           <div class="client-name">${c.name}</div>
           <div class="client-meta">${c.email||''} ${c.phone?'· '+c.phone:''}</div>
           <div class="client-meta">${c.location||'No location set'}</div>
           <div class="client-sessions">${sessions} session${sessions!==1?'s':''}</div>
+          ${badge}
         </div>`;
       }).join('')
     : '<div style="color:var(--muted);padding:24px">No clients yet.</div>';
@@ -1465,6 +1475,9 @@ function openAddClient(){
   document.getElementById('cl-waivers').innerHTML='—';
   document.getElementById('cl-send-waivers').style.display='none';
   document.getElementById('cl-send-intake').style.display='none';
+  document.getElementById('cl-intake-status').textContent='';
+  document.getElementById('cl-send-msg').style.display='none';
+  document.getElementById('cl-msg-status').textContent='';
   openModal('client-modal');
 }
 function openEditClient(id){
@@ -1483,6 +1496,10 @@ function openEditClient(id){
     : 'No sessions yet.';
   document.getElementById('cl-send-waivers').style.display='inline-block';
   document.getElementById('cl-send-intake').style.display='inline-block';
+  document.getElementById('cl-send-msg').style.display='inline-block';
+  populateMsgTemplates();
+  document.getElementById('cl-msg-status').textContent='';
+  document.getElementById('cl-msg-file').value='';
   loadClientExtras(id);
   openModal('client-modal');
 }
@@ -1518,6 +1535,25 @@ let clientWaivers = [];  // waivers for the open client
 
 function ageFromDob(dob){ if(!dob) return null; const b=new Date(dob+'T00:00:00'); const n=new Date(); let a=n.getFullYear()-b.getFullYear(); const m=n.getMonth()-b.getMonth(); if(m<0||(m===0&&n.getDate()<b.getDate()))a--; return a; }
 
+// Intake status (an intake is "sent" when the client has an intake_token).
+function intakeState(c){
+  if(!c||!c.intake_token) return null;
+  const exp = c.intake_token_expires ? new Date(c.intake_token_expires) : null;
+  if(exp && exp < new Date()) return { label:'Intake expired', color:'var(--muted)' };
+  return { label:'Intake sent', color:'var(--cyan)' };
+}
+function renderIntakeStatus(clientId){
+  const elx=document.getElementById('cl-intake-status'); if(!elx) return;
+  const c=clients.find(x=>x.id===clientId)||{};
+  const st=intakeState(c);
+  if(!st){ elx.textContent='Intake form not sent yet.'; elx.style.color='var(--muted)'; return; }
+  let when='';
+  if(c.intake_token_expires){ const d=new Date(new Date(c.intake_token_expires).getTime()-30*86400000); when=' '+d.toLocaleDateString('en-CA',{month:'short',day:'numeric'}); }
+  const responded=(clientRoster||[]).some(p=>p.id);
+  if(st.label==='Intake expired'){ elx.textContent='⚠ Intake link expired (sent'+when+')'; elx.style.color='var(--muted)'; }
+  else { elx.textContent='✓ Intake form sent'+when+(responded?' · participants on file':' · awaiting response'); elx.style.color='var(--cyan)'; }
+}
+
 async function loadClientExtras(clientId){
   document.getElementById('cl-roster').innerHTML='Loading…';
   document.getElementById('cl-waivers').innerHTML='Loading…';
@@ -1526,7 +1562,16 @@ async function loadClientExtras(clientId){
     db.from('waivers').select('*').eq('client_id',clientId).order('created_at',{ascending:false})
   ]);
   clientRoster = parts||[]; clientWaivers = wv||[];
-  renderRoster(); renderClientWaivers();
+  // Auto-include the main client as a participant (every time, deduped by email/name).
+  // Shown prefilled; persists on Save / Send waivers.
+  const c = clients.find(x=>x.id===clientId)||{};
+  if(c.name){
+    const has = clientRoster.some(p =>
+      (c.email && (p.email||'').trim().toLowerCase()===c.email.trim().toLowerCase()) ||
+      (p.name||'').trim().toLowerCase()===c.name.trim().toLowerCase());
+    if(!has) clientRoster.unshift({ name:c.name, email:c.email||null, is_minor:false, guardian_on_site:true, date_of_birth:null });
+  }
+  renderRoster(); renderClientWaivers(); renderIntakeStatus(clientId);
 }
 
 function rosterRowHtml(p={}){
@@ -1648,6 +1693,38 @@ async function sendIntakeForm(){
   const {data,error}=await db.functions.invoke('send-intake-invite',{body:{client_id:clientId, base_url:SIGN_BASE}});
   if(error||(data&&data.error)){ toast((data&&data.error)||'Could not send intake form'); return; }
   toast('Intake form sent ✓');
+  await loadClients(); renderClients();   // refresh grid badge
+  renderIntakeStatus(clientId);           // refresh modal status line
+}
+
+// "Send a guide / message" — emails a chosen template (+ optional attachments)
+// to this client's participants.
+function populateMsgTemplates(){
+  const sel=document.getElementById('cl-msg-template'); if(!sel) return;
+  sel.innerHTML='<option value="">Choose a template…</option>'+(templates||[]).map(t=>`<option value="${esc(t.name)}">${esc(t.name)}</option>`).join('');
+}
+function fileToB64(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(String(r.result).split(',')[1]); r.onerror=rej; r.readAsDataURL(file); }); }
+async function sendClientMessage(){
+  const clientId=editingClientId; if(!clientId){ toast('Save the client first'); return; }
+  const tplName=document.getElementById('cl-msg-template').value;
+  if(!tplName){ toast('Pick a template first'); return; }
+  const c=clients.find(x=>x.id===clientId)||{};
+  // recipients: each roster participant (their email, or guardian email) + the client
+  const map=new Map();
+  (clientRoster||[]).forEach(p=>{ const em=(p.email||p.guardian_email||'').trim(); if(em) map.set(em.toLowerCase(),{email:em,name:p.name||''}); });
+  if(c.email) map.set(c.email.toLowerCase(),{email:c.email,name:c.name||''});
+  const to=[...map.values()];
+  if(!to.length){ toast('No participant emails on file'); return; }
+  const files=[...(document.getElementById('cl-msg-file').files||[])];
+  let total=0; const attachments=[];
+  for(const f of files){ total+=f.size; attachments.push({filename:f.name, content:await fileToB64(f)}); }
+  if(total>8*1024*1024){ toast('Attachments too large (max ~8MB total)'); return; }
+  const st=document.getElementById('cl-msg-status'); st.textContent='Sending…'; st.style.color='var(--muted)';
+  const {data,error}=await db.functions.invoke('send-client-message',{body:{client_id:clientId, template_name:tplName, to, attachments}});
+  if(error||(data&&data.error)){ st.textContent=(data&&data.error)||'Send failed'; st.style.color='var(--red)'; return; }
+  st.textContent=`✓ Sent to ${data.sent} recipient(s)`; st.style.color='var(--cyan)';
+  document.getElementById('cl-msg-file').value='';
+  toast(`Guide sent to ${data.sent} ✓`);
 }
 
 // On-site "Sign now" — creates a waiver for this saved participant and opens the
