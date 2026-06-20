@@ -819,6 +819,7 @@ tr:hover td{background:rgba(0,200,212,.03)}
     <button class="btn btn-ghost btn-sm" id="cl-send-intake" onclick="sendIntakeForm()" style="margin-top:10px;display:none">Send intake form</button>
     <button class="btn btn-primary btn-sm" id="cl-send-waivers" onclick="sendClientWaivers()" style="margin-top:10px;display:none">Send waivers</button>
     <div id="cl-intake-status" style="font-size:12px;margin-top:8px"></div>
+    <div id="cl-bounces" style="font-size:12px;margin-top:8px"></div>
     <div class="section-label">Send a guide / message</div>
     <select id="cl-msg-template" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'Outfit',sans-serif;font-size:13px;background:#fff"></select>
     <div style="font-size:11px;color:var(--muted);margin:6px 0 2px">Optional attachment(s):</div>
@@ -1478,6 +1479,7 @@ function openAddClient(){
   document.getElementById('cl-intake-status').textContent='';
   document.getElementById('cl-send-msg').style.display='none';
   document.getElementById('cl-msg-status').textContent='';
+  document.getElementById('cl-bounces').innerHTML='';
   openModal('client-modal');
 }
 function openEditClient(id){
@@ -1553,15 +1555,23 @@ function renderIntakeStatus(clientId){
   if(st.label==='Intake expired'){ elx.textContent='⚠ Intake link expired (sent'+when+')'; elx.style.color='var(--muted)'; }
   else { elx.textContent='✓ Intake form sent'+when+(responded?' · participants on file':' · awaiting response'); elx.style.color='var(--cyan)'; }
 }
+function renderBounces(list){
+  const elx=document.getElementById('cl-bounces'); if(!elx) return;
+  if(!list||!list.length){ elx.innerHTML=''; return; }
+  const seen=new Set(); const rows=[];
+  list.forEach(e=>{ const k=(e.to_email||'')+e.status; if(!seen.has(k)){ seen.add(k); rows.push(e); } });
+  elx.innerHTML='<div style="background:#fdecec;border:1px solid #e88;border-radius:8px;padding:8px 10px;color:#a22"><strong>⚠ Email delivery issues:</strong> '+rows.map(e=>`${esc(e.to_email||'?')} (${esc(e.status)})`).join(', ')+'</div>';
+}
 
 async function loadClientExtras(clientId){
   document.getElementById('cl-roster').innerHTML='Loading…';
   document.getElementById('cl-waivers').innerHTML='Loading…';
-  const [{data:parts},{data:wv}] = await Promise.all([
+  const [{data:parts},{data:wv},{data:ev}] = await Promise.all([
     db.from('participants').select('*').eq('client_id',clientId).order('name'),
-    db.from('waivers').select('*').eq('client_id',clientId).order('created_at',{ascending:false})
+    db.from('waivers').select('*').eq('client_id',clientId).order('created_at',{ascending:false}),
+    db.from('email_events').select('to_email,status,kind,updated_at').eq('client_id',clientId).in('status',['bounced','complained','failed']).order('updated_at',{ascending:false})
   ]);
-  clientRoster = parts||[]; clientWaivers = wv||[];
+  clientRoster = parts||[]; clientWaivers = wv||[]; renderBounces(ev||[]);
   // Auto-include the main client as a participant (every time, deduped by email/name).
   // Shown prefilled; persists on Save / Send waivers.
   const c = clients.find(x=>x.id===clientId)||{};
