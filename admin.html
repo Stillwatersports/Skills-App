@@ -963,7 +963,7 @@ const db = createClient(SUPABASE_URL, SUPABASE_KEY);
 // ── PASSWORD VALIDATOR ────────────────────────────────────
 const PasswordValidator = {
   rules: {
-    minLength: 12,
+    minLength: 6,
     uppercase: /[A-Z]/,
     lowercase: /[a-z]/,
     number: /\d/,
