@@ -474,7 +474,14 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;backgrou
     <div id="login-fields">
       <div class="field"><label>Username or Email</label><input type="text" id="inp-login" placeholder="username or you@example.com" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="if(event.key==='Enter')doAuth()"/></div>
     </div>
-    <div class="field"><label>Password</label><input type="password" id="inp-pass" placeholder="········" onkeydown="if(event.key==='Enter')doAuth()"/></div>
+    <div class="field"><label>Password</label><input type="password" id="inp-pass" placeholder="········" autocomplete="current-password" onkeydown="if(event.key==='Enter')doAuth()" oninput="updatePasswordStrength(this.value)"/></div>
+    <div id="pw-strength" style="margin-top:8px;display:none">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:4px">Strength: <span id="pw-strength-text">—</span></div>
+      <div style="height:4px;background:rgba(0,0,0,0.1);border-radius:2px;overflow:hidden">
+        <div id="pw-strength-bar" style="height:100%;width:0%;background:var(--brand);transition:width .3s,background .3s"></div>
+      </div>
+      <div id="pw-requirements" style="font-size:10px;color:var(--muted);margin-top:8px;line-height:1.6"></div>
+    </div>
     <button class="btn-primary" id="auth-btn" onclick="doAuth()">Sign in</button>
     <div class="auth-msg" id="auth-msg"></div>
     <div style="text-align:center;margin-top:1rem;font-size:11px;color:var(--muted);line-height:1.8">
@@ -529,6 +536,45 @@ const SUPABASE_URL='https://jjnhsbgmcjqwlmeihwuy.supabase.co'
 const SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqbmhzYmdtY2pxd2xtZWlod3V5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQyODkwNDEsImV4cCI6MjA4OTg2NTA0MX0.MOTbufdBqUhB36P1YBL-zo-KKlvJ-LBHwPS70D7DoWU'
 const {createClient}=supabase
 const db=createClient(SUPABASE_URL,SUPABASE_KEY)
+
+// ── PASSWORD VALIDATOR ────────────────────────────────────
+const PasswordValidator = {
+  rules: {
+    minLength: 12,
+    uppercase: /[A-Z]/,
+    lowercase: /[a-z]/,
+    number: /\d/,
+    special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,
+  },
+  validate(password) {
+    if (!password) return { valid: false, error: 'Password is required' };
+    if (password.length < this.rules.minLength)
+      return { valid: false, error: `Min ${this.rules.minLength} characters` };
+    if (!this.rules.uppercase.test(password))
+      return { valid: false, error: 'Add 1+ uppercase letter (A-Z)' };
+    if (!this.rules.lowercase.test(password))
+      return { valid: false, error: 'Add 1+ lowercase letter (a-z)' };
+    if (!this.rules.number.test(password))
+      return { valid: false, error: 'Add 1+ number (0-9)' };
+    if (!this.rules.special.test(password))
+      return { valid: false, error: 'Add 1+ special char (!@#$%^&*, etc)' };
+    return { valid: true, error: null };
+  },
+  getStrength(password) {
+    if (!password) return 0;
+    let score = 0;
+    if (password.length >= 12) score += 1;
+    if (password.length >= 16) score += 1;
+    if (this.rules.uppercase.test(password)) score += 1;
+    if (this.rules.number.test(password)) score += 1;
+    if (this.rules.special.test(password)) score += 1;
+    return Math.min(score, 5);
+  },
+  getStrengthText(score) {
+    const texts = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
+    return texts[score] || 'Unknown';
+  }
+};
 
 // ── SKILLS DATA ───────────────────────────────────────────────────
 const DEFAULT_SKILLS={
@@ -680,6 +726,16 @@ function setMsg(t,type){const el=document.getElementById('auth-msg');el.textCont
 async function doAuth(){
   const pass=document.getElementById('inp-pass').value
   const btn=document.getElementById('auth-btn')
+
+  // Validate password format on signup
+  if(authMode==='signup'){
+    const pwValidation = PasswordValidator.validate(pass);
+    if (!pwValidation.valid) {
+      setMsg(pwValidation.error, 'err');
+      return;
+    }
+  }
+
   if(!pass){setMsg('Please enter a password','err');return}
   btn.disabled=true;setMsg('','')
 
@@ -733,6 +789,40 @@ async function doAuth(){
     await loadUser(data.user)
   }
 }
+function updatePasswordStrength(password) {
+  const strength = PasswordValidator.getStrength(password);
+  const strengthEl = document.getElementById('pw-strength');
+  const textEl = document.getElementById('pw-strength-text');
+  const barEl = document.getElementById('pw-strength-bar');
+  const reqEl = document.getElementById('pw-requirements');
+
+  if (!password) {
+    strengthEl.style.display = 'none';
+    return;
+  }
+
+  strengthEl.style.display = 'block';
+  textEl.textContent = PasswordValidator.getStrengthText(strength);
+  barEl.style.width = (strength * 20) + '%';
+
+  // Color code
+  const colors = ['#e53935', '#e65100', '#f5d87a', '#2e7d32', '#1d9e75'];
+  barEl.style.background = colors[strength] || 'var(--brand)';
+
+  // Requirements
+  const reqs = [
+    { check: password.length >= 12, text: '12+ characters' },
+    { check: /[A-Z]/.test(password), text: '1+ uppercase' },
+    { check: /[a-z]/.test(password), text: '1+ lowercase' },
+    { check: /\d/.test(password), text: '1+ number' },
+    { check: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password), text: '1+ special char' },
+  ];
+
+  reqEl.innerHTML = reqs.map(r =>
+    `<div style="color:${r.check ? '#2e7d32' : 'var(--muted)'}">${r.check ? '✓' : '○'} ${r.text}</div>`
+  ).join('');
+}
+
 async function signOut(){
   await db.auth.signOut()
   currentUser=null;userProfile=null;approvals={};skillNotes={};quizResults={};drylandApprovals={};friends=[];friendRequests=[]
