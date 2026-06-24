@@ -237,8 +237,8 @@ tr:hover td{background:rgba(0,200,212,.03)}
   <div class="login-box">
     <h1>Stillwater Admin</h1>
    <p>Coach dashboard — restricted access</p>
-    <input type="email" id="email-input" placeholder="Email" onkeydown="if(event.key==='Enter')doLogin()"/>
-    <input type="password" id="pw-input" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <input type="email" id="email-input" placeholder="Email" autocomplete="email" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <input type="password" id="pw-input" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/>
     <button onclick="doLogin()">Sign In</button>
     <div class="login-error" id="login-error"></div>
   </div>
@@ -960,6 +960,44 @@ const SUPABASE_URL = 'https://isbhflfmugfeqwhhqlkh.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzYmhmbGZtdWdmZXF3aGhxbGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDE0MzEsImV4cCI6MjA5MzA3NzQzMX0.TKMd_rSmJvoLiL5_1pFw9KqYHNne-eEdnGNR4zgZwFk';
 const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+// ── PASSWORD VALIDATOR ────────────────────────────────────
+const PasswordValidator = {
+  rules: {
+    minLength: 12,
+    uppercase: /[A-Z]/,
+    lowercase: /[a-z]/,
+    number: /\d/,
+    special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,
+  },
+  validate(password) {
+    if (!password) return { valid: false, error: 'Password is required' };
+    if (password.length < this.rules.minLength)
+      return { valid: false, error: `Min ${this.rules.minLength} characters` };
+    if (!this.rules.uppercase.test(password))
+      return { valid: false, error: 'Add 1+ uppercase letter (A-Z)' };
+    if (!this.rules.lowercase.test(password))
+      return { valid: false, error: 'Add 1+ lowercase letter (a-z)' };
+    if (!this.rules.number.test(password))
+      return { valid: false, error: 'Add 1+ number (0-9)' };
+    if (!this.rules.special.test(password))
+      return { valid: false, error: 'Add 1+ special char (!@#$%^&*, etc)' };
+    return { valid: true, error: null };
+  },
+  getStrength(password) {
+    if (!password) return 0;
+    let score = 0;
+    if (password.length >= 12) score += 1;
+    if (password.length >= 16) score += 1;
+    if (this.rules.uppercase.test(password)) score += 1;
+    if (this.rules.number.test(password)) score += 1;
+    if (this.rules.special.test(password)) score += 1;
+    return Math.min(score, 5);
+  },
+  getStrengthText(score) {
+    const texts = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
+    return texts[score] || 'Unknown';
+  }
+};
 // ── STATE ─────────────────────────────────────────────────
 let bookings = [], clients = [], availability = [], templates = [], participants = {}, leads = [];
 let calYear = new Date().getFullYear(), calMonth = new Date().getMonth();
@@ -1056,12 +1094,37 @@ async function doLogin(){
   const pw    = document.getElementById('pw-input').value;
   const err   = document.getElementById('login-error');
   err.textContent = '';
+
+  // Validate password format
+  const pwValidation = PasswordValidator.validate(pw);
+  if (!pwValidation.valid) {
+    err.textContent = pwValidation.error;
+    return;
+  }
+
   const { error } = await db.auth.signInWithPassword({ email, password: pw });
   if(error){
     err.textContent = 'Incorrect email or password.';
     setTimeout(()=>err.textContent='', 3000);
     return;
   }
+
+  // Check user role
+  try {
+    const { data: { user } } = await db.auth.getUser();
+    const { data: coachRole } = await db.from('coach_roles').select('role').eq('user_id', user.id).single();
+    if (!coachRole || !['coach', 'admin'].includes(coachRole.role)) {
+      await db.auth.signOut();
+      err.textContent = 'Access denied. Admin role required.';
+      setTimeout(()=>err.textContent='', 3000);
+      return;
+    }
+  } catch (e) {
+    await db.auth.signOut();
+    err.textContent = 'Unable to verify access. Please try again.';
+    return;
+  }
+
   showApp();
 }
 function showApp(){
@@ -1081,9 +1144,27 @@ async function doLogout(){
   document.getElementById('pw-input').value='';
   document.getElementById('email-input').value='';
 }
-// Stay logged in across refreshes
+// Stay logged in across refreshes (WITH ROLE CHECK)
 (async function(){
-  try{ const { data:{ session } } = await db.auth.getSession(); if(session) showApp(); }catch(e){}
+  try {
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) return;
+
+    // Check role before showing app
+    const { data: coachRole } = await db.from('coach_roles')
+      .select('role')
+      .eq('user_id', session.user.id)
+      .single();
+
+    if (coachRole && ['coach', 'admin'].includes(coachRole.role)) {
+      showApp();
+    } else {
+      await db.auth.signOut();
+      document.getElementById('login-error').textContent = 'Access denied.';
+    }
+  } catch(e) {
+    console.error('Auth check failed:', e);
+  }
 })();
 // ── DATA LOAD ─────────────────────────────────────────────
 async function loadAll(){
