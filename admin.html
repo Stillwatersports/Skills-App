@@ -50,6 +50,10 @@ h1,h2,h3,.card-title,.stat-num,.cal-nav h2,.modal-title{font-family:var(--serif)
 .tab:hover{color:var(--dark)}
 .tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
 .tab-badge{background:var(--pink);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:6px}
+.subtab-row{background:var(--white);border-bottom:1px solid var(--border);padding:8px 32px;display:flex;gap:18px}
+.subtab{font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;padding:4px 2px;border-bottom:2px solid transparent;transition:all .15s}
+.subtab:hover{color:var(--dark)}
+.subtab.active{color:var(--pink);border-bottom-color:var(--pink)}
 
 /* CONTENT */
 .content{padding:32px;max-width:1400px;margin:0 auto}
@@ -253,18 +257,24 @@ tr:hover td{background:rgba(0,200,212,.03)}
     </div>
   </div>
 <div class="tabs">
-  <div class="tab active" onclick="showTab('tasks')">Dashboard</div>
-  <div class="tab" onclick="showTab('dashboard')">Sports Dash</div>
-  <div class="tab" onclick="showTab('calendar')">Calendar</div>
-  <div class="tab" onclick="showTab('bookings')">Bookings <span class="tab-badge" id="new-badge">0</span></div>
-  <div class="tab" onclick="showTab('leads')">Leads <span class="tab-badge" id="leads-badge">0</span></div>
-  <div class="tab" onclick="showTab('clients')">Clients</div>
-  <div class="tab" onclick="showTab('emails')">Emails</div>
-  <div class="tab" onclick="showTab('promo')">Promo Banner</div>
-  <div class="tab" onclick="showTab('promocodes')">Promo Codes</div>
-  <div class="tab" onclick="showTab('cardcontacts')">Card Contacts <span class="tab-badge" id="contacts-badge"></span></div>
-  <div class="tab" onclick="showTab('qrcodes')">QR Codes</div>
-  <div class="tab" onclick="showTab('digitalcard')">Digital Card</div>
+  <div class="tab active" id="navtab-tasks" onclick="showTab('tasks')">Dashboard</div>
+  <div class="tab" id="navtab-dashboard" onclick="showTab('dashboard')">Sports Dash</div>
+  <div class="tab" id="navtab-calendar" onclick="showTab('calendar')">Calendar</div>
+  <div class="tab" id="navtab-bookings" onclick="showTab('bookings')">Bookings <span class="tab-badge" id="new-badge">0</span></div>
+  <div class="tab" id="navtab-leads" onclick="showTab('leads')">Leads <span class="tab-badge" id="leads-badge">0</span></div>
+  <div class="tab" id="navtab-clients" onclick="showTab('clients')">Clients</div>
+  <div class="tab" id="navtab-emails" onclick="showTab('emails')">Emails</div>
+  <div class="tab" id="navtab-promogroup" onclick="showTab('promo')">Promotions</div>
+  <div class="tab" id="navtab-cardgroup" onclick="showTab('digitalcard')">Digital Card <span class="tab-badge" id="contacts-badge"></span></div>
+</div>
+<div class="subtab-row" id="subtab-promogroup" style="display:none">
+  <span class="subtab" id="subtab-item-promo" onclick="showTab('promo')">Banner</span>
+  <span class="subtab" id="subtab-item-promocodes" onclick="showTab('promocodes')">Promo Codes</span>
+</div>
+<div class="subtab-row" id="subtab-cardgroup" style="display:none">
+  <span class="subtab" id="subtab-item-digitalcard" onclick="showTab('digitalcard')">Card Design</span>
+  <span class="subtab" id="subtab-item-cardcontacts" onclick="showTab('cardcontacts')">Card Contacts</span>
+  <span class="subtab" id="subtab-item-qrcodes" onclick="showTab('qrcodes')">QR Codes</span>
 </div>
   <div class="content">
 <!-- TASKS DASHBOARD (default) -->
@@ -302,6 +312,13 @@ tr:hover td{background:rgba(0,200,212,.03)}
     <div class="stat-card"><div class="stat-num" id="t-stat-done">0</div><div class="stat-label">Done this week</div></div>
     <div class="stat-card"><div class="stat-num" id="t-stat-book">0</div><div class="stat-label">Bookings left</div></div>
     <div class="stat-card"><div class="stat-num" id="t-stat-aware">0</div><div class="stat-label">Awareness left</div></div>
+  </div>
+  <div class="sec-title">CRM Health</div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num" id="crm-stat-stale">0</div><div class="stat-label">Stale leads (3d+)</div></div>
+    <div class="stat-card"><div class="stat-num" id="crm-stat-nowaiver">0</div><div class="stat-label">Confirmed, no waiver</div></div>
+    <div class="stat-card"><div class="stat-num" id="crm-stat-newtoday">0</div><div class="stat-label">New today</div></div>
+    <div class="stat-card"><div class="stat-num" id="crm-stat-unlinked">0</div><div class="stat-label">Bookings w/o lead link</div></div>
   </div>
   <div class="sec-title">The Backlog</div>
   <div class="task-cols">
@@ -407,19 +424,22 @@ tr:hover td{background:rgba(0,200,212,.03)}
       <div class="card" style="padding:0">
         <table>
         <colgroup>
+          <col style="width:12%">
           <col style="width:14%">
-          <col style="width:16%">
-          <col style="width:10%">
-          <col style="width:34%">
-          <col style="width:10%">
           <col style="width:8%">
+          <col style="width:26%">
+          <col style="width:9%">
           <col style="width:8%">
+          <col style="width:11%">
+          <col style="width:12%">
         </colgroup>
         <thead><tr>
           <th onclick="setLeadSort('name')" style="cursor:pointer;user-select:none">Name <span id="lsort-name" style="opacity:.4">↕</span></th>
           <th>Contact</th><th>Sport</th><th>Inquiry</th>
           <th onclick="setLeadSort('status')" style="cursor:pointer;user-select:none">Status <span id="lsort-status" style="color:var(--cyan)">↑</span></th>
-          <th>Source</th><th>Actions</th>
+          <th>Source</th>
+          <th onclick="setLeadSort('activity')" style="cursor:pointer;user-select:none">Last Activity <span id="lsort-activity" style="opacity:.4">↕</span></th>
+          <th>Actions</th>
         </tr></thead>
         <tbody id="leads-table"></tbody></table>
       </div>
@@ -866,6 +886,14 @@ tr:hover td{background:rgba(0,200,212,.03)}
           <option value="facebook">Facebook</option>
           <option value="instagram">Instagram</option>
           <option value="referral">Referral</option>
+          <option value="phone/text">Phone / Text</option>
+          <option value="messenger">Messenger</option>
+          <option value="sunset_wake_date">Sunset Wake Date</option>
+          <option value="gmail">Gmail</option>
+          <option value="square">Square</option>
+          <option value="imessage">iMessage</option>
+          <option value="walk-up">Walk-up</option>
+          <option value="repeat">Repeat Customer</option>
           <option value="other">Other</option>
         </select>
       </div>
@@ -1001,7 +1029,7 @@ const PasswordValidator = {
 // ── STATE ─────────────────────────────────────────────────
 let bookings = [], clients = [], availability = [], templates = [], participants = {}, leads = [];
 let calYear = new Date().getFullYear(), calMonth = new Date().getMonth();
-let editingBookingId = null, editingClientId = null, editingTemplateId = null, editingLeadId = null;
+let editingBookingId = null, editingClientId = null, editingTemplateId = null, editingLeadId = null, pendingLeadIdForBooking = null;
 let promoCodes = [], editingPromoCodeId = null;
 let cardContacts = [], qrCodes = [], cardConfig = null, cardConfigLoaded = false;
 let qrScanStats = {};
@@ -1178,6 +1206,8 @@ async function loadAll(){
   renderPromoCodes();
   renderCardContacts();
   renderQRCodes();
+  updateNewActivityBadges();
+  renderCrmHealth();
 }
 async function loadBookings(){
   const {data} = await db.from('bookings').select('*, clients(name,email,phone)').order('date');
@@ -1189,8 +1219,6 @@ async function loadBookings(){
     participants = {};
     (p||[]).forEach(r=>{ if(!participants[r.booking_id]) participants[r.booking_id]=[]; participants[r.booking_id].push(r); });
   }
-  const nb = bookings.filter(b=>b.status==='new').length;
-  document.getElementById('new-badge').textContent = nb;
 }
 async function loadClients(){
   const {data} = await db.from('clients').select('*').order('name');
@@ -1205,13 +1233,65 @@ async function loadTemplates(){
   templates = data || [];
 }
 // ── TABS ──────────────────────────────────────────────────
+// Tabs that got consolidated under one nav item share a "group" so the umbrella
+// nav button + the right sub-tab pill both light up correctly.
+const TAB_GROUP = { promo:'promogroup', promocodes:'promogroup', digitalcard:'cardgroup', cardcontacts:'cardgroup', qrcodes:'cardgroup' };
 function showTab(tab){
-  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  event.target.classList.add('active');
   document.getElementById('panel-'+tab).classList.add('active');
   activeTab = tab;
   if(tab==='digitalcard' && !cardConfigLoaded) loadCardConfig();
+  if(tab==='leads' || tab==='bookings'){ markVisited(tab); updateNewActivityBadges(); }
+
+  // Top-level nav highlighting (id-based, not event.target — works whether
+  // showTab() was triggered by a click or called directly from JS)
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  const group = TAB_GROUP[tab];
+  const navEl = document.getElementById('navtab-'+(group||tab));
+  if(navEl) navEl.classList.add('active');
+
+  // Sub-tab row show/hide + highlighting for grouped tabs
+  document.querySelectorAll('.subtab-row').forEach(r=>r.style.display='none');
+  document.querySelectorAll('.subtab').forEach(s=>s.classList.remove('active'));
+  if(group){
+    const row = document.getElementById('subtab-'+group);
+    if(row) row.style.display='flex';
+    const subEl = document.getElementById('subtab-item-'+tab);
+    if(subEl) subEl.classList.add('active');
+  }
+}
+// ── NEW-ACTIVITY BADGES (since you last opened the tab) ────
+function getLastVisit(tab){
+  return localStorage.getItem('sw_lastvisit_'+tab) || '1970-01-01T00:00:00.000Z';
+}
+function markVisited(tab){
+  localStorage.setItem('sw_lastvisit_'+tab, new Date().toISOString());
+}
+function renderCrmHealth(){
+  const L = leads||[], B = bookings||[];
+  const staleCutoff = Date.now() - 3*86400000;
+  const stale = L.filter(l=>l.status!=='converted'&&l.status!=='archived'&&new Date(l.last_activity_at||l.created_at).getTime()<staleCutoff).length;
+  const noWaiver = B.filter(b=>{
+    if(b.status!=='confirmed') return false;
+    const p = (participants&&participants[b.id])||[];
+    return p.length===0 || p.some(x=>!x.waiver_signed);
+  }).length;
+  const todayStr = new Date().toISOString().slice(0,10);
+  const newToday = L.filter(l=>(l.created_at||'').slice(0,10)===todayStr).length + B.filter(b=>(b.created_at||'').slice(0,10)===todayStr).length;
+  const unlinked = B.filter(b=>!b.lead_id).length;
+  const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.textContent = val; };
+  set('crm-stat-stale', stale);
+  set('crm-stat-nowaiver', noWaiver);
+  set('crm-stat-newtoday', newToday);
+  set('crm-stat-unlinked', unlinked);
+}
+function updateNewActivityBadges(){
+  const leadsSince = getLastVisit('leads');
+  const bookingsSince = getLastVisit('bookings');
+  const newLeads = (leads||[]).filter(l=>l.created_at && l.created_at > leadsSince).length;
+  const newBookings = (bookings||[]).filter(b=>b.created_at && b.created_at > bookingsSince).length;
+  const lb = document.getElementById('leads-badge'); if(lb) lb.textContent = newLeads;
+  const nb = document.getElementById('new-badge'); if(nb) nb.textContent = newBookings;
 }
 // ── DASHBOARD ─────────────────────────────────────────────
 function renderDashboard(){
@@ -1316,8 +1396,9 @@ function bookingRow(b, compact){
   const minors = p.filter(x=>x.is_minor).length;
   const waivers = p.filter(x=>!x.waiver_signed).length;
   const warn = (minors>0||waivers>0) ? `<span style="color:var(--orange);font-size:11px;margin-left:4px">⚠</span>` : '';
+  const leadTag = b.lead_id ? `<span title="Originated from a lead" style="font-size:10px;color:var(--cyan);border:1px solid var(--cyan);border-radius:8px;padding:1px 6px;margin-left:4px">lead</span>` : '';
   if(compact) return `<tr>
-    <td>${b.clients?.name||'—'}${warn}</td>
+    <td>${b.clients?.name||'—'}${warn}${leadTag}</td>
     <td>${fmtDate(b.date)}</td>
     <td>${cap(b.slot)}</td>
     <td>${b.package||'—'}</td>
@@ -1328,7 +1409,7 @@ function bookingRow(b, compact){
   return `<tr>
     <td>${fmtDate(b.date)}</td>
     <td><span class="status-badge" style="background:rgba(0,200,212,0.1);color:var(--cyan)">${cap(b.slot)}</span></td>
-    <td>${b.clients?.name||'—'}${warn}</td>
+    <td>${b.clients?.name||'—'}${warn}${leadTag}</td>
     <td style="font-size:13px">${(b.package||'—').split('—')[0]}</td>
     <td style="font-size:13px">${b.location||'—'}</td>
     <td style="font-size:13px">${p.length} rider${p.length!==1?'s':''}${minors?` · <span style="color:var(--red)">${minors}⚠</span>`:''}${waivers?` · <span style="color:var(--orange)">${waivers} pending</span>`:p.length?' · ✓':''}</td>
@@ -1336,10 +1417,28 @@ function bookingRow(b, compact){
     <td><select class="booking-status-select" onchange="updateBookingStatus('${b.id}', this.value)">${statusOptions.map(s=>`<option value="${s}"${b.status===s?' selected':''}>${s.replace('_',' ')}</option>`).join('')}</select></td>
     <td style="display:flex;gap:6px;flex-wrap:wrap">
       <button class="btn btn-primary btn-sm" onclick="openEditBooking('${b.id}')">Edit</button>
+      ${b.status!=='deposit_paid'&&b.status!=='complete'?`<button class="btn btn-pink btn-sm" onclick="markDepositReceived('${b.id}')" title="Mark deposit received (e.g. via e-transfer) and log it in the booking notes">💰 Deposit</button>`:''}
       <button class="btn btn-ghost btn-sm" onclick="openEmailForBooking('${b.id}')">Email</button>
       <button class="btn btn-danger btn-sm" onclick="deleteBooking('${b.id}')">Delete</button>
     </td>
   </tr>`;
+}
+async function markDepositReceived(id){
+  const b = bookings.find(x=>x.id===id); if(!b) return;
+  const amount = prompt(`Deposit amount received for ${b.clients?.name||'this booking'}? (optional, leave blank to skip)`);
+  if(amount===null) return; // cancelled
+  const today = new Date().toLocaleDateString('en-CA');
+  const note = `[${today}] Deposit received${amount?' — $'+amount:''} (manual entry)`;
+  const newNotes = b.notes ? b.notes+'\n'+note : note;
+  const { error } = await db.from('bookings').update({ status:'deposit_paid', notes:newNotes }).eq('id', id);
+  if(error){ toast('Error updating booking'); return; }
+  b.status = 'deposit_paid'; b.notes = newNotes;
+  renderBookingsTable(
+    document.getElementById('search-bookings').value,
+    document.getElementById('filter-status').value,
+    document.getElementById('filter-slot').value
+  );
+  toast('Deposit marked received ✓');
 }
 function filterBookings(){
   renderBookingsTable(
@@ -1353,8 +1452,7 @@ async function updateLeadStatus(id, status){
   if(error){ toast('Error updating lead status'); return; }
   const l = leads.find(x => x.id === id);
   if(l) l.status = status;
-  const active = leads.filter(l=>l.status!=='converted'&&l.status!=='archived').length;
-  document.getElementById('leads-badge').textContent = active;
+  updateNewActivityBadges();
   renderLeads(document.getElementById('search-leads').value);
   toast('Lead updated ✓');
 }
@@ -1498,10 +1596,12 @@ async function saveBooking(){
     await db.from('bookings').update(bkData).eq('id',editingBookingId);
     bookingId = editingBookingId;
   } else {
+    if(pendingLeadIdForBooking){ bkData.lead_id = pendingLeadIdForBooking; }
     const {data,error} = await db.from('bookings').insert(bkData).select().single();
     if(error){ toast('Error saving booking'); return; }
     bookingId = data.id;
   }
+  pendingLeadIdForBooking = null;
   // Save participants
   await db.from('participants').delete().eq('booking_id',bookingId);
   const rows = document.querySelectorAll('.participant-row');
@@ -1846,7 +1946,7 @@ function setLeadSort(col){
   if(leadSort.col===col){ leadSort.dir *= -1; }
   else { leadSort = { col, dir: col==='status' ? 1 : 1 }; }
   // Update header indicators
-  ['name','status'].forEach(c=>{
+  ['name','status','activity'].forEach(c=>{
     const el = document.getElementById('lsort-'+c);
     if(!el) return;
     if(c===leadSort.col){ el.textContent = leadSort.dir===1 ? '↑' : '↓'; el.style.opacity='1'; el.style.color='var(--cyan)'; }
@@ -1883,25 +1983,43 @@ function renderLeads(filter=''){
     let va, vb;
     if(leadSort.col==='status'){ va = LEAD_RANK[a.status] ?? 9; vb = LEAD_RANK[b.status] ?? 9; }
     else if(leadSort.col==='name'){ va = (a.name||'').toLowerCase(); vb = (b.name||'').toLowerCase(); }
+    else if(leadSort.col==='activity'){ va = new Date(a.last_activity_at||a.created_at).getTime(); vb = new Date(b.last_activity_at||b.created_at).getTime(); }
     if(va < vb) return -1 * leadSort.dir;
     if(va > vb) return  1 * leadSort.dir;
     // secondary sort: newest first within same rank
     return new Date(b.created_at) - new Date(a.created_at);
   });
-  const srcOpts = ['','website','resort','facebook','instagram','referral','other'];
-  tb.innerHTML = list.length ? list.map(l=>`<tr>
+  const srcOpts = ['','website','resort','facebook','instagram','referral','phone/text','messenger','sunset_wake_date','gmail','square','imessage','walk-up','repeat','other'];
+  tb.innerHTML = list.length ? list.map(l=>{
+    const activityMs = new Date(l.last_activity_at||l.created_at).getTime();
+    const staleDays = (Date.now()-activityMs)/86400000;
+    const staleColor = staleDays>7?'var(--red)':(staleDays>3?'var(--orange)':'var(--muted)');
+    return `<tr>
     <td><strong>${esc(l.name||'—')}</strong></td>
     <td style="font-size:13px">${esc(l.email||'')}${l.phone?'<br>'+esc(l.phone):''}</td>
     <td style="font-size:13px">${esc(l.sport||'—')}</td>
     <td style="font-size:13px;max-width:260px;cursor:pointer" onclick="inlineEditInquiry(this,'${l.id}')" title="Click to edit">${esc((l.message||'').slice(0,140))||'<span style=color:var(--hint)>click to add…</span>'}</td>
     <td><select class="booking-status-select" onchange="updateLeadStatus('${l.id}', this.value)">${['new','hot','warm','cold','archived'].map(s=>`<option value="${s}"${l.status===s?' selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}</select></td>
     <td><select class="booking-status-select" onchange="updateLeadSource('${l.id}', this.value)">${srcOpts.map(s=>`<option value="${s}"${(l.source||'')===s?' selected':''}>${s?s.charAt(0).toUpperCase()+s.slice(1):'—'}</option>`).join('')}${l.source&&!srcOpts.includes(l.source)?`<option value="${esc(l.source)}" selected>${esc(l.source)}</option>`:''}</select></td>
+    <td style="font-size:12px;color:${staleColor}" title="${new Date(activityMs).toLocaleString()}">${timeAgo(activityMs)}</td>
     <td style="display:flex;gap:6px;flex-wrap:wrap">
       <button class="btn btn-primary btn-sm" onclick="openEditLead('${l.id}')">Edit</button>
       <button class="btn btn-pink btn-sm" onclick="convertLead('${l.id}')">→ Client</button>
       <button class="btn btn-danger btn-sm" onclick="deleteLead('${l.id}')">Delete</button>
     </td>
-  </tr>`).join('') : '<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:24px">No active leads. New booking inquiries land here automatically each morning.</td></tr>';
+  </tr>`;
+  }).join('') : '<tr><td colspan="8" style="color:var(--muted);text-align:center;padding:24px">No active leads. New booking inquiries land here automatically each morning.</td></tr>';
+}
+function timeAgo(ts){
+  const diffMs = Date.now()-new Date(ts).getTime();
+  const mins = Math.floor(diffMs/60000);
+  if(mins<1) return 'just now';
+  if(mins<60) return mins+'m ago';
+  const hrs = Math.floor(mins/60);
+  if(hrs<24) return hrs+'h ago';
+  const days = Math.floor(hrs/24);
+  if(days<30) return days+'d ago';
+  return Math.floor(days/30)+'mo ago';
 }
 function filterLeads(){ renderLeads(document.getElementById('search-leads').value); }
 function inlineEditInquiry(td, id){
@@ -2048,6 +2166,13 @@ async function convertLead(id){
   await Promise.all([loadLeads(), loadClients()]);
   renderLeads(); renderClients();
   toast(`${l.name} is now a client ✓`);
+
+  if(confirm(`Create a booking for ${l.name} now? (You can also do this later from the Bookings tab.)`)){
+    pendingLeadIdForBooking = id;
+    openAddBooking();
+    populateClientSelect(client.id);
+    document.getElementById('bk-notes').value = l.message || '';
+  }
 }
 // ── EMAILS ────────────────────────────────────────────────
 function renderTemplates(){
@@ -2639,6 +2764,7 @@ function renderTasks(){
   document.getElementById('t-stat-book').textContent  = open.filter(t=>t.stage==='bookings').length;
   document.getElementById('t-stat-aware').textContent = open.filter(t=>t.stage==='awareness').length;
   ['bookings','awareness','later'].forEach(renderTaskCol);
+  if(typeof renderCrmHealth==='function') renderCrmHealth();
 }
 function renderTaskCol(stage){
   const el = document.getElementById('tcol-'+stage);
@@ -2755,7 +2881,7 @@ async function saveLeadQuickNote(id){
   const { data:existing } = await db.from('leads').select('inquiry').eq('id',id).single();
   const prev = existing?.inquiry||'';
   const updated = prev ? prev+'\n['+today+'] '+val : '['+today+'] '+val;
-  const { error } = await db.from('leads').update({inquiry:updated,updated_at:new Date().toISOString()}).eq('id',id);
+  const { error } = await db.from('leads').update({inquiry:updated,last_activity_at:new Date().toISOString()}).eq('id',id);
   if(!error){
     el.value='';
     toast('Lead updated ✓');

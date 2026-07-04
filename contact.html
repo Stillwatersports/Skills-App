@@ -143,6 +143,68 @@
 
 <script src="./assets/js/content.js"></script>
 
+<!-- ══ SUPABASE CONTACT FORM ══ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  const SUPABASE_URL = 'https://isbhflfmugfeqwhhqlkh.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzYmhmbGZtdWdmZXF3aGhxbGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDE0MzEsImV4cCI6MjA5MzA3NzQzMX0.TKMd_rSmJvoLiL5_1pFw9KqYHNne-eEdnGNR4zgZwFk';
+  let db;
+  try { db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e){}
+
+  function showToast(msg){
+    const t = document.getElementById('toast');
+    if(!t) return;
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'), 3500);
+  }
+
+  window.submitContact = async function(){
+    const name    = document.getElementById('c-name').value.trim();
+    const email   = document.getElementById('c-email').value.trim();
+    const phone   = document.getElementById('c-phone').value.trim();
+    const subject = document.getElementById('c-subject').value.trim();
+    const message = document.getElementById('c-message').value.trim();
+    const btn     = document.getElementById('c-submit');
+
+    if(!name){ showToast('Please add your name'); return; }
+    if(!email){ showToast('Please add your email'); return; }
+    if(!message){ showToast('Please add a message'); return; }
+
+    btn.disabled = true; btn.textContent = 'Sending...';
+
+    const fullMessage = 'Subject: ' + (subject || 'Not specified') + '\n\n' + message;
+
+    let saved = false;
+    if(db){
+      try {
+        const { error } = await db.rpc('submit_lead', { p_payload: {
+          name: name,
+          email: email,
+          phone: phone || null,
+          source: 'website',
+          message: fullMessage
+        }});
+        saved = !error;
+        if(error) console.error('submit_lead failed:', error);
+      } catch(err){ console.error('submit_lead exception:', err); }
+    }
+
+    if(!saved){
+      btn.disabled = false; btn.textContent = 'Send Message →';
+      showToast('Something went wrong — please email christian@learnwatersports.ca directly.');
+      return;
+    }
+
+    document.getElementById('contact-form').style.display = 'none';
+    document.getElementById('contact-success').style.display = '';
+    btn.disabled = false; btn.textContent = 'Send Message →';
+  };
+})();
+</script>
+<!-- ══ /SUPABASE CONTACT FORM ══ -->
+
 
 
 <!-- ══ PROMO BANNER ══ -->
