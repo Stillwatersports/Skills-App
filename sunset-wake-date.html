@@ -19,7 +19,7 @@
 <!-- Twitter card -->
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="Sunset Wake Date — Ottawa's Ultimate Date Night"/>
-<meta name="twitter:description" content="Private waterski lesson, lakeside dinner, and a sunset cruise. From $350 per couple."/>
+<meta name="twitter:description" content="Private waterski lesson, lakeside dinner, and a sunset cruise. From $400 per couple."/>
 <meta name="twitter:image" content="https://www.learnwatersports.ca/assets/images/jpg/FB-date.jpg"/>
 
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -94,6 +94,33 @@
   .dn-guarantee-icon{font-size:38px;line-height:1;flex-shrink:0}
   .dn-guarantee-title{font-size:15px;font-weight:800;letter-spacing:.02em;margin-bottom:4px}
   .dn-guarantee-text{font-size:13px;line-height:1.55;opacity:.92}
+
+  /* ── Booking Modal ── */
+  .swd-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+  .swd-overlay.open{display:flex}
+  .swd-modal{background:var(--yellow);border:2px solid var(--cyan);border-radius:var(--radius);padding:36px 32px;max-width:480px;width:100%;position:relative;max-height:90vh;overflow-y:auto}
+  .swd-modal-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:24px;color:var(--muted);cursor:pointer;line-height:1}
+  .swd-modal-title{font-size:22px;font-weight:800;color:var(--text);margin-bottom:4px}
+  .swd-modal-sub{font-size:14px;color:var(--muted);margin-bottom:24px}
+  .swd-restaurant-tag{display:inline-block;background:var(--pink);color:var(--yellow);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 14px;border-radius:50px;margin-bottom:18px}
+  .swd-field{margin-bottom:16px}
+  .swd-label{display:block;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text);margin-bottom:6px}
+  .swd-input{width:100%;padding:12px 14px;border:1.5px solid rgba(0,200,212,0.3);border-radius:var(--rsm);font-size:15px;font-family:inherit;background:#fff;color:var(--text);box-sizing:border-box;transition:border-color .2s}
+  .swd-input:focus{outline:none;border-color:var(--cyan)}
+  .swd-input::placeholder{color:#aaa}
+  .swd-radio-group{display:flex;gap:10px}
+  .swd-radio{flex:1;position:relative}
+  .swd-radio input{position:absolute;opacity:0;pointer-events:none}
+  .swd-radio label{display:block;text-align:center;padding:12px 10px;border:1.5px solid rgba(0,200,212,0.3);border-radius:var(--rsm);font-size:14px;font-weight:600;color:var(--text);cursor:pointer;background:#fff;transition:all .2s}
+  .swd-radio input:checked+label{border-color:var(--cyan);background:var(--cyan);color:#fff}
+  .swd-submit{display:block;width:100%;background:var(--pink);color:var(--yellow);font-size:14px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:16px;border:none;border-radius:50px;cursor:pointer;margin-top:24px;transition:transform .15s,box-shadow .2s}
+  .swd-submit:hover{transform:scale(1.02);box-shadow:0 0 0 5px rgba(224,64,160,.18)}
+  .swd-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+  .swd-success{text-align:center;padding:24px 0}
+  .swd-success-icon{font-size:48px;margin-bottom:12px}
+  .swd-success-title{font-size:22px;font-weight:800;color:var(--text);margin-bottom:8px}
+  .swd-success-text{font-size:14px;color:var(--muted);line-height:1.7}
+  @media(max-width:520px){.swd-modal{padding:28px 20px}}
 </style>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-9Z296M7ZLP"></script>
@@ -170,7 +197,7 @@
         <div class="dn-restaurant-name">Lakeside BBQ Stand</div>
         <div class="dn-restaurant-desc">Smoked brisket, pulled pork, burgers, poutine, and ice cream from the local BBQ stand. <br>Casual, hands-on, picnic tables by the water. <br>Generous portions, and they have ice cream.</div>
         <div class="dn-restaurant-prices">
-          <div class="dn-price-row featured"><span>Couple (2 people)</span><strong>$350</strong></div>
+          <div class="dn-price-row featured"><span>Couple (2 people)</span><strong>$400</strong></div>
           <div class="dn-price-row"><span>Double date (4 people)</span><strong>$600</strong></div>
           <div class="dn-price-row" style="border-top:1px dashed rgba(224,64,160,0.25);padding-top:8px;margin-top:4px"><span style="color:var(--pink);font-weight:700">Fri / Sat night</span><strong style="color:var(--pink)">+$50</strong></div>
         </div>
@@ -181,7 +208,7 @@
         <div class="dn-restaurant-name">Curated Charcuterie</div>
         <div class="dn-restaurant-desc">A full board of cheeses, cured meats, fresh bread, fruit, and chocolate from a local small business. <br>Enjoy a picnic at a park on the water, or on the boat. <br>Very romantic!</div>
         <div class="dn-restaurant-prices">
-          <div class="dn-price-row featured"><span>Couple (2 people)</span><strong>$350</strong></div>
+          <div class="dn-price-row featured"><span>Couple (2 people)</span><strong>$400</strong></div>
           <div class="dn-price-row"><span>Double date (4 people)</span><strong>$600</strong></div>
           <div class="dn-price-row" style="border-top:1px dashed rgba(224,64,160,0.25);padding-top:8px;margin-top:4px"><span style="color:var(--pink);font-weight:700">Fri / Sat night</span><strong style="color:var(--pink)">+$50</strong></div>
         </div>
@@ -283,59 +310,172 @@
 
 <div id="footer-placeholder"></div>
 <script src="./assets/js/footer.js"></script>
+
+<!-- ══ BOOKING MODAL ══ -->
+<div class="swd-overlay" id="swd-overlay">
+  <div class="swd-modal">
+    <button class="swd-modal-close" id="swd-close">&times;</button>
+    <div id="swd-form-view">
+      <div class="swd-restaurant-tag" id="swd-restaurant-tag"></div>
+      <div class="swd-modal-title">Book the Sunset Wake Date</div>
+      <div class="swd-modal-sub">Fill in your details and we'll confirm within 24 hours.</div>
+      <div class="swd-field">
+        <label class="swd-label">Name *</label>
+        <input class="swd-input" id="swd-name" placeholder="Your name" autocomplete="name"/>
+      </div>
+      <div class="swd-field">
+        <label class="swd-label">Email</label>
+        <input class="swd-input" id="swd-email" type="email" placeholder="you@email.com" autocomplete="email"/>
+      </div>
+      <div class="swd-field">
+        <label class="swd-label">Phone *</label>
+        <input class="swd-input" id="swd-phone" type="tel" placeholder="(613) 555-0000" autocomplete="tel"/>
+      </div>
+      <div class="swd-field">
+        <label class="swd-label">Group Size</label>
+        <div class="swd-radio-group">
+          <div class="swd-radio"><input type="radio" name="swd-group" id="swd-couple" value="couple" checked/><label for="swd-couple">Couple (2)</label></div>
+          <div class="swd-radio"><input type="radio" name="swd-group" id="swd-double" value="double"/><label for="swd-double">Double Date (4)</label></div>
+        </div>
+      </div>
+      <div class="swd-field">
+        <label class="swd-label">Preferred Date</label>
+        <input class="swd-input" id="swd-date" type="date"/>
+      </div>
+      <div class="swd-field">
+        <label class="swd-label">Special Requests</label>
+        <textarea class="swd-input" id="swd-notes" rows="3" placeholder="Dietary needs, special occasion, etc."></textarea>
+      </div>
+      <button class="swd-submit" id="swd-submit">Book This Experience &rarr;</button>
+    </div>
+    <div id="swd-success-view" class="swd-success" style="display:none">
+      <div class="swd-success-icon">&#127942;</div>
+      <div class="swd-success-title">You're booked in, <span id="swd-success-name"></span>!</div>
+      <div class="swd-success-text">I'll confirm your Sunset Wake Date within 24 hours.<br>Questions? Call or text <strong>613-299-5998</strong>.</div>
+    </div>
+  </div>
+</div>
+
 <div id="toast"></div>
 
 <script src="./assets/js/content.js"></script>
 
 
 
-<!-- ══ EMAIL TEMPLATE LOADER (admin-editable via Supabase) ══ -->
+<!-- ══ SUPABASE BOOKING + EMAIL TEMPLATE ══ -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 (function(){
-  // Fallback template — used if Supabase fetch fails or template not yet seeded.
-  // Edit the live template via Admin → Email Templates → "sunset_wake_date".
-  const FALLBACK = {
-    to:      'christian@learnwatersports.ca',
-    subject: 'Sunset Wake Date Inquiry',
-    body:    "Hi Christian,\n\nWe'd like to book the Sunset Wake Date experience.\n\nRestaurant: {{restaurant}}\nGroup size: 2 (couple) or 4 (double date)?  \nPreferred date (Fri/Sat is +$50): \nAny special requests: \n\nThanks!"
-  };
-  let TEMPLATE = FALLBACK;
+  const SUPABASE_URL = 'https://isbhflfmugfeqwhhqlkh.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzYmhmbGZtdWdmZXF3aGhxbGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDE0MzEsImV4cCI6MjA5MzA3NzQzMX0.TKMd_rSmJvoLiL5_1pFw9KqYHNne-eEdnGNR4zgZwFk';
+  let db;
+  try { db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e){}
 
-  function buildMailto(restaurant){
-    const subject = encodeURIComponent(TEMPLATE.subject);
-    const body = encodeURIComponent((TEMPLATE.body||'').replace(/\{\{restaurant\}\}/g, restaurant || 'Not yet chosen'));
-    return 'mailto:' + TEMPLATE.to + '?subject=' + subject + '&body=' + body;
+  // ── Toast helper ──
+  function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3500); }
+
+  // ── Modal refs ──
+  const overlay  = document.getElementById('swd-overlay');
+  const formView = document.getElementById('swd-form-view');
+  const succView = document.getElementById('swd-success-view');
+  let selectedRestaurant = '';
+
+  function openModal(restaurant){
+    selectedRestaurant = restaurant;
+    document.getElementById('swd-restaurant-tag').textContent = restaurant;
+    formView.style.display = '';
+    succView.style.display = 'none';
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
   }
 
-  function applyToCTAs(){
-    document.querySelectorAll('[data-mailto]').forEach(a=>{
-      const r = a.dataset.restaurant || 'Not yet chosen';
-      a.href = buildMailto(r);
+  // Close on X button or overlay click
+  document.getElementById('swd-close').addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e){ if(e.target === overlay) closeModal(); });
+
+  // ── CTA buttons → open modal instead of mailto ──
+  document.querySelectorAll('[data-mailto]').forEach(function(a){
+    a.href = '#';
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      openModal(a.dataset.restaurant || 'Not yet chosen');
     });
-  }
+  });
 
-  // Apply fallback immediately so the page works even before Supabase responds.
-  applyToCTAs();
+  // ── Form submit → Supabase submit_booking ──
+  document.getElementById('swd-submit').addEventListener('click', async function(){
+    const name  = document.getElementById('swd-name').value.trim();
+    const email = document.getElementById('swd-email').value.trim();
+    const phone = document.getElementById('swd-phone').value.trim();
+    const group = document.querySelector('input[name="swd-group"]:checked').value;
+    const date  = document.getElementById('swd-date').value;
+    const notes = document.getElementById('swd-notes').value.trim();
+    const btn   = document.getElementById('swd-submit');
 
-  // Try to fetch from Supabase
-  try {
-    const SUPABASE_URL = 'https://isbhflfmugfeqwhhqlkh.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzYmhmbGZtdWdmZXF3aGhxbGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDE0MzEsImV4cCI6MjA5MzA3NzQzMX0.TKMd_rSmJvoLiL5_1pFw9KqYHNne-eEdnGNR4zgZwFk';
-    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-    db.from('email_templates').select('subject,body').eq('name','sunset_wake_date').single().then(({data,error})=>{
-      if(data && !error){
-        TEMPLATE = {
-          to:      FALLBACK.to,              // to_address column doesn't exist on this table
-          subject: data.subject || FALLBACK.subject,
-          body:    data.body    || FALLBACK.body
-        };
-        applyToCTAs();
-      }
-    }).catch(()=>{ /* silent — fallback already applied */ });
-  } catch(e){ /* silent */ }
+    if(!name){ showToast('Please add your name'); return; }
+    if(!phone){ showToast('Please add a phone number so we can reach you'); return; }
+
+    btn.disabled = true; btn.textContent = 'Sending...';
+
+    const groupLabel = group === 'double' ? 'Double date (4 people)' : 'Couple (2 people)';
+    const dateStr    = date || 'Not specified';
+
+    const notesSummary =
+      'SUNSET WAKE DATE INQUIRY\n' +
+      'Restaurant: ' + selectedRestaurant + '\n' +
+      'Group: ' + groupLabel + '\n' +
+      'Preferred date: ' + dateStr + '\n' +
+      (notes ? 'Special requests: ' + notes : '');
+
+    let saved = false;
+    if(db){
+      try {
+        const { error } = await db.rpc('submit_booking', { p_payload: {
+          name: name,
+          email: email || null,
+          phone: phone,
+          location: 'Rideau River',
+          date: date || new Date().toISOString().slice(0,10),
+          slot: 'evening',
+          package: 'Sunset Wake Date',
+          sport: 'Waterski / Wakeboard / Wakesurf',
+          promo_code: null,
+          notes: notesSummary,
+          raw_request: {
+            type: 'sunset_wake_date',
+            restaurant: selectedRestaurant,
+            group_size: group,
+            group_label: groupLabel,
+            preferred_date: date || null,
+            special_requests: notes || null,
+            name: name,
+            email: email || null,
+            phone: phone
+          }
+        }});
+        saved = !error;
+        if(error) console.error('submit_booking failed:', error);
+      } catch(err){ console.error('submit_booking exception:', err); }
+    }
+
+    if(!saved){
+      btn.disabled = false; btn.textContent = 'Book This Experience \u2192';
+      showToast('Something went wrong \u2014 please call or text 613-299-5998 and we\'ll get you booked.');
+      return;
+    }
+
+    // Success — show confirmation
+    document.getElementById('swd-success-name').textContent = name.split(' ')[0] || '';
+    formView.style.display = 'none';
+    succView.style.display = '';
+    btn.disabled = false; btn.textContent = 'Book This Experience \u2192';
+  });
 })();
 </script>
-<!-- ══ /EMAIL TEMPLATE LOADER ══ -->
+<!-- ══ /SUPABASE BOOKING + EMAIL TEMPLATE ══ -->
 </body>
 </html>
