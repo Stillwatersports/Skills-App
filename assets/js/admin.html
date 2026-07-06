@@ -1,0 +1,3132 @@
+<!-- © 2026 Christian Richards / Stillwater Sports. Admin Panel. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Stillwater Admin</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet"/><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cyan:#00C8D4;--pink:#E040A0;--yellow:#FFFEB4;--offwhite:#FFFFF0;
+  --dark:#1a2a2a;--muted:#3a6a6a;--hint:#7aacac;--white:#fff;
+  --bg:#FFFEB4;--border:#e8e6c8;--card:#FFFFF0;
+  --red:#e53935;--green:#2e7d32;--orange:#e65100;--gold:#F5D87A;
+  --radius:16px;--shadow:0 8px 28px rgba(26,42,42,.10);
+  --serif:"Playfair Display",Georgia,serif;
+  --sans:"DM Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+body{
+  font-family:var(--sans);color:var(--dark);min-height:100vh;
+  background:var(--bg);
+  background-image:radial-gradient(circle at 8% -5%,rgba(0,200,212,.16),transparent 42%),
+                   radial-gradient(circle at 98% 0%,rgba(224,64,160,.10),transparent 40%);
+}
+h1,h2,h3,.card-title,.stat-num,.cal-nav h2,.modal-title{font-family:var(--serif)}
+
+/* LOGIN */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;background:var(--dark)}
+.login-box{background:var(--offwhite);border-radius:var(--radius);padding:48px;width:100%;max-width:400px;text-align:center;box-shadow:var(--shadow)}
+.login-box h1{font-weight:900;font-size:26px;color:var(--dark);margin-bottom:4px}
+.login-box p{font-size:14px;color:var(--muted);margin-bottom:28px}
+.login-box input{width:100%;padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;font-size:15px;font-family:var(--sans);margin-bottom:14px;outline:none}
+.login-box input:focus{border-color:var(--cyan)}
+.login-box button{width:100%;padding:14px;background:var(--cyan);color:var(--dark);font-weight:700;font-size:15px;border:none;border-radius:10px;cursor:pointer;font-family:var(--sans)}
+.login-box button:hover{background:#00b3be}
+.login-error{color:var(--red);font-size:13px;margin-top:10px}
+
+/* LAYOUT */
+#app{display:none;min-height:100vh}
+.topbar{background:var(--dark);color:var(--yellow);padding:0 32px;height:62px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-brand{font-family:var(--serif);font-size:20px;font-weight:900;letter-spacing:-.01em}
+.topbar-brand span{color:var(--cyan)}
+.topbar-right{display:flex;align-items:center;gap:16px;font-size:13px;color:rgba(255,255,231,.65)}
+.topbar-right button{background:none;border:1px solid rgba(255,255,231,.25);color:var(--yellow);padding:6px 14px;border-radius:20px;cursor:pointer;font-family:var(--sans);font-size:12px}
+
+/* TABS */
+.tabs{background:var(--offwhite);border-bottom:2px solid var(--border);padding:0 32px;display:flex;gap:0;flex-wrap:wrap}
+.tab{padding:16px 22px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s}
+.tab:hover{color:var(--dark)}
+.tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.tab-badge{background:var(--pink);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:6px}
+.subtab-row{background:var(--white);border-bottom:1px solid var(--border);padding:8px 32px;display:flex;gap:18px}
+.subtab{font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;padding:4px 2px;border-bottom:2px solid transparent;transition:all .15s}
+.subtab:hover{color:var(--dark)}
+.subtab.active{color:var(--pink);border-bottom-color:var(--pink)}
+
+/* CONTENT */
+.content{padding:32px;max-width:1400px;margin:0 auto}
+.panel{display:none}
+.panel.active{display:block}
+
+/* CARDS */
+.card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:24px;margin-bottom:20px;box-shadow:var(--shadow)}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.card-title{font-size:18px;font-weight:700;color:var(--dark)}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--card);border-radius:var(--radius);border:1px solid var(--border);padding:20px 24px;box-shadow:var(--shadow)}
+.stat-num{font-size:36px;font-weight:900;color:var(--cyan)}
+.stat-card:nth-child(2) .stat-num{color:var(--pink)}
+.stat-card:nth-child(3) .stat-num{color:var(--gold)}
+.stat-card:nth-child(4) .stat-num{color:var(--muted)}
+.stat-label{font-size:11px;color:var(--muted);font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-top:6px}
+
+/* CALENDAR */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+.cal-nav h2{font-size:22px;font-weight:800}
+.cal-nav button{background:var(--cyan);color:var(--dark);border:none;border-radius:8px;padding:8px 16px;font-weight:700;cursor:pointer;font-family:var(--sans)}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-day-header{text-align:center;font-size:11px;font-weight:700;color:var(--muted);padding:8px 0;text-transform:uppercase;letter-spacing:.06em}
+.cal-day{border-radius:8px;border:1px solid var(--border);min-height:90px;padding:6px;background:var(--white);cursor:pointer;transition:border-color .15s}
+.cal-day:hover{border-color:var(--cyan)}
+.cal-day.empty{background:transparent;border-color:transparent;cursor:default}
+.cal-day.today{border-color:var(--cyan);background:rgba(0,200,212,.05)}
+.cal-day-num{font-size:12px;font-weight:700;margin-bottom:4px;color:var(--dark)}
+.cal-slot{font-size:9px;font-weight:600;padding:2px 5px;border-radius:4px;margin-bottom:2px;text-transform:uppercase;letter-spacing:.04em;cursor:pointer;display:flex;align-items:center;justify-content:space-between}
+.slot-open{background:rgba(0,200,212,.12);color:#0b8a93}
+.slot-blocked{background:rgba(229,57,53,.12);color:var(--red)}
+.slot-booked{background:rgba(224,64,160,.15);color:var(--pink)}
+.slot-pending{background:rgba(230,81,0,.12);color:var(--orange)}
+
+/* TABLES */
+.bookings-toolbar{display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.bookings-toolbar input,.bookings-toolbar select{padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:var(--sans);outline:none;background:#fff}
+.bookings-toolbar input:focus,.bookings-toolbar select:focus{border-color:var(--pink)}
+table{width:100%;border-collapse:collapse}
+th{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;padding:10px 14px;text-align:left;border-bottom:2px solid var(--border);background:rgba(0,200,212,.04)}
+td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:14px;vertical-align:middle}
+tr:hover td{background:rgba(0,200,212,.03)}
+.status-badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.status-new{background:rgba(230,81,0,.1);color:var(--orange)}
+.status-confirmed{background:rgba(0,200,212,.12);color:#0b8a93}
+.status-deposit_paid{background:rgba(46,125,50,.1);color:var(--green)}
+.status-complete{background:rgba(26,42,42,.08);color:var(--dark)}
+.status-cancelled{background:rgba(229,57,53,.1);color:var(--red)}
+.status-morning,.status-afternoon,.status-evening{background:rgba(0,200,212,0.1);color:#0b8a93}
+/* Lead-specific status colours */
+.status-hot{background:rgba(229,57,53,.14);color:var(--red)}
+.status-warm{background:rgba(245,216,122,.35);color:#9a6200}
+.status-cold{background:rgba(0,200,212,.12);color:#0b8a93}
+.status-archived{background:rgba(26,42,42,.08);color:var(--dark)}
+
+/* Booking inline status select */
+.booking-status-select{padding:4px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--sans);outline:none;cursor:pointer;background:#fff;color:var(--dark)}
+.booking-status-select:focus{border-color:var(--pink)}
+
+/* BUTTONS */
+.btn{padding:8px 16px;border-radius:8px;border:none;font-weight:600;font-size:13px;cursor:pointer;font-family:var(--sans);transition:all .15s}
+.btn-primary{background:var(--cyan);color:var(--dark)}
+.btn-primary:hover{background:#00b3be}
+.btn-pink{background:var(--pink);color:#fff}
+.btn-ghost{background:transparent;border:1.5px solid var(--border);color:var(--dark)}
+.btn-danger{background:var(--red);color:#fff}
+.btn-sm{padding:5px 12px;font-size:12px}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(26,42,42,.55);z-index:200;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.open{display:flex}
+.modal{background:var(--offwhite);border-radius:var(--radius);padding:32px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;position:relative;box-shadow:var(--shadow)}
+.modal-title{font-size:22px;font-weight:800;margin-bottom:24px;padding-right:32px}
+.modal-close{position:absolute;top:20px;right:20px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 14px;border:1.5px solid rgba(224,64,160,.3);border-radius:8px;font-size:14px;font-family:var(--sans);outline:none;background:#fff}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--pink)}
+.form-group textarea{min-height:80px;resize:vertical;line-height:1.6}
+.section-label{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin:24px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+
+/* PARTICIPANTS / CLIENTS / EMAILS */
+.participant-row{display:grid;grid-template-columns:1fr 80px 120px 40px;gap:10px;align-items:center;padding:10px;background:rgba(0,200,212,.05);border-radius:8px;margin-bottom:8px}
+.minor-flag{background:rgba(229,57,53,.1);color:var(--red);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.04em}
+.waiver-check{display:flex;align-items:center;gap:6px;font-size:13px}
+.waiver-check input[type=checkbox]{width:16px;height:16px;accent-color:var(--cyan)}
+.client-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;cursor:pointer;transition:border-color .15s;box-shadow:var(--shadow)}
+.client-card:hover{border-color:var(--cyan)}
+.client-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.client-name{font-size:16px;font-weight:700;margin-bottom:4px}
+.client-meta{font-size:13px;color:var(--muted);margin-bottom:8px}
+.client-sessions{font-size:12px;font-weight:600;color:var(--cyan)}
+.template-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:12px;cursor:pointer;transition:border-color .15s}
+.template-card:hover{border-color:var(--cyan)}
+.template-name{font-size:15px;font-weight:700;margin-bottom:4px}
+.template-subject{font-size:13px;color:var(--muted)}
+.email-compose{background:rgba(0,200,212,.04);border-radius:var(--radius);padding:24px;margin-top:20px}
+.email-preview{background:var(--white);border:1px solid var(--border);border-radius:8px;padding:20px;font-size:14px;line-height:1.8;white-space:pre-wrap;max-height:400px;overflow-y:auto;font-family:monospace}
+.var-chip{display:inline-block;background:rgba(0,200,212,.12);color:#0b8a93;border-radius:4px;padding:1px 6px;font-size:12px;font-weight:600;margin:2px}
+.toast{position:fixed;bottom:24px;right:24px;background:var(--dark);color:var(--yellow);padding:14px 20px;border-radius:10px;font-size:14px;font-weight:600;z-index:999;transform:translateY(100px);opacity:0;transition:all .3s;max-width:320px}
+.toast.show{transform:translateY(0);opacity:1}
+.minor-warning{background:rgba(229,57,53,.08);border:1px solid rgba(229,57,53,.2);border-radius:8px;padding:12px 16px;font-size:13px;color:var(--red);font-weight:600;margin-top:8px;display:none}
+
+/* ── TASKS DASHBOARD ───────────────────────────────────── */
+#tasks-tagline{background:var(--cyan);color:var(--yellow);font-family:var(--serif);font-style:italic;font-weight:700;font-size:20px;padding:16px 24px;border-radius:var(--radius);margin-bottom:26px;box-shadow:var(--shadow)}
+#tasks-tagline::before{content:"\2192  ";color:var(--pink);font-style:normal}
+.sec-title{font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 14px 2px;display:flex;align-items:center;gap:9px}
+.sec-title::before{content:"";width:22px;height:3px;background:var(--pink);border-radius:2px}
+.top3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:30px}
+.top3-card{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);border-top:5px solid var(--cyan)}
+.top3-card:nth-child(1){border-top-color:var(--pink)}
+.top3-card:nth-child(3){border-top-color:var(--gold)}
+.top3-card .lbl{font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.top3-card h4{font-family:var(--serif);font-weight:700;font-size:17px;margin:8px 0;line-height:1.25}
+.task-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.task-col{background:var(--card);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow)}
+.task-col.bookings{border-left:5px solid var(--pink)}
+.task-col.awareness{border-left:5px solid var(--cyan)}
+.task-col.later{border-left:5px solid var(--hint)}
+.task-col h3{font-family:var(--serif);font-weight:700;font-size:17px}
+.task-col .count{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--hint);margin:2px 0 12px}
+.task-row{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--border);font-size:14px}
+.task-row:last-child{border-bottom:none}
+.task-row input[type=checkbox]{width:17px;height:17px;margin-top:2px;accent-color:var(--cyan);cursor:pointer;flex:none}
+.task-row.done .task-title{text-decoration:line-through;color:var(--hint)}
+.task-title{flex:1}
+.task-pill{font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;padding:3px 7px;border-radius:12px;flex:none}
+.pill-high{background:rgba(224,64,160,.14);color:var(--pink)}
+.pill-med{background:rgba(0,200,212,.16);color:#0b8a93}
+.pill-low{background:rgba(122,172,172,.2);color:var(--muted)}
+.add-task{display:flex;gap:10px;margin-top:6px}
+.add-task input{flex:1;padding:11px 14px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans);font-size:14px;outline:none;background:#fff}
+.add-task input:focus{border-color:var(--cyan)}
+
+@media(max-width:900px){
+  .stats-row,.top3,.task-cols{grid-template-columns:1fr}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .client-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+}
+/* ── DIGITAL CARD / QR / CONTACTS ─────────────────────── */
+.dc-section{border:1px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.dc-section-header{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:rgba(0,200,212,.04);cursor:pointer;font-weight:700;font-size:14px;user-select:none}
+.dc-section-header:hover{background:rgba(0,200,212,.08)}
+.dc-chevron{font-size:12px;color:var(--hint);transition:transform .2s}
+.dc-section-body{padding:16px 18px;border-top:1px solid var(--border)}
+.dc-section-body.collapsed{display:none}
+.dc-list-row{display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
+.dc-list-row input{flex:1;min-width:120px}
+.dc-list-row select{width:150px;flex:none;padding:11px 8px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans);font-size:14px;outline:none;background:#fff}
+.dc-list-row select:focus{border-color:var(--cyan)}
+.dc-num-val{width:90px!important;flex:none!important}
+.remove-btn{background:none;border:none;color:var(--hint);cursor:pointer;font-size:18px;padding:4px 8px;border-radius:6px;transition:color .15s;flex-shrink:0}
+.remove-btn:hover{color:var(--red);background:rgba(229,57,53,.06)}
+.toggle-sw{position:relative;display:inline-block;width:42px;height:24px;flex-shrink:0}
+.toggle-sw input{opacity:0;width:0;height:0}
+.toggle-sl{position:absolute;cursor:pointer;inset:0;background:#ccc;border-radius:12px;transition:.2s}
+.toggle-sl:before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:white;border-radius:50%;transition:.2s}
+.toggle-sw input:checked+.toggle-sl{background:var(--cyan)}
+.toggle-sw input:checked+.toggle-sl:before{transform:translateX(18px)}
+.block-order-row{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:8px}
+.block-order-label{flex:1;font-size:14px;font-weight:600;text-transform:capitalize}
+.block-order-btn{background:none;border:1px solid var(--border);border-radius:6px;width:28px;height:28px;cursor:pointer;font-size:13px;color:var(--muted);transition:all .15s}
+.block-order-btn:hover:not(:disabled){background:var(--cyan);color:var(--dark);border-color:var(--cyan)}
+.block-order-btn:disabled{opacity:.3;cursor:default}
+.qr-canvas-cell img{width:44px!important;height:44px!important;border-radius:4px;border:1px solid var(--border)}
+.cc-badge{display:inline-block;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase}
+.cc-badge.new{background:rgba(0,200,212,.12);color:#0b8a93}
+.cc-badge.contacted{background:rgba(100,120,200,.12);color:#3a4a90}
+.cc-badge.qualified{background:rgba(46,125,50,.1);color:var(--green)}
+.cc-badge.converted{background:rgba(245,216,122,.5);color:#9a6200}
+.cc-badge.archived{background:rgba(0,0,0,.07);color:var(--hint)}
+</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9Z296M7ZLP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-9Z296M7ZLP');</script>
+</head>
+<body>
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <h1>Stillwater Admin</h1>
+   <p>Coach dashboard — restricted access</p>
+    <input type="email" id="email-input" placeholder="Email" autocomplete="email" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <input type="password" id="pw-input" placeholder="Password" autocomplete="current-password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <button onclick="doLogin()">Sign In</button>
+    <div class="login-error" id="login-error"></div>
+  </div>
+</div>
+<!-- APP -->
+<div id="app">
+  <div class="topbar">
+    <div class="topbar-brand">Stillwater <span>Admin</span></div>
+    <div class="topbar-right">
+      <span id="topbar-date"></span>
+      <button onclick="doLogout()">Sign Out</button>
+    </div>
+  </div>
+<div class="tabs">
+  <div class="tab active" id="navtab-tasks" onclick="showTab('tasks')">Dashboard</div>
+  <div class="tab" id="navtab-dashboard" onclick="showTab('dashboard')">Sports Dash</div>
+  <div class="tab" id="navtab-calendar" onclick="showTab('calendar')">Calendar</div>
+  <div class="tab" id="navtab-bookings" onclick="showTab('bookings')">Bookings <span class="tab-badge" id="new-badge">0</span></div>
+  <div class="tab" id="navtab-leadsgroup" onclick="showTab('leads')">Leads <span class="tab-badge" id="leads-badge">0</span></div>
+  <div class="tab" id="navtab-clientsgroup" onclick="showTab('clients')">Clients</div>
+  <div class="tab" id="navtab-emails" onclick="showTab('emails')">Emails</div>
+  <div class="tab" id="navtab-promogroup" onclick="showTab('promo')">Promotions</div>
+  <div class="tab" id="navtab-cardgroup" onclick="showTab('digitalcard')">Digital Card <span class="tab-badge" id="contacts-badge"></span></div>
+</div>
+<div class="subtab-row" id="subtab-promogroup" style="display:none">
+  <span class="subtab" id="subtab-item-promo" onclick="showTab('promo')">Banner</span>
+  <span class="subtab" id="subtab-item-promocodes" onclick="showTab('promocodes')">Promo Codes</span>
+</div>
+<div class="subtab-row" id="subtab-cardgroup" style="display:none">
+  <span class="subtab" id="subtab-item-digitalcard" onclick="showTab('digitalcard')">Card Design</span>
+  <span class="subtab" id="subtab-item-cardcontacts" onclick="showTab('cardcontacts')">Card Contacts</span>
+  <span class="subtab" id="subtab-item-qrcodes" onclick="showTab('qrcodes')">QR Codes</span>
+</div>
+<div class="subtab-row" id="subtab-leadsgroup" style="display:none">
+  <span class="subtab" id="subtab-item-leads" onclick="showTab('leads')">All Leads</span>
+  <span class="subtab" id="subtab-item-leads-local" onclick="showTab('leads-local')">Local</span>
+  <span class="subtab" id="subtab-item-leads-resorts" onclick="showTab('leads-resorts')">Resorts</span>
+  <span class="subtab" id="subtab-item-leads-outoftowner" onclick="showTab('leads-outoftowner')">Out-of-Towner</span>
+</div>
+<div class="subtab-row" id="subtab-clientsgroup" style="display:none">
+  <span class="subtab" id="subtab-item-clients" onclick="showTab('clients')">All Clients</span>
+  <span class="subtab" id="subtab-item-clients-local" onclick="showTab('clients-local')">Local</span>
+  <span class="subtab" id="subtab-item-clients-outoftown" onclick="showTab('clients-outoftown')">Out of Town</span>
+  <span class="subtab" id="subtab-item-clients-experience" onclick="showTab('clients-experience')">By Experience</span>
+  <span class="subtab" id="subtab-item-clients-discipline" onclick="showTab('clients-discipline')">By Discipline</span>
+</div>
+  <div class="content">
+<!-- TASKS DASHBOARD (default) -->
+<div class="panel active" id="panel-tasks">
+  <div id="tasks-tagline">Pick one thing and start — momentum beats motivation.</div>
+  <div class="card" id="briefing-card" style="display:none;margin-bottom:24px;border-left:5px solid var(--gold)">
+  <div class="card-header" style="margin-bottom:12px">
+    <div class="card-title">☀️ Today's Briefing</div>
+    <span id="briefing-time" style="font-size:12px;color:var(--hint)"></span>
+  </div>
+  <pre id="briefing-content" style="white-space:pre-wrap;font-family:var(--sans);font-size:14px;line-height:1.8;color:var(--dark)"></pre>
+</div>
+  <div class="card" id="feedback-card" style="margin-bottom:24px;border-left:5px solid var(--pink)">
+    <div class="card-header" style="margin-bottom:12px">
+      <div class="card-title">📝 Notes for Cowork</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <span id="feedback-save-status" style="font-size:12px;color:var(--hint)"></span>
+        <button class="btn btn-primary btn-sm" onclick="saveFeedback()">Save</button>
+      </div>
+    </div>
+    <textarea id="feedback-input" placeholder="Add notes, updates, or tasks for Cowork to pick up on its next run — e.g. 'Follow up with Jane re: July booking', 'Post about weekend availability'..." style="width:100%;min-height:100px;padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:var(--sans);outline:none;resize:vertical;line-height:1.6;background:#fff"></textarea>
+  </div>
+  <div class="card" id="lead-notes-card" style="margin-bottom:24px;border-left:5px solid var(--cyan);display:none">
+    <div class="card-header" style="margin-bottom:12px">
+      <div class="card-title">🔥 Lead Updates</div>
+      <span style="font-size:12px;color:var(--hint)">Notes append to each lead's inquiry log</span>
+    </div>
+    <div id="briefing-leads-list" style="display:flex;flex-direction:column;gap:12px"></div>
+  </div>
+  <div class="sec-title">Today's Top 3</div>
+  <div class="top3" id="tasks-top3"></div>
+  <div class="sec-title">Where You Stand</div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num" id="t-stat-open">0</div><div class="stat-label">Open tasks</div></div>
+    <div class="stat-card"><div class="stat-num" id="t-stat-done">0</div><div class="stat-label">Done this week</div></div>
+    <div class="stat-card"><div class="stat-num" id="t-stat-book">0</div><div class="stat-label">Bookings left</div></div>
+    <div class="stat-card"><div class="stat-num" id="t-stat-aware">0</div><div class="stat-label">Awareness left</div></div>
+  </div>
+  <div class="sec-title">CRM Health</div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-num" id="crm-stat-stale">0</div><div class="stat-label">Stale leads (3d+)</div></div>
+    <div class="stat-card"><div class="stat-num" id="crm-stat-nowaiver">0</div><div class="stat-label">Confirmed, no waiver</div></div>
+    <div class="stat-card"><div class="stat-num" id="crm-stat-newtoday">0</div><div class="stat-label">New today</div></div>
+    <div class="stat-card"><div class="stat-num" id="crm-stat-unlinked">0</div><div class="stat-label">Bookings w/o lead link</div></div>
+  </div>
+  <div class="sec-title">The Backlog</div>
+  <div class="task-cols">
+    <div class="task-col bookings"><h3>Leads</h3><div class="count">Fill slots this season</div><div id="tcol-bookings"></div></div>
+    <div class="task-col awareness"><h3>Social</h3><div class="count">Grow social</div><div id="tcol-awareness"></div></div>
+    <div class="task-col later"><h3>To Do</h3><div class="count">Matters, not now</div><div id="tcol-later"></div></div>
+  </div>
+  <div class="card">
+    <div class="add-task">
+      <input id="new-task-input" placeholder="Add a task..." onkeydown="if(event.key==='Enter')addTask()"/>
+      <select id="new-task-stage" style="padding:11px;border:1.5px solid var(--border);border-radius:8px;font-family:var(--sans)">
+        <option value="bookings">Bookings</option>
+        <option value="awareness">Awareness</option>
+        <option value="later" selected>Later</option>
+      </select>
+      <button class="btn btn-primary" onclick="addTask()">Add</button>
+    </div>
+  </div>
+</div>
+    <!-- DASHBOARD -->
+    <div class="panel" id="panel-dashboard">
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-num" id="stat-new">—</div><div class="stat-label">New Requests</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-confirmed">—</div><div class="stat-label">Confirmed</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-upcoming">—</div><div class="stat-label">This Month</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-clients">—</div><div class="stat-label">Total Clients</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Recent Requests</div><button class="btn btn-primary btn-sm" onclick="showTab('bookings')">View All</button></div>
+        <table><thead><tr><th>Client</th><th>Date</th><th>Slot</th><th>Package</th><th>Status</th><th>Action</th></tr></thead>
+        <tbody id="recent-bookings"></tbody></table>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">Upcoming Sessions — Next 14 Days</div></div>
+        <table><thead><tr><th>Date</th><th>Slot</th><th>Client</th><th>Package</th><th>Location</th><th>Waivers</th></tr></thead>
+        <tbody id="upcoming-sessions"></tbody></table>
+      </div>
+    </div>
+    <!-- CALENDAR -->
+    <div class="panel" id="panel-calendar">
+      <div class="card">
+        <div class="cal-nav">
+          <button onclick="calPrev()">← Prev</button>
+          <h2 id="cal-month-label"></h2>
+          <button onclick="calNext()">Next →</button>
+        </div>
+        <div style="margin-bottom:16px;display:flex;gap:16px;flex-wrap:wrap;font-size:13px">
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(0,200,212,0.2);display:inline-block"></span>Open</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(229,57,53,0.2);display:inline-block"></span>Blocked</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(224,64,160,0.2);display:inline-block"></span>Booked</span>
+          <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:3px;background:rgba(230,81,0,0.2);display:inline-block"></span>Pending</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+          <button class="btn btn-ghost btn-sm" onclick="blockDateRange()">Block Date Range</button>
+          <button class="btn btn-ghost btn-sm" onclick="openModal('holiday-modal')">🗓 Manage Holidays</button>
+          <button class="btn btn-primary btn-sm" onclick="openAddBooking()">+ New Booking</button>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+      </div>
+    </div>
+    <!-- BOOKINGS -->
+    <div class="panel" id="panel-bookings">
+      <div class="bookings-toolbar">
+        <input type="text" id="search-bookings" placeholder="Search client name..." oninput="filterBookings()"/>
+        <select id="filter-status" onchange="filterBookings()">
+          <option value="">All Statuses</option>
+          <option value="new">New</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="deposit_paid">Deposit Paid</option>
+          <option value="complete">Complete</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+        <select id="filter-slot" onchange="filterBookings()">
+          <option value="">All Slots</option>
+          <option value="morning">Morning</option>
+          <option value="afternoon">Afternoon</option>
+          <option value="evening">Evening</option>
+        </select>
+        <button class="btn btn-primary" onclick="openAddBooking()">+ New Booking</button>
+      </div>
+      <div class="card" style="padding:0">
+        <table><thead><tr><th>Date</th><th>Slot</th><th>Client</th><th>Package</th><th>Location</th><th>Participants</th><th>Promo</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="bookings-table"></tbody></table>
+      </div>
+    </div>
+    <!-- CLIENTS -->
+    <div class="panel" id="panel-clients">
+      <div class="bookings-toolbar">
+        <input type="text" id="search-clients" placeholder="Search clients..." oninput="filterClients()"/>
+        <button class="btn btn-primary" onclick="openAddClient()">+ New Client</button>
+      </div>
+      <div class="client-grid" id="clients-grid"></div>
+    </div>
+    <!-- CLIENTS: LOCAL -->
+    <div class="panel" id="panel-clients-local">
+      <div class="client-grid" id="clients-local-grid"></div>
+    </div>
+    <!-- CLIENTS: OUT OF TOWN -->
+    <div class="panel" id="panel-clients-outoftown">
+      <div class="client-grid" id="clients-outoftown-grid"></div>
+    </div>
+    <!-- CLIENTS: BY EXPERIENCE -->
+    <div class="panel" id="panel-clients-experience">
+      <div id="clients-experience-body"></div>
+    </div>
+    <!-- CLIENTS: BY DISCIPLINE -->
+    <div class="panel" id="panel-clients-discipline">
+      <div id="clients-discipline-body"></div>
+    </div>
+    <!-- LEADS -->
+    <div class="panel" id="panel-leads">
+      <div class="bookings-toolbar">
+        <input type="text" id="search-leads" placeholder="Search leads by name or email..." oninput="filterLeads()"/>
+        <button class="btn btn-primary" onclick="openAddLead()">+ New Lead</button>
+        <button class="btn btn-ghost" onclick="exportLeadsCSV()">Export CSV</button>
+        <button class="btn btn-ghost" onclick="document.getElementById('leads-csv-input').click()">Import CSV</button>
+        <input type="file" id="leads-csv-input" accept=".csv" style="display:none" onchange="importLeadsCSV(this)"/>
+      </div>
+      <div class="card" style="padding:0">
+        <table>
+        <colgroup>
+          <col style="width:11%">
+          <col style="width:13%">
+          <col style="width:7%">
+          <col style="width:20%">
+          <col style="width:8%">
+          <col style="width:8%">
+          <col style="width:10%">
+          <col style="width:11%">
+          <col style="width:12%">
+        </colgroup>
+        <thead><tr>
+          <th onclick="setLeadSort('name')" style="cursor:pointer;user-select:none">Name <span id="lsort-name" style="opacity:.4">↕</span></th>
+          <th>Contact</th><th>Sport</th><th>Inquiry</th>
+          <th onclick="setLeadSort('status')" style="cursor:pointer;user-select:none">Status <span id="lsort-status" style="color:var(--cyan)">↑</span></th>
+          <th>Region</th>
+          <th>Source</th>
+          <th onclick="setLeadSort('activity')" style="cursor:pointer;user-select:none">Last Activity <span id="lsort-activity" style="opacity:.4">↕</span></th>
+          <th>Actions</th>
+        </tr></thead>
+        <tbody id="leads-table"></tbody></table>
+      </div>
+    </div>
+    <!-- LEADS: LOCAL -->
+    <div class="panel" id="panel-leads-local">
+      <div class="card" style="padding:0">
+        <table>
+        <colgroup>
+          <col style="width:11%"><col style="width:13%"><col style="width:7%"><col style="width:20%">
+          <col style="width:8%"><col style="width:8%"><col style="width:10%"><col style="width:11%"><col style="width:12%">
+        </colgroup>
+        <thead><tr><th>Name</th><th>Contact</th><th>Sport</th><th>Inquiry</th><th>Status</th><th>Region</th><th>Source</th><th>Last Activity</th><th>Actions</th></tr></thead>
+        <tbody id="leads-local-table"></tbody></table>
+      </div>
+    </div>
+    <!-- LEADS: RESORTS -->
+    <div class="panel" id="panel-leads-resorts">
+      <div class="card" style="padding:0">
+        <table>
+        <colgroup>
+          <col style="width:11%"><col style="width:13%"><col style="width:7%"><col style="width:20%">
+          <col style="width:8%"><col style="width:8%"><col style="width:10%"><col style="width:11%"><col style="width:12%">
+        </colgroup>
+        <thead><tr><th>Name</th><th>Contact</th><th>Sport</th><th>Inquiry</th><th>Status</th><th>Region</th><th>Source</th><th>Last Activity</th><th>Actions</th></tr></thead>
+        <tbody id="leads-resorts-table"></tbody></table>
+      </div>
+    </div>
+    <!-- LEADS: OUT-OF-TOWNER -->
+    <div class="panel" id="panel-leads-outoftowner">
+      <div class="card" style="padding:0">
+        <table>
+        <colgroup>
+          <col style="width:11%"><col style="width:13%"><col style="width:7%"><col style="width:20%">
+          <col style="width:8%"><col style="width:8%"><col style="width:10%"><col style="width:11%"><col style="width:12%">
+        </colgroup>
+        <thead><tr><th>Name</th><th>Contact</th><th>Sport</th><th>Inquiry</th><th>Status</th><th>Region</th><th>Source</th><th>Last Activity</th><th>Actions</th></tr></thead>
+        <tbody id="leads-outoftowner-table"></tbody></table>
+      </div>
+    </div>
+    <!-- EMAILS -->
+    <div class="panel" id="panel-promo">
+      <div style="max-width:640px">
+        <div class="card-title" style="margin-bottom:4px">Promo Banner</div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:24px;line-height:1.6">This banner appears at the bottom of every page. Toggle it on/off, update the text, and set a CTA. Changes save to Supabase and take effect on next page load — no redeploy needed.</p>
+        <div style="background:var(--white);border-radius:var(--radius);padding:24px;border:1.5px solid var(--cyan);margin-bottom:16px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+            <div style="font-size:13px;font-weight:700;color:var(--text)">Banner Status</div>
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+              <span id="promo-status-label" style="font-size:13px;color:var(--muted)">Loading...</span>
+              <div style="position:relative;width:44px;height:24px">
+                <input type="checkbox" id="promo-active" style="opacity:0;width:0;height:0" onchange="savePromo()"/>
+                <span id="promo-toggle-track" style="position:absolute;inset:0;border-radius:50px;background:#ddd;transition:.2s;cursor:pointer" onclick="document.getElementById('promo-active').click()"></span>
+              </div>
+            </label>
+          </div>
+          <div style="margin-bottom:14px">
+            <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase">Banner Text</label>
+            <input type="text" id="promo-text" placeholder="e.g. 🎉 10% off your first session — book before June 15" style="width:100%;padding:11px 14px;border:1.5px solid rgba(0,200,212,0.25);border-radius:10px;font-size:14px;font-family:Outfit,sans-serif;outline:none" oninput="updatePromoPreview()"/>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px">
+            <div>
+              <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase">CTA Button Text</label>
+              <input type="text" id="promo-cta-text" placeholder="Book Now →" style="width:100%;padding:11px 14px;border:1.5px solid rgba(0,200,212,0.25);border-radius:10px;font-size:14px;font-family:Outfit,sans-serif;outline:none" oninput="updatePromoPreview()"/>
+            </div>
+            <div>
+              <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase">CTA URL</label>
+              <input type="text" id="promo-cta-url" placeholder="/booking" style="width:100%;padding:11px 14px;border:1.5px solid rgba(0,200,212,0.25);border-radius:10px;font-size:14px;font-family:Outfit,sans-serif;outline:none"/>
+            </div>
+          </div>
+          <div style="margin-bottom:20px">
+            <label style="display:block;font-size:11px;font-weight:700;color:var(--muted);margin-bottom:6px;letter-spacing:.06em;text-transform:uppercase">Promo ID <span style="font-weight:400;text-transform:none">(change when starting a new promo — resets dismissed state)</span></label>
+            <input type="text" id="promo-id" placeholder="e.g. summer2026-10off" style="width:100%;padding:11px 14px;border:1.5px solid rgba(0,200,212,0.25);border-radius:10px;font-size:14px;font-family:Outfit,sans-serif;outline:none"/>
+          </div>
+          <button class="btn btn-primary" onclick="savePromo()" style="margin-right:8px">Save & Publish</button>
+          <span id="promo-save-status" style="font-size:13px;color:var(--muted)"></span>
+        </div>
+        <div style="background:var(--white);border-radius:var(--radius);padding:20px;border:1px solid rgba(0,0,0,0.08)">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Preview</div>
+          <div id="promo-preview" style="background:#E040A0;color:#FFFeb4;font-size:13px;font-weight:700;padding:11px 48px;text-align:center;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:16px;min-height:44px">
+            <span id="promo-preview-text" style="color:#FFFeb4"></span>
+            <a id="promo-preview-cta" style="color:#FFFeb4;font-weight:800;text-decoration:underline"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- PROMO CODES -->
+    <div class="panel" id="panel-promocodes">
+      <div class="bookings-toolbar">
+        <input type="text" id="search-promocodes" placeholder="Search code or partner..." oninput="filterPromoCodes()"/>
+        <button class="btn btn-primary" onclick="openAddPromoCode()">+ New Code</button>
+      </div>
+      <div class="card" style="padding:0">
+        <table><thead><tr><th>Code</th><th>Discount</th><th>Partner / Label</th><th>Status</th><th>Expires</th><th>Actions</th></tr></thead>
+        <tbody id="promocodes-table"></tbody></table>
+      </div>
+    </div>
+    <div class="panel" id="panel-emails">
+      <div style="display:grid;grid-template-columns:280px 1fr;gap:24px">
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Templates</div>
+          <div id="template-list"></div>
+          <button class="btn btn-ghost" style="width:100%;margin-top:8px" onclick="openNewTemplate()">+ New Template</button>
+        </div>
+        <div id="email-composer">
+          <div style="color:var(--muted);font-size:15px;padding:40px;text-align:center">Select a template to compose an email</div>
+        </div>
+      </div>
+    </div>
+    <!-- CARD CONTACTS -->
+    <div class="panel" id="panel-cardcontacts">
+      <div class="stats-row" style="margin-bottom:20px">
+        <div class="stat-card"><div class="stat-num" id="cc-stat-total">—</div><div class="stat-label">Total Contacts</div></div>
+        <div class="stat-card"><div class="stat-num" id="cc-stat-week">—</div><div class="stat-label">New This Week</div></div>
+        <div class="stat-card"><div class="stat-num" id="cc-stat-rate">—</div><div class="stat-label">Promotion Rate</div></div>
+        <div class="stat-card"><div class="stat-num" id="cc-stat-source">—</div><div class="stat-label">Top Source</div></div>
+      </div>
+      <div class="bookings-toolbar">
+        <input type="text" id="cc-search" placeholder="Search name, email, phone..." oninput="renderCardContacts()" style="flex:1;min-width:180px"/>
+        <select id="cc-status-filter" onchange="renderCardContacts()">
+          <option value="">All statuses</option>
+          <option value="new">New</option>
+          <option value="contacted">Contacted</option>
+          <option value="qualified">Qualified</option>
+          <option value="converted">Converted</option>
+          <option value="archived">Archived</option>
+        </select>
+        <button class="btn btn-ghost" onclick="exportContactsCSV()">Export CSV</button>
+      </div>
+      <div class="card" style="padding:0">
+        <table>
+          <thead><tr><th>Name</th><th>Contact</th><th>Promo</th><th>Source</th><th>Status</th><th>Captured</th><th>Actions</th></tr></thead>
+          <tbody id="cc-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <!-- QR CODES -->
+    <div class="panel" id="panel-qrcodes">
+      <div class="stats-row" style="margin-bottom:20px">
+        <div class="stat-card"><div class="stat-num" id="qr-stat-active">—</div><div class="stat-label">Active Codes</div></div>
+        <div class="stat-card"><div class="stat-num" id="qr-stat-scans">—</div><div class="stat-label">Total Scans</div></div>
+        <div class="stat-card"><div class="stat-num" id="qr-stat-captures">—</div><div class="stat-label">Captures</div></div>
+        <div class="stat-card"><div class="stat-num" id="qr-stat-rate">—</div><div class="stat-label">Capture Rate</div></div>
+      </div>
+      <div class="bookings-toolbar">
+        <span style="flex:1;font-size:13px;color:var(--muted)">URL pattern: <code>https://learnwatersports.ca/card?q=<em>slug</em></code></span>
+        <button class="btn btn-primary" onclick="openQRModal()">+ New QR Code</button>
+      </div>
+      <div class="card" style="padding:0">
+        <table>
+          <thead><tr><th>Preview</th><th>Name</th><th>Slug</th><th>Promo</th><th>Status</th><th>Scans</th><th>Captures</th><th>Actions</th></tr></thead>
+          <tbody id="qr-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+    <!-- DIGITAL CARD EDITOR -->
+    <div class="panel" id="panel-digitalcard">
+      <div class="card" style="max-width:820px">
+        <div class="card-header" style="margin-bottom:4px">
+          <div class="card-title">Digital Card Content</div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <span id="dc-save-status" style="font-size:12px;color:var(--hint)"></span>
+            <a href="/card" target="_blank" class="btn btn-ghost btn-sm">Preview ↗</a>
+            <button class="btn btn-primary" onclick="saveCardConfig()">Save Changes</button>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--muted);margin-bottom:20px">Changes apply after saving. No redeploy needed.</p>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-hero')">Hero <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-hero">
+            <div class="form-row">
+              <div class="form-group"><label>Hero Image URL</label><input type="text" id="dc-hero-image" placeholder="/assets/card-hero.png"/></div>
+              <div class="form-group"><label>Eyebrow (e.g. HEAD COACH)</label><input type="text" id="dc-eyebrow"/></div>
+            </div>
+            <div class="form-group"><label>Display Name</label><input type="text" id="dc-display-name"/></div>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-ctabtn')">CTA Button <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body collapsed" id="dc-body-ctabtn">
+            <div class="form-row">
+              <div class="form-group"><label>Save Contact Button Text</label><input type="text" id="dc-cta-save-text" placeholder="Save Contact"/></div>
+              <div class="form-group"><label>SMS Button Text</label><input type="text" id="dc-cta-btn-text" placeholder="Send Us a Text"/></div>
+              <div class="form-group"><label>DM Button Text</label><input type="text" id="dc-cta-dm-text" placeholder="DM Us"/></div>
+            </div>
+            <div class="form-group">
+              <label>SMS Pre-filled Message</label>
+              <input type="text" id="dc-cta-sms-body" placeholder="Hi christian i saw your flyer for stillwater sports and wanted to know more!"/>
+              <p style="font-size:11px;color:var(--hint);margin-top:4px">Opens the SMS app with this message pre-filled when tapped.</p>
+            </div>
+            <div class="form-group">
+              <label>DM Link URL (Instagram)</label>
+              <input type="text" id="dc-cta-dm-url" placeholder="https://www.instagram.com/stillwater.sports/"/>
+            </div>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-creds')">Credentials <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-creds">
+            <div id="dc-creds-list"></div>
+            <button class="btn btn-ghost btn-sm" onclick="addDcCred()" style="margin-top:4px">+ Add Credential</button>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-desc')">Description <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-desc">
+            <div class="form-group"><label>Tagline</label><input type="text" id="dc-tagline"/></div>
+            <div class="form-group"><label>Description Lines (one per line)</label><textarea id="dc-desc-lines" rows="4"></textarea></div>
+            <div class="form-group"><label>CTA Text</label><input type="text" id="dc-cta"/></div>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-nums')">Key Numbers <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-nums">
+            <div id="dc-nums-list"></div>
+            <button class="btn btn-ghost btn-sm" onclick="addDcNum()" style="margin-top:4px">+ Add Number</button>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-website')">Website Block <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-website">
+            <div class="form-group"><label>Image URL</label><input type="text" id="dc-web-img" placeholder="/assets/FB-main.jpg"/></div>
+            <div class="form-group"><label>Caption (pink text below image)</label><input type="text" id="dc-web-caption" placeholder="tap to visit our website"/></div>
+            <div class="form-group"><label>Link URL</label><input type="text" id="dc-web-link" placeholder="https://learnwatersports.ca"/></div>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-video')">Intro Video <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-video">
+            <div class="form-group"><label>Video URL (YouTube, Vimeo, or MP4)</label><input type="text" id="dc-video-url"/></div>
+            <div class="form-group"><label>Caption (optional)</label><input type="text" id="dc-video-caption"/></div>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-contact')">Contact Info <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-contact">
+            <div class="form-row">
+              <div class="form-group"><label>Phone</label><input type="text" id="dc-phone"/></div>
+              <div class="form-group"><label>Email</label><input type="text" id="dc-email"/></div>
+            </div>
+            <div class="form-group"><label>Website</label><input type="text" id="dc-website"/></div>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-socials')">Socials <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-socials">
+            <div id="dc-socials-list"></div>
+            <button class="btn btn-ghost btn-sm" onclick="addDcSocial()" style="margin-top:4px">+ Add Social Link</button>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-exchange')">Exchange Gate <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-exchange">
+            <div class="form-row">
+              <div class="form-group"><label>Eyebrow</label><input type="text" id="dc-ex-eyebrow"/></div>
+              <div class="form-group"><label>Headline</label><input type="text" id="dc-ex-headline"/></div>
+            </div>
+            <div class="form-group"><label>Description</label><input type="text" id="dc-ex-description"/></div>
+            <div class="form-group"><label>Promo field label</label><input type="text" id="dc-ex-promo-label"/></div>
+            <div class="form-group"><label>Submit Button Text</label><input type="text" id="dc-ex-cta-text" placeholder="COMPLETE EXCHANGE →"/></div>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-blocks')">Block Visibility &amp; Order <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-blocks">
+            <p style="font-size:13px;color:var(--muted);margin-bottom:12px">Reorder with ↑↓. Toggle to show/hide on the card.</p>
+            <div id="dc-blocks-list"></div>
+          </div>
+        </div>
+        <div class="dc-section">
+          <div class="dc-section-header" onclick="dcToggle('dc-body-footer')">Footer <span class="dc-chevron">▾</span></div>
+          <div class="dc-section-body" id="dc-body-footer">
+            <div class="form-group"><label>Footer Text</label><input type="text" id="dc-footer-text"/></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- QR CODE MODAL -->
+<div class="modal-overlay" id="qr-modal">
+  <div class="modal" style="max-width:480px">
+    <button class="modal-close" onclick="closeModal('qr-modal')">✕</button>
+    <div class="modal-title" id="qr-modal-title">New QR Code</div>
+    <input type="hidden" id="qr-editing-id"/>
+    <div class="form-group"><label>Name (e.g. Duck Lake Marina)</label><input type="text" id="qr-name"/></div>
+    <div class="form-group"><label>Slug (URL-safe, e.g. ducklake)</label><input type="text" id="qr-slug" placeholder="ducklake" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')"/></div>
+    <div class="form-row">
+      <div class="form-group"><label>Promo Code (optional)</label><input type="text" id="qr-promo-code" placeholder="e.g. Wood15"/></div>
+      <div class="form-group"><label>Discount %</label><input type="number" id="qr-promo-pct" placeholder="15" min="1" max="100"/></div>
+    </div>
+    <div class="form-group"><label>Description / Location (optional)</label><input type="text" id="qr-desc" placeholder="Duck Lake boat launch kiosk"/></div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+      <label style="font-size:13px;font-weight:600;color:var(--muted)">Active</label>
+      <label class="toggle-sw"><input type="checkbox" id="qr-active" checked/><span class="toggle-sl"></span></label>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-primary" onclick="saveQRCode()" style="flex:1">Save</button>
+      <button class="btn btn-ghost" id="qr-delete-btn" onclick="deleteQRCode()" style="display:none;color:var(--red)">Delete</button>
+    </div>
+  </div>
+</div>
+<!-- HOLIDAY MODAL -->
+<div class="modal-overlay" id="holiday-modal">
+  <div class="modal" style="max-width:560px">
+    <button class="modal-close" onclick="closeModal('holiday-modal')">✕</button>
+    <div class="modal-title">Holiday Management</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:20px;line-height:1.6">Holidays marked here show as a <span style="color:var(--pink);font-weight:700">pink dot</span> on the public booking calendar. On holiday dates: Half Day and Full Day Split are unavailable — only <strong>Full Day ($1,250 · any 2 blocks including split)</strong> and multi-day packages are offered. Split day is included at no extra charge on holidays.</p>
+    <div class="section-label">Ontario Public Holidays 2026</div>
+    <div id="preset-holidays" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px"></div>
+    <div class="section-label">Custom Holiday / Special Date</div>
+    <div class="form-row">
+      <div class="form-group"><label>Date</label><input type="date" id="custom-holiday-date"/></div>
+      <div class="form-group"><label>Label (e.g. Long Weekend)</label><input type="text" id="custom-holiday-label" placeholder="Victoria Day Weekend"/></div>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="addCustomHoliday()">Add Custom Holiday</button>
+    <div class="section-label" style="margin-top:20px">Active Holidays</div>
+    <div id="active-holidays-list" style="font-size:13px;color:var(--muted)">Loading...</div>
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px">
+      <button class="btn btn-ghost" onclick="closeModal('holiday-modal')">Close</button>
+    </div>
+  </div>
+</div>
+<!-- DROP-IN MODAL -->
+<div class="modal-overlay" id="booking-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('booking-modal')">✕</button>
+    <div class="modal-title" id="booking-modal-title">New Booking</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Client</label>
+        <select id="bk-client" onchange="loadClientDetails()">
+          <option value="">Select existing client...</option>
+          <option value="new">+ New Client</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Status</label>
+        <select id="bk-status">
+          <option value="new">New Request</option>
+          <option value="confirmed">Confirmed</option>
+          <option value="deposit_paid">Deposit Paid</option>
+          <option value="complete">Complete</option>
+          <option value="cancelled">Cancelled</option>
+        </select>
+      </div>
+    </div>
+    <div id="new-client-fields" style="display:none">
+      <div class="section-label">New Client Details</div>
+      <div class="form-row">
+        <div class="form-group"><label>Name *</label><input type="text" id="nc-name" placeholder="Full name"/></div>
+        <div class="form-group"><label>Email</label><input type="email" id="nc-email" placeholder="email@example.com"/></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Phone</label><input type="tel" id="nc-phone" placeholder="613-555-0100"/></div>
+        <div class="form-group"><label>Lake / Location</label><input type="text" id="nc-location" placeholder="Rideau Lake, ON"/></div>
+      </div>
+    </div>
+    <div class="section-label">Session Details</div>
+    <div class="form-row">
+      <div class="form-group"><label>Date *</label><input type="date" id="bk-date"/></div>
+      <div class="form-group">
+        <label>Time Slot *</label>
+        <select id="bk-slot">
+          <option value="morning">Morning (~8am–12pm)</option>
+          <option value="afternoon">Afternoon (~12pm–4pm)</option>
+          <option value="evening">Evening (~4pm–8pm)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Package</label>
+        <select id="bk-package" onchange="lookupPromo(document.getElementById('bk-promo').value)">
+          <option>Half Day — $600 (weekday)</option>
+          <option>Half Day — $750 (weekend/holiday)</option>
+          <option>Full Day — $1,000</option>
+          <option>Full Day (Weekend) — $1,250</option>
+          <option>Full Day (Holiday) — $1,250 · any 2 blocks incl. split</option>
+          <option>Full Day Split (any day except holidays) — $1,250</option>
+          <option>Double Weekday — $1,750</option>
+          <option>Full Weekend — $2,100</option>
+          <option>3 Day Work Week — $2,500</option>
+          <option>Holiday Weekend — $3,000</option>
+          <option>5 Day Week — $4,500</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Sport(s)</label><input type="text" id="bk-sport" placeholder="Waterski, Wakeboard..."/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Location / Lake</label><input type="text" id="bk-location" placeholder="Lake name, ON"/></div>
+      <div class="form-group"><label>Deposit Link (Square)</label><input type="text" id="bk-deposit" placeholder="https://square.link/..."/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Promo Code</label><input type="text" id="bk-promo" placeholder="e.g. Wood15" oninput="lookupPromo(this.value)"/></div>
+      <div class="form-group" style="display:flex;align-items:flex-end"><div id="bk-promo-info" style="padding-bottom:10px;font-size:13px;font-weight:600;min-height:20px"></div></div>
+    </div>
+    <div class="form-group"><label>Notes</label><textarea id="bk-notes" placeholder="Any notes about this booking..."></textarea></div>
+    <div class="section-label">Class Participants</div>
+    <div id="participants-list"></div>
+    <div class="minor-warning" id="minor-warning">⚠️ This class includes minors under 18 — ensure waivers are completed and parent/guardian is confirmed present on shore.</div>
+    <button class="btn btn-ghost btn-sm" onclick="addParticipant()" style="margin-bottom:16px">+ Add Participant</button>
+    <div style="display:flex;gap:12px;justify-content:space-between;margin-top:24px">
+      <button class="btn btn-danger" id="booking-delete-btn" style="display:none" onclick="deleteBooking(editingBookingId)">Delete Booking</button>
+      <div style="display:flex;gap:12px;margin-left:auto">
+        <button class="btn btn-ghost" onclick="closeModal('booking-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveBooking()">Save Booking</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- CLIENT MODAL -->
+<div class="modal-overlay" id="client-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('client-modal')">✕</button>
+    <div class="modal-title" id="client-modal-title">Client</div>
+    <div class="form-row">
+      <div class="form-group"><label>Name *</label><input type="text" id="cl-name"/></div>
+      <div class="form-group"><label>Email</label><input type="email" id="cl-email"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Phone</label><input type="tel" id="cl-phone"/></div>
+      <div class="form-group"><label>Lake / Location</label><input type="text" id="cl-location"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Region</label>
+        <select id="cl-region-tag">
+          <option value="">—</option>
+          <option value="local">Local</option>
+          <option value="out_of_town">Out of Town</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Experience Level</label>
+        <select id="cl-experience-level">
+          <option value="">—</option>
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="advanced">Advanced</option>
+          <option value="expert">Expert</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label>Discipline</label>
+      <select id="cl-discipline-tag">
+        <option value="">—</option>
+        <option value="waterski">Waterski</option>
+        <option value="wakeboard">Wakeboard</option>
+        <option value="wakesurf">Wakesurf</option>
+        <option value="multi_sport">Multi-Sport</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Notes</label><textarea id="cl-notes"></textarea></div>
+    <div class="section-label">Session History</div>
+    <div id="cl-history" style="font-size:14px;color:var(--muted)">No sessions yet.</div>
+    <div class="section-label">Participants / Roster</div>
+    <div id="cl-roster"></div>
+    <button class="btn btn-ghost btn-sm" onclick="addRosterRow()" style="margin:8px 0 4px">+ Add participant</button>
+    <div class="section-label">Waivers</div>
+    <div id="cl-waivers" style="font-size:13px;color:var(--muted)">—</div>
+    <button class="btn btn-ghost btn-sm" id="cl-send-intake" onclick="sendIntakeForm()" style="margin-top:10px;display:none">Send intake form</button>
+    <button class="btn btn-primary btn-sm" id="cl-send-waivers" onclick="sendClientWaivers()" style="margin-top:10px;display:none">Send waivers</button>
+    <div id="cl-intake-status" style="font-size:12px;margin-top:8px"></div>
+    <div id="cl-bounces" style="font-size:12px;margin-top:8px"></div>
+    <div class="section-label">Send a guide / message</div>
+    <select id="cl-msg-template" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'Outfit',sans-serif;font-size:13px;background:#fff"></select>
+    <div style="font-size:11px;color:var(--muted);margin:6px 0 2px">Optional attachment(s):</div>
+    <input type="file" id="cl-msg-file" multiple style="font-size:12px"/>
+    <button class="btn btn-ghost btn-sm" id="cl-send-msg" onclick="sendClientMessage()" style="margin-top:10px;display:none">Send to participants</button>
+    <div id="cl-msg-status" style="font-size:12px;margin-top:6px;color:var(--muted)"></div>
+    <div style="display:flex;gap:12px;justify-content:space-between;margin-top:24px">
+      <button class="btn btn-danger" id="client-delete-btn" style="display:none" onclick="deleteClient(editingClientId)">Delete Client</button>
+      <div style="display:flex;gap:12px;margin-left:auto">
+        <button class="btn btn-ghost" onclick="closeModal('client-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveClient()">Save Client</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- LEAD MODAL -->
+<div class="modal-overlay" id="lead-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('lead-modal')">✕</button>
+    <div class="modal-title" id="lead-modal-title">Lead</div>
+    <div class="form-row">
+      <div class="form-group"><label>Name *</label><input type="text" id="ld-name"/></div>
+      <div class="form-group"><label>Email</label><input type="email" id="ld-email"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Phone</label><input type="tel" id="ld-phone"/></div>
+      <div class="form-group"><label>Sport / Interest</label><input type="text" id="ld-sport" placeholder="Waterski, Wakeboard..."/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Status</label>
+        <select id="ld-status">
+          <option value="new">New</option>
+          <option value="hot">Hot</option>
+          <option value="warm">Warm</option>
+          <option value="cold">Cold</option>
+          <option value="archived">Archived</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Source</label>
+        <select id="ld-source">
+          <option value="">—</option>
+          <option value="website">Website</option>
+          <option value="resort">Resort</option>
+          <option value="facebook">Facebook</option>
+          <option value="instagram">Instagram</option>
+          <option value="referral">Referral</option>
+          <option value="phone/text">Phone / Text</option>
+          <option value="messenger">Messenger</option>
+          <option value="sunset_wake_date">Sunset Wake Date</option>
+          <option value="gmail">Gmail</option>
+          <option value="square">Square</option>
+          <option value="imessage">iMessage</option>
+          <option value="walk-up">Walk-up</option>
+          <option value="repeat">Repeat Customer</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label>Region</label>
+      <select id="ld-region-tag">
+        <option value="">—</option>
+        <option value="local">Local</option>
+        <option value="resort">Resort</option>
+        <option value="out_of_towner">Out-of-Towner</option>
+      </select>
+    </div>
+    <div class="form-group"><label>Inquiry / Message</label><textarea id="ld-message" placeholder="What they reached out about..."></textarea></div>
+    <div class="form-group"><label>Notes</label><textarea id="ld-notes"></textarea></div>
+    <div style="display:flex;gap:12px;justify-content:space-between;margin-top:24px">
+      <button class="btn btn-danger" id="lead-delete-btn" style="display:none" onclick="deleteLead(editingLeadId)">Delete</button>
+      <div style="display:flex;gap:12px;margin-left:auto">
+        <button class="btn btn-pink" id="lead-convert-btn" style="display:none" onclick="convertLead(editingLeadId)">Convert to Client</button>
+        <button class="btn btn-ghost" onclick="closeModal('lead-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="saveLead()">Save Lead</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- TEMPLATE MODAL -->
+<div class="modal-overlay" id="template-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('template-modal')">✕</button>
+    <div class="modal-title">Email Template</div>
+    <div class="form-group"><label>Template Name</label><input type="text" id="tpl-name"/></div>
+    <div class="form-group"><label>Subject Line</label><input type="text" id="tpl-subject"/></div>
+    <div class="form-group">
+      <label>Body</label>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Use {{variable_name}} for dynamic fields</div>
+      <textarea id="tpl-body" style="min-height:300px;font-family:monospace;font-size:13px"></textarea>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px">
+      <button class="btn btn-ghost" onclick="closeModal('template-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveTemplate()">Save Template</button>
+    </div>
+  </div>
+</div>
+<!-- BLOCK RANGE MODAL -->
+<div class="modal-overlay" id="block-modal">
+  <div class="modal" style="max-width:440px">
+    <button class="modal-close" onclick="closeModal('block-modal')">✕</button>
+    <div class="modal-title">Block Date Range</div>
+    <div class="form-row">
+      <div class="form-group"><label>From</label><input type="date" id="block-from"/></div>
+      <div class="form-group"><label>To</label><input type="date" id="block-to"/></div>
+    </div>
+    <div class="form-group">
+      <label>Slots to Block</label>
+      <div style="display:flex;gap:12px;margin-top:8px">
+        <label style="display:flex;align-items:center;gap:6px;text-transform:none;letter-spacing:0;font-size:14px;font-weight:400"><input type="checkbox" id="bl-morning" checked> Morning</label>
+        <label style="display:flex;align-items:center;gap:6px;text-transform:none;letter-spacing:0;font-size:14px;font-weight:400"><input type="checkbox" id="bl-afternoon" checked> Afternoon</label>
+        <label style="display:flex;align-items:center;gap:6px;text-transform:none;letter-spacing:0;font-size:14px;font-weight:400"><input type="checkbox" id="bl-evening" checked> Evening</label>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:24px">
+      <button class="btn btn-ghost" onclick="closeModal('block-modal')">Cancel</button>
+      <button class="btn btn-danger" onclick="applyBlockRange()">Block These Dates</button>
+    </div>
+  </div>
+</div>
+<!-- PROMO CODE MODAL -->
+<div class="modal-overlay" id="promocode-modal">
+  <div class="modal" style="max-width:520px">
+    <button class="modal-close" onclick="closeModal('promocode-modal')">✕</button>
+    <div class="modal-title" id="promocode-modal-title">New Promo Code</div>
+    <div class="form-row">
+      <div class="form-group"><label>Code *</label><input type="text" id="pc-code" placeholder="e.g. CAFE10" style="text-transform:uppercase"/></div>
+      <div class="form-group"><label>Partner / Label</label><input type="text" id="pc-label" placeholder="e.g. Cafe on the Lake"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Discount Type</label>
+        <select id="pc-type"><option value="percent">Percent (%)</option><option value="fixed">Fixed ($)</option></select>
+      </div>
+      <div class="form-group"><label>Discount Value *</label><input type="number" id="pc-value" min="0" step="1" placeholder="10"/></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Expires (optional)</label><input type="date" id="pc-expires"/></div>
+      <div class="form-group"><label>Status</label>
+        <select id="pc-active"><option value="true">Active</option><option value="false">Inactive</option></select>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;justify-content:space-between;margin-top:24px">
+      <button class="btn btn-danger" id="promocode-delete-btn" style="display:none" onclick="deletePromoCode(editingPromoCodeId)">Delete</button>
+      <div style="display:flex;gap:12px;margin-left:auto">
+        <button class="btn btn-ghost" onclick="closeModal('promocode-modal')">Cancel</button>
+        <button class="btn btn-primary" onclick="savePromoCode()">Save Code</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+// ── CONFIG ────────────────────────────────────────────────
+const SUPABASE_URL = 'https://isbhflfmugfeqwhhqlkh.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzYmhmbGZtdWdmZXF3aGhxbGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDE0MzEsImV4cCI6MjA5MzA3NzQzMX0.TKMd_rSmJvoLiL5_1pFw9KqYHNne-eEdnGNR4zgZwFk';
+const { createClient } = supabase;
+const db = createClient(SUPABASE_URL, SUPABASE_KEY);
+// ── PASSWORD VALIDATOR ────────────────────────────────────
+const PasswordValidator = {
+  rules: {
+    minLength: 6,
+    uppercase: /[A-Z]/,
+    lowercase: /[a-z]/,
+    number: /\d/,
+    special: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,
+  },
+  validate(password) {
+    if (!password) return { valid: false, error: 'Password is required' };
+    if (password.length < this.rules.minLength)
+      return { valid: false, error: `Min ${this.rules.minLength} characters` };
+    if (!this.rules.uppercase.test(password))
+      return { valid: false, error: 'Add 1+ uppercase letter (A-Z)' };
+    if (!this.rules.lowercase.test(password))
+      return { valid: false, error: 'Add 1+ lowercase letter (a-z)' };
+    if (!this.rules.number.test(password))
+      return { valid: false, error: 'Add 1+ number (0-9)' };
+    if (!this.rules.special.test(password))
+      return { valid: false, error: 'Add 1+ special char (!@#$%^&*, etc)' };
+    return { valid: true, error: null };
+  },
+  getStrength(password) {
+    if (!password) return 0;
+    let score = 0;
+    if (password.length >= 12) score += 1;
+    if (password.length >= 16) score += 1;
+    if (this.rules.uppercase.test(password)) score += 1;
+    if (this.rules.number.test(password)) score += 1;
+    if (this.rules.special.test(password)) score += 1;
+    return Math.min(score, 5);
+  },
+  getStrengthText(score) {
+    const texts = ['Very Weak', 'Weak', 'Fair', 'Good', 'Strong', 'Very Strong'];
+    return texts[score] || 'Unknown';
+  }
+};
+// ── STATE ─────────────────────────────────────────────────
+let bookings = [], clients = [], availability = [], templates = [], participants = {}, leads = [];
+let calYear = new Date().getFullYear(), calMonth = new Date().getMonth();
+let editingBookingId = null, editingClientId = null, editingTemplateId = null, editingLeadId = null, pendingLeadIdForBooking = null;
+let promoCodes = [], editingPromoCodeId = null;
+let cardContacts = [], qrCodes = [], cardConfig = null, cardConfigLoaded = false;
+let qrScanStats = {};
+let activeTab = 'dashboard';
+// ── HOLIDAYS ──────────────────────────────────────────────
+const ONTARIO_HOLIDAYS_2026 = [
+  {date:'2026-01-01', label:"New Year's Day"},
+  {date:'2026-02-16', label:'Family Day'},
+  {date:'2026-04-03', label:'Good Friday'},
+  {date:'2026-04-06', label:'Easter Monday'},
+  {date:'2026-05-18', label:'Victoria Day'},
+  {date:'2026-07-01', label:'Canada Day'},
+  {date:'2026-08-03', label:'Civic Holiday'},
+  {date:'2026-09-07', label:'Labour Day'},
+  {date:'2026-10-12', label:'Thanksgiving'},
+  {date:'2026-11-11', label:'Remembrance Day'},
+  {date:'2026-12-25', label:'Christmas Day'},
+  {date:'2026-12-26', label:'Boxing Day'},
+];
+let activeHolidays = [];
+async function loadHolidays(){
+  const {data} = await db.from('availability').select('*').eq('is_holiday', true);
+  activeHolidays = data || [];
+  renderActiveHolidays();
+  renderPresetHolidays();
+}
+function renderPresetHolidays(){
+  const el = document.getElementById('preset-holidays');
+  if(!el) return;
+  el.innerHTML = ONTARIO_HOLIDAYS_2026.map(h => {
+    const active = activeHolidays.some(a => a.date === h.date && a.is_holiday);
+    return `<label style="display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;background:${active?'rgba(0,200,212,0.08)':'var(--bg)'};border:1px solid ${active?'var(--cyan)':'var(--border)'};cursor:pointer;font-size:13px">
+      <input type="checkbox" ${active?'checked':''} onchange="toggleHoliday('${h.date}','${h.label}',this.checked)" style="accent-color:var(--cyan)"/>
+      <span><strong>${h.label}</strong><br><span style="font-size:11px;color:var(--muted)">${fmtDate(h.date)}</span></span>
+    </label>`;
+  }).join('');
+}
+function renderActiveHolidays(){
+  const el = document.getElementById('active-holidays-list');
+  if(!el) return;
+  if(!activeHolidays.length){ el.innerHTML = 'No holidays set.'; return; }
+  el.innerHTML = activeHolidays.map(h => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg);border-radius:8px;margin-bottom:6px">
+      <span><strong>${h.holiday_label||'Holiday'}</strong> — ${fmtDate(h.date)}</span>
+      <button class="btn btn-danger btn-sm" onclick="removeHoliday('${h.id}')">Remove</button>
+    </div>`).join('');
+}
+async function toggleHoliday(date, label, checked){
+  if(checked){
+    const {data} = await db.from('availability').upsert(
+      {date, slot:'holiday_marker', is_blocked:false, is_holiday:true, holiday_label:label},
+      {onConflict:'date,slot'}
+    ).select().single();
+    if(data) activeHolidays.push(data);
+  } else {
+    await db.from('availability').delete().eq('date',date).eq('is_holiday',true);
+    activeHolidays = activeHolidays.filter(h=>h.date!==date);
+  }
+  renderActiveHolidays();
+  renderPresetHolidays();
+  renderCalendar();
+  toast(checked ? `${label} marked as holiday ✓` : `${label} removed`);
+}
+async function addCustomHoliday(){
+  const date = document.getElementById('custom-holiday-date').value;
+  const label = document.getElementById('custom-holiday-label').value.trim() || 'Holiday';
+  if(!date){ toast('Please select a date'); return; }
+  const {data} = await db.from('availability').upsert(
+    {date, slot:'holiday_marker', is_blocked:false, is_holiday:true, holiday_label:label},
+    {onConflict:'date,slot'}
+  ).select().single();
+  if(data) activeHolidays.push(data);
+  document.getElementById('custom-holiday-date').value='';
+  document.getElementById('custom-holiday-label').value='';
+  renderActiveHolidays();
+  renderCalendar();
+  toast(`${label} added as holiday ✓`);
+}
+async function removeHoliday(id){
+  await db.from('availability').delete().eq('id',id);
+  activeHolidays = activeHolidays.filter(h=>h.id!==id);
+  renderActiveHolidays();
+  renderPresetHolidays();
+  renderCalendar();
+  toast('Holiday removed');
+}
+// ── AUTH ──────────────────────────────────────────────────
+async function doLogin(){
+  const email = document.getElementById('email-input').value.trim();
+  const pw    = document.getElementById('pw-input').value;
+  const err   = document.getElementById('login-error');
+  err.textContent = '';
+
+  // Validate password format
+  const pwValidation = PasswordValidator.validate(pw);
+  if (!pwValidation.valid) {
+    err.textContent = pwValidation.error;
+    return;
+  }
+
+  const { error } = await db.auth.signInWithPassword({ email, password: pw });
+  if(error){
+    err.textContent = 'Incorrect email or password.';
+    setTimeout(()=>err.textContent='', 3000);
+    return;
+  }
+
+  // Check user role
+  try {
+    const { data: { user } } = await db.auth.getUser();
+    const { data: coachRole } = await db.from('coach_roles').select('role').eq('user_id', user.id).single();
+    if (!coachRole || !['coach', 'admin'].includes(coachRole.role)) {
+      await db.auth.signOut();
+      err.textContent = 'Access denied. Admin role required.';
+      setTimeout(()=>err.textContent='', 3000);
+      return;
+    }
+  } catch (e) {
+    await db.auth.signOut();
+    err.textContent = 'Unable to verify access. Please try again.';
+    return;
+  }
+
+  showApp();
+}
+function showApp(){
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('topbar-date').textContent = new Date().toLocaleDateString('en-CA',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  loadAll();
+  loadTasks();
+  loadBriefing();
+  loadFeedback();
+  loadLeadNotes();
+}
+async function doLogout(){
+  await db.auth.signOut();
+  document.getElementById('app').style.display='none';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('pw-input').value='';
+  document.getElementById('email-input').value='';
+}
+// Stay logged in across refreshes (WITH ROLE CHECK)
+(async function(){
+  try {
+    const { data: { session } } = await db.auth.getSession();
+    if (!session) return;
+
+    // Check role before showing app
+    const { data: coachRole } = await db.from('coach_roles')
+      .select('role')
+      .eq('user_id', session.user.id)
+      .single();
+
+    if (coachRole && ['coach', 'admin'].includes(coachRole.role)) {
+      showApp();
+    } else {
+      await db.auth.signOut();
+      document.getElementById('login-error').textContent = 'Access denied.';
+    }
+  } catch(e) {
+    console.error('Auth check failed:', e);
+  }
+})();
+// ── DATA LOAD ─────────────────────────────────────────────
+async function loadAll(){
+  await Promise.all([loadBookings(), loadClients(), loadAvailability(), loadTemplates(), loadHolidays(), loadPromo(), loadLeads(), loadPromoCodes(), loadCardContacts(), loadQRCodes()]);
+  renderDashboard();
+  renderCalendar();
+  renderBookingsTable();
+  renderClients();
+  renderClientsLocal();
+  renderClientsOutOfTown();
+  renderClientsByExperience();
+  renderClientsByDiscipline();
+  renderTemplates();
+  renderLeads();
+  renderLeadsLocal();
+  renderLeadsResorts();
+  renderLeadsOutOfTowner();
+  renderPromoCodes();
+  renderCardContacts();
+  renderQRCodes();
+  updateNewActivityBadges();
+  renderCrmHealth();
+}
+async function loadBookings(){
+  const {data} = await db.from('bookings').select('*, clients(name,email,phone)').order('date');
+  bookings = data || [];
+  // load participants for each booking
+  const ids = bookings.map(b=>b.id);
+  if(ids.length){
+    const {data:p} = await db.from('participants').select('*').in('booking_id', ids);
+    participants = {};
+    (p||[]).forEach(r=>{ if(!participants[r.booking_id]) participants[r.booking_id]=[]; participants[r.booking_id].push(r); });
+  }
+}
+async function loadClients(){
+  const {data} = await db.from('clients').select('*').order('name');
+  clients = data || [];
+}
+async function loadAvailability(){
+  const {data} = await db.from('availability').select('*');
+  availability = data || [];
+}
+async function loadTemplates(){
+  const {data} = await db.from('email_templates').select('*');
+  templates = data || [];
+}
+// ── TABS ──────────────────────────────────────────────────
+// Tabs that got consolidated under one nav item share a "group" so the umbrella
+// nav button + the right sub-tab pill both light up correctly.
+const TAB_GROUP = {
+  promo:'promogroup', promocodes:'promogroup',
+  digitalcard:'cardgroup', cardcontacts:'cardgroup', qrcodes:'cardgroup',
+  leads:'leadsgroup', 'leads-local':'leadsgroup', 'leads-resorts':'leadsgroup', 'leads-outoftowner':'leadsgroup',
+  clients:'clientsgroup', 'clients-local':'clientsgroup', 'clients-outoftown':'clientsgroup', 'clients-experience':'clientsgroup', 'clients-discipline':'clientsgroup'
+};
+function showTab(tab){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.getElementById('panel-'+tab).classList.add('active');
+  activeTab = tab;
+  if(tab==='digitalcard' && !cardConfigLoaded) loadCardConfig();
+  if(tab==='bookings'){ markVisited('bookings'); updateNewActivityBadges(); }
+  if(tab==='leads' || tab.indexOf('leads-')===0){ markVisited('leads'); updateNewActivityBadges(); }
+  if(tab==='leads-local') renderLeadsLocal();
+  if(tab==='leads-resorts') renderLeadsResorts();
+  if(tab==='leads-outoftowner') renderLeadsOutOfTowner();
+  if(tab==='clients-local') renderClientsLocal();
+  if(tab==='clients-outoftown') renderClientsOutOfTown();
+  if(tab==='clients-experience') renderClientsByExperience();
+  if(tab==='clients-discipline') renderClientsByDiscipline();
+
+  // Top-level nav highlighting (id-based, not event.target — works whether
+  // showTab() was triggered by a click or called directly from JS)
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  const group = TAB_GROUP[tab];
+  const navEl = document.getElementById('navtab-'+(group||tab));
+  if(navEl) navEl.classList.add('active');
+
+  // Sub-tab row show/hide + highlighting for grouped tabs
+  document.querySelectorAll('.subtab-row').forEach(r=>r.style.display='none');
+  document.querySelectorAll('.subtab').forEach(s=>s.classList.remove('active'));
+  if(group){
+    const row = document.getElementById('subtab-'+group);
+    if(row) row.style.display='flex';
+    const subEl = document.getElementById('subtab-item-'+tab);
+    if(subEl) subEl.classList.add('active');
+  }
+}
+// ── NEW-ACTIVITY BADGES (since you last opened the tab) ────
+function getLastVisit(tab){
+  return localStorage.getItem('sw_lastvisit_'+tab) || '1970-01-01T00:00:00.000Z';
+}
+function markVisited(tab){
+  localStorage.setItem('sw_lastvisit_'+tab, new Date().toISOString());
+}
+function renderCrmHealth(){
+  const L = leads||[], B = bookings||[];
+  const staleCutoff = Date.now() - 3*86400000;
+  const stale = L.filter(l=>l.status!=='converted'&&l.status!=='archived'&&new Date(l.last_activity_at||l.created_at).getTime()<staleCutoff).length;
+  const noWaiver = B.filter(b=>{
+    if(b.status!=='confirmed') return false;
+    const p = (participants&&participants[b.id])||[];
+    return p.length===0 || p.some(x=>!x.waiver_signed);
+  }).length;
+  const todayStr = new Date().toISOString().slice(0,10);
+  const newToday = L.filter(l=>(l.created_at||'').slice(0,10)===todayStr).length + B.filter(b=>(b.created_at||'').slice(0,10)===todayStr).length;
+  const unlinked = B.filter(b=>!b.lead_id).length;
+  const set = (id,val)=>{ const el=document.getElementById(id); if(el) el.textContent = val; };
+  set('crm-stat-stale', stale);
+  set('crm-stat-nowaiver', noWaiver);
+  set('crm-stat-newtoday', newToday);
+  set('crm-stat-unlinked', unlinked);
+}
+function updateNewActivityBadges(){
+  const leadsSince = getLastVisit('leads');
+  const bookingsSince = getLastVisit('bookings');
+  const newLeads = (leads||[]).filter(l=>l.created_at && l.created_at > leadsSince).length;
+  const newBookings = (bookings||[]).filter(b=>b.created_at && b.created_at > bookingsSince).length;
+  const lb = document.getElementById('leads-badge'); if(lb) lb.textContent = newLeads;
+  const nb = document.getElementById('new-badge'); if(nb) nb.textContent = newBookings;
+}
+// ── DASHBOARD ─────────────────────────────────────────────
+function renderDashboard(){
+  const now = new Date();
+  const monthEnd = new Date(now.getFullYear(), now.getMonth()+1, 0);
+  document.getElementById('stat-new').textContent = bookings.filter(b=>b.status==='new').length;
+  document.getElementById('stat-confirmed').textContent = bookings.filter(b=>b.status==='confirmed'||b.status==='deposit_paid').length;
+  document.getElementById('stat-upcoming').textContent = bookings.filter(b=>{const d=new Date(b.date);return d>=now&&d<=monthEnd}).length;
+  document.getElementById('stat-clients').textContent = clients.length;
+  const recent = [...bookings].filter(b=>b.status==='new').slice(0,5);
+  document.getElementById('recent-bookings').innerHTML = recent.length ? recent.map(b=>bookingRow(b,true)).join('') : '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:24px">No new requests</td></tr>';
+  const in14 = new Date(); in14.setDate(in14.getDate()+14);
+  const upcoming = bookings.filter(b=>{const d=new Date(b.date);return d>=now&&d<=in14&&b.status!=='cancelled'}).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  document.getElementById('upcoming-sessions').innerHTML = upcoming.length ? upcoming.map(b=>{
+    const p = participants[b.id]||[];
+    const minors = p.filter(x=>x.is_minor);
+    const waiverPending = p.filter(x=>!x.waiver_signed).length;
+    return `<tr>
+      <td><strong>${fmtDate(b.date)}</strong></td>
+      <td><span class="status-badge status-${b.slot}">${cap(b.slot)}</span></td>
+      <td>${b.clients?.name||'—'}</td>
+      <td>${b.package||'—'}</td>
+      <td>${b.location||'—'}</td>
+      <td>${p.length} riders${minors.length?` · <span style="color:var(--red)">${minors.length} minor${minors.length>1?'s':''}</span>`:''}${waiverPending?` · <span style="color:var(--orange)">${waiverPending} waiver pending</span>`:' · <span style="color:var(--green)">✓ waivers</span>'}</td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:24px">No upcoming sessions in the next 14 days</td></tr>';
+}
+// ── CALENDAR ──────────────────────────────────────────────
+function renderCalendar(){
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month-label').textContent = `${months[calMonth]} ${calYear}`;
+  const grid = document.getElementById('cal-grid');
+  const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let html = days.map(d=>`<div class="cal-day-header">${d}</div>`).join('');
+  const first = new Date(calYear,calMonth,1).getDay();
+  for(let i=0;i<first;i++) html+=`<div class="cal-day empty"></div>`;
+  const total = new Date(calYear,calMonth+1,0).getDate();
+  const today = new Date();
+  for(let d=1;d<=total;d++){
+    const dateStr = `${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const isToday = d===today.getDate()&&calMonth===today.getMonth()&&calYear===today.getFullYear();
+    const slots = ['morning','afternoon','evening'].map(slot=>{
+      const avail = availability.find(a=>a.date===dateStr&&a.slot===slot);
+      const booking = bookings.find(b=>b.date===dateStr&&b.slot===slot&&b.status!=='cancelled');
+      let cls = 'slot-open', label = slot.slice(0,3).toUpperCase(), icon='○';
+      if(booking && booking.status==='new'){ cls='slot-pending'; icon='●'; }
+      else if(booking){ cls='slot-booked'; icon='●'; }
+      else if(avail?.is_blocked){ cls='slot-blocked'; icon='×'; }
+      return `<div class="cal-slot ${cls}" onclick="toggleSlot('${dateStr}','${slot}',event)" title="${cap(slot)}">${icon} ${label}</div>`;
+    }).join('');
+    html+=`<div class="cal-day${isToday?' today':''}"><div class="cal-day-num">${d}</div>${slots}</div>`;
+  }
+  grid.innerHTML = html;
+}
+function calPrev(){ calMonth--; if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); }
+function calNext(){ calMonth++; if(calMonth>11){calMonth=0;calYear++;} renderCalendar(); }
+async function toggleSlot(date, slot, e){
+  e.stopPropagation();
+  const booking = bookings.find(b=>b.date===date&&b.slot===slot&&b.status!=='cancelled');
+  if(booking){ openEditBooking(booking.id); return; }
+  const avail = availability.find(a=>a.date===date&&a.slot===slot);
+  if(avail){
+    await db.from('availability').update({is_blocked:!avail.is_blocked}).eq('id',avail.id);
+    avail.is_blocked = !avail.is_blocked;
+  } else {
+    const {data} = await db.from('availability').insert({date,slot,is_blocked:true}).select().single();
+    if(data) availability.push(data);
+  }
+  renderCalendar();
+  toast(avail?.is_blocked ? `${cap(slot)} on ${date} unblocked` : `${cap(slot)} on ${date} blocked`);
+}
+function blockDateRange(){ openModal('block-modal'); }
+async function applyBlockRange(){
+  const from = new Date(document.getElementById('block-from').value);
+  const to   = new Date(document.getElementById('block-to').value);
+  const slots = ['morning','afternoon','evening'].filter(s=>document.getElementById('bl-'+s).checked);
+  if(!from||!to||!slots.length){ toast('Please fill in all fields'); return; }
+  const rows = [];
+  for(let d=new Date(from); d<=to; d.setDate(d.getDate()+1)){
+    const ds = d.toISOString().split('T')[0];
+    slots.forEach(s=>rows.push({date:ds,slot:s,is_blocked:true}));
+  }
+  await db.from('availability').upsert(rows,{onConflict:'date,slot'});
+  await loadAvailability();
+  renderCalendar();
+  closeModal('block-modal');
+  toast(`Blocked ${rows.length} slots`);
+}
+// ── BOOKINGS TABLE ────────────────────────────────────────
+function renderBookingsTable(filter='', status='', slot=''){
+  let list = [...bookings];
+  if(filter) list = list.filter(b=>(b.clients?.name||'').toLowerCase().includes(filter.toLowerCase()));
+  if(status) list = list.filter(b=>b.status===status);
+  if(slot) list = list.filter(b=>b.slot===slot);
+  // Upcoming/active bookings first (soonest date at top), completed & cancelled always sink to the bottom.
+  const bookingRank = b => (b.status==='complete' || b.status==='cancelled') ? 1 : 0;
+  list.sort((a,b)=>{
+    const ra = bookingRank(a), rb = bookingRank(b);
+    if(ra !== rb) return ra - rb;
+    return new Date(a.date) - new Date(b.date);
+  });
+  document.getElementById('bookings-table').innerHTML = list.length
+    ? list.map(b=>bookingRow(b,false)).join('')
+    : '<tr><td colspan="9" style="color:var(--muted);text-align:center;padding:24px">No bookings found</td></tr>';
+}
+function bookingRow(b, compact){
+  const p = participants[b.id]||[];
+  const minors = p.filter(x=>x.is_minor).length;
+  const waivers = p.filter(x=>!x.waiver_signed).length;
+  const warn = (minors>0||waivers>0) ? `<span style="color:var(--orange);font-size:11px;margin-left:4px">⚠</span>` : '';
+  const leadTag = b.lead_id ? `<span title="Originated from a lead" style="font-size:10px;color:var(--cyan);border:1px solid var(--cyan);border-radius:8px;padding:1px 6px;margin-left:4px">lead</span>` : '';
+  if(compact) return `<tr>
+    <td>${b.clients?.name||'—'}${warn}${leadTag}</td>
+    <td>${fmtDate(b.date)}</td>
+    <td>${cap(b.slot)}</td>
+    <td>${b.package||'—'}</td>
+    <td><span class="status-badge status-${b.status}">${b.status.replace('_',' ')}</span></td>
+    <td><button class="btn btn-primary btn-sm" onclick="openEditBooking('${b.id}')">Open</button></td>
+  </tr>`;
+  const statusOptions = ['new','confirmed','deposit_paid','complete','cancelled'];
+  return `<tr>
+    <td>${fmtDate(b.date)}</td>
+    <td><span class="status-badge" style="background:rgba(0,200,212,0.1);color:var(--cyan)">${cap(b.slot)}</span></td>
+    <td>${b.clients?.name||'—'}${warn}${leadTag}</td>
+    <td style="font-size:13px">${(b.package||'—').split('—')[0]}</td>
+    <td style="font-size:13px">${b.location||'—'}</td>
+    <td style="font-size:13px">${p.length} rider${p.length!==1?'s':''}${minors?` · <span style="color:var(--red)">${minors}⚠</span>`:''}${waivers?` · <span style="color:var(--orange)">${waivers} pending</span>`:p.length?' · ✓':''}</td>
+    <td style="font-size:13px">${b.promo_code?`<span class="status-badge" style="background:rgba(224,64,160,0.12);color:var(--pink)">${esc(b.promo_code)}</span>`:'—'}</td>
+    <td><select class="booking-status-select" onchange="updateBookingStatus('${b.id}', this.value)">${statusOptions.map(s=>`<option value="${s}"${b.status===s?' selected':''}>${s.replace('_',' ')}</option>`).join('')}</select></td>
+    <td style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn btn-primary btn-sm" onclick="openEditBooking('${b.id}')">Edit</button>
+      ${b.status!=='deposit_paid'&&b.status!=='complete'?`<button class="btn btn-pink btn-sm" onclick="markDepositReceived('${b.id}')" title="Mark deposit received (e.g. via e-transfer) and log it in the booking notes">💰 Deposit</button>`:''}
+      <button class="btn btn-ghost btn-sm" onclick="openEmailForBooking('${b.id}')">Email</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteBooking('${b.id}')">Delete</button>
+    </td>
+  </tr>`;
+}
+async function markDepositReceived(id){
+  const b = bookings.find(x=>x.id===id); if(!b) return;
+  const amount = prompt(`Deposit amount received for ${b.clients?.name||'this booking'}? (optional, leave blank to skip)`);
+  if(amount===null) return; // cancelled
+  const today = new Date().toLocaleDateString('en-CA');
+  const note = `[${today}] Deposit received${amount?' — $'+amount:''} (manual entry)`;
+  const newNotes = b.notes ? b.notes+'\n'+note : note;
+  const { error } = await db.from('bookings').update({ status:'deposit_paid', notes:newNotes }).eq('id', id);
+  if(error){ toast('Error updating booking'); return; }
+  b.status = 'deposit_paid'; b.notes = newNotes;
+  renderBookingsTable(
+    document.getElementById('search-bookings').value,
+    document.getElementById('filter-status').value,
+    document.getElementById('filter-slot').value
+  );
+  toast('Deposit marked received ✓');
+}
+function filterBookings(){
+  renderBookingsTable(
+    document.getElementById('search-bookings').value,
+    document.getElementById('filter-status').value,
+    document.getElementById('filter-slot').value
+  );
+}
+async function updateLeadStatus(id, status){
+  const { error } = await db.from('leads').update({ status }).eq('id', id);
+  if(error){ toast('Error updating lead status'); return; }
+  const l = leads.find(x => x.id === id);
+  if(l) l.status = status;
+  updateNewActivityBadges();
+  renderActiveLeadsView();
+  toast('Lead updated ✓');
+}
+async function updateBookingStatus(id, status){
+  const { error } = await db.from('bookings').update({ status }).eq('id', id);
+  if(error){ toast('Error updating status'); return; }
+  const b = bookings.find(x => x.id === id);
+  if(b) b.status = status;
+  renderBookingsTable(
+    document.getElementById('search-bookings').value,
+    document.getElementById('filter-status').value,
+    document.getElementById('filter-slot').value
+  );
+  renderDashboard();
+  document.getElementById('new-badge').textContent = bookings.filter(b=>b.status==='new').length;
+  toast('Status updated ✓');
+}
+// ── BOOKING MODAL ─────────────────────────────────────────
+function openAddBooking(){
+  editingBookingId = null;
+  document.getElementById('booking-modal-title').textContent = 'New Booking';
+  clearBookingForm();
+  populateClientSelect();
+  document.getElementById('participants-list').innerHTML = '';
+  document.getElementById('booking-delete-btn').style.display = 'none';
+  openModal('booking-modal');
+}
+function openEditBooking(id){
+  editingBookingId = id;
+  const b = bookings.find(x=>x.id===id);
+  if(!b) return;
+  document.getElementById('booking-modal-title').textContent = 'Edit Booking';
+  document.getElementById('booking-delete-btn').style.display = 'inline-block';
+  populateClientSelect(b.client_id);
+  document.getElementById('new-client-fields').style.display='none';
+  document.getElementById('bk-date').value = b.date;
+  document.getElementById('bk-slot').value = b.slot;
+  document.getElementById('bk-package').value = b.package||'';
+  document.getElementById('bk-sport').value = b.sport||'';
+  document.getElementById('bk-location').value = b.location||'';
+  document.getElementById('bk-deposit').value = b.deposit_link||'';
+  document.getElementById('bk-status').value = b.status;
+  document.getElementById('bk-notes').value = b.notes||'';
+  document.getElementById('bk-promo').value = b.promo_code||'';
+  if(b.promo_code) lookupPromo(b.promo_code); else document.getElementById('bk-promo-info').innerHTML='';
+  renderParticipants(participants[id]||[]);
+  openModal('booking-modal');
+}
+function clearBookingForm(){
+  ['bk-date','bk-sport','bk-location','bk-deposit','bk-notes','bk-promo'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('bk-promo-info').innerHTML='';
+  document.getElementById('bk-slot').value='morning';
+  document.getElementById('bk-status').value='new';
+  document.getElementById('minor-warning').style.display='none';
+}
+function populateClientSelect(selectedId=''){
+  const sel = document.getElementById('bk-client');
+  sel.innerHTML = '<option value="">Select existing client...</option><option value="new">+ New Client</option>';
+  clients.forEach(c=>{ const o=document.createElement('option'); o.value=c.id; o.textContent=`${c.name} — ${c.email||c.phone||''}`;if(c.id===selectedId)o.selected=true; sel.appendChild(o); });
+}
+function lookupPromo(code){
+  const infoEl=document.getElementById('bk-promo-info');
+  if(!infoEl) return;
+  if(!code){infoEl.innerHTML='';return;}
+  const pc=(promoCodes||[]).find(p=>p.code.toLowerCase()===code.toLowerCase()&&p.active);
+  if(pc){
+    const pkgText=document.getElementById('bk-package').value;
+    const priceMatch=pkgText.match(/\$([0-9,]+)/);
+    let extra='';
+    if(priceMatch&&pc.discount_type==='percent'){
+      const base=parseInt(priceMatch[1].replace(/,/g,''));
+      const disc=Math.round(base*parseFloat(pc.discount_value)/100);
+      extra=` — $${base.toLocaleString()} → <strong style="color:#16a34a">$${(base-disc).toLocaleString()}</strong>`;
+    }
+    infoEl.innerHTML=`<span style="color:#16a34a">✓ ${esc(pc.discount_value)}% off${extra}</span>`;
+  } else if(code.length>=3){
+    infoEl.innerHTML=`<span style="color:#ef4444">Code not found</span>`;
+  } else {
+    infoEl.innerHTML='';
+  }
+}
+function loadClientDetails(){
+  const val = document.getElementById('bk-client').value;
+  document.getElementById('new-client-fields').style.display = val==='new'?'grid':'none';
+}
+let partCount = 0;
+function addParticipant(p=null){
+  const i = partCount++;
+  const div = document.createElement('div');
+  div.className = 'participant-row';
+  div.id = `part-${i}`;
+  div.innerHTML = `
+    <input type="text" placeholder="Full name" value="${p?.name||''}" style="padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'Outfit',sans-serif;outline:none"/>
+    <input type="number" placeholder="Age" value="${p?.age||''}" min="1" max="100" style="padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'Outfit',sans-serif;outline:none" onchange="checkMinors()"/>
+    <div class="waiver-check"><input type="checkbox" ${p?.waiver_signed?'checked':''}/><label style="font-size:13px">Waiver signed</label></div>
+    <button onclick="this.closest('.participant-row').remove();checkMinors()" style="background:none;border:none;cursor:pointer;font-size:16px;color:var(--muted)">✕</button>`;
+  document.getElementById('participants-list').appendChild(div);
+  checkMinors();
+}
+function renderParticipants(list){
+  document.getElementById('participants-list').innerHTML='';
+  partCount=0;
+  list.forEach(p=>addParticipant(p));
+}
+function checkMinors(){
+  const rows = document.querySelectorAll('.participant-row');
+  let hasMinor = false;
+  rows.forEach(r=>{
+    const age = parseInt(r.querySelector('input[type=number]')?.value||'99');
+    if(age<18) hasMinor=true;
+  });
+  document.getElementById('minor-warning').style.display = hasMinor?'block':'none';
+}
+async function saveBooking(){
+  let clientId = document.getElementById('bk-client').value;
+  if(clientId==='new'||clientId===''){
+    const name = document.getElementById('nc-name').value.trim();
+    if(!name){ toast('Please enter a client name'); return; }
+    const {data,error} = await db.from('clients').insert({
+      name, email:document.getElementById('nc-email').value,
+      phone:document.getElementById('nc-phone').value,
+      location:document.getElementById('nc-location').value
+    }).select().single();
+    if(error){ toast('Error creating client'); return; }
+    clients.push(data); clientId=data.id;
+  }
+  const bkData = {
+    client_id:clientId,
+    date:document.getElementById('bk-date').value,
+    slot:document.getElementById('bk-slot').value,
+    package:document.getElementById('bk-package').value,
+    sport:document.getElementById('bk-sport').value,
+    location:document.getElementById('bk-location').value,
+    deposit_link:document.getElementById('bk-deposit').value,
+    status:document.getElementById('bk-status').value,
+    notes:document.getElementById('bk-notes').value,
+    promo_code:document.getElementById('bk-promo').value.trim()||null,
+  };
+  let bookingId;
+  if(editingBookingId){
+    await db.from('bookings').update(bkData).eq('id',editingBookingId);
+    bookingId = editingBookingId;
+  } else {
+    if(pendingLeadIdForBooking){ bkData.lead_id = pendingLeadIdForBooking; }
+    const {data,error} = await db.from('bookings').insert(bkData).select().single();
+    if(error){ toast('Error saving booking'); return; }
+    bookingId = data.id;
+  }
+  pendingLeadIdForBooking = null;
+  // Save participants
+  await db.from('participants').delete().eq('booking_id',bookingId);
+  const rows = document.querySelectorAll('.participant-row');
+  const partData = [];
+  rows.forEach(r=>{
+    const name = r.querySelector('input[type=text]').value.trim();
+    const age = parseInt(r.querySelector('input[type=number]').value)||null;
+    const waiver = r.querySelector('input[type=checkbox]').checked;
+    if(name) partData.push({booking_id:bookingId,name,age,waiver_signed:waiver,is_minor:(age!=null?age<18:null)});
+  });
+  if(partData.length) await db.from('participants').insert(partData);
+  closeModal('booking-modal');
+  await loadAll();
+  toast('Booking saved ✓');
+}
+async function deleteBooking(id){
+  if(!id) return;
+  if(!confirm('Delete this booking? This also removes its participants and cannot be undone.')) return;
+  await db.from('participants').delete().eq('booking_id', id);
+  const { error } = await db.from('bookings').delete().eq('id', id);
+  if(error){ toast('Error deleting booking'); return; }
+  closeModal('booking-modal');
+  await loadAll();
+  toast('Booking deleted');
+}
+// ── CLIENTS ───────────────────────────────────────────────
+const REGION_TAGS = [['','—'],['local','Local'],['out_of_town','Out of Town']];
+const EXPERIENCE_TAGS = [['','—'],['beginner','Beginner'],['intermediate','Intermediate'],['advanced','Advanced'],['expert','Expert']];
+const DISCIPLINE_TAGS = [['','—'],['waterski','Waterski'],['wakeboard','Wakeboard'],['wakesurf','Wakesurf'],['multi_sport','Multi-Sport']];
+function tagSelectHtml(id, field, value, options){
+  return `<select class="booking-status-select" style="font-size:11px;padding:3px 6px" onclick="event.stopPropagation()" onchange="event.stopPropagation();updateClientTag('${id}','${field}',this.value)">${options.map(([v,l])=>`<option value="${v}"${(value||'')===v?' selected':''}>${esc(l)}</option>`).join('')}</select>`;
+}
+function clientCardHtml(c){
+  const sessions = bookings.filter(b=>b.client_id===c.id).length;
+  const st = intakeState(c);
+  const badge = st ? `<span style="display:inline-block;margin-top:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#fff;background:${st.color};border-radius:10px;padding:2px 9px">${st.label}</span>` : '';
+  return `<div class="client-card" onclick="openEditClient('${c.id}')">
+    <div class="client-name">${c.name}</div>
+    <div class="client-meta">${c.email||''} ${c.phone?'· '+c.phone:''}</div>
+    <div class="client-meta">${c.location||'No location set'}</div>
+    <div class="client-sessions">${sessions} session${sessions!==1?'s':''}</div>
+    ${badge}
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+      ${tagSelectHtml(c.id,'region_tag',c.region_tag,REGION_TAGS)}
+      ${tagSelectHtml(c.id,'experience_level',c.experience_level,EXPERIENCE_TAGS)}
+      ${tagSelectHtml(c.id,'discipline_tag',c.discipline_tag,DISCIPLINE_TAGS)}
+    </div>
+  </div>`;
+}
+function renderClients(filter=''){
+  let list = filter ? clients.filter(c=>c.name.toLowerCase().includes(filter.toLowerCase())) : clients;
+  document.getElementById('clients-grid').innerHTML = list.length
+    ? list.map(clientCardHtml).join('')
+    : '<div style="color:var(--muted);padding:24px">No clients yet.</div>';
+}
+function filterClients(){ renderClients(document.getElementById('search-clients').value); }
+function renderClientsInto(gridId, predicate){
+  const el = document.getElementById(gridId); if(!el) return;
+  const list = clients.filter(predicate);
+  el.innerHTML = list.length ? list.map(clientCardHtml).join('') : '<div style="color:var(--muted);padding:24px">No clients in this category yet.</div>';
+}
+function renderClientsLocal(){ renderClientsInto('clients-local-grid', c=>c.region_tag==='local'); }
+function renderClientsOutOfTown(){ renderClientsInto('clients-outoftown-grid', c=>c.region_tag==='out_of_town'); }
+function renderClientsGroupedInto(containerId, field, groups){
+  const el = document.getElementById(containerId); if(!el) return;
+  const html = groups.map(([val,label])=>{
+    const list = clients.filter(c=>(c[field]||'')===val);
+    if(!list.length) return '';
+    return `<div class="sec-title" style="margin-top:20px">${esc(label)} <span style="color:var(--muted);font-weight:400">(${list.length})</span></div><div class="client-grid">${list.map(clientCardHtml).join('')}</div>`;
+  }).join('');
+  el.innerHTML = html || '<div style="color:var(--muted);padding:24px">No clients yet.</div>';
+}
+function renderClientsByExperience(){
+  renderClientsGroupedInto('clients-experience-body','experience_level',[['beginner','Beginner'],['intermediate','Intermediate'],['advanced','Advanced'],['expert','Expert'],['','Not Tagged']]);
+}
+function renderClientsByDiscipline(){
+  renderClientsGroupedInto('clients-discipline-body','discipline_tag',[['waterski','Waterski'],['wakeboard','Wakeboard'],['wakesurf','Wakesurf'],['multi_sport','Multi-Sport'],['','Not Tagged']]);
+}
+async function updateClientTag(id, field, value){
+  const { error } = await db.from('clients').update({ [field]: value || null }).eq('id', id);
+  if(error){ toast('Error updating tag'); return; }
+  const c = clients.find(x=>x.id===id); if(c) c[field] = value || null;
+  renderActiveClientsView();
+  toast('Tag updated ✓');
+}
+function renderActiveClientsView(){
+  if(activeTab==='clients') renderClients(document.getElementById('search-clients')?.value||'');
+  else if(activeTab==='clients-local') renderClientsLocal();
+  else if(activeTab==='clients-outoftown') renderClientsOutOfTown();
+  else if(activeTab==='clients-experience') renderClientsByExperience();
+  else if(activeTab==='clients-discipline') renderClientsByDiscipline();
+}
+function openAddClient(){
+  editingClientId=null;
+  ['cl-name','cl-email','cl-phone','cl-location','cl-notes','cl-region-tag','cl-experience-level','cl-discipline-tag'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('cl-history').innerHTML='No sessions yet.';
+  document.getElementById('client-modal-title').textContent='New Client';
+  document.getElementById('client-delete-btn').style.display='none';
+  clientRoster=[]; clientWaivers=[];
+  document.getElementById('cl-roster').innerHTML='<div style="color:var(--muted);font-size:13px">Save the client first to add participants and send waivers.</div>';
+  document.getElementById('cl-waivers').innerHTML='—';
+  document.getElementById('cl-send-waivers').style.display='none';
+  document.getElementById('cl-send-intake').style.display='none';
+  document.getElementById('cl-intake-status').textContent='';
+  document.getElementById('cl-send-msg').style.display='none';
+  document.getElementById('cl-msg-status').textContent='';
+  document.getElementById('cl-bounces').innerHTML='';
+  openModal('client-modal');
+}
+function openEditClient(id){
+  editingClientId=id;
+  const c=clients.find(x=>x.id===id); if(!c) return;
+  document.getElementById('client-modal-title').textContent=c.name;
+  document.getElementById('client-delete-btn').style.display='inline-block';
+  document.getElementById('cl-name').value=c.name||'';
+  document.getElementById('cl-email').value=c.email||'';
+  document.getElementById('cl-phone').value=c.phone||'';
+  document.getElementById('cl-location').value=c.location||'';
+  document.getElementById('cl-region-tag').value=c.region_tag||'';
+  document.getElementById('cl-experience-level').value=c.experience_level||'';
+  document.getElementById('cl-discipline-tag').value=c.discipline_tag||'';
+  document.getElementById('cl-notes').value=c.notes||'';
+  const sessions = bookings.filter(b=>b.client_id===id);
+  document.getElementById('cl-history').innerHTML = sessions.length
+    ? sessions.map(b=>`<div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;font-size:13px"><span>${fmtDate(b.date)}</span><span style="color:var(--muted)">${cap(b.slot)}</span><span>${b.package||''}</span><span class="status-badge status-${b.status}">${b.status}</span></div>`).join('')
+    : 'No sessions yet.';
+  document.getElementById('cl-send-waivers').style.display='inline-block';
+  document.getElementById('cl-send-intake').style.display='inline-block';
+  document.getElementById('cl-send-msg').style.display='inline-block';
+  populateMsgTemplates();
+  document.getElementById('cl-msg-status').textContent='';
+  document.getElementById('cl-msg-file').value='';
+  loadClientExtras(id);
+  openModal('client-modal');
+}
+async function saveClient(){
+  const data={
+    name:document.getElementById('cl-name').value.trim(),
+    email:document.getElementById('cl-email').value,
+    phone:document.getElementById('cl-phone').value,
+    location:document.getElementById('cl-location').value,
+    region_tag:document.getElementById('cl-region-tag').value||null,
+    experience_level:document.getElementById('cl-experience-level').value||null,
+    discipline_tag:document.getElementById('cl-discipline-tag').value||null,
+    notes:document.getElementById('cl-notes').value
+  };
+  if(!data.name){ toast('Name is required'); return; }
+  let cid=editingClientId;
+  if(cid){ await db.from('clients').update(data).eq('id',cid); }
+  else { const {data:d}=await db.from('clients').insert(data).select().single(); if(d){ clients.push(d); cid=d.id; editingClientId=d.id; } }
+  if(cid) await saveClientRoster(cid);
+  closeModal('client-modal');
+  await loadClients();
+  renderActiveClientsView();
+  toast('Client saved ✓');
+}
+async function deleteClient(id){
+  if(!id) return;
+  const linked = bookings.filter(b=>b.client_id===id).length;
+  const msg = linked
+    ? `This client has ${linked} booking(s). Deleting will unlink those bookings (they remain, with no client attached). Continue?`
+    : 'Delete this client? This cannot be undone.';
+  if(!confirm(msg)) return;
+  if(linked){ await db.from('bookings').update({client_id:null}).eq('client_id', id); }
+  const { error } = await db.from('clients').delete().eq('id', id);
+  if(error){ toast('Error deleting client'); return; }
+  closeModal('client-modal');
+  await loadAll();
+  toast('Client deleted');
+}
+// ── CLIENT ROSTER + WAIVERS (Step E) ──────────────────────
+let clientRoster = [];   // participants for the open client (client_id-scoped)
+let clientWaivers = [];  // waivers for the open client
+
+function ageFromDob(dob){ if(!dob) return null; const b=new Date(dob+'T00:00:00'); const n=new Date(); let a=n.getFullYear()-b.getFullYear(); const m=n.getMonth()-b.getMonth(); if(m<0||(m===0&&n.getDate()<b.getDate()))a--; return a; }
+
+// Intake status (an intake is "sent" when the client has an intake_token).
+function intakeState(c){
+  if(!c||!c.intake_token) return null;
+  const exp = c.intake_token_expires ? new Date(c.intake_token_expires) : null;
+  if(exp && exp < new Date()) return { label:'Intake expired', color:'var(--muted)' };
+  return { label:'Intake sent', color:'var(--cyan)' };
+}
+function renderIntakeStatus(clientId){
+  const elx=document.getElementById('cl-intake-status'); if(!elx) return;
+  const c=clients.find(x=>x.id===clientId)||{};
+  const st=intakeState(c);
+  if(!st){ elx.textContent='Intake form not sent yet.'; elx.style.color='var(--muted)'; return; }
+  let when='';
+  if(c.intake_token_expires){ const d=new Date(new Date(c.intake_token_expires).getTime()-30*86400000); when=' '+d.toLocaleDateString('en-CA',{month:'short',day:'numeric'}); }
+  const responded=(clientRoster||[]).some(p=>p.id);
+  if(st.label==='Intake expired'){ elx.textContent='⚠ Intake link expired (sent'+when+')'; elx.style.color='var(--muted)'; }
+  else { elx.textContent='✓ Intake form sent'+when+(responded?' · participants on file':' · awaiting response'); elx.style.color='var(--cyan)'; }
+}
+function renderBounces(list){
+  const elx=document.getElementById('cl-bounces'); if(!elx) return;
+  if(!list||!list.length){ elx.innerHTML=''; return; }
+  const seen=new Set(); const rows=[];
+  list.forEach(e=>{ const k=(e.to_email||'')+e.status; if(!seen.has(k)){ seen.add(k); rows.push(e); } });
+  elx.innerHTML='<div style="background:#fdecec;border:1px solid #e88;border-radius:8px;padding:8px 10px;color:#a22"><strong>⚠ Email delivery issues:</strong> '+rows.map(e=>`${esc(e.to_email||'?')} (${esc(e.status)})`).join(', ')+'</div>';
+}
+
+async function loadClientExtras(clientId){
+  document.getElementById('cl-roster').innerHTML='Loading…';
+  document.getElementById('cl-waivers').innerHTML='Loading…';
+  const [{data:parts},{data:wv},{data:ev}] = await Promise.all([
+    db.from('participants').select('*').eq('client_id',clientId).order('name'),
+    db.from('waivers').select('*').eq('client_id',clientId).order('created_at',{ascending:false}),
+    db.from('email_events').select('to_email,status,kind,updated_at').eq('client_id',clientId).in('status',['bounced','complained','failed']).order('updated_at',{ascending:false})
+  ]);
+  clientRoster = parts||[]; clientWaivers = wv||[]; renderBounces(ev||[]);
+  // Auto-include the main client as a participant (every time, deduped by email/name).
+  // Shown prefilled; persists on Save / Send waivers.
+  const c = clients.find(x=>x.id===clientId)||{};
+  if(c.name){
+    const has = clientRoster.some(p =>
+      (c.email && (p.email||'').trim().toLowerCase()===c.email.trim().toLowerCase()) ||
+      (p.name||'').trim().toLowerCase()===c.name.trim().toLowerCase());
+    if(!has) clientRoster.unshift({ name:c.name, email:c.email||null, is_minor:false, guardian_on_site:true, date_of_birth:null });
+  }
+  renderRoster(); renderClientWaivers(); renderIntakeStatus(clientId);
+}
+
+function rosterRowHtml(p={}){
+  const minor = p.is_minor===true;
+  return `<div class="roster-row" data-id="${p.id||''}" style="border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-bottom:8px">
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+      <input type="text" class="r-name" placeholder="Name" value="${esc(p.name||'')}" style="flex:2;min-width:120px"/>
+      <input type="email" class="r-email" placeholder="Email" value="${esc(p.email||'')}" style="flex:2;min-width:140px"/>
+      <label style="font-size:12px;display:flex;gap:4px;align-items:center;white-space:nowrap"><input type="checkbox" class="r-minor" ${minor?'checked':''} onchange="toggleRosterMinor(this)"/>Minor</label>
+      <button onclick="signNow('${p.id||''}')" title="Sign on this device now" style="background:none;border:1px solid var(--cyan);border-radius:6px;cursor:pointer;color:var(--cyan);font-size:11px;font-weight:700;padding:6px 10px">Sign</button>
+      <button onclick="this.closest('.roster-row').remove()" title="Remove" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:15px">✕</button>
+    </div>
+    <div class="r-minorbox" style="display:${minor?'flex':'none'};gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px">
+      <label style="font-size:10px;color:var(--muted)">DOB <input type="date" class="r-dob" value="${p.date_of_birth||''}" style="display:block"/></label>
+      <input type="email" class="r-gemail" placeholder="Guardian email" value="${esc(p.guardian_email||'')}" style="flex:1;min-width:160px"/>
+      <label style="font-size:11px;display:flex;gap:4px;align-items:center;color:var(--muted);white-space:nowrap"><input type="checkbox" class="r-guard" ${p.guardian_on_site===false?'':'checked'}/>guardian on-site</label>
+    </div>
+  </div>`;
+}
+function toggleRosterMinor(cb){ cb.closest('.roster-row').querySelector('.r-minorbox').style.display = cb.checked?'flex':'none'; }
+function renderRoster(){
+  const wrap=document.getElementById('cl-roster');
+  wrap.innerHTML = clientRoster.length?clientRoster.map(rosterRowHtml).join(''):'<div style="color:var(--muted);font-size:13px;padding:4px 0">No participants yet.</div>';
+}
+function addRosterRow(){ document.getElementById('cl-roster').insertAdjacentHTML('beforeend', rosterRowHtml()); }
+
+async function saveClientRoster(clientId){
+  const rows=[...document.querySelectorAll('#cl-roster .roster-row')];
+  const keep=[];
+  for(const r of rows){
+    const name=r.querySelector('.r-name').value.trim(); if(!name) continue;
+    const minor=r.querySelector('.r-minor').checked;
+    const dob=minor?(r.querySelector('.r-dob').value||null):null;
+    const rec={ client_id:clientId, name,
+      email:r.querySelector('.r-email').value.trim()||null,
+      guardian_email:minor?(r.querySelector('.r-gemail').value.trim()||null):null,
+      date_of_birth:dob,
+      is_minor: minor,
+      guardian_on_site: minor?r.querySelector('.r-guard').checked:true };
+    const id=r.getAttribute('data-id');
+    if(id){ await db.from('participants').update(rec).eq('id',id); keep.push(id); }
+    else { const {data:d}=await db.from('participants').insert(rec).select('id').single(); if(d) keep.push(d.id); }
+  }
+  for(const p of clientRoster){ if(!keep.includes(p.id)) await db.from('participants').delete().eq('id',p.id); }
+}
+
+function renderClientWaivers(){
+  const wrap=document.getElementById('cl-waivers');
+  if(!clientWaivers.length){ wrap.innerHTML='No waivers yet.'; return; }
+  const col={signed:'var(--green)',sent:'var(--orange)',viewed:'var(--cyan)',expired:'var(--muted)',void:'var(--muted)'};
+  wrap.innerHTML=clientWaivers.map(w=>{
+    const who=clientRoster.find(p=>p.id===w.participant_id);
+    const view=w.pdf_path?`<button class="btn btn-ghost btn-sm" onclick="viewWaiverPdf('${w.pdf_path}')">View PDF</button>`:'';
+    return `<div style="display:flex;gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)"><span style="flex:1">${esc(who?who.name:(w.signer_name||'—'))} · ${w.waiver_type} · ${w.season}</span><span style="color:${col[w.status]||'var(--muted)'};font-weight:700;text-transform:uppercase;font-size:11px">${w.status}</span>${view}</div>`;
+  }).join('');
+}
+async function viewWaiverPdf(path){
+  const {data,error}=await db.storage.from('waivers').createSignedUrl(path,300);
+  if(error||!data){ toast('Could not open PDF'); return; }
+  window.open(data.signedUrl,'_blank');
+}
+
+const SIGN_BASE='https://learnwatersports.ca';
+function mdyJS(d){ if(!d) return null; const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(d); return m?`${m[2]}/${m[3]}/${m[1]}`:d; }
+
+// Sends immediately on click (no confirm). Minors are grouped into ONE guardian
+// session; adults each get their own; parental-consent (guardian off-site) is a
+// separate link per minor. Skips anyone already signed/sent this season.
+async function sendClientWaivers(){
+  const clientId=editingClientId; if(!clientId){ toast('Save the client first'); return; }
+  await saveClientRoster(clientId);
+  await loadClientExtras(clientId);
+  const c=clients.find(x=>x.id===clientId)||{};
+  const season=new Date().getFullYear();
+  const signed=new Set(clientWaivers.filter(w=>w.season===season&&w.status==='signed').map(w=>w.participant_id+'|'+w.waiver_type));
+  const pending=new Set(clientWaivers.filter(w=>w.season===season&&['sent','viewed'].includes(w.status)&&(!w.token_expires_at||new Date(w.token_expires_at)>new Date())).map(w=>w.participant_id+'|'+w.waiver_type));
+  const invites=[], minors=[], skips=[];
+  let guardianEmail=null; const guardianName=c.name||null;
+  clientRoster.forEach(p=>{
+    const isMinor = p.is_minor===true; // classified by the Minor toggle (DOB optional)
+    if(!isMinor){
+      const key=p.id+'|adult';
+      if(signed.has(key)){ skips.push(`${p.name}: already signed`); return; }
+      if(pending.has(key)){ skips.push(`${p.name}: already sent`); return; }
+      const email=p.email||c.email;
+      if(!email){ skips.push(`${p.name}: no email`); return; }
+      invites.push({participant_id:p.id, client_id:clientId, waiver_type:'adult', signer_name:p.name, signer_email:email, is_guardian_signature:false});
+    } else {
+      const gemail=p.guardian_email||c.email;
+      const age=ageFromDob(p.date_of_birth);
+      const mkey=p.id+'|minor';
+      if(signed.has(mkey)) skips.push(`${p.name}: minor already signed`);
+      else if(pending.has(mkey)) skips.push(`${p.name}: minor already sent`);
+      else if(!gemail) skips.push(`${p.name}: missing guardian email`);
+      else { minors.push({participant_id:p.id, minor_name:p.name, minor_dob:p.date_of_birth||null, minor_age:age}); if(!guardianEmail) guardianEmail=gemail; }
+      if(p.guardian_on_site===false){
+        const ck=p.id+'|parental_consent';
+        if(signed.has(ck)) skips.push(`${p.name}: consent already signed`);
+        else if(pending.has(ck)) skips.push(`${p.name}: consent already sent`);
+        else if(!gemail) skips.push(`${p.name}: consent needs guardian email`);
+        else invites.push({participant_id:p.id, client_id:clientId, waiver_type:'parental_consent', signer_name:c.name||p.name, signer_email:gemail, is_guardian_signature:true});
+      }
+    }
+  });
+  const body={base_url:SIGN_BASE};
+  if(invites.length) body.invites=invites;
+  if(minors.length) body.minor_group={client_id:clientId, signer_name:guardianName, signer_email:guardianEmail, minors};
+  if(!invites.length && !minors.length){ toast('Nothing to send (all signed/sent)'); return; }
+  const {data,error}=await db.functions.invoke('send-waiver-invite',{body});
+  if(error){ toast('Send failed'); return; }
+  const okN=(data&&data.results?data.results.filter(r=>r.ok).length:0);
+  toast(`Sent ${okN} ✓`+((skips.length||needDob.length)?' (some skipped)':''));
+  await loadClientExtras(clientId);
+}
+
+// "Send intake form" — emails the client a tokened link to add participants.
+async function sendIntakeForm(){
+  const clientId=editingClientId; if(!clientId){ toast('Save the client first'); return; }
+  const {data,error}=await db.functions.invoke('send-intake-invite',{body:{client_id:clientId, base_url:SIGN_BASE}});
+  if(error||(data&&data.error)){ toast((data&&data.error)||'Could not send intake form'); return; }
+  toast('Intake form sent ✓');
+  await loadClients(); renderClients();   // refresh grid badge
+  renderIntakeStatus(clientId);           // refresh modal status line
+}
+
+// "Send a guide / message" — emails a chosen template (+ optional attachments)
+// to this client's participants.
+function populateMsgTemplates(){
+  const sel=document.getElementById('cl-msg-template'); if(!sel) return;
+  sel.innerHTML='<option value="">Choose a template…</option>'+(templates||[]).map(t=>`<option value="${esc(t.name)}">${esc(t.name)}</option>`).join('');
+}
+function fileToB64(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(String(r.result).split(',')[1]); r.onerror=rej; r.readAsDataURL(file); }); }
+async function sendClientMessage(){
+  const clientId=editingClientId; if(!clientId){ toast('Save the client first'); return; }
+  const tplName=document.getElementById('cl-msg-template').value;
+  if(!tplName){ toast('Pick a template first'); return; }
+  const c=clients.find(x=>x.id===clientId)||{};
+  // recipients: each roster participant (their email, or guardian email) + the client
+  const map=new Map();
+  (clientRoster||[]).forEach(p=>{ const em=(p.email||p.guardian_email||'').trim(); if(em) map.set(em.toLowerCase(),{email:em,name:p.name||''}); });
+  if(c.email) map.set(c.email.toLowerCase(),{email:c.email,name:c.name||''});
+  const to=[...map.values()];
+  if(!to.length){ toast('No participant emails on file'); return; }
+  const files=[...(document.getElementById('cl-msg-file').files||[])];
+  let total=0; const attachments=[];
+  for(const f of files){ total+=f.size; attachments.push({filename:f.name, content:await fileToB64(f)}); }
+  if(total>8*1024*1024){ toast('Attachments too large (max ~8MB total)'); return; }
+  const st=document.getElementById('cl-msg-status'); st.textContent='Sending…'; st.style.color='var(--muted)';
+  const {data,error}=await db.functions.invoke('send-client-message',{body:{client_id:clientId, template_name:tplName, to, attachments}});
+  if(error||(data&&data.error)){ st.textContent=(data&&data.error)||'Send failed'; st.style.color='var(--red)'; return; }
+  st.textContent=`✓ Sent to ${data.sent} recipient(s)`; st.style.color='var(--cyan)';
+  document.getElementById('cl-msg-file').value='';
+  toast(`Guide sent to ${data.sent} ✓`);
+}
+
+// On-site "Sign now" — creates a waiver for this saved participant and opens the
+// signing page on this device (no email).
+async function signNow(id){
+  if(!id){ toast('Save the client first, then Sign'); return; }
+  const p=clientRoster.find(x=>x.id===id);
+  if(!p){ toast('Save the client first, then Sign'); return; }
+  const type=p.is_minor===true?'minor':'adult';
+  const c=clients.find(x=>x.id===editingClientId)||{};
+  const season=new Date().getFullYear();
+  const token=(crypto.randomUUID()+crypto.randomUUID()).replace(/-/g,'');
+  const rec={ participant_id:p.id, client_id:editingClientId, waiver_type:type, season,
+    template_version:`${type}-v1-${season}`, status:'sent',
+    signer_name: type==='minor'?(c.name||p.name):p.name,
+    signer_email: type==='minor'?(p.guardian_email||c.email||null):(p.email||c.email||null),
+    is_guardian_signature: type==='minor', sign_token:token,
+    token_expires_at:new Date(Date.now()+30*86400000).toISOString() };
+  const {error}=await db.from('waivers').insert(rec);
+  if(error){ toast('Could not start signing'); return; }
+  window.open(SIGN_BASE+'/sign?t='+token,'_blank');
+}
+// ── LEADS ─────────────────────────────────────────────────
+// Lead status sort rank: new → hot → warm → cold → archived
+const LEAD_RANK = { new:0, hot:1, warm:2, cold:3, archived:4 };
+let leadSort = { col:'status', dir:1 }; // dir: 1=asc, -1=desc
+function setLeadSort(col){
+  if(leadSort.col===col){ leadSort.dir *= -1; }
+  else { leadSort = { col, dir: col==='status' ? 1 : 1 }; }
+  // Update header indicators
+  ['name','status','activity'].forEach(c=>{
+    const el = document.getElementById('lsort-'+c);
+    if(!el) return;
+    if(c===leadSort.col){ el.textContent = leadSort.dir===1 ? '↑' : '↓'; el.style.opacity='1'; el.style.color='var(--cyan)'; }
+    else { el.textContent = '↕'; el.style.opacity='.4'; el.style.color=''; }
+  });
+  filterLeads();
+}
+// Lead status → CSS badge class
+const LEAD_STATUS_CLASS = {
+  new:      'status-new',
+  hot:      'status-hot',
+  warm:     'status-warm',
+  cold:     'status-cold',
+  archived: 'status-archived'
+};
+async function loadLeads(){
+  const { data, error } = await db.from('leads').select('*').order('created_at',{ascending:false});
+  if(error){ console.warn('leads load failed', error); leads=[]; }
+  else leads = data || [];
+  const active = leads.filter(l=>l.status!=='converted'&&l.status!=='archived').length;
+  const badge = document.getElementById('leads-badge');
+  if(badge) badge.textContent = active;
+}
+const LEAD_SRC_OPTS = ['','website','resort','facebook','instagram','referral','phone/text','messenger','sunset_wake_date','gmail','square','imessage','walk-up','repeat','other'];
+const LEAD_REGION_TAGS = [['','—'],['local','Local'],['resort','Resort'],['out_of_towner','Out-of-Towner']];
+function leadRowHtml(l){
+  const activityMs = new Date(l.last_activity_at||l.created_at).getTime();
+  const staleDays = (Date.now()-activityMs)/86400000;
+  const staleColor = staleDays>7?'var(--red)':(staleDays>3?'var(--orange)':'var(--muted)');
+  return `<tr>
+    <td><strong>${esc(l.name||'—')}</strong></td>
+    <td style="font-size:13px">${esc(l.email||'')}${l.phone?'<br>'+esc(l.phone):''}</td>
+    <td style="font-size:13px">${esc(l.sport||'—')}</td>
+    <td style="font-size:13px;max-width:260px;cursor:pointer" onclick="inlineEditInquiry(this,'${l.id}')" title="Click to edit">${esc((l.message||'').slice(0,140))||'<span style=color:var(--hint)>click to add…</span>'}</td>
+    <td><select class="booking-status-select" onchange="updateLeadStatus('${l.id}', this.value)">${['new','hot','warm','cold','archived'].map(s=>`<option value="${s}"${l.status===s?' selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}</select></td>
+    <td><select class="booking-status-select" onchange="updateLeadRegion('${l.id}', this.value)">${LEAD_REGION_TAGS.map(([v,lbl])=>`<option value="${v}"${(l.region_tag||'')===v?' selected':''}>${esc(lbl)}</option>`).join('')}</select></td>
+    <td><select class="booking-status-select" onchange="updateLeadSource('${l.id}', this.value)">${LEAD_SRC_OPTS.map(s=>`<option value="${s}"${(l.source||'')===s?' selected':''}>${s?s.charAt(0).toUpperCase()+s.slice(1):'—'}</option>`).join('')}${l.source&&!LEAD_SRC_OPTS.includes(l.source)?`<option value="${esc(l.source)}" selected>${esc(l.source)}</option>`:''}</select></td>
+    <td style="font-size:12px;color:${staleColor}" title="${new Date(activityMs).toLocaleString()}">${timeAgo(activityMs)}</td>
+    <td style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn btn-primary btn-sm" onclick="openEditLead('${l.id}')">Edit</button>
+      <button class="btn btn-pink btn-sm" onclick="convertLead('${l.id}')">→ Client</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteLead('${l.id}')">Delete</button>
+    </td>
+  </tr>`;
+}
+function renderLeads(filter=''){
+  const tb = document.getElementById('leads-table');
+  if(!tb) return;
+  let list = leads.filter(l=>l.status!=='converted');
+  if(filter){
+    const f = filter.toLowerCase();
+    list = list.filter(l=>(l.name||'').toLowerCase().includes(f) || (l.email||'').toLowerCase().includes(f));
+  }
+  // Sort by active column
+  list.sort((a,b) => {
+    let va, vb;
+    if(leadSort.col==='status'){ va = LEAD_RANK[a.status] ?? 9; vb = LEAD_RANK[b.status] ?? 9; }
+    else if(leadSort.col==='name'){ va = (a.name||'').toLowerCase(); vb = (b.name||'').toLowerCase(); }
+    else if(leadSort.col==='activity'){ va = new Date(a.last_activity_at||a.created_at).getTime(); vb = new Date(b.last_activity_at||b.created_at).getTime(); }
+    if(va < vb) return -1 * leadSort.dir;
+    if(va > vb) return  1 * leadSort.dir;
+    // secondary sort: newest first within same rank
+    return new Date(b.created_at) - new Date(a.created_at);
+  });
+  tb.innerHTML = list.length ? list.map(leadRowHtml).join('') : '<tr><td colspan="9" style="color:var(--muted);text-align:center;padding:24px">No active leads. New booking inquiries land here automatically each morning.</td></tr>';
+}
+function renderLeadsInto(tbodyId, predicate){
+  const tb = document.getElementById(tbodyId); if(!tb) return;
+  const list = leads.filter(l=>l.status!=='converted').filter(predicate).sort((a,b)=>(a.name||'').toLowerCase().localeCompare((b.name||'').toLowerCase()));
+  tb.innerHTML = list.length ? list.map(leadRowHtml).join('') : '<tr><td colspan="9" style="color:var(--muted);text-align:center;padding:24px">No leads in this category yet.</td></tr>';
+}
+function renderLeadsLocal(){ renderLeadsInto('leads-local-table', l=>l.region_tag==='local'); }
+function renderLeadsResorts(){ renderLeadsInto('leads-resorts-table', l=>l.region_tag==='resort'); }
+function renderLeadsOutOfTowner(){ renderLeadsInto('leads-outoftowner-table', l=>l.region_tag==='out_of_towner'); }
+async function updateLeadRegion(id, region){
+  const { error } = await db.from('leads').update({ region_tag: region || null }).eq('id', id);
+  if(error){ toast('Error updating region'); return; }
+  const l = leads.find(x=>x.id===id); if(l) l.region_tag = region || null;
+  renderActiveLeadsView();
+  toast('Region updated ✓');
+}
+function renderActiveLeadsView(){
+  if(activeTab==='leads') renderLeads(document.getElementById('search-leads')?.value||'');
+  else if(activeTab==='leads-local') renderLeadsLocal();
+  else if(activeTab==='leads-resorts') renderLeadsResorts();
+  else if(activeTab==='leads-outoftowner') renderLeadsOutOfTowner();
+}
+function timeAgo(ts){
+  const diffMs = Date.now()-new Date(ts).getTime();
+  const mins = Math.floor(diffMs/60000);
+  if(mins<1) return 'just now';
+  if(mins<60) return mins+'m ago';
+  const hrs = Math.floor(mins/60);
+  if(hrs<24) return hrs+'h ago';
+  const days = Math.floor(hrs/24);
+  if(days<30) return days+'d ago';
+  return Math.floor(days/30)+'mo ago';
+}
+function filterLeads(){ renderLeads(document.getElementById('search-leads').value); }
+function inlineEditInquiry(td, id){
+  const l = leads.find(x=>x.id===id); if(!l) return;
+  const orig = l.message||'';
+  td.onclick = null;
+  td.innerHTML = `<textarea style="width:100%;min-height:60px;padding:6px 8px;border:1.5px solid var(--pink);border-radius:6px;font-size:13px;font-family:var(--sans);outline:none;resize:vertical;line-height:1.5">${esc(orig)}</textarea>`;
+  const ta = td.querySelector('textarea');
+  ta.focus();
+  ta.addEventListener('blur', async ()=>{
+    const val = ta.value.trim();
+    if(val !== orig){
+      const {error} = await db.from('leads').update({message:val}).eq('id',id);
+      if(error){ toast('Error saving inquiry'); }
+      else { l.message = val; toast('Inquiry updated ✓'); }
+    }
+    renderLeads(document.getElementById('search-leads').value);
+  });
+  ta.addEventListener('keydown', e=>{ if(e.key==='Escape'){ ta.value=orig; ta.blur(); } });
+}
+async function updateLeadSource(id, source){
+  const {error} = await db.from('leads').update({source}).eq('id',id);
+  if(error){ toast('Error updating source'); return; }
+  const l = leads.find(x=>x.id===id);
+  if(l) l.source = source;
+  renderActiveLeadsView();
+  toast('Source updated ✓');
+}
+function openAddLead(){
+  editingLeadId = null;
+  ['ld-name','ld-email','ld-phone','ld-sport','ld-message','ld-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ld-status').value='new';
+  document.getElementById('ld-source').value='';
+  document.getElementById('ld-region-tag').value='';
+  document.getElementById('lead-modal-title').textContent='New Lead';
+  document.getElementById('lead-delete-btn').style.display='none';
+  document.getElementById('lead-convert-btn').style.display='none';
+  openModal('lead-modal');
+}
+function openEditLead(id){
+  const l = leads.find(x=>x.id===id); if(!l) return;
+  editingLeadId = id;
+  document.getElementById('ld-name').value=l.name||'';
+  document.getElementById('ld-email').value=l.email||'';
+  document.getElementById('ld-phone').value=l.phone||'';
+  document.getElementById('ld-sport').value=l.sport||'';
+  document.getElementById('ld-message').value=l.message||'';
+  document.getElementById('ld-notes').value=l.notes||'';
+  document.getElementById('ld-status').value=l.status||'new';
+  document.getElementById('ld-source').value=l.source||'';
+  document.getElementById('ld-region-tag').value=l.region_tag||'';
+  document.getElementById('lead-modal-title').textContent='Edit Lead';
+  document.getElementById('lead-delete-btn').style.display='inline-block';
+  document.getElementById('lead-convert-btn').style.display='inline-block';
+  openModal('lead-modal');
+}
+async function saveLead(){
+  const data = {
+    name: document.getElementById('ld-name').value.trim(),
+    email: document.getElementById('ld-email').value.trim(),
+    phone: document.getElementById('ld-phone').value.trim(),
+    sport: document.getElementById('ld-sport').value.trim(),
+    message: document.getElementById('ld-message').value.trim(),
+    notes: document.getElementById('ld-notes').value.trim(),
+    status: document.getElementById('ld-status').value,
+    source: document.getElementById('ld-source').value || 'manual',
+    region_tag: document.getElementById('ld-region-tag').value || null
+  };
+  if(!data.name){ toast('Lead name is required'); return; }
+  if(editingLeadId){ await db.from('leads').update(data).eq('id', editingLeadId); }
+  else { await db.from('leads').insert(data); }
+  closeModal('lead-modal');
+  await loadLeads(); renderActiveLeadsView();
+  toast('Lead saved ✓');
+}
+async function deleteLead(id){
+  if(!id) return;
+  if(!confirm('Delete this lead? This cannot be undone.')) return;
+  await db.from('leads').delete().eq('id', id);
+  closeModal('lead-modal');
+  await loadLeads(); renderActiveLeadsView();
+  toast('Lead deleted');
+}
+function exportLeadsCSV(){
+  const headers=['Name','Email','Phone','Sport','Source','Status','Region','Inquiry','Notes','Created'];
+  const rows=leads.filter(l=>l.status!=='converted').map(l=>[l.name,l.email,l.phone,l.sport,l.source,l.status,l.region_tag,l.message,l.notes,l.created_at?.slice(0,10)]);
+  const csv=[headers,...rows].map(r=>r.map(f=>'"'+(f==null?'':f).toString().replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='leads-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+  toast('Leads exported ✓');
+}
+async function importLeadsCSV(input){
+  const file=input.files[0]; if(!file) return;
+  const text=await file.text();
+  const lines=text.split('\n').map(l=>l.trim()).filter(Boolean);
+  if(lines.length<2){toast('CSV must have a header row and at least one data row');input.value='';return;}
+  const hdr=lines[0].split(',').map(h=>h.replace(/^"|"$/g,'').trim().toLowerCase());
+  const nameIdx=hdr.findIndex(h=>h==='name');
+  const emailIdx=hdr.findIndex(h=>h==='email');
+  const phoneIdx=hdr.findIndex(h=>h==='phone');
+  const sportIdx=hdr.findIndex(h=>h==='sport');
+  const sourceIdx=hdr.findIndex(h=>h==='source');
+  const statusIdx=hdr.findIndex(h=>h==='status');
+  const regionIdx=hdr.findIndex(h=>h==='region');
+  const msgIdx=hdr.findIndex(h=>h==='inquiry'||h==='message');
+  const notesIdx=hdr.findIndex(h=>h==='notes');
+  if(nameIdx<0){toast('CSV must have a "Name" column');input.value='';return;}
+  const rows=[];
+  for(let i=1;i<lines.length;i++){
+    const cols=lines[i].match(/("(?:[^"]|"")*"|[^,]*)/g).map(c=>c.replace(/^"|"$/g,'').replace(/""/g,'"').trim());
+    const name=cols[nameIdx];
+    if(!name) continue;
+    rows.push({
+      name,
+      email:emailIdx>=0?cols[emailIdx]||null:null,
+      phone:phoneIdx>=0?cols[phoneIdx]||null:null,
+      sport:sportIdx>=0?cols[sportIdx]||null:null,
+      source:sourceIdx>=0?cols[sourceIdx]||'manual':'manual',
+      status:statusIdx>=0&&['new','hot','warm','cold','archived'].includes(cols[statusIdx])?cols[statusIdx]:'new',
+      region_tag:regionIdx>=0&&['local','resort','out_of_towner'].includes(cols[regionIdx])?cols[regionIdx]:null,
+      message:msgIdx>=0?cols[msgIdx]||null:null,
+      notes:notesIdx>=0?cols[notesIdx]||null:null
+    });
+  }
+  if(!rows.length){toast('No valid rows found');input.value='';return;}
+  if(!confirm(`Import ${rows.length} lead(s)? Duplicates won't be merged.`)){input.value='';return;}
+  const {error}=await db.from('leads').insert(rows);
+  if(error){toast('Import error: '+error.message);input.value='';return;}
+  await loadLeads(); renderActiveLeadsView();
+  input.value='';
+  toast(`${rows.length} lead(s) imported ✓`);
+}
+async function convertLead(id){
+  const l = leads.find(x=>x.id===id); if(!l) return;
+  if(!confirm(`Convert "${l.name}" into a client? They'll move from Leads to the Clients tab.`)) return;
+  let client = null;
+  if(l.email){
+    const { data:ex } = await db.from('clients').select('*').eq('email', l.email).maybeSingle();
+    if(ex) client = ex;
+  }
+  if(!client){
+    const inferredRegion = l.region_tag==='local' ? 'local' : (l.region_tag==='resort'||l.region_tag==='out_of_towner') ? 'out_of_town' : null;
+    const { data, error } = await db.from('clients').insert({ name:l.name, email:l.email||null, phone:l.phone||null, notes:l.message||null, region_tag:inferredRegion }).select().single();
+    if(error){ toast('Error creating client'); return; }
+    client = data;
+  }
+  await db.from('leads').update({ status:'converted', converted_client_id: client.id }).eq('id', id);
+  closeModal('lead-modal');
+  await Promise.all([loadLeads(), loadClients()]);
+  renderActiveLeadsView(); renderActiveClientsView();
+  toast(`${l.name} is now a client ✓`);
+
+  if(confirm(`Create a booking for ${l.name} now? (You can also do this later from the Bookings tab.)`)){
+    pendingLeadIdForBooking = id;
+    openAddBooking();
+    populateClientSelect(client.id);
+    document.getElementById('bk-notes').value = l.message || '';
+  }
+}
+// ── EMAILS ────────────────────────────────────────────────
+function renderTemplates(){
+  document.getElementById('template-list').innerHTML = templates.map(t=>`
+    <div class="template-card" onclick="selectTemplate('${t.id}')">
+      <div class="template-name">${t.name}</div>
+      <div class="template-subject" style="font-size:12px;color:var(--muted)">${t.subject}</div>
+    </div>`).join('');
+}
+function selectTemplate(id){
+  const t = templates.find(x=>x.id===id);
+  if(!t) return;
+  const vars = (t.body.match(/\{\{(\w+)\}\}/g)||[]).filter((v,i,a)=>a.indexOf(v)===i);
+  const chips = vars.map(v=>`<span class="var-chip">${v}</span>`).join('');
+  document.getElementById('email-composer').innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div style="font-size:18px;font-weight:700">${t.name}</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-ghost btn-sm" onclick="editTemplate('${id}')">Edit</button>
+        <button class="btn btn-primary btn-sm" onclick="composeEmail('${id}')">Compose →</button>
+      </div>
+    </div>
+    <div class="form-group"><label>Subject</label><div style="padding:10px 14px;background:var(--bg);border-radius:8px;font-size:14px">${t.subject}</div></div>
+    ${vars.length?`<div style="margin-bottom:16px"><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Variables</div>${chips}</div>`:''}
+    <div class="form-group"><label>Preview</label><div class="email-preview">${t.body}</div></div>`;
+}
+function composeEmail(templateId){
+  const t = templates.find(x=>x.id===templateId);
+  if(!t) return;
+  const vars = (t.body.match(/\{\{(\w+)\}\}/g)||[]).filter((v,i,a)=>a.indexOf(v)===i).map(v=>v.replace(/[{}]/g,''));
+  let filled = t.body, subj = t.subject;
+  vars.forEach(v=>{
+    const val = prompt(`Value for {{${v}}}:`, '');
+    if(val!==null){ filled=filled.replaceAll(`{{${v}}}`,val); subj=subj.replaceAll(`{{${v}}}`,val); }
+  });
+  const mailto = `mailto:?subject=${encodeURIComponent(subj)}&body=${encodeURIComponent(filled)}`;
+  document.getElementById('email-composer').innerHTML += `
+    <div style="margin-top:20px;padding:16px;background:rgba(0,200,212,0.06);border-radius:10px;border:1px solid rgba(0,200,212,0.2)">
+      <div style="font-size:13px;font-weight:700;color:var(--cyan);margin-bottom:10px">Draft Ready</div>
+      <div class="email-preview" style="margin-bottom:16px">${filled}</div>
+      <a href="${mailto}" class="btn btn-primary" style="text-decoration:none;display:inline-block">Open in Mail App →</a>
+      <button class="btn btn-ghost" style="margin-left:8px" onclick="navigator.clipboard.writeText(${JSON.stringify(filled)}).then(()=>toast('Copied to clipboard ✓'))">Copy to Clipboard</button>
+    </div>`;
+}
+function openEmailForBooking(bookingId){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelector('.tabs .tab[onclick*="emails"]').classList.add('active');
+  document.getElementById('panel-emails').classList.add('active');
+  activeTab = 'emails';
+}
+function editTemplate(id){
+  editingTemplateId=id;
+  const t=templates.find(x=>x.id===id);
+  document.getElementById('tpl-name').value=t.name;
+  document.getElementById('tpl-subject').value=t.subject;
+  document.getElementById('tpl-body').value=t.body;
+  openModal('template-modal');
+}
+function openNewTemplate(){
+  editingTemplateId=null;
+  ['tpl-name','tpl-subject','tpl-body'].forEach(id=>document.getElementById(id).value='');
+  openModal('template-modal');
+}
+async function saveTemplate(){
+  const data={name:document.getElementById('tpl-name').value,subject:document.getElementById('tpl-subject').value,body:document.getElementById('tpl-body').value};
+  if(!data.name||!data.subject){ toast('Name and subject required'); return; }
+  if(editingTemplateId){ await db.from('email_templates').update(data).eq('id',editingTemplateId); }
+  else { const {data:d}=await db.from('email_templates').insert(data).select().single(); if(d) templates.push(d); }
+  closeModal('template-modal');
+  await loadTemplates();
+  renderTemplates();
+  toast('Template saved ✓');
+}
+// ── MODALS ────────────────────────────────────────────────
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+// ── HELPERS ───────────────────────────────────────────────
+function cap(s){ return s?s.charAt(0).toUpperCase()+s.slice(1):'' }
+function fmtDate(d){ if(!d) return '—'; const dt=new Date(d+'T12:00:00'); return dt.toLocaleDateString('en-CA',{weekday:'short',month:'short',day:'numeric',year:'numeric'}); }
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3000); }
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(o=>o.addEventListener('click',e=>{ if(e.target===o) o.classList.remove('open'); }));
+// ── PROMO BANNER MANAGEMENT ────────────────────────────────────────────
+async function loadPromo(){
+  try {
+    const { data, error } = await db.from('promo_config').select('*').eq('id', 1).single();
+    if(data){
+      document.getElementById('promo-active').checked = data.active;
+      document.getElementById('promo-text').value = data.text || '';
+      document.getElementById('promo-cta-text').value = data.cta_text || '';
+      document.getElementById('promo-cta-url').value = data.cta_url || '/booking';
+      document.getElementById('promo-id').value = data.promo_id || 'summer2026-10off';
+      updatePromoToggleUI(data.active);
+      updatePromoPreview();
+    }
+  } catch(e){ console.warn('Promo load failed', e); loadPromoFromContentJs(); }
+}
+function loadPromoFromContentJs(){
+  if(window.PROMO_CONFIG){
+    const c = window.PROMO_CONFIG;
+    document.getElementById('promo-active').checked = c.active;
+    document.getElementById('promo-text').value = c.text || '';
+    document.getElementById('promo-cta-text').value = c.cta_text || '';
+    document.getElementById('promo-cta-url').value = c.cta_url || '/booking';
+    document.getElementById('promo-id').value = c.id || '';
+    updatePromoToggleUI(c.active);
+    updatePromoPreview();
+  }
+}
+async function savePromo(){
+  const payload = {
+    active:   document.getElementById('promo-active').checked,
+    text:     document.getElementById('promo-text').value.trim(),
+    cta_text: document.getElementById('promo-cta-text').value.trim(),
+    cta_url:  document.getElementById('promo-cta-url').value.trim() || '/booking',
+    promo_id: document.getElementById('promo-id').value.trim()
+  };
+  const status = document.getElementById('promo-save-status');
+  try {
+    const { error } = await db.from('promo_config').upsert({id:1, ...payload});
+    if(error) throw error;
+    status.textContent = '✓ Saved';
+    status.style.color = 'var(--cyan)';
+    updatePromoToggleUI(payload.active);
+    updatePromoPreview();
+    setTimeout(()=>status.textContent='', 3000);
+  } catch(e){
+    status.textContent = '✗ Save failed — update content.js manually';
+    status.style.color = '#e04040';
+    console.error(e);
+  }
+}
+function updatePromoToggleUI(active){
+  const track = document.getElementById('promo-toggle-track');
+  const label = document.getElementById('promo-status-label');
+  if(active){
+    track.style.background = '#00C8D4';
+    label.textContent = 'Active';
+    label.style.color = 'var(--cyan)';
+  } else {
+    track.style.background = '#ddd';
+    label.textContent = 'Inactive';
+    label.style.color = 'var(--muted)';
+  }
+}
+function updatePromoPreview(){
+  const text = document.getElementById('promo-text').value;
+  const ctaText = document.getElementById('promo-cta-text').value;
+  document.getElementById('promo-preview-text').textContent = text || 'Banner text will appear here';
+  document.getElementById('promo-preview-cta').textContent = ctaText;
+}
+// ── /PROMO BANNER MANAGEMENT ───────────────────────────────────────────
+// ── PROMO CODES MANAGEMENT ─────────────────────────────────────────────
+async function loadPromoCodes(){
+  const { data, error } = await db.from('promo_codes').select('*').order('created_at',{ascending:false});
+  if(error){ console.warn('promo codes load failed', error); promoCodes=[]; return; }
+  promoCodes = data || [];
+}
+function renderPromoCodes(filter=''){
+  const tb = document.getElementById('promocodes-table');
+  if(!tb) return;
+  let list = [...promoCodes];
+  if(filter){
+    const f = filter.toLowerCase();
+    list = list.filter(c=>(c.code||'').toLowerCase().includes(f) || (c.label||'').toLowerCase().includes(f));
+  }
+  tb.innerHTML = list.length ? list.map(c=>{
+    const disc = c.discount_type==='fixed' ? `$${c.discount_value}` : `${c.discount_value}%`;
+    const expired = c.expires_at && new Date(c.expires_at) < new Date();
+    const statusTxt = !c.active ? 'Inactive' : expired ? 'Expired' : 'Active';
+    const statusCls = (!c.active||expired) ? 'status-cancelled' : 'status-confirmed';
+    return `<tr>
+      <td><strong>${esc(c.code)}</strong></td>
+      <td>${disc} off</td>
+      <td style="font-size:13px">${esc(c.label||'—')}</td>
+      <td><span class="status-badge ${statusCls}">${statusTxt}</span></td>
+      <td style="font-size:13px">${c.expires_at?fmtDate(c.expires_at.split('T')[0]):'—'}</td>
+      <td style="display:flex;gap:6px;flex-wrap:wrap">
+        <button class="btn btn-primary btn-sm" onclick="openEditPromoCode('${c.id}')">Edit</button>
+        <button class="btn btn-danger btn-sm" onclick="deletePromoCode('${c.id}')">Delete</button>
+      </td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:24px">No promo codes yet. Create one to share with a partner.</td></tr>';
+}
+function filterPromoCodes(){ renderPromoCodes(document.getElementById('search-promocodes').value); }
+function openAddPromoCode(){
+  editingPromoCodeId = null;
+  document.getElementById('promocode-modal-title').textContent = 'New Promo Code';
+  document.getElementById('pc-code').value = '';
+  document.getElementById('pc-label').value = '';
+  document.getElementById('pc-type').value = 'percent';
+  document.getElementById('pc-value').value = '';
+  document.getElementById('pc-expires').value = '';
+  document.getElementById('pc-active').value = 'true';
+  document.getElementById('promocode-delete-btn').style.display = 'none';
+  openModal('promocode-modal');
+}
+function openEditPromoCode(id){
+  const c = promoCodes.find(x=>x.id===id); if(!c) return;
+  editingPromoCodeId = id;
+  document.getElementById('promocode-modal-title').textContent = 'Edit Promo Code';
+  document.getElementById('pc-code').value = c.code || '';
+  document.getElementById('pc-label').value = c.label || '';
+  document.getElementById('pc-type').value = c.discount_type || 'percent';
+  document.getElementById('pc-value').value = c.discount_value ?? '';
+  document.getElementById('pc-expires').value = c.expires_at ? c.expires_at.split('T')[0] : '';
+  document.getElementById('pc-active').value = c.active ? 'true' : 'false';
+  document.getElementById('promocode-delete-btn').style.display = 'inline-block';
+  openModal('promocode-modal');
+}
+async function savePromoCode(){
+  const code = document.getElementById('pc-code').value.trim().toUpperCase();
+  const value = parseFloat(document.getElementById('pc-value').value);
+  if(!code){ toast('Code is required'); return; }
+  if(isNaN(value) || value < 0){ toast('Enter a valid discount value'); return; }
+  const expRaw = document.getElementById('pc-expires').value;
+  const data = {
+    code,
+    label: document.getElementById('pc-label').value.trim() || null,
+    discount_type: document.getElementById('pc-type').value,
+    discount_value: value,
+    active: document.getElementById('pc-active').value === 'true',
+    expires_at: expRaw ? new Date(expRaw+'T23:59:59').toISOString() : null
+  };
+  let error;
+  if(editingPromoCodeId){ ({ error } = await db.from('promo_codes').update(data).eq('id', editingPromoCodeId)); }
+  else { ({ error } = await db.from('promo_codes').insert(data)); }
+  if(error){ toast(error.code==='23505' ? 'That code already exists' : 'Error saving code'); return; }
+  closeModal('promocode-modal');
+  await loadPromoCodes(); renderPromoCodes();
+  toast('Promo code saved ✓');
+}
+async function deletePromoCode(id){
+  if(!id) return;
+  if(!confirm('Delete this promo code? Past bookings keep the code they recorded.')) return;
+  const { error } = await db.from('promo_codes').delete().eq('id', id);
+  if(error){ toast('Error deleting code'); return; }
+  closeModal('promocode-modal');
+  await loadPromoCodes(); renderPromoCodes();
+  toast('Promo code deleted');
+}
+// ── /PROMO CODES MANAGEMENT ────────────────────────────────────────────
+// ── CARD CONTACTS ─────────────────────────────────────────
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+async function loadCardContacts(){
+  const {data}=await db.from('card_contacts').select('*').order('created_at',{ascending:false});
+  cardContacts=data||[];
+  const newCount=cardContacts.filter(c=>c.status==='new').length;
+  document.getElementById('contacts-badge').textContent=newCount||'';
+  updateCCStats();
+}
+function updateCCStats(){
+  const total=cardContacts.length;
+  const now=Date.now();
+  const week=cardContacts.filter(c=>(now-new Date(c.created_at).getTime())<604800000).length;
+  const promoted=cardContacts.filter(c=>c.promoted_to_lead).length;
+  const rate=total?Math.round(promoted/total*100)+'%':'—';
+  const src={};
+  cardContacts.forEach(c=>{if(c.source_slug)src[c.source_slug]=(src[c.source_slug]||0)+1});
+  const topSrc=Object.entries(src).sort((a,b)=>b[1]-a[1])[0];
+  document.getElementById('cc-stat-total').textContent=total||0;
+  document.getElementById('cc-stat-week').textContent=week||0;
+  document.getElementById('cc-stat-rate').textContent=rate;
+  document.getElementById('cc-stat-source').textContent=topSrc?topSrc[0]:'—';
+}
+function renderCardContacts(){
+  const q=(document.getElementById('cc-search')?.value||'').toLowerCase();
+  const sf=document.getElementById('cc-status-filter')?.value||'';
+  const rows=cardContacts.filter(c=>{
+    const m=!q||[c.name,c.email,c.phone].some(f=>(f||'').toLowerCase().includes(q));
+    return m&&(!sf||c.status===sf);
+  });
+  const tbody=document.getElementById('cc-tbody');
+  if(!tbody) return;
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--hint);padding:32px">No contacts yet.</td></tr>';return;}
+  tbody.innerHTML=rows.map(c=>`<tr>
+    <td style="font-weight:600">${esc(c.name||'—')}</td>
+    <td style="font-size:12px">${c.phone?`<div>${esc(c.phone)}</div>`:''}<div style="color:var(--hint)">${esc(c.email||'')}</div></td>
+    <td><code style="font-size:11px">${esc(c.promo_code||'—')}</code></td>
+    <td style="font-size:12px">${esc(c.source_name||c.source_slug||'—')}</td>
+    <td><select onchange="updateContactStatus('${c.id}',this.value)" style="padding:4px 8px;font-size:12px;border:1px solid var(--border);border-radius:6px;font-family:var(--sans)">
+      ${['new','contacted','qualified','converted','archived'].map(s=>`<option value="${s}"${c.status===s?' selected':''}>${cap(s)}</option>`).join('')}
+    </select></td>
+    <td style="font-size:12px;white-space:nowrap">${fmtDate(c.created_at?.slice(0,10))}</td>
+    <td style="display:flex;gap:4px;flex-wrap:wrap">${!c.promoted_to_lead?`<button class="btn btn-ghost btn-sm" onclick="promoteToLead('${c.id}')" style="font-size:11px">→ Lead</button>`:'<span style="font-size:11px;color:var(--hint)">In Leads</span>'}<button class="btn btn-danger btn-sm" onclick="deleteCardContact('${c.id}')" style="font-size:11px">Delete</button></td>
+  </tr>`).join('');
+}
+async function updateContactStatus(id,status){
+  const {error}=await db.from('card_contacts').update({status}).eq('id',id);
+  if(error){toast('Error updating status');return;}
+  const c=cardContacts.find(x=>x.id===id);
+  if(c) c.status=status;
+  document.getElementById('contacts-badge').textContent=cardContacts.filter(c=>c.status==='new').length||'';
+  toast('Status updated ✓');
+}
+async function promoteToLead(id){
+  const c=cardContacts.find(x=>x.id===id);
+  if(!c) return;
+  if(!confirm(`Promote ${c.name||'this contact'} to a Lead?`)) return;
+  const promoNote = c.promo_code ? `[Promo code: ${c.promo_code}]` : '';
+  const existingNotes = c.notes || '';
+  const combinedNotes = [promoNote, existingNotes].filter(Boolean).join('\n');
+  const {data:lead,error:le}=await db.from('leads').insert({
+    name:c.name,email:c.email||'',phone:c.phone||'',
+    source:'card:'+(c.source_slug||'card'),status:'new',notes:combinedNotes
+  }).select().single();
+  if(le){toast('Error: '+le.message);return;}
+  await db.from('card_contacts').update({promoted_to_lead:true,lead_id:lead?.id}).eq('id',id);
+  await loadCardContacts();
+  await loadLeads(); renderLeads();
+  renderCardContacts();
+  toast('Promoted to Lead ✓');
+}
+function exportContactsCSV(){
+  const headers=['Name','Email','Phone','Promo Code','Source','Status','Promoted','Captured'];
+  const rows=cardContacts.map(c=>[c.name,c.email,c.phone,c.promo_code,c.source_name||c.source_slug,c.status,c.promoted_to_lead?'yes':'no',c.created_at?.slice(0,10)]);
+  const csv=[headers,...rows].map(r=>r.map(f=>'"'+(f==null?'':f).toString().replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='card-contacts-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+}
+async function deleteCardContact(id){
+  if(!id) return;
+  if(!confirm('Delete this contact? This cannot be undone.')) return;
+  const {error}=await db.from('card_contacts').delete().eq('id',id);
+  if(error){toast('Error deleting contact');return;}
+  await loadCardContacts();
+  renderCardContacts();
+  toast('Contact deleted');
+}
+// ── QR CODES ──────────────────────────────────────────────
+async function loadQRCodes(){
+  const {data:codes}=await db.from('qr_codes').select('*').order('created_at',{ascending:false});
+  qrCodes=codes||[];
+  qrScanStats={};
+  const {data:scans}=await db.from('card_scans').select('source_slug,converted');
+  (scans||[]).forEach(s=>{
+    if(!qrScanStats[s.source_slug])qrScanStats[s.source_slug]={total:0,converted:0};
+    qrScanStats[s.source_slug].total++;
+    if(s.converted)qrScanStats[s.source_slug].converted++;
+  });
+  updateQRStats();
+}
+function updateQRStats(){
+  const active=qrCodes.filter(q=>q.active).length;
+  const scans=Object.values(qrScanStats).reduce((a,s)=>a+s.total,0);
+  const captures=Object.values(qrScanStats).reduce((a,s)=>a+s.converted,0);
+  document.getElementById('qr-stat-active').textContent=active;
+  document.getElementById('qr-stat-scans').textContent=scans;
+  document.getElementById('qr-stat-captures').textContent=captures;
+  document.getElementById('qr-stat-rate').textContent=scans?Math.round(captures/scans*100)+'%':'—';
+}
+function renderQRCodes(){
+  const tbody=document.getElementById('qr-tbody');
+  if(!tbody) return;
+  if(!qrCodes.length){tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--hint);padding:32px">No QR codes yet. Click "+ New QR Code" to create one.</td></tr>';return;}
+  tbody.innerHTML=qrCodes.map(q=>{
+    const s=qrScanStats[q.slug]||{total:0,converted:0};
+    return `<tr>
+      <td class="qr-canvas-cell" id="qrcell-${q.slug}"></td>
+      <td style="font-weight:600">${esc(q.name)}</td>
+      <td style="font-size:12px"><code>${esc(q.slug)}</code></td>
+      <td><code style="font-size:11px">${esc(q.promo_code||'—')}</code></td>
+      <td style="font-weight:700;color:${q.active?'var(--green)':'var(--hint)'}">${q.active?'Active':'Paused'}</td>
+      <td style="text-align:center">${s.total}</td>
+      <td style="text-align:center">${s.converted}</td>
+      <td><button class="btn btn-ghost btn-sm" onclick="editQRCode('${q.id}')">Edit</button> <button class="btn btn-ghost btn-sm" onclick="downloadQR('${esc(q.slug)}','${esc(q.name)}')">↓ GIF</button></td>
+    </tr>`;
+  }).join('');
+  qrCodes.forEach(q=>{
+    const cell=document.getElementById('qrcell-'+q.slug);
+    if(!cell||typeof qrcode==='undefined') return;
+    try{const qr=qrcode(0,'M');qr.addData('https://learnwatersports.ca/card?q='+q.slug);qr.make();cell.innerHTML=qr.createImgTag(2,2);}catch(e){}
+  });
+}
+function openQRModal(editId){
+  document.getElementById('qr-modal-title').textContent=editId?'Edit QR Code':'New QR Code';
+  document.getElementById('qr-editing-id').value=editId||'';
+  document.getElementById('qr-delete-btn').style.display=editId?'':'none';
+  if(editId){
+    const q=qrCodes.find(x=>x.id===editId);
+    if(q){
+      document.getElementById('qr-name').value=q.name||'';
+      document.getElementById('qr-slug').value=q.slug||'';
+      document.getElementById('qr-promo-code').value=q.promo_code||'';
+      const pc=promoCodes.find(p=>p.code===q.promo_code);
+      document.getElementById('qr-promo-pct').value=pc?pc.discount_value:'';
+      document.getElementById('qr-desc').value=q.description||'';
+      document.getElementById('qr-active').checked=!!q.active;
+    }
+  } else {
+    ['qr-name','qr-slug','qr-desc'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('qr-promo-code').value='';
+    document.getElementById('qr-promo-pct').value='';
+    document.getElementById('qr-active').checked=true;
+  }
+  openModal('qr-modal');
+}
+function editQRCode(id){openQRModal(id);}
+async function saveQRCode(){
+  const editId=document.getElementById('qr-editing-id').value;
+  const name=document.getElementById('qr-name').value.trim();
+  const slug=document.getElementById('qr-slug').value.trim();
+  if(!name||!slug){toast('Name and slug are required');return;}
+  const promoCode=document.getElementById('qr-promo-code').value.trim()||null;
+  const promoPct=document.getElementById('qr-promo-pct').value.trim();
+  const payload={name,slug,promo_code:promoCode,description:document.getElementById('qr-desc').value.trim()||null,active:document.getElementById('qr-active').checked};
+  const {error}=editId?await db.from('qr_codes').update(payload).eq('id',editId):await db.from('qr_codes').insert(payload);
+  if(error){toast(error.code==='23505'?'Slug already exists':'Error: '+error.message);return;}
+  // Auto-create promo code entry if it doesn't already exist
+  if(promoCode && promoPct && !promoCodes.find(p=>p.code===promoCode)){
+    await db.from('promo_codes').insert({code:promoCode,discount_type:'percent',discount_value:promoPct,label:name,active:true});
+    await loadPromoCodes();renderPromoCodes();
+  }
+  closeModal('qr-modal');
+  qrScanStats={};
+  await loadQRCodes();renderQRCodes();
+  toast('QR code saved ✓');
+}
+async function deleteQRCode(){
+  const editId=document.getElementById('qr-editing-id').value;
+  if(!editId||!confirm('Delete this QR code? Scan history is kept.')) return;
+  const {error}=await db.from('qr_codes').delete().eq('id',editId);
+  if(error){toast('Error deleting');return;}
+  closeModal('qr-modal');
+  qrScanStats={};
+  await loadQRCodes();renderQRCodes();
+  toast('QR code deleted');
+}
+function downloadQR(slug){
+  if(typeof qrcode==='undefined'){toast('QR library not loaded');return;}
+  try{
+    const qr=qrcode(0,'M');
+    qr.addData('https://learnwatersports.ca/card?q='+slug);
+    qr.make();
+    const tmp=document.createElement('div');
+    tmp.innerHTML=qr.createImgTag(8,4);
+    const img=tmp.querySelector('img');
+    if(!img){toast('QR generation failed');return;}
+    const a=document.createElement('a');
+    a.href=img.src;
+    a.download='qr-'+slug+'.gif';
+    a.click();
+  }catch(e){toast('Error: '+e.message);}
+}
+// ── DIGITAL CARD CONFIG ───────────────────────────────────
+async function loadCardConfig(){
+  document.getElementById('dc-save-status').textContent='Loading…';
+  const {data:rows,error}=await db.from('card_config').select('*').limit(1);
+  const data=rows?.[0]||null;
+  if(error||!data){document.getElementById('dc-save-status').textContent='Load failed: '+(error?.message||error?.code||'no data');console.error('card_config load error',error);return;}
+  cardConfig=data;cardConfigLoaded=true;
+  populateDCForm(data);
+  document.getElementById('dc-save-status').textContent='';
+}
+function populateDCForm(d){
+  const sv=(id,v)=>{const el=document.getElementById(id);if(el)el.value=v||'';};
+  sv('dc-hero-image',d.hero_image_url);sv('dc-eyebrow',d.eyebrow_text);sv('dc-display-name',d.display_name);
+  const credList=document.getElementById('dc-creds-list');
+  credList.innerHTML='';
+  (d.credentials||[]).forEach((c,i)=>credList.insertAdjacentHTML('beforeend',dcCredRow(i,c.label||c)));
+  sv('dc-tagline',d.tagline);
+  document.getElementById('dc-desc-lines').value=(d.description_lines||[]).join('\n');
+  sv('dc-cta',d.cta_text);
+  const numList=document.getElementById('dc-nums-list');
+  numList.innerHTML='';
+  (d.key_numbers||[]).forEach((n,i)=>numList.insertAdjacentHTML('beforeend',dcNumRow(i,n)));
+  sv('dc-video-url',d.intro_video_url);sv('dc-video-caption',d.intro_video_caption);
+  sv('dc-phone',d.contact_phone);sv('dc-email',d.contact_email);sv('dc-website',d.contact_website);
+  const socList=document.getElementById('dc-socials-list');
+  socList.innerHTML='';
+  (d.socials||[]).forEach((s,i)=>socList.insertAdjacentHTML('beforeend',dcSocialRow(i,s)));
+  sv('dc-ex-headline',d.exchange_headline);sv('dc-ex-eyebrow',d.exchange_subheadline);
+  sv('dc-ex-description',d.exchange_description);sv('dc-ex-promo-label',d.exchange_promo_field_label);
+  sv('dc-cta-save-text',d.cta_save_text);sv('dc-cta-btn-text',d.cta_button_text);sv('dc-cta-sms-body',d.cta_button_sms_body);
+  sv('dc-cta-dm-text',d.cta_dm_text);sv('dc-cta-dm-url',d.cta_dm_url);
+  sv('dc-ex-cta-text',d.exchange_cta_text);
+  sv('dc-web-img',d.website_image_url);sv('dc-web-caption',d.website_caption);sv('dc-web-link',d.website_link_url);
+  sv('dc-footer-text',d.footer_text);
+  renderBlockOrderList((d.block_order&&d.block_order.length)?d.block_order:['description','key_numbers','website','intro_video','contact_info','socials'],{});
+}
+function dcCredRow(i,val){return `<div class="dc-list-row dc-cred-row" data-idx="${i}"><input type="text" class="dc-cred-val" placeholder="e.g. AWSI Certified Instructor" value="${esc(val)}"/><button class="remove-btn" onclick="this.closest('.dc-list-row').remove()">×</button></div>`;}
+function dcNumRow(i,n){return `<div class="dc-list-row dc-num-row" data-idx="${i}"><input type="text" class="dc-num-val" placeholder="25+" value="${esc(n.number||'')}"/><input type="text" class="dc-num-label" placeholder="label" value="${esc(n.caption||'')}"/><button class="remove-btn" onclick="this.closest('.dc-list-row').remove()">×</button></div>`;}
+function dcPortRow(i,p){return `<div class="dc-list-row dc-port-row" data-idx="${i}"><input type="text" class="dc-port-img" placeholder="Image URL" value="${esc(p.image||'')}"/><input type="text" class="dc-port-cap" placeholder="Caption" value="${esc(p.caption||'')}"/><input type="text" class="dc-port-url" placeholder="Link URL (opt)" value="${esc(p.link_url||'')}"/><button class="remove-btn" onclick="this.closest('.dc-list-row').remove()">×</button></div>`;}
+function dcSocialRow(i,s){
+  const nets=['instagram','facebook','tiktok','youtube','x','linkedin','snapchat'];
+  const sel=nets.map(n=>`<option value="${n}"${s.platform===n?' selected':''}>${cap(n)}</option>`).join('');
+  return `<div class="dc-list-row dc-social-row" data-idx="${i}"><select class="dc-soc-net">${sel}</select><input type="text" class="dc-soc-url" placeholder="https://..." value="${esc(s.url||'')}"/><button class="remove-btn" onclick="this.closest('.dc-list-row').remove()">×</button></div>`;
+}
+function addDcCred(){const l=document.getElementById('dc-creds-list');l.insertAdjacentHTML('beforeend',dcCredRow(l.children.length,''));l.lastElementChild.querySelector('input').focus();}
+function addDcNum(){const l=document.getElementById('dc-nums-list');l.insertAdjacentHTML('beforeend',dcNumRow(l.children.length,{}));}
+function addDcPortfolio(){const l=document.getElementById('dc-portfolio-list');l.insertAdjacentHTML('beforeend',dcPortRow(l.children.length,{}));}
+function addDcSocial(){const l=document.getElementById('dc-socials-list');l.insertAdjacentHTML('beforeend',dcSocialRow(l.children.length,{}));}
+function dcToggle(id){const b=document.getElementById(id);if(!b)return;const col=b.classList.toggle('collapsed');const ch=b.previousElementSibling?.querySelector('.dc-chevron');if(ch)ch.style.transform=col?'rotate(-90deg)':'';}
+function renderBlockOrderList(order,visible){
+  const labels={description:'Description',key_numbers:'Key Numbers',website:'Website',intro_video:'Intro Video',contact_info:'Contact Info',socials:'Socials'};
+  const list=document.getElementById('dc-blocks-list');
+  list.innerHTML='';
+  // Support both DB object format {block_id,enabled,order} and plain string format
+  const normalized=order.map(b=>typeof b==='object'?{id:b.block_id,on:b.enabled!==false}:{id:b,on:true})
+    .filter(b=>b.id!=='credentials'&&b.id!=='portfolio');
+  normalized.forEach(({id,on},i)=>{
+    list.insertAdjacentHTML('beforeend',`<div class="block-order-row" data-block="${id}">
+      <label class="toggle-sw"><input type="checkbox" class="block-vis-cb"${on?' checked':''}><span class="toggle-sl"></span></label>
+      <span class="block-order-label">${labels[id]||id}</span>
+      <div class="block-order-btns">
+        <button class="block-order-btn" onclick="moveBlock(this,-1)"${i===0?' disabled':''}>↑</button>
+        <button class="block-order-btn" onclick="moveBlock(this,1)"${i===normalized.length-1?' disabled':''}>↓</button>
+      </div>
+    </div>`);
+  });
+}
+function moveBlock(btn,dir){
+  const row=btn.closest('.block-order-row');
+  const list=document.getElementById('dc-blocks-list');
+  const rows=[...list.querySelectorAll('.block-order-row')];
+  const idx=rows.indexOf(row);
+  const target=rows[idx+dir];
+  if(!target) return;
+  if(dir===-1)list.insertBefore(row,target);else list.insertBefore(target,row);
+  const nr=[...list.querySelectorAll('.block-order-row')];
+  nr.forEach((r,i)=>{const bs=r.querySelectorAll('.block-order-btn');bs[0].disabled=i===0;bs[1].disabled=i===nr.length-1;});
+}
+function collectDCConfig(){
+  const gv=id=>(document.getElementById(id)?.value||'').trim();
+  const creds=[...document.querySelectorAll('.dc-cred-row .dc-cred-val')].map(i=>i.value.trim()).filter(Boolean);
+  const descLines=(document.getElementById('dc-desc-lines')?.value||'').split('\n').map(l=>l.trim()).filter(Boolean);
+  const nums=[...document.querySelectorAll('.dc-num-row')].map(r=>({number:r.querySelector('.dc-num-val')?.value.trim(),caption:r.querySelector('.dc-num-label')?.value.trim()})).filter(n=>n.number&&n.caption);
+  const socs=[...document.querySelectorAll('.dc-social-row')].map(r=>{const p=r.querySelector('.dc-soc-net')?.value;return{platform:p,label:p?p.charAt(0).toUpperCase()+p.slice(1):'',url:r.querySelector('.dc-soc-url')?.value.trim()};}).filter(s=>s.url);
+  const blockRows=[...document.querySelectorAll('#dc-blocks-list .block-order-row')];
+  const block_order=blockRows.map((r,i)=>({block_id:r.dataset.block,enabled:r.querySelector('.block-vis-cb').checked,order:i+1}));
+  return {
+    hero_image_url:gv('dc-hero-image'),eyebrow_text:gv('dc-eyebrow'),display_name:gv('dc-display-name'),
+    credentials:creds,tagline:gv('dc-tagline'),description_lines:descLines,cta_text:gv('dc-cta'),
+    key_numbers:nums,
+    intro_video_url:gv('dc-video-url'),intro_video_caption:gv('dc-video-caption'),
+    contact_phone:gv('dc-phone'),contact_email:gv('dc-email'),contact_website:gv('dc-website'),
+    socials:socs,
+    exchange_headline:gv('dc-ex-headline'),exchange_subheadline:gv('dc-ex-eyebrow'),
+    exchange_description:gv('dc-ex-description'),exchange_promo_field_label:gv('dc-ex-promo-label'),
+    cta_save_text:gv('dc-cta-save-text'),cta_button_text:gv('dc-cta-btn-text'),cta_button_sms_body:gv('dc-cta-sms-body'),
+    cta_dm_text:gv('dc-cta-dm-text'),cta_dm_url:gv('dc-cta-dm-url'),
+    exchange_cta_text:gv('dc-ex-cta-text'),
+    website_image_url:gv('dc-web-img'),website_caption:gv('dc-web-caption'),website_link_url:gv('dc-web-link'),
+    footer_text:gv('dc-footer-text'),block_order
+  };
+}
+async function saveCardConfig(){
+  const st=document.getElementById('dc-save-status');
+  st.textContent='Saving…';
+  const cfg=collectDCConfig();
+  const {error}=await db.from('card_config').update(cfg).eq('id',cardConfig.id);
+  if(error){st.textContent='Error: '+error.message;toast('Save failed');return;}
+  cardConfig={...cardConfig,...cfg};
+  st.textContent='Saved ✓';
+  setTimeout(()=>{if(st.textContent==='Saved ✓')st.textContent='';},3000);
+  toast('Card config saved ✓');
+}
+</script>
+  <script>
+// ===== TASKS DASHBOARD =====
+let opsTasks = [];
+const STAGE_RANK  = { bookings:0, awareness:1, later:2 };
+const IMPACT_RANK = { high:0, med:1, low:2 };
+async function loadTasks(){
+  const { data, error } = await db.from('ops_tasks').select('*').order('sort_order');
+  if(error){ console.warn('tasks load failed', error); return; }
+  opsTasks = data || [];
+  renderTasks();
+}
+function renderTasks(){
+  const open = opsTasks.filter(t => t.status !== 'done');
+  const ranked = [...open].sort((a,b) =>
+    (STAGE_RANK[a.stage] ?? 9) - (STAGE_RANK[b.stage] ?? 9) ||
+    (IMPACT_RANK[a.impact] ?? 9) - (IMPACT_RANK[b.impact] ?? 9) ||
+    a.sort_order - b.sort_order
+  );
+  const labels = ['Start here','Needle-mover',"Don't skip this"];
+  const top3 = ranked.slice(0,3);
+  document.getElementById('tasks-top3').innerHTML = top3.length
+    ? top3.map((t,i)=>`<div class="top3-card"><div class="lbl">${labels[i]||'Focus'}</div><h4>${esc(t.title)}</h4><div>${pill(t.impact)} <span class="task-pill pill-low">${esc(t.effort||'')}</span></div></div>`).join('')
+    : '<div class="top3-card"><h4>All clear — add a task below 🎉</h4></div>';
+  const weekAgo = Date.now() - 7*864e5;
+  const doneWeek = opsTasks.filter(t => t.status==='done' && t.done_at && new Date(t.done_at).getTime() >= weekAgo).length;
+  document.getElementById('t-stat-open').textContent  = open.length;
+  document.getElementById('t-stat-done').textContent  = doneWeek;
+  document.getElementById('t-stat-book').textContent  = open.filter(t=>t.stage==='bookings').length;
+  document.getElementById('t-stat-aware').textContent = open.filter(t=>t.stage==='awareness').length;
+  ['bookings','awareness','later'].forEach(renderTaskCol);
+  if(typeof renderCrmHealth==='function') renderCrmHealth();
+}
+function renderTaskCol(stage){
+  const el = document.getElementById('tcol-'+stage);
+  if(!el) return;
+  const rows = opsTasks.filter(t => t.stage === stage && t.status !== 'done');
+  el.innerHTML = rows.length
+    ? rows.map(t=>`<div class="task-row"><input type="checkbox" onchange="toggleTask('${t.id}',this.checked)"/><span class="task-title" title="Click to edit" onclick="editTaskTitle('${t.id}', this)">${esc(t.title)}</span>${pill(t.impact)}</div>`).join('')
+    : '<div style="font-size:13px;color:var(--hint)">All clear — nothing open here.</div>';
+}
+function editTaskTitle(id, el){
+  if(el.querySelector('input')) return; // already editing
+  const current = el.textContent;
+  el.innerHTML = `<input type="text" class="task-title-input" value="${esc(current)}" style="width:100%;font:inherit;color:inherit;border:1px solid var(--cyan);border-radius:4px;padding:2px 6px;box-sizing:border-box" onkeydown="if(event.key==='Enter'){this.blur();} if(event.key==='Escape'){this.dataset.cancel='1';this.blur();}" onblur="saveTaskTitle('${id}', this)"/>`;
+  const inp = el.querySelector('input');
+  inp.focus(); inp.select();
+}
+async function saveTaskTitle(id, inputEl){
+  const t = opsTasks.find(x => x.id === id);
+  if(inputEl.dataset.cancel){ renderTasks(); return; }
+  const title = inputEl.value.trim();
+  if(!title || (t && title === t.title)){ renderTasks(); return; }
+  const { error } = await db.from('ops_tasks').update({ title }).eq('id', id);
+  if(error){ toast('Error saving task'); renderTasks(); return; }
+  if(t) t.title = title;
+  renderTasks();
+  toast('Task updated ✓');
+}
+function pill(impact){
+  const c = impact==='high' ? 'pill-high' : impact==='low' ? 'pill-low' : 'pill-med';
+  return `<span class="task-pill ${c}">${impact||'med'}</span>`;
+}
+function esc(s){ return (s||'').replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+async function toggleTask(id, done){
+  await db.from('ops_tasks').update({ status: done?'done':'open', done_at: done?new Date().toISOString():null }).eq('id', id);
+  const t = opsTasks.find(x => x.id === id);
+  if(t){ t.status = done?'done':'open'; t.done_at = done?new Date().toISOString():null; }
+  renderTasks();
+  if(typeof toast === 'function') toast(done ? 'Nice — done ✓' : 'Reopened');
+}
+async function addTask(){
+  const inp = document.getElementById('new-task-input');
+  const title = inp.value.trim();
+  if(!title) return;
+  const stage = document.getElementById('new-task-stage').value;
+  const { data } = await db.from('ops_tasks').insert({ title, stage, impact:'med', effort:'medium', sort_order:999 }).select().single();
+  if(data){ opsTasks.push(data); inp.value=''; renderTasks(); if(typeof toast==='function') toast('Task added'); }
+}
+async function loadFeedback(){
+  const today = new Date().toLocaleDateString('en-CA');
+  const { data } = await db.from('ops_briefing').select('feedback').eq('date', today).single();
+  if(data?.feedback){
+    document.getElementById('feedback-input').value = data.feedback;
+  }
+}
+async function saveFeedback(){
+  const today = new Date().toLocaleDateString('en-CA');
+  const feedback = document.getElementById('feedback-input').value.trim();
+  const status = document.getElementById('feedback-save-status');
+  // Try update first to preserve existing briefing content
+  const { data, error: updateErr } = await db.from('ops_briefing')
+    .update({ feedback, updated_at: new Date().toISOString() })
+    .eq('date', today)
+    .select();
+  if(updateErr){
+    console.error('saveFeedback update error:', updateErr);
+    status.textContent = '✗ Save failed: ' + (updateErr.message || updateErr.code);
+    status.style.color = 'var(--red)';
+    return;
+  }
+  if(!data || data.length === 0){
+    // No briefing row yet today — insert with placeholder content
+    const { error: insertErr } = await db.from('ops_briefing')
+      .insert({ date: today, feedback, content: '(No briefing yet today)' });
+    if(insertErr){
+      console.error('saveFeedback insert error:', insertErr);
+      status.textContent = '✗ Save failed: ' + (insertErr.message || insertErr.code);
+      status.style.color = 'var(--red)';
+      return;
+    }
+  }
+  status.textContent = '✓ Saved';
+  status.style.color = 'var(--cyan)';
+  setTimeout(()=>status.textContent='', 3000);
+}
+async function loadBriefing(){
+  const today = new Date().toLocaleDateString('en-CA');
+  const { data } = await db.from('ops_briefing')
+    .select('content,updated_at').eq('date', today).single();
+  const card = document.getElementById('briefing-card');
+  if(!card) return;
+  if(data?.content){
+    document.getElementById('briefing-content').textContent = data.content;
+    document.getElementById('briefing-time').textContent =
+      'Cowork · ' + new Date(data.updated_at).toLocaleTimeString('en-CA',{hour:'2-digit',minute:'2-digit'});
+    card.style.display = 'block';
+  }
+}
+async function loadLeadNotes(){
+  const card = document.getElementById('lead-notes-card');
+  if(!card) return;
+  const { data } = await db.from('leads')
+    .select('id,name,status,inquiry,email')
+    .not('status','in','("converted","archived")')
+    .order('updated_at',{ascending:false})
+    .limit(8);
+  if(!data?.length){ card.style.display='none'; return; }
+  card.style.display='block';
+  const list = document.getElementById('briefing-leads-list');
+  list.innerHTML = data.map(l => {
+    const lines = (l.inquiry||'').split('\n').filter(Boolean);
+    const lastLine = lines.slice(-1)[0]||'';
+    const statusColor = l.status==='hot'?'var(--red)':l.status==='warm'?'var(--gold)':'var(--cyan)';
+    return `<div style="border:1px solid var(--border);border-radius:10px;padding:12px 14px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+        <span style="font-size:11px;font-weight:700;text-transform:uppercase;color:${statusColor};background:${statusColor}22;border-radius:20px;padding:2px 8px">${esc(l.status||'lead')}</span>
+        <strong style="font-size:14px">${esc(l.name)}</strong>
+        ${l.email&&l.email!=='FB chat'?`<span style="font-size:11px;color:var(--hint)">${esc(l.email)}</span>`:''}
+      </div>
+      ${lastLine?`<div style="font-size:11px;color:var(--muted);background:#f4faf9;border-left:2px solid var(--cyan);padding:4px 8px;border-radius:0 4px 4px 0;margin-bottom:8px;line-height:1.5">${esc(lastLine)}</div>`:''}
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        <textarea id="lnote-${l.id}" placeholder="Add update…" rows="2" style="flex:1;border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font-size:13px;font-family:var(--sans);resize:vertical;outline:none;line-height:1.5;background:#fff"></textarea>
+        <button class="btn btn-primary btn-sm" onclick="saveLeadQuickNote('${l.id}')">Save</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+async function saveLeadQuickNote(id){
+  const el = document.getElementById('lnote-'+id);
+  const val = el?.value.trim();
+  if(!val) return;
+  const today = new Date().toLocaleDateString('en-CA');
+  const { data:existing } = await db.from('leads').select('inquiry').eq('id',id).single();
+  const prev = existing?.inquiry||'';
+  const updated = prev ? prev+'\n['+today+'] '+val : '['+today+'] '+val;
+  const { error } = await db.from('leads').update({inquiry:updated,last_activity_at:new Date().toISOString()}).eq('id',id);
+  if(!error){
+    el.value='';
+    toast('Lead updated ✓');
+    loadLeadNotes();
+  } else {
+    toast('Save failed: '+(error.message||'unknown'));
+  }
+}
+</script>
+</body>
+</html>

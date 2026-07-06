@@ -1,0 +1,488 @@
+<!-- © 2026 Christian Richards / Stillwater Sports. All rights reserved. Unauthorized copying or reproduction of this code or content is prohibited. -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="google-site-verification" content="_ymjlW_Dw-AhwY4WSTsuzvuAlaIJYNpKvLNRo2aS4Js"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="description" content="Ottawa's most unique date night — a private waterski, wakeboard, or surf lesson, lakeside dinner, and a sunset cruise. Starting at $135. person Up to 4 people."/>
+<title>Sunset Wake Date — Ottawa's Ultimate Date Night | Stillwater Sports</title>
+<!-- Open Graph (Facebook, LinkedIn, iMessage, WhatsApp, Slack) -->
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://www.learnwatersports.ca/sunset-wake-date"/>
+<meta property="og:title" content="Sunset Wake Date — Ottawa's Ultimate Date Night"/>
+<meta property="og:description" content="Private waterski lesson, lakeside dinner, and a sunset cruise."/>
+<meta property="og:image" content="https://www.learnwatersports.ca/assets/images/jpg/FB-date.jpg"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+
+<!-- Twitter card -->
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Sunset Wake Date — Ottawa's Ultimate Date Night"/>
+<meta name="twitter:description" content="Private waterski lesson, lakeside dinner, and a sunset cruise. From $400 per couple."/>
+<meta name="twitter:image" content="https://www.learnwatersports.ca/assets/images/jpg/FB-date.jpg"/>
+
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="./assets/css/styles.css"/>
+<style>
+  img{pointer-events:none;user-select:none;-webkit-user-drag:none}body{-webkit-user-select:none;user-select:none}
+
+  /* Date-night specific styling — warm, golden, sunset vibe */
+  .dn-timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:32px}
+  .dn-step{background:#fff;border:1.5px solid var(--cyan);border-top:4px solid var(--pink);border-radius:var(--rsm);padding:24px 20px;position:relative;display:flex;flex-direction:column}
+  .dn-step-time{font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--text);text-shadow:-1px -1px 0 var(--cyan),1px -1px 0 var(--cyan),-1px 1px 0 var(--cyan),1px 1px 0 var(--cyan);padding-bottom:4px;border-bottom:1.5px solid var(--cyan);display:inline-block;margin-bottom:14px;align-self:flex-start}
+  .dn-step-icon{font-size:38px;line-height:1;margin-bottom:14px}
+  .dn-step-title{font-size:17px;font-weight:800;color:var(--text);margin-bottom:8px;line-height:1.3}
+  .dn-step-desc{font-size:13px;color:var(--muted);line-height:1.65}
+  @media(max-width:960px){.dn-timeline{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:520px){.dn-timeline{grid-template-columns:1fr}}
+
+  /* Restaurant choice cards */
+  .dn-restaurants{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:32px}
+  .dn-restaurant{background:#fff;border:1.5px solid rgba(0,200,212,0.25);border-radius:var(--rsm);padding:28px 24px;transition:transform .2s,border-color .2s}
+  .dn-restaurant:hover{transform:translateY(-4px);border-color:var(--cyan)}
+  .dn-restaurant-num{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--pink);margin-bottom:12px}
+  .dn-restaurant-name{font-size:20px;font-weight:800;color:var(--text);margin-bottom:10px;line-height:1.2}
+  .dn-restaurant-desc{font-size:14px;color:var(--muted);line-height:1.7}
+  @media(max-width:960px){.dn-restaurants{grid-template-columns:1fr;gap:14px}}
+
+  /* Pricing card — premium feel */
+  .dn-price-card{background:linear-gradient(180deg,#fff 0%,rgba(0,200,212,0.06) 100%);border:2px solid var(--cyan);border-radius:var(--radius);padding:48px 40px;text-align:center;max-width:560px;margin:0 auto;position:relative;overflow:hidden}
+  .dn-price-card::before{content:'';position:absolute;top:-30px;right:-30px;width:140px;height:140px;background:var(--pink);border-radius:50%;opacity:.1}
+  .dn-price-badge{display:inline-block;background:var(--pink);color:var(--yellow);font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:6px 16px;border-radius:50px;margin-bottom:20px}
+  .dn-price-num{font-size:64px;font-weight:900;color:var(--text);line-height:1;letter-spacing:-.02em;margin-bottom:6px}
+  .dn-price-num em{color:var(--cyan);font-style:normal}
+  .dn-price-sub{font-size:14px;color:var(--muted);margin-bottom:8px}
+  .dn-price-meta{font-size:13px;color:var(--text);font-weight:600;margin-bottom:28px}
+  .dn-price-cta{display:inline-block;background:var(--pink);color:var(--yellow);font-size:14px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:16px 36px;border-radius:50px;text-decoration:none;transition:transform .15s,box-shadow .2s}
+  .dn-price-cta:hover{transform:scale(1.03);box-shadow:0 0 0 6px rgba(224,64,160,.18)}
+  .dn-price-fine{font-size:11px;color:var(--muted);margin-top:18px;line-height:1.6}
+
+  /* Includes list */
+  .dn-includes{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:760px;margin:32px auto 0}
+  .dn-include{display:flex;gap:12px;align-items:flex-start;padding:14px 16px;background:rgba(0,200,212,0.05);border:1px solid rgba(0,200,212,0.15);border-radius:var(--rsm)}
+  .dn-include-check{flex-shrink:0;width:24px;height:24px;background:var(--cyan);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700}
+  .dn-include-text{font-size:14px;color:var(--text);line-height:1.5}
+  @media(max-width:680px){.dn-includes{grid-template-columns:1fr}}
+
+  /* Dinner card price + CTA */
+  .dn-restaurant{display:flex;flex-direction:column}
+  .dn-restaurant-prices{margin-top:auto;padding-top:18px;border-top:1px dashed rgba(0,200,212,0.25);display:grid;gap:6px;margin-bottom:18px}
+  .dn-price-row{display:flex;justify-content:space-between;align-items:baseline;font-size:13px;color:var(--muted)}
+  .dn-price-row strong{font-size:18px;font-weight:800;color:var(--text);font-variant-numeric:tabular-nums}
+  .dn-price-row.featured strong{color:var(--cyan)}
+  .dn-restaurant-cta{display:block;text-align:center;background:var(--pink);color:var(--yellow);font-size:12px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:13px 18px;border-radius:50px;text-decoration:none;transition:transform .15s,box-shadow .2s}
+  .dn-restaurant-cta:hover{transform:scale(1.02);box-shadow:0 0 0 4px rgba(224,64,160,.18)}
+
+  /* What's Included — yellow text override (on cyan band background) */
+  .highlight-band .dn-include{background:rgba(255,254,180,0.08);border:1px solid rgba(255,254,180,0.25)}
+  .highlight-band .dn-include-text{color:var(--yellow)}
+  .highlight-band .dn-include-check{background:var(--yellow);color:var(--cyan)}
+
+  /* The Activity section */
+  .dn-activity{display:grid;grid-template-columns:0.85fr 1.15fr;gap:48px;align-items:center}
+  @media(max-width:860px){.dn-activity{grid-template-columns:1fr;gap:32px}}
+  .dn-activity-photo{position:relative;aspect-ratio:4/5;border-radius:var(--radius);overflow:hidden;background:linear-gradient(160deg,rgba(0,200,212,0.15),rgba(224,64,160,0.08))}
+  .dn-activity-photo img{width:100%;height:100%;object-fit:cover;display:block}
+  .dn-activity-photo-badge{position:absolute;bottom:16px;left:16px;background:var(--pink);color:var(--yellow);font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:6px 14px;border-radius:50px}
+  .dn-creds{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0 26px}
+  .dn-cred{background:rgba(0,200,212,0.06);border:1px solid rgba(0,200,212,0.2);border-radius:var(--rsm);padding:14px 16px}
+  .dn-cred-num{font-size:20px;font-weight:900;color:var(--cyan);line-height:1;margin-bottom:4px}
+  .dn-cred-lbl{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--muted);line-height:1.3}
+  .dn-guarantee{background:linear-gradient(135deg,var(--pink) 0%,#c43090 100%);color:var(--yellow);border-radius:var(--rsm);padding:22px 26px;display:flex;gap:18px;align-items:center;box-shadow:0 8px 24px rgba(224,64,160,.15)}
+  .dn-guarantee-icon{font-size:38px;line-height:1;flex-shrink:0}
+  .dn-guarantee-title{font-size:15px;font-weight:800;letter-spacing:.02em;margin-bottom:4px}
+  .dn-guarantee-text{font-size:13px;line-height:1.55;opacity:.92}
+
+  /* ── Booking Modal ── */
+  .swd-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:1000;display:none;align-items:center;justify-content:center;padding:20px}
+  .swd-overlay.open{display:flex}
+  .swd-modal{background:var(--yellow);border:2px solid var(--cyan);border-radius:var(--radius);padding:36px 32px;max-width:480px;width:100%;position:relative;max-height:90vh;overflow-y:auto}
+  .swd-modal-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:24px;color:var(--muted);cursor:pointer;line-height:1}
+  .swd-modal-title{font-size:22px;font-weight:800;color:var(--text);margin-bottom:4px}
+  .swd-modal-sub{font-size:14px;color:var(--muted);margin-bottom:24px}
+  .swd-restaurant-tag{display:inline-block;background:var(--pink);color:var(--yellow);font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;padding:5px 14px;border-radius:50px;margin-bottom:18px}
+  .swd-field{margin-bottom:16px}
+  .swd-label{display:block;font-size:12px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--text);margin-bottom:6px}
+  .swd-input{width:100%;padding:12px 14px;border:1.5px solid rgba(0,200,212,0.3);border-radius:var(--rsm);font-size:15px;font-family:inherit;background:#fff;color:var(--text);box-sizing:border-box;transition:border-color .2s}
+  .swd-input:focus{outline:none;border-color:var(--cyan)}
+  .swd-input::placeholder{color:#aaa}
+  .swd-radio-group{display:flex;gap:10px}
+  .swd-radio{flex:1;position:relative}
+  .swd-radio input{position:absolute;opacity:0;pointer-events:none}
+  .swd-radio label{display:block;text-align:center;padding:12px 10px;border:1.5px solid rgba(0,200,212,0.3);border-radius:var(--rsm);font-size:14px;font-weight:600;color:var(--text);cursor:pointer;background:#fff;transition:all .2s}
+  .swd-radio input:checked+label{border-color:var(--cyan);background:var(--cyan);color:#fff}
+  .swd-submit{display:block;width:100%;background:var(--pink);color:var(--yellow);font-size:14px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:16px;border:none;border-radius:50px;cursor:pointer;margin-top:24px;transition:transform .15s,box-shadow .2s}
+  .swd-submit:hover{transform:scale(1.02);box-shadow:0 0 0 5px rgba(224,64,160,.18)}
+  .swd-submit:disabled{opacity:.6;cursor:not-allowed;transform:none;box-shadow:none}
+  .swd-success{text-align:center;padding:24px 0}
+  .swd-success-icon{font-size:48px;margin-bottom:12px}
+  .swd-success-title{font-size:22px;font-weight:800;color:var(--text);margin-bottom:8px}
+  .swd-success-text{font-size:14px;color:var(--muted);line-height:1.7}
+  @media(max-width:520px){.swd-modal{padding:28px 20px}}
+</style>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-9Z296M7ZLP"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-9Z296M7ZLP');</script>
+</head>
+<body>
+
+
+<div id="nav-placeholder"></div>
+<script src="./assets/js/nav.js"></script>
+
+<!-- ══ HERO ══ -->
+<section class="hero hero-tall">
+  <div class="hero-bg" style="background:linear-gradient(to bottom,rgba(0,0,0,0) 0%,rgba(0,0,0,0.35) 100%),url('./assets/images/webp/date-night-hero.webp') center center/cover no-repeat;background-color:var(--cyan)"></div>
+  <div class="hero-coords">N 45°<br>OTTAWA · GOLDEN HOUR</div>
+  <div class="hero-content" style="left:48px;max-width:640px">
+    <div class="hero-badge" style="background:var(--pink);border-color:var(--pink);color:var(--yellow)">Limited Promotion</div>
+    <h1><span class="l1">Sunset</span><span class="l3">Wake Date.</span></h1>
+    <p class="hero-sub" style="color:var(--yellow);text-shadow:0 1px 6px rgba(0,0,0,.5)">Ottawa's most unique date night. Private waterski lesson, waterfront dinner, and a sunset cruise. </p>
+    <div class="hero-actions">
+      <a class="btn-pink" data-mailto data-restaurant="Not yet chosen" href="#">Book This Experience →</a>
+      <a href="#what-included" class="btn-ghost">See What's Included</a>
+    </div>
+  </div>
+  <div class="hero-bottom">
+    <div class="hero-scroll">The Experience</div>
+    <a href="mailto:christian@learnwatersports.ca?subject=Sunset%20Wake%20Date%20Question" class="hero-contact-link">Questions? Email Usn</a>
+  </div>
+</section>
+
+<!-- ══ THE EXPERIENCE TIMELINE ══ -->
+<section style="background:var(--yellow)" id="what-included">
+  <div class="s">
+    <div class="eyebrow">The Experience</div>
+    <h2 class="big-title" style="margin-bottom:8px">Activities, Dinner, Experiences <br><em>One <span style='color:var(--pink)'>Unforgetable!</span> <br>Evening.</em></h2>
+    <p class="section-desc">From the first pass to the last sip of light over the water — the whole evening is yours.</p>
+
+    <div class="dn-timeline">
+      <div class="dn-step">
+        <span class="dn-step-time">3:00 PM · Start</span>
+        <div class="dn-step-icon">🌊</div>
+        <div class="dn-step-title">Private Lesson</div>
+        <div class="dn-step-desc">Waterski, Wakeboard, or Wakesurf. Trying for the first time, or going pro, all levels welcome.</div>
+      </div>
+      <div class="dn-step">
+        <span class="dn-step-time">6:00 PM · Dinner</span>
+        <div class="dn-step-icon">🍽️</div>
+        <div class="dn-step-title">Lakeside Dinner</div>
+        <div class="dn-step-desc"> 2 Options — Big Rideau BBQ truck, or a curated charcuterie platter.</div>
+      </div>
+      <div class="dn-step">
+        <span class="dn-step-time">7:30 PM · Finale</span>
+        <div class="dn-step-icon">🌅</div>
+        <div class="dn-step-title">Sunset Cruise</div>
+        <div class="dn-step-desc"> Enjoy the Rideau River </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+<!-- ══ RESTAURANT CHOICES ══ -->
+<section style="background:var(--yellow)">
+  <div class="s" style="padding-top:0">
+    <div class="eyebrow">Pick Your Dinner</div>
+    <h2 class="big-title" style="margin-bottom:12px">2 Ways to Eat.<br><em>Both Great!</em></h2>
+    <p class="section-desc">Pick one when you book. We'll handle the rest, timing so it lands when you're hungry.</p>
+
+    <div class="dn-restaurants" id="dinner">
+   
+      <div class="dn-restaurant">
+        <div class="dn-restaurant-num">Option 01 · Casual</div>
+        <div class="dn-restaurant-name">Lakeside BBQ Stand</div>
+        <div class="dn-restaurant-desc">Smoked brisket, pulled pork, burgers, poutine, and ice cream from the local BBQ stand. <br>Casual, hands-on, picnic tables by the water. <br>Generous portions, and they have ice cream.</div>
+        <div class="dn-restaurant-prices">
+          <div class="dn-price-row featured"><span>Couple (2 people)</span><strong>$400</strong></div>
+          <div class="dn-price-row"><span>Double date (4 people)</span><strong>$600</strong></div>
+          <div class="dn-price-row" style="border-top:1px dashed rgba(224,64,160,0.25);padding-top:8px;margin-top:4px"><span style="color:var(--pink);font-weight:700">Fri / Sat night</span><strong style="color:var(--pink)">+$50</strong></div>
+        </div>
+        <a class="dn-restaurant-cta" data-mailto data-restaurant="Lakeside BBQ Stand" href="#">Book the BBQ →</a>
+      </div>
+      <div class="dn-restaurant">
+        <div class="dn-restaurant-num">Option 02 · Romantic</div>
+        <div class="dn-restaurant-name">Curated Charcuterie</div>
+        <div class="dn-restaurant-desc">A full board of cheeses, cured meats, fresh bread, fruit, and chocolate from a local small business. <br>Enjoy a picnic at a park on the water, or on the boat. <br>Very romantic!</div>
+        <div class="dn-restaurant-prices">
+          <div class="dn-price-row featured"><span>Couple (2 people)</span><strong>$400</strong></div>
+          <div class="dn-price-row"><span>Double date (4 people)</span><strong>$600</strong></div>
+          <div class="dn-price-row" style="border-top:1px dashed rgba(224,64,160,0.25);padding-top:8px;margin-top:4px"><span style="color:var(--pink);font-weight:700">Fri / Sat night</span><strong style="color:var(--pink)">+$50</strong></div>
+        </div>
+        <a class="dn-restaurant-cta" data-mailto data-restaurant="Curated Charcuterie" href="#">Book the Charcuterie →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+  <!-- ══ WHAT'S INCLUDED ══ -->
+<div class="highlight-band">
+  <div class="highlight-band-inner">
+    <div>
+      <div class="eyebrow" style="color:#5a8a8a">What's Included</div>
+      <h2>Everything.<br><em>Just show up.</em></h2>
+    </div>
+    <div>
+      <p>One flat price for a great evening on the water. Activities, dinner, dessert, and a sunset. The perfect date night. All included. </p>
+      <div class="dn-includes">
+        <div class="dn-include"><div class="dn-include-check">✓</div><div class="dn-include-text">Private waterski / wakeboard / surf lesson</div></div>
+        <div class="dn-include"><div class="dn-include-text">Boat, gas, gear, captain — included</div><div class="dn-include-check">✓</div></div>
+        <div class="dn-include"><div class="dn-include-check">✓</div><div class="dn-include-text">All equipment (skis, boards, life jackets, ropes)</div></div>
+        <div class="dn-include"><div class="dn-include-text">Dinner from your chosen spot</div><div class="dn-include-check">✓</div></div>
+        <div class="dn-include"><div class="dn-include-check">✓</div><div class="dn-include-text">Ice cream stop</div></div>
+        <div class="dn-include"><div class="dn-include-text">Sunset cruise to wrap up the night</div><div class="dn-include-check">✓</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- ══ THE ACTIVITY · MEET YOUR COACH ══ -->
+<section style="background:var(--yellow)">
+  <div class="s">
+    <div class="eyebrow">The Activity</div>
+    <h2 class="big-title" style="margin-bottom:8px">Coached by a pro.<br><em>You'll get up first try.</em></h2>
+    <p class="section-desc">This isn't a buddy with a boat. It's a private lesson with Ottawa's most experienced waterski coach — and a promise: you'll ride on your first attempt, or your follow-up session is on us.</p>
+
+    <div class="dn-activity" style="margin-top:40px">
+      <div>
+        <div class="dn-activity-photo">
+          <img src="./assets/images/webp/christian-photo.webp"alt="Christian Richards · Stillwater Sports coach" onerror="this.style.display='none'"/>
+          <div class="dn-activity-photo-badge">Christian Richards · Coach</div>
+        </div>
+      </div>
+
+      <div>
+        <p style="font-size:16px;color:var(--text);line-height:1.75;margin-bottom:14px">Christian Richards has spent twenty-five years on the water — competing, coaching, and teaching first-timers how to ride.</p>
+        <p style="font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:8px">He's a top-100 worldwide barefoot athlete, a certified WSWC instructor, and has coached thousands of new waterskiers and wakeboarders across Ontario. He knows exactly how to read a beginner — the body position, the rope tension, the boat speed — and adjust everything so you stand up the first time.</p>
+
+        <div class="dn-creds">
+          <div class="dn-cred">
+            <div class="dn-cred-num">Top 100</div>
+            <div class="dn-cred-lbl">Worldwide Barefoot Athlete</div>
+          </div>
+          <div class="dn-cred">
+            <div class="dn-cred-num">WSWC</div>
+            <div class="dn-cred-lbl">Certified Instructor</div>
+          </div>
+          <div class="dn-cred">
+            <div class="dn-cred-num">25+</div>
+            <div class="dn-cred-lbl">Years on the Water</div>
+          </div>
+          <div class="dn-cred">
+            <div class="dn-cred-num">1000+</div>
+            <div class="dn-cred-lbl">Beginners Coached</div>
+          </div>
+        </div>
+
+        <div class="dn-guarantee">
+          <div class="dn-guarantee-icon">🏆</div>
+          <div>
+            <div class="dn-guarantee-title">The First-Try Guarantee</div>
+            <div class="dn-guarantee-text">If you don't get up on your first attempt, we'll bring you out again on the house. That's how confident we are.</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ══ FAQ / FINE PRINT ══ -->
+<section style="background:var(--yellow);padding-top:0">
+  <div class="s" style="padding-top:0;padding-bottom:80px">
+    <div style="max-width:760px;margin:0 auto;background:#fff;border:1.5px solid rgba(0,200,212,0.2);border-radius:var(--radius);padding:36px 32px">
+      <div class="eyebrow" style="margin-bottom:16px">Good to Know</div>
+      <div style="display:grid;gap:18px;font-size:14px;color:var(--muted);line-height:1.75">
+        <div><strong style="color:var(--text);display:block;margin-bottom:4px">What if it rains?</strong> For normal lessons, light rain is OK, and the coach has final say on weather conditions. However, we want your date night to be perfect so we will accept postponements at your request. Heavy rain, thunder, or unsafe wind = we reschedule, no penalty.</div>
+        <div><strong style="color:var(--text);display:block;margin-bottom:4px">First time skiing?</strong>Perfect. We have taught hundreds of first-timers, if not over a thousand. We'll start with basics, take it slow, and build confidence.</div>
+        <div><strong style="color:var(--text);display:block;margin-bottom:4px">Dietary restrictions?</strong>Mention them when you book — all three dinner options can accommodate vegetarian, gluten-free, or other needs with notice.</div>
+        <div><strong style="color:var(--text);display:block;margin-bottom:4px">Special occasion?</strong>Engagement, anniversary, birthday — let us know. We can help add a personal touch (flowers, a card, a playlist)</div>
+        <div><strong style="color:var(--text);display:block;margin-bottom:4px">Why does Friday or Saturday cost more?</strong>Friday and Saturday are peak demand evenings. Bookings on those nights are <strong style="color:var(--pink)">+$50</strong> flat. Sunday through Thursday are full price as listed on each dinner card.</div>
+        <div><strong style="color:var(--text);display:block;margin-bottom:4px">Location?</strong> Various spots along the Rideau River, Manotick, Riverside south, Barrhaven, Kemptville, Kars and more have great staging areas depending on your package. Address and dock details sent on confirmation.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="footer-placeholder"></div>
+<script src="./assets/js/footer.js"></script>
+
+<!-- ══ BOOKING MODAL ══ -->
+<div class="swd-overlay" id="swd-overlay">
+  <div class="swd-modal">
+    <button class="swd-modal-close" id="swd-close">&times;</button>
+    <div id="swd-form-view">
+      <div class="swd-restaurant-tag" id="swd-restaurant-tag"></div>
+      <div class="swd-modal-title">Book the Sunset Wake Date</div>
+      <div class="swd-modal-sub">Fill in your details and we'll confirm within 24 hours.</div>
+      <div class="swd-field">
+        <label class="swd-label">Name *</label>
+        <input class="swd-input" id="swd-name" placeholder="Your name" autocomplete="name"/>
+      </div>
+      <div class="swd-field">
+        <label class="swd-label">Email</label>
+        <input class="swd-input" id="swd-email" type="email" placeholder="you@email.com" autocomplete="email"/>
+      </div>
+      <div class="swd-field">
+        <label class="swd-label">Phone *</label>
+        <input class="swd-input" id="swd-phone" type="tel" placeholder="(613) 555-0000" autocomplete="tel"/>
+      </div>
+      <div class="swd-field">
+        <label class="swd-label">Group Size</label>
+        <div class="swd-radio-group">
+          <div class="swd-radio"><input type="radio" name="swd-group" id="swd-couple" value="couple" checked/><label for="swd-couple">Couple (2)</label></div>
+          <div class="swd-radio"><input type="radio" name="swd-group" id="swd-double" value="double"/><label for="swd-double">Double Date (4)</label></div>
+        </div>
+      </div>
+      <div class="swd-field">
+        <label class="swd-label">Preferred Date</label>
+        <input class="swd-input" id="swd-date" type="date"/>
+      </div>
+      <div class="swd-field">
+        <label class="swd-label">Promo Code</label>
+        <input class="swd-input" id="swd-promo" type="text" placeholder="Optional" style="text-transform:uppercase" autocapitalize="characters"/>
+      </div>
+      <div class="swd-field">
+        <label class="swd-label">Special Requests</label>
+        <textarea class="swd-input" id="swd-notes" rows="3" placeholder="Dietary needs, special occasion, etc."></textarea>
+      </div>
+      <button class="swd-submit" id="swd-submit">Book This Experience &rarr;</button>
+    </div>
+    <div id="swd-success-view" class="swd-success" style="display:none">
+      <div class="swd-success-icon">&#127942;</div>
+      <div class="swd-success-title">You're booked in, <span id="swd-success-name"></span>!</div>
+      <div class="swd-success-text">I'll confirm your Sunset Wake Date within 24 hours.<br>Questions? Call or text <strong>613-299-5998</strong>.</div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="./assets/js/content.js"></script>
+
+
+
+<!-- ══ SUPABASE BOOKING + EMAIL TEMPLATE ══ -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+(function(){
+  const SUPABASE_URL = 'https://isbhflfmugfeqwhhqlkh.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlzYmhmbGZtdWdmZXF3aGhxbGtoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDE0MzEsImV4cCI6MjA5MzA3NzQzMX0.TKMd_rSmJvoLiL5_1pFw9KqYHNne-eEdnGNR4zgZwFk';
+  let db;
+  try { db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e){}
+
+  // ── Toast helper ──
+  function showToast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),3500); }
+
+  // ── Modal refs ──
+  const overlay  = document.getElementById('swd-overlay');
+  const formView = document.getElementById('swd-form-view');
+  const succView = document.getElementById('swd-success-view');
+  let selectedRestaurant = '';
+
+  function openModal(restaurant){
+    selectedRestaurant = restaurant;
+    document.getElementById('swd-restaurant-tag').textContent = restaurant;
+    formView.style.display = '';
+    succView.style.display = 'none';
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // Close on X button or overlay click
+  document.getElementById('swd-close').addEventListener('click', closeModal);
+  overlay.addEventListener('click', function(e){ if(e.target === overlay) closeModal(); });
+
+  // ── CTA buttons → open modal instead of mailto ──
+  document.querySelectorAll('[data-mailto]').forEach(function(a){
+    a.href = '#';
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      openModal(a.dataset.restaurant || 'Not yet chosen');
+    });
+  });
+
+  // ── Form submit → Supabase submit_booking ──
+  document.getElementById('swd-submit').addEventListener('click', async function(){
+    const name  = document.getElementById('swd-name').value.trim();
+    const email = document.getElementById('swd-email').value.trim();
+    const phone = document.getElementById('swd-phone').value.trim();
+    const group = document.querySelector('input[name="swd-group"]:checked').value;
+    const date  = document.getElementById('swd-date').value;
+    const promo = document.getElementById('swd-promo').value.trim().toUpperCase();
+    const notes = document.getElementById('swd-notes').value.trim();
+    const btn   = document.getElementById('swd-submit');
+
+    if(!name){ showToast('Please add your name'); return; }
+    if(!phone){ showToast('Please add a phone number so we can reach you'); return; }
+
+    btn.disabled = true; btn.textContent = 'Sending...';
+
+    const groupLabel = group === 'double' ? 'Double date (4 people)' : 'Couple (2 people)';
+    const dateStr    = date || 'Not specified';
+
+    const notesSummary =
+      'SUNSET WAKE DATE INQUIRY\n' +
+      'Restaurant: ' + selectedRestaurant + '\n' +
+      'Group: ' + groupLabel + '\n' +
+      'Preferred date: ' + dateStr + '\n' +
+      (promo ? 'Promo code: ' + promo + '\n' : '') +
+      (notes ? 'Special requests: ' + notes : '');
+
+    let saved = false;
+    if(db){
+      try {
+        const { error } = await db.rpc('submit_booking', { p_payload: {
+          name: name,
+          email: email || null,
+          phone: phone,
+          location: 'Rideau River',
+          date: date || new Date().toISOString().slice(0,10),
+          slot: 'evening',
+          package: 'Sunset Wake Date',
+          sport: 'Waterski / Wakeboard / Wakesurf',
+          promo_code: promo || null,
+          notes: notesSummary,
+          raw_request: {
+            type: 'sunset_wake_date',
+            restaurant: selectedRestaurant,
+            group_size: group,
+            group_label: groupLabel,
+            preferred_date: date || null,
+            promo_code: promo || null,
+            special_requests: notes || null,
+            name: name,
+            email: email || null,
+            phone: phone
+          }
+        }});
+        saved = !error;
+        if(error) console.error('submit_booking failed:', error);
+      } catch(err){ console.error('submit_booking exception:', err); }
+    }
+
+    if(!saved){
+      btn.disabled = false; btn.textContent = 'Book This Experience \u2192';
+      showToast('Something went wrong \u2014 please call or text 613-299-5998 and we\'ll get you booked.');
+      return;
+    }
+
+    // Success — show confirmation
+    document.getElementById('swd-success-name').textContent = name.split(' ')[0] || '';
+    formView.style.display = 'none';
+    succView.style.display = '';
+    btn.disabled = false; btn.textContent = 'Book This Experience \u2192';
+  });
+})();
+</script>
+<!-- ══ /SUPABASE BOOKING + EMAIL TEMPLATE ══ -->
+</body>
+</html>
