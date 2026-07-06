@@ -564,7 +564,7 @@ tr:hover td{background:rgba(0,200,212,.03)}
         <button class="btn btn-primary" onclick="openAddPromoCode()">+ New Code</button>
       </div>
       <div class="card" style="padding:0">
-        <table><thead><tr><th>Code</th><th>Discount</th><th>Partner / Label</th><th>Status</th><th>Expires</th><th>Actions</th></tr></thead>
+        <table><thead><tr><th>Code</th><th>Discount</th><th>Partner / Label</th><th>Status</th><th>Expires</th><th>Uses</th><th>Actions</th></tr></thead>
         <tbody id="promocodes-table"></tbody></table>
       </div>
     </div>
@@ -1080,6 +1080,18 @@ tr:hover td{background:rgba(0,200,212,.03)}
         <button class="btn btn-ghost" onclick="closeModal('promocode-modal')">Cancel</button>
         <button class="btn btn-primary" onclick="savePromoCode()">Save Code</button>
       </div>
+    </div>
+  </div>
+</div>
+<!-- PROMO CODE USAGE MODAL -->
+<div class="modal-overlay" id="promocode-usage-modal">
+  <div class="modal" style="max-width:480px">
+    <button class="modal-close" onclick="closeModal('promocode-usage-modal')">✕</button>
+    <div class="modal-title" id="pcu-title">Promo Code Usage</div>
+    <div id="pcu-count" style="font-size:12px;color:var(--muted);margin-bottom:12px"></div>
+    <div id="pcu-list" style="max-height:400px;overflow-y:auto"></div>
+    <div style="display:flex;justify-content:flex-end;margin-top:20px">
+      <button class="btn btn-ghost" onclick="closeModal('promocode-usage-modal')">Close</button>
     </div>
   </div>
 </div>
@@ -2209,10 +2221,28 @@ function renderLeadsInto(tbodyId, predicate){
 function renderLeadsLocal(){ renderLeadsInto('leads-local-table', l=>l.region_tag==='local'); }
 function renderLeadsResorts(){ renderLeadsInto('leads-resorts-table', l=>l.region_tag==='resort'); }
 function renderLeadsOutOfTowner(){ renderLeadsInto('leads-outoftowner-table', l=>l.region_tag==='out_of_towner'); }
+// A lead's region tags are more granular (local / resort / out_of_towner) than a
+// client's (local / out_of_town) — this maps one onto the other when propagating.
+function mapLeadRegionToClientRegion(leadRegion){
+  if(leadRegion==='local') return 'local';
+  if(leadRegion==='resort' || leadRegion==='out_of_towner') return 'out_of_town';
+  return null;
+}
 async function updateLeadRegion(id, region){
   const { error } = await db.from('leads').update({ region_tag: region || null }).eq('id', id);
   if(error){ toast('Error updating region'); return; }
   const l = leads.find(x=>x.id===id); if(l) l.region_tag = region || null;
+  // If this lead is already linked to a client (converted, either manually or via a
+  // matching booking), keep that client's Region tag in sync automatically.
+  if(l && l.converted_client_id){
+    const mapped = mapLeadRegionToClientRegion(region);
+    const { error: cErr } = await db.from('clients').update({ region_tag: mapped }).eq('id', l.converted_client_id);
+    if(!cErr){
+      const c = clients.find(x=>x.id===l.converted_client_id);
+      if(c) c.region_tag = mapped;
+      renderActiveClientsView();
+    }
+  }
   renderActiveLeadsView();
   toast('Region updated ✓');
 }
@@ -2303,8 +2333,18 @@ async function saveLead(){
   if(!data.name){ toast('Lead name is required'); return; }
   if(editingLeadId){ await db.from('leads').update(data).eq('id', editingLeadId); }
   else { await db.from('leads').insert(data); }
+  // Keep a linked client's Region tag in sync if this lead was already converted.
+  const existing = editingLeadId ? leads.find(x=>x.id===editingLeadId) : null;
+  if(existing && existing.converted_client_id){
+    const mapped = mapLeadRegionToClientRegion(data.region_tag);
+    const { error: cErr } = await db.from('clients').update({ region_tag: mapped }).eq('id', existing.converted_client_id);
+    if(!cErr){
+      const c = clients.find(x=>x.id===existing.converted_client_id);
+      if(c) c.region_tag = mapped;
+    }
+  }
   closeModal('lead-modal');
-  await loadLeads(); renderActiveLeadsView();
+  await loadLeads(); renderActiveLeadsView(); renderActiveClientsView();
   toast('Lead saved ✓');
 }
 async function deleteLead(id){
@@ -2375,7 +2415,7 @@ async function convertLead(id){
     if(ex) client = ex;
   }
   if(!client){
-    const inferredRegion = l.region_tag==='local' ? 'local' : (l.region_tag==='resort'||l.region_tag==='out_of_towner') ? 'out_of_town' : null;
+    const inferredRegion = mapLeadRegionToClientRegion(l.region_tag);
     const { data, error } = await db.from('clients').insert({ name:l.name, email:l.email||null, phone:l.phone||null, notes:l.message||null, region_tag:inferredRegion }).select().single();
     if(error){ toast('Error creating client'); return; }
     client = data;
@@ -2551,6 +2591,11 @@ async function loadPromoCodes(){
   if(error){ console.warn('promo codes load failed', error); promoCodes=[]; return; }
   promoCodes = data || [];
 }
+function promoUsageBookings(code){
+  const c = (code||'').trim().toUpperCase();
+  if(!c) return [];
+  return bookings.filter(b=>(b.promo_code||'').trim().toUpperCase()===c);
+}
 function renderPromoCodes(filter=''){
   const tb = document.getElementById('promocodes-table');
   if(!tb) return;
@@ -2564,18 +2609,37 @@ function renderPromoCodes(filter=''){
     const expired = c.expires_at && new Date(c.expires_at) < new Date();
     const statusTxt = !c.active ? 'Inactive' : expired ? 'Expired' : 'Active';
     const statusCls = (!c.active||expired) ? 'status-cancelled' : 'status-confirmed';
+    const uses = promoUsageBookings(c.code).length;
     return `<tr>
       <td><strong>${esc(c.code)}</strong></td>
       <td>${disc} off</td>
       <td style="font-size:13px">${esc(c.label||'—')}</td>
       <td><span class="status-badge ${statusCls}">${statusTxt}</span></td>
       <td style="font-size:13px">${c.expires_at?fmtDate(c.expires_at.split('T')[0]):'—'}</td>
+      <td style="text-align:center">${uses ? `<span class="status-badge" style="background:rgba(224,64,160,0.12);color:var(--pink);cursor:pointer" onclick="openPromoCodeUsage('${esc(c.code)}')" title="See which clients used this code">${uses} ✓</span>` : '<span style="color:var(--muted);font-size:12px">0</span>'}</td>
       <td style="display:flex;gap:6px;flex-wrap:wrap">
         <button class="btn btn-primary btn-sm" onclick="openEditPromoCode('${c.id}')">Edit</button>
         <button class="btn btn-danger btn-sm" onclick="deletePromoCode('${c.id}')">Delete</button>
       </td>
     </tr>`;
-  }).join('') : '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:24px">No promo codes yet. Create one to share with a partner.</td></tr>';
+  }).join('') : '<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:24px">No promo codes yet. Create one to share with a partner.</td></tr>';
+}
+function openPromoCodeUsage(code){
+  const rows = promoUsageBookings(code).sort((a,b)=>new Date(b.date)-new Date(a.date));
+  document.getElementById('pcu-title').textContent = `Clients who used "${code}"`;
+  document.getElementById('pcu-count').textContent = `${rows.length} booking${rows.length!==1?'s':''}`;
+  document.getElementById('pcu-list').innerHTML = rows.length ? rows.map(b=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div>
+        <div style="font-weight:700;font-size:14px">${esc(b.clients?.name||'—')}</div>
+        <div style="font-size:12px;color:var(--muted)">${esc(b.clients?.email||'')}${b.clients?.phone?' · '+esc(b.clients.phone):''}</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:13px">${fmtDate(b.date)}</div>
+        <span class="status-badge status-${b.status}" style="font-size:11px">${b.status.replace('_',' ')}</span>
+      </div>
+    </div>`).join('') : '<div style="color:var(--muted);padding:12px 0">No bookings found for this code.</div>';
+  openModal('promocode-usage-modal');
 }
 function filterPromoCodes(){ renderPromoCodes(document.getElementById('search-promocodes').value); }
 function openAddPromoCode(){
