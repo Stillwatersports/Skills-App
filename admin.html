@@ -102,10 +102,20 @@ tr:hover td{background:rgba(0,200,212,.03)}
 .status-badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
 .status-new{background:rgba(230,81,0,.1);color:var(--orange)}
 .status-confirmed{background:rgba(0,200,212,.12);color:#0b8a93}
-.status-deposit_paid{background:rgba(46,125,50,.1);color:var(--green)}
-.status-complete{background:rgba(26,42,42,.08);color:var(--dark)}
+.status-deposit_paid{background:rgba(245,216,122,.4);color:#9a6200}
+.status-complete{background:rgba(46,125,50,.14);color:var(--green)}
 .status-cancelled{background:rgba(229,57,53,.1);color:var(--red)}
 .status-morning,.status-afternoon,.status-evening{background:rgba(0,200,212,0.1);color:#0b8a93}
+/* Booking row tints — mirrors the status-badge colors so the whole row reads at a glance */
+tr.row-complete td{background:rgba(46,125,50,.06)}
+tr.row-complete:hover td{background:rgba(46,125,50,.1)}
+tr.row-cancelled td{background:rgba(229,57,53,.05)}
+tr.row-cancelled:hover td{background:rgba(229,57,53,.09)}
+tr.row-deposit_paid td{background:rgba(245,216,122,.15)}
+tr.row-deposit_paid:hover td{background:rgba(245,216,122,.22)}
+.status-legend{display:flex;gap:16px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--muted);margin-bottom:12px}
+.status-legend-item{display:flex;gap:6px;align-items:center}
+.status-legend-dot{width:11px;height:11px;border-radius:50%;display:inline-block}
 /* Lead-specific status colours */
 .status-hot{background:rgba(229,57,53,.14);color:var(--red)}
 .status-warm{background:rgba(245,216,122,.35);color:#9a6200}
@@ -288,6 +298,7 @@ tr:hover td{background:rgba(0,200,212,.03)}
   <span class="subtab" id="subtab-item-clients-outoftown" onclick="showTab('clients-outoftown')">Out of Town</span>
   <span class="subtab" id="subtab-item-clients-experience" onclick="showTab('clients-experience')">By Experience</span>
   <span class="subtab" id="subtab-item-clients-discipline" onclick="showTab('clients-discipline')">By Discipline</span>
+  <span class="subtab" id="subtab-item-clients-participants" onclick="showTab('clients-participants')">All Participants</span>
 </div>
   <div class="content">
 <!-- TASKS DASHBOARD (default) -->
@@ -412,6 +423,13 @@ tr:hover td{background:rgba(0,200,212,.03)}
         </select>
         <button class="btn btn-primary" onclick="openAddBooking()">+ New Booking</button>
       </div>
+      <div class="status-legend">
+        <span class="status-legend-item"><span class="status-legend-dot" style="background:var(--orange)"></span>New</span>
+        <span class="status-legend-item"><span class="status-legend-dot" style="background:#0b8a93"></span>Confirmed</span>
+        <span class="status-legend-item"><span class="status-legend-dot" style="background:#9a6200"></span>Deposit Paid</span>
+        <span class="status-legend-item"><span class="status-legend-dot" style="background:var(--green)"></span>Complete</span>
+        <span class="status-legend-item"><span class="status-legend-dot" style="background:var(--red)"></span>Cancelled</span>
+      </div>
       <div class="card" style="padding:0">
         <table><thead><tr><th>Date</th><th>Slot</th><th>Client</th><th>Package</th><th>Location</th><th>Participants</th><th>Promo</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody id="bookings-table"></tbody></table>
@@ -440,6 +458,16 @@ tr:hover td{background:rgba(0,200,212,.03)}
     <!-- CLIENTS: BY DISCIPLINE -->
     <div class="panel" id="panel-clients-discipline">
       <div id="clients-discipline-body"></div>
+    </div>
+    <!-- CLIENTS: ALL PARTICIPANTS -->
+    <div class="panel" id="panel-clients-participants">
+      <div class="bookings-toolbar">
+        <input type="text" id="search-clients-participants" placeholder="Search by name..." oninput="renderAllParticipants(this.value)"/>
+      </div>
+      <div class="card" style="padding:0">
+        <table><thead><tr><th>Name</th><th>Role</th><th>Belongs To</th><th>Contact</th><th>Discipline</th><th>Minor</th><th>Actions</th></tr></thead>
+        <tbody id="all-participants-table"></tbody></table>
+      </div>
     </div>
     <!-- LEADS -->
     <div class="panel" id="panel-leads">
@@ -1338,6 +1366,7 @@ async function loadAll(){
   renderClientsOutOfTown();
   renderClientsByExperience();
   renderClientsByDiscipline();
+  renderAllParticipants();
   renderTemplates();
   renderLeads();
   renderLeadsLocal();
@@ -1380,7 +1409,7 @@ const TAB_GROUP = {
   promo:'promogroup', promocodes:'promogroup',
   digitalcard:'cardgroup', cardcontacts:'cardgroup', qrcodes:'cardgroup',
   leads:'leadsgroup', 'leads-local':'leadsgroup', 'leads-resorts':'leadsgroup', 'leads-outoftowner':'leadsgroup',
-  clients:'clientsgroup', 'clients-local':'clientsgroup', 'clients-outoftown':'clientsgroup', 'clients-experience':'clientsgroup', 'clients-discipline':'clientsgroup'
+  clients:'clientsgroup', 'clients-local':'clientsgroup', 'clients-outoftown':'clientsgroup', 'clients-experience':'clientsgroup', 'clients-discipline':'clientsgroup', 'clients-participants':'clientsgroup'
 };
 function showTab(tab){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
@@ -1396,6 +1425,7 @@ function showTab(tab){
   if(tab==='clients-outoftown') renderClientsOutOfTown();
   if(tab==='clients-experience') renderClientsByExperience();
   if(tab==='clients-discipline') renderClientsByDiscipline();
+  if(tab==='clients-participants') renderAllParticipants(document.getElementById('search-clients-participants')?.value||'');
 
   // Top-level nav highlighting (id-based, not event.target — works whether
   // showTab() was triggered by a click or called directly from JS)
@@ -1557,16 +1587,17 @@ function bookingRow(b, compact){
   const waivers = p.filter(x=>!x.waiver_signed).length;
   const warn = (minors>0||waivers>0) ? `<span style="color:var(--orange);font-size:11px;margin-left:4px">⚠</span>` : '';
   const leadTag = b.lead_id ? `<span title="Originated from a lead" style="font-size:10px;color:var(--cyan);border:1px solid var(--cyan);border-radius:8px;padding:1px 6px;margin-left:4px">lead</span>` : '';
-  if(compact) return `<tr>
+  const rowClass = (b.status==='complete'||b.status==='cancelled'||b.status==='deposit_paid') ? `row-${b.status}` : '';
+  if(compact) return `<tr class="${rowClass}" style="cursor:pointer" onclick="openEditBooking('${b.id}')">
     <td>${b.clients?.name||'—'}${warn}${leadTag}</td>
     <td>${fmtDate(b.date)}</td>
     <td>${cap(b.slot)}</td>
     <td>${b.package||'—'}</td>
     <td><span class="status-badge status-${b.status}">${b.status.replace('_',' ')}</span></td>
-    <td><button class="btn btn-primary btn-sm" onclick="openEditBooking('${b.id}')">Open</button></td>
+    <td><button class="btn btn-primary btn-sm" onclick="event.stopPropagation();openEditBooking('${b.id}')">Open</button></td>
   </tr>`;
   const statusOptions = ['new','confirmed','deposit_paid','complete','cancelled'];
-  return `<tr>
+  return `<tr class="${rowClass}" style="cursor:pointer" onclick="openEditBooking('${b.id}')">
     <td>${fmtDate(b.date)}</td>
     <td><span class="status-badge" style="background:rgba(0,200,212,0.1);color:var(--cyan)">${cap(b.slot)}</span></td>
     <td>${b.clients?.name||'—'}${warn}${leadTag}</td>
@@ -1574,8 +1605,8 @@ function bookingRow(b, compact){
     <td style="font-size:13px">${b.location||'—'}</td>
     <td style="font-size:13px">${p.length} rider${p.length!==1?'s':''}${minors?` · <span style="color:var(--red)">${minors}⚠</span>`:''}${waivers?` · <span style="color:var(--orange)">${waivers} pending</span>`:p.length?' · ✓':''}</td>
     <td style="font-size:13px">${b.promo_code?`<span class="status-badge" style="background:rgba(224,64,160,0.12);color:var(--pink)">${esc(b.promo_code)}</span>`:'—'}</td>
-    <td><select class="booking-status-select" onchange="updateBookingStatus('${b.id}', this.value)">${statusOptions.map(s=>`<option value="${s}"${b.status===s?' selected':''}>${s.replace('_',' ')}</option>`).join('')}</select></td>
-    <td style="display:flex;gap:6px;flex-wrap:wrap">
+    <td><select class="booking-status-select" onclick="event.stopPropagation()" onchange="event.stopPropagation();updateBookingStatus('${b.id}', this.value)">${statusOptions.map(s=>`<option value="${s}"${b.status===s?' selected':''}>${s.replace('_',' ')}</option>`).join('')}</select></td>
+    <td style="display:flex;gap:6px;flex-wrap:wrap" onclick="event.stopPropagation()">
       <button class="btn btn-primary btn-sm" onclick="openEditBooking('${b.id}')">Edit</button>
       ${b.status!=='deposit_paid'&&b.status!=='complete'?`<button class="btn btn-pink btn-sm" onclick="markDepositReceived('${b.id}')" title="Mark deposit received (e.g. via e-transfer) and log it in the booking notes">💰 Deposit</button>`:''}
       <button class="btn btn-ghost btn-sm" onclick="openEmailForBooking('${b.id}')">Email</button>
@@ -1763,20 +1794,39 @@ const DISCIPLINE_TAGS = [['','—'],['waterski','Waterski'],['wakeboard','Wakebo
 function tagSelectHtml(id, field, value, options){
   return `<select class="booking-status-select" style="font-size:11px;padding:3px 6px" onclick="event.stopPropagation()" onchange="event.stopPropagation();updateClientTag('${id}','${field}',this.value)">${options.map(([v,l])=>`<option value="${v}"${(value||'')===v?' selected':''}>${esc(l)}</option>`).join('')}</select>`;
 }
+function disciplineLabel(v){
+  const f = DISCIPLINE_TAGS.find(([val])=>val===(v||''));
+  return (f && f[0]) ? f[1] : null;
+}
 function clientCardHtml(c){
   const sessions = bookings.filter(b=>b.client_id===c.id).length;
   const st = intakeState(c);
   const badge = st ? `<span style="display:inline-block;margin-top:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#fff;background:${st.color};border-radius:10px;padding:2px 9px">${st.label}</span>` : '';
+  const roster = participantsByClient[c.id]||[];
+  const rosterHtml = roster.length
+    ? roster.map(p=>{
+        const disc = disciplineLabel(p.discipline_tag);
+        return `<div style="font-size:12px;color:var(--dark);margin-bottom:6px;line-height:1.3">${esc(p.name||'—')}${p.is_minor?' <span style="color:var(--red);font-size:10px;font-weight:700">MINOR</span>':''}${disc?`<br><span style="color:var(--cyan);font-size:11px">${esc(disc)}</span>`:''}</div>`;
+      }).join('')
+    : '<div style="font-size:12px;color:var(--hint)">No participants yet</div>';
   return `<div class="client-card" onclick="openEditClient('${c.id}')">
-    <div class="client-name">${c.name}</div>
-    <div class="client-meta">${c.email||''} ${c.phone?'· '+c.phone:''}</div>
-    <div class="client-meta">${c.location||'No location set'}</div>
-    <div class="client-sessions">${sessions} session${sessions!==1?'s':''}</div>
-    ${badge}
-    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
-      ${tagSelectHtml(c.id,'region_tag',c.region_tag,REGION_TAGS)}
-      ${tagSelectHtml(c.id,'experience_level',c.experience_level,EXPERIENCE_TAGS)}
-      ${tagSelectHtml(c.id,'discipline_tag',c.discipline_tag,DISCIPLINE_TAGS)}
+    <div style="display:flex;gap:14px">
+      <div style="flex:1;min-width:0">
+        <div class="client-name">${c.name}</div>
+        <div class="client-meta">${c.email||''} ${c.phone?'· '+c.phone:''}</div>
+        <div class="client-meta">${c.location||'No location set'}</div>
+        <div class="client-sessions">${sessions} session${sessions!==1?'s':''}</div>
+        ${badge}
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+          ${tagSelectHtml(c.id,'region_tag',c.region_tag,REGION_TAGS)}
+          ${tagSelectHtml(c.id,'experience_level',c.experience_level,EXPERIENCE_TAGS)}
+          ${tagSelectHtml(c.id,'discipline_tag',c.discipline_tag,DISCIPLINE_TAGS)}
+        </div>
+      </div>
+      <div style="flex:1;min-width:0;border-left:1px solid var(--border);padding-left:14px">
+        <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:8px">Participants</div>
+        ${rosterHtml}
+      </div>
     </div>
   </div>`;
 }
@@ -1822,6 +1872,47 @@ function renderActiveClientsView(){
   else if(activeTab==='clients-outoftown') renderClientsOutOfTown();
   else if(activeTab==='clients-experience') renderClientsByExperience();
   else if(activeTab==='clients-discipline') renderClientsByDiscipline();
+  else if(activeTab==='clients-participants') renderAllParticipants(document.getElementById('search-clients-participants')?.value||'');
+}
+// Every client themselves, plus every saved roster participant under them, in one
+// flat directory — so you can find "who is this person and whose account are
+// they under" without opening each client one at a time.
+function renderAllParticipants(filter=''){
+  const tb = document.getElementById('all-participants-table'); if(!tb) return;
+  const rows = [];
+  clients.forEach(c=>{
+    rows.push({
+      name: c.name, role:'Client', clientId: c.id, clientName: c.name,
+      email: c.email, phone: c.phone, is_minor:false, discipline_tag: c.discipline_tag
+    });
+    (participantsByClient[c.id]||[]).forEach(p=>{
+      rows.push({
+        name: p.name, role:'Participant', clientId: c.id, clientName: c.name,
+        email: p.email||c.email, phone: c.phone, is_minor: p.is_minor===true, discipline_tag: p.discipline_tag
+      });
+    });
+  });
+  let list = rows;
+  if(filter){
+    const f = filter.toLowerCase();
+    list = list.filter(r=>(r.name||'').toLowerCase().includes(f) || (r.clientName||'').toLowerCase().includes(f));
+  }
+  list.sort((a,b)=>(a.clientName||'').toLowerCase().localeCompare((b.clientName||'').toLowerCase()) || (a.role==='Client'?-1:1));
+  tb.innerHTML = list.length ? list.map(r=>{
+    const disc = disciplineLabel(r.discipline_tag);
+    const roleBadge = r.role==='Client'
+      ? `<span class="status-badge" style="background:rgba(224,64,160,0.12);color:var(--pink)">Client</span>`
+      : `<span class="status-badge" style="background:rgba(0,200,212,0.12);color:var(--cyan)">Participant</span>`;
+    return `<tr>
+      <td><strong>${esc(r.name||'—')}</strong></td>
+      <td>${roleBadge}</td>
+      <td style="font-size:13px">${r.role==='Client'?'—':esc(r.clientName)}</td>
+      <td style="font-size:13px">${esc(r.email||'')}${r.phone?'<br>'+esc(r.phone):''}</td>
+      <td style="font-size:13px">${disc?esc(disc):'<span style="color:var(--hint)">—</span>'}</td>
+      <td style="font-size:13px">${r.is_minor?'<span style="color:var(--red);font-weight:700">Minor</span>':'—'}</td>
+      <td><button class="btn btn-primary btn-sm" onclick="openEditClient('${r.clientId}')">Open Client</button></td>
+    </tr>`;
+  }).join('') : '<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:24px">No clients or participants yet.</td></tr>';
 }
 function openAddClient(){
   editingClientId=null;
@@ -1975,6 +2066,7 @@ function rosterRowHtml(p={}){
     <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
       <input type="text" class="r-name" placeholder="Name" value="${esc(p.name||'')}" style="flex:2;min-width:120px"/>
       <input type="email" class="r-email" placeholder="Email" value="${esc(p.email||'')}" style="flex:2;min-width:140px"/>
+      <select class="r-discipline" title="Discipline" style="flex:1;min-width:110px;font-size:12px;padding:6px 8px;border:1.5px solid var(--border);border-radius:6px;font-family:'Outfit',sans-serif">${DISCIPLINE_TAGS.map(([v,l])=>`<option value="${v}"${(p.discipline_tag||'')===v?' selected':''}>${esc(l)}</option>`).join('')}</select>
       <label style="font-size:12px;display:flex;gap:4px;align-items:center;white-space:nowrap"><input type="checkbox" class="r-minor" ${minor?'checked':''} onchange="toggleRosterMinor(this)"/>Minor</label>
       <button onclick="signNow('${p.id||''}')" title="Sign on this device now" style="background:none;border:1px solid var(--cyan);border-radius:6px;cursor:pointer;color:var(--cyan);font-size:11px;font-weight:700;padding:6px 10px">Sign</button>
       <button onclick="this.closest('.roster-row').remove()" title="Remove" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:15px">✕</button>
@@ -2006,7 +2098,8 @@ async function saveClientRoster(clientId){
       guardian_email:minor?(r.querySelector('.r-gemail').value.trim()||null):null,
       date_of_birth:dob,
       is_minor: minor,
-      guardian_on_site: minor?r.querySelector('.r-guard').checked:true };
+      guardian_on_site: minor?r.querySelector('.r-guard').checked:true,
+      discipline_tag: r.querySelector('.r-discipline')?.value || null };
     const id=r.getAttribute('data-id');
     if(id){ await db.from('participants').update(rec).eq('id',id); keep.push(id); }
     else { const {data:d}=await db.from('participants').insert(rec).select('id').single(); if(d) keep.push(d.id); }
