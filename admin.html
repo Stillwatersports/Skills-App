@@ -869,10 +869,21 @@ tr:hover td{background:rgba(0,200,212,.03)}
       <div class="form-group" style="display:flex;align-items:flex-end"><div id="bk-promo-info" style="padding-bottom:10px;font-size:13px;font-weight:600;min-height:20px"></div></div>
     </div>
     <div class="form-group"><label>Notes</label><textarea id="bk-notes" placeholder="Any notes about this booking..."></textarea></div>
-    <div class="section-label">Class Participants</div>
-    <div id="participants-list"></div>
-    <div class="minor-warning" id="minor-warning">⚠️ This class includes minors under 18 — ensure waivers are completed and parent/guardian is confirmed present on shore.</div>
-    <button class="btn btn-ghost btn-sm" onclick="addParticipant()" style="margin-bottom:16px">+ Add Participant</button>
+    <div class="section-label">Participants / Roster</div>
+    <div id="bk-roster"></div>
+    <button class="btn btn-ghost btn-sm" onclick="addRosterRow()" style="margin:8px 0 4px">+ Add participant</button>
+    <div class="section-label">Waivers</div>
+    <div id="bk-waivers" style="font-size:13px;color:var(--muted)">—</div>
+    <button class="btn btn-ghost btn-sm" id="bk-send-intake" onclick="sendIntakeForm()" style="margin-top:10px;display:none">Send intake form</button>
+    <button class="btn btn-primary btn-sm" id="bk-send-waivers" onclick="sendClientWaivers()" style="margin-top:10px;display:none">Send waivers</button>
+    <div id="bk-intake-status" style="font-size:12px;margin-top:8px"></div>
+    <div id="bk-bounces" style="font-size:12px;margin-top:8px"></div>
+    <div class="section-label">Send a guide / message</div>
+    <select id="bk-msg-template" style="width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'Outfit',sans-serif;font-size:13px;background:#fff"></select>
+    <div style="font-size:11px;color:var(--muted);margin:6px 0 2px">Optional attachment(s):</div>
+    <input type="file" id="bk-msg-file" multiple style="font-size:12px"/>
+    <button class="btn btn-ghost btn-sm" id="bk-send-msg" onclick="sendClientMessage()" style="margin-top:10px;display:none">Send to participants</button>
+    <div id="bk-msg-status" style="font-size:12px;margin-top:6px;color:var(--muted)"></div>
     <div style="display:flex;gap:12px;justify-content:space-between;margin-top:24px">
       <button class="btn btn-danger" id="booking-delete-btn" style="display:none" onclick="deleteBooking(editingBookingId)">Delete Booking</button>
       <div style="display:flex;gap:12px;margin-left:auto">
@@ -1141,9 +1152,17 @@ const PasswordValidator = {
   }
 };
 // ── STATE ─────────────────────────────────────────────────
-let bookings = [], clients = [], availability = [], templates = [], participants = {}, leads = [];
+let bookings = [], clients = [], availability = [], templates = [], participantsByClient = {}, leads = [];
 let calYear = new Date().getFullYear(), calMonth = new Date().getMonth();
 let editingBookingId = null, editingClientId = null, editingTemplateId = null, editingLeadId = null, pendingLeadIdForBooking = null;
+// ── SHARED CLIENT ROSTER/WAIVER PANEL ──────────────────────
+// A client's roster, waivers, and messaging tools are the same regardless of
+// whether you opened them from the Clients tab or from a Booking. activePrefix
+// ('cl' for the Client modal, 'bk' for the Booking modal) picks which set of
+// DOM ids the shared render/send functions below write into; activeClientId is
+// whichever client's data is currently loaded into that panel.
+let activeClientId = null, activePrefix = 'cl';
+function ael(suffix){ return document.getElementById(activePrefix+'-'+suffix); }
 let promoCodes = [], editingPromoCodeId = null;
 let cardContacts = [], qrCodes = [], cardConfig = null, cardConfigLoaded = false;
 let qrScanStats = {};
@@ -1333,17 +1352,18 @@ async function loadAll(){
 async function loadBookings(){
   const {data} = await db.from('bookings').select('*, clients(name,email,phone)').order('date');
   bookings = data || [];
-  // load participants for each booking
-  const ids = bookings.map(b=>b.id);
-  if(ids.length){
-    const {data:p} = await db.from('participants').select('*').in('booking_id', ids);
-    participants = {};
-    (p||[]).forEach(r=>{ if(!participants[r.booking_id]) participants[r.booking_id]=[]; participants[r.booking_id].push(r); });
-  }
 }
 async function loadClients(){
   const {data} = await db.from('clients').select('*').order('name');
   clients = data || [];
+  // Participants belong to the client (not the booking) — load them here so any
+  // booking for that client can show the same roster/minor/waiver signal.
+  const ids = clients.map(c=>c.id);
+  participantsByClient = {};
+  if(ids.length){
+    const {data:p} = await db.from('participants').select('*').in('client_id', ids);
+    (p||[]).forEach(r=>{ if(!r.client_id) return; if(!participantsByClient[r.client_id]) participantsByClient[r.client_id]=[]; participantsByClient[r.client_id].push(r); });
+  }
 }
 async function loadAvailability(){
   const {data} = await db.from('availability').select('*');
@@ -1407,7 +1427,7 @@ function renderCrmHealth(){
   const stale = L.filter(l=>l.status!=='converted'&&l.status!=='archived'&&new Date(l.last_activity_at||l.created_at).getTime()<staleCutoff).length;
   const noWaiver = B.filter(b=>{
     if(b.status!=='confirmed') return false;
-    const p = (participants&&participants[b.id])||[];
+    const p = (b.client_id && participantsByClient[b.client_id]) || [];
     return p.length===0 || p.some(x=>!x.waiver_signed);
   }).length;
   const todayStr = new Date().toISOString().slice(0,10);
@@ -1440,7 +1460,7 @@ function renderDashboard(){
   const in14 = new Date(); in14.setDate(in14.getDate()+14);
   const upcoming = bookings.filter(b=>{const d=new Date(b.date);return d>=now&&d<=in14&&b.status!=='cancelled'}).sort((a,b)=>new Date(a.date)-new Date(b.date));
   document.getElementById('upcoming-sessions').innerHTML = upcoming.length ? upcoming.map(b=>{
-    const p = participants[b.id]||[];
+    const p = (b.client_id && participantsByClient[b.client_id]) || [];
     const minors = p.filter(x=>x.is_minor);
     const waiverPending = p.filter(x=>!x.waiver_signed).length;
     return `<tr>
@@ -1532,7 +1552,7 @@ function renderBookingsTable(filter='', status='', slot=''){
     : '<tr><td colspan="9" style="color:var(--muted);text-align:center;padding:24px">No bookings found</td></tr>';
 }
 function bookingRow(b, compact){
-  const p = participants[b.id]||[];
+  const p = (b.client_id && participantsByClient[b.client_id]) || [];
   const minors = p.filter(x=>x.is_minor).length;
   const waivers = p.filter(x=>!x.waiver_signed).length;
   const warn = (minors>0||waivers>0) ? `<span style="color:var(--orange);font-size:11px;margin-left:4px">⚠</span>` : '';
@@ -1613,15 +1633,17 @@ async function updateBookingStatus(id, status){
 // ── BOOKING MODAL ─────────────────────────────────────────
 function openAddBooking(){
   editingBookingId = null;
+  activePrefix = 'bk';
   document.getElementById('booking-modal-title').textContent = 'New Booking';
   clearBookingForm();
   populateClientSelect();
-  document.getElementById('participants-list').innerHTML = '';
+  loadRosterPanelForClient(null);
   document.getElementById('booking-delete-btn').style.display = 'none';
   openModal('booking-modal');
 }
 function openEditBooking(id){
   editingBookingId = id;
+  activePrefix = 'bk';
   const b = bookings.find(x=>x.id===id);
   if(!b) return;
   document.getElementById('booking-modal-title').textContent = 'Edit Booking';
@@ -1638,7 +1660,7 @@ function openEditBooking(id){
   document.getElementById('bk-notes').value = b.notes||'';
   document.getElementById('bk-promo').value = b.promo_code||'';
   if(b.promo_code) lookupPromo(b.promo_code); else document.getElementById('bk-promo-info').innerHTML='';
-  renderParticipants(participants[id]||[]);
+  loadRosterPanelForClient(b.client_id||null);
   openModal('booking-modal');
 }
 function clearBookingForm(){
@@ -1646,7 +1668,6 @@ function clearBookingForm(){
   document.getElementById('bk-promo-info').innerHTML='';
   document.getElementById('bk-slot').value='morning';
   document.getElementById('bk-status').value='new';
-  document.getElementById('minor-warning').style.display='none';
 }
 function populateClientSelect(selectedId=''){
   const sel = document.getElementById('bk-client');
@@ -1677,34 +1698,10 @@ function lookupPromo(code){
 function loadClientDetails(){
   const val = document.getElementById('bk-client').value;
   document.getElementById('new-client-fields').style.display = val==='new'?'grid':'none';
-}
-let partCount = 0;
-function addParticipant(p=null){
-  const i = partCount++;
-  const div = document.createElement('div');
-  div.className = 'participant-row';
-  div.id = `part-${i}`;
-  div.innerHTML = `
-    <input type="text" placeholder="Full name" value="${p?.name||''}" style="padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'Outfit',sans-serif;outline:none"/>
-    <input type="number" placeholder="Age" value="${p?.age||''}" min="1" max="100" style="padding:8px 10px;border:1.5px solid var(--border);border-radius:6px;font-size:13px;font-family:'Outfit',sans-serif;outline:none" onchange="checkMinors()"/>
-    <div class="waiver-check"><input type="checkbox" ${p?.waiver_signed?'checked':''}/><label style="font-size:13px">Waiver signed</label></div>
-    <button onclick="this.closest('.participant-row').remove();checkMinors()" style="background:none;border:none;cursor:pointer;font-size:16px;color:var(--muted)">✕</button>`;
-  document.getElementById('participants-list').appendChild(div);
-  checkMinors();
-}
-function renderParticipants(list){
-  document.getElementById('participants-list').innerHTML='';
-  partCount=0;
-  list.forEach(p=>addParticipant(p));
-}
-function checkMinors(){
-  const rows = document.querySelectorAll('.participant-row');
-  let hasMinor = false;
-  rows.forEach(r=>{
-    const age = parseInt(r.querySelector('input[type=number]')?.value||'99');
-    if(age<18) hasMinor=true;
-  });
-  document.getElementById('minor-warning').style.display = hasMinor?'block':'none';
+  // Picking an existing client live-loads their roster/waivers into this same
+  // modal, same as opening that client directly — one client, one roster.
+  if(val && val!=='new') loadRosterPanelForClient(val);
+  else loadRosterPanelForClient(null);
 }
 async function saveBooking(){
   let clientId = document.getElementById('bk-client').value;
@@ -1742,25 +1739,17 @@ async function saveBooking(){
     bookingId = data.id;
   }
   pendingLeadIdForBooking = null;
-  // Save participants
-  await db.from('participants').delete().eq('booking_id',bookingId);
-  const rows = document.querySelectorAll('.participant-row');
-  const partData = [];
-  rows.forEach(r=>{
-    const name = r.querySelector('input[type=text]').value.trim();
-    const age = parseInt(r.querySelector('input[type=number]').value)||null;
-    const waiver = r.querySelector('input[type=checkbox]').checked;
-    if(name) partData.push({booking_id:bookingId,name,age,waiver_signed:waiver,is_minor:(age!=null?age<18:null)});
-  });
-  if(partData.length) await db.from('participants').insert(partData);
+  // Participants belong to the client, not the booking — save whatever's in the
+  // roster panel (same table + same function the Client modal uses) against
+  // this booking's client.
+  await saveClientRoster(clientId);
   closeModal('booking-modal');
   await loadAll();
   toast('Booking saved ✓');
 }
 async function deleteBooking(id){
   if(!id) return;
-  if(!confirm('Delete this booking? This also removes its participants and cannot be undone.')) return;
-  await db.from('participants').delete().eq('booking_id', id);
+  if(!confirm('Delete this booking? This does not affect the client\'s participant roster.')) return;
   const { error } = await db.from('bookings').delete().eq('id', id);
   if(error){ toast('Error deleting booking'); return; }
   closeModal('booking-modal');
@@ -1836,23 +1825,18 @@ function renderActiveClientsView(){
 }
 function openAddClient(){
   editingClientId=null;
+  activePrefix='cl';
   ['cl-name','cl-email','cl-phone','cl-location','cl-notes','cl-region-tag','cl-experience-level','cl-discipline-tag'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('cl-history').innerHTML='No sessions yet.';
   document.getElementById('client-modal-title').textContent='New Client';
   document.getElementById('client-delete-btn').style.display='none';
   clientRoster=[]; clientWaivers=[];
-  document.getElementById('cl-roster').innerHTML='<div style="color:var(--muted);font-size:13px">Save the client first to add participants and send waivers.</div>';
-  document.getElementById('cl-waivers').innerHTML='—';
-  document.getElementById('cl-send-waivers').style.display='none';
-  document.getElementById('cl-send-intake').style.display='none';
-  document.getElementById('cl-intake-status').textContent='';
-  document.getElementById('cl-send-msg').style.display='none';
-  document.getElementById('cl-msg-status').textContent='';
-  document.getElementById('cl-bounces').innerHTML='';
+  loadRosterPanelForClient(null);
   openModal('client-modal');
 }
 function openEditClient(id){
   editingClientId=id;
+  activePrefix='cl';
   const c=clients.find(x=>x.id===id); if(!c) return;
   document.getElementById('client-modal-title').textContent=c.name;
   document.getElementById('client-delete-btn').style.display='inline-block';
@@ -1868,13 +1852,7 @@ function openEditClient(id){
   document.getElementById('cl-history').innerHTML = sessions.length
     ? sessions.map(b=>`<div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;font-size:13px"><span>${fmtDate(b.date)}</span><span style="color:var(--muted)">${cap(b.slot)}</span><span>${b.package||''}</span><span class="status-badge status-${b.status}">${b.status}</span></div>`).join('')
     : 'No sessions yet.';
-  document.getElementById('cl-send-waivers').style.display='inline-block';
-  document.getElementById('cl-send-intake').style.display='inline-block';
-  document.getElementById('cl-send-msg').style.display='inline-block';
-  populateMsgTemplates();
-  document.getElementById('cl-msg-status').textContent='';
-  document.getElementById('cl-msg-file').value='';
-  loadClientExtras(id);
+  loadRosterPanelForClient(id);
   openModal('client-modal');
 }
 async function saveClient(){
@@ -1926,7 +1904,7 @@ function intakeState(c){
   return { label:'Intake sent', color:'var(--cyan)' };
 }
 function renderIntakeStatus(clientId){
-  const elx=document.getElementById('cl-intake-status'); if(!elx) return;
+  const elx=ael('intake-status'); if(!elx) return;
   const c=clients.find(x=>x.id===clientId)||{};
   const st=intakeState(c);
   if(!st){ elx.textContent='Intake form not sent yet.'; elx.style.color='var(--muted)'; return; }
@@ -1937,16 +1915,42 @@ function renderIntakeStatus(clientId){
   else { elx.textContent='✓ Intake form sent'+when+(responded?' · participants on file':' · awaiting response'); elx.style.color='var(--cyan)'; }
 }
 function renderBounces(list){
-  const elx=document.getElementById('cl-bounces'); if(!elx) return;
+  const elx=ael('bounces'); if(!elx) return;
   if(!list||!list.length){ elx.innerHTML=''; return; }
   const seen=new Set(); const rows=[];
   list.forEach(e=>{ const k=(e.to_email||'')+e.status; if(!seen.has(k)){ seen.add(k); rows.push(e); } });
   elx.innerHTML='<div style="background:#fdecec;border:1px solid #e88;border-radius:8px;padding:8px 10px;color:#a22"><strong>⚠ Email delivery issues:</strong> '+rows.map(e=>`${esc(e.to_email||'?')} (${esc(e.status)})`).join(', ')+'</div>';
 }
 
+// Shown in the roster/waivers panel when there's no client yet to attach them to
+// (e.g. a brand-new Client that hasn't been saved, or a new Booking with no client
+// selected). Same message shape either way, so the two modals stay in sync.
+function showRosterGate(message){
+  const wrap = ael('roster'); if(wrap) wrap.innerHTML = `<div style="color:var(--muted);font-size:13px">${esc(message)}</div>`;
+  const wv = ael('waivers'); if(wv) wv.innerHTML = '—';
+  ['send-waivers','send-intake','send-msg'].forEach(s=>{ const b=ael(s); if(b) b.style.display='none'; });
+  const is = ael('intake-status'); if(is) is.textContent = '';
+  const bo = ael('bounces'); if(bo) bo.innerHTML = '';
+}
+// Single entry point for loading a client's roster/waivers/messaging tools into
+// whichever panel is currently active (Client modal's cl-* ids, or Booking
+// modal's bk-* ids — see activePrefix). Called from both modals so there is one
+// code path for "show me this client's participants," not two.
+async function loadRosterPanelForClient(clientId){
+  activeClientId = clientId || null;
+  if(!clientId){
+    showRosterGate(activePrefix==='bk' ? 'Select or save a client above to manage participants.' : 'Save the client first to add participants and send waivers.');
+    return;
+  }
+  ['send-waivers','send-intake','send-msg'].forEach(s=>{ const b=ael(s); if(b) b.style.display='inline-block'; });
+  populateMsgTemplates();
+  const st=ael('msg-status'); if(st) st.textContent='';
+  const fi=ael('msg-file'); if(fi) fi.value='';
+  await loadClientExtras(clientId);
+}
 async function loadClientExtras(clientId){
-  document.getElementById('cl-roster').innerHTML='Loading…';
-  document.getElementById('cl-waivers').innerHTML='Loading…';
+  const rw = ael('roster'); if(rw) rw.innerHTML='Loading…';
+  const ww = ael('waivers'); if(ww) ww.innerHTML='Loading…';
   const [{data:parts},{data:wv},{data:ev}] = await Promise.all([
     db.from('participants').select('*').eq('client_id',clientId).order('name'),
     db.from('waivers').select('*').eq('client_id',clientId).order('created_at',{ascending:false}),
@@ -1984,13 +1988,14 @@ function rosterRowHtml(p={}){
 }
 function toggleRosterMinor(cb){ cb.closest('.roster-row').querySelector('.r-minorbox').style.display = cb.checked?'flex':'none'; }
 function renderRoster(){
-  const wrap=document.getElementById('cl-roster');
+  const wrap=ael('roster'); if(!wrap) return;
   wrap.innerHTML = clientRoster.length?clientRoster.map(rosterRowHtml).join(''):'<div style="color:var(--muted);font-size:13px;padding:4px 0">No participants yet.</div>';
 }
-function addRosterRow(){ document.getElementById('cl-roster').insertAdjacentHTML('beforeend', rosterRowHtml()); }
+function addRosterRow(){ const wrap=ael('roster'); if(wrap) wrap.insertAdjacentHTML('beforeend', rosterRowHtml()); }
 
 async function saveClientRoster(clientId){
-  const rows=[...document.querySelectorAll('#cl-roster .roster-row')];
+  const wrap=ael('roster'); if(!wrap) return;
+  const rows=[...wrap.querySelectorAll('.roster-row')];
   const keep=[];
   for(const r of rows){
     const name=r.querySelector('.r-name').value.trim(); if(!name) continue;
@@ -2010,7 +2015,7 @@ async function saveClientRoster(clientId){
 }
 
 function renderClientWaivers(){
-  const wrap=document.getElementById('cl-waivers');
+  const wrap=ael('waivers'); if(!wrap) return;
   if(!clientWaivers.length){ wrap.innerHTML='No waivers yet.'; return; }
   const col={signed:'var(--green)',sent:'var(--orange)',viewed:'var(--cyan)',expired:'var(--muted)',void:'var(--muted)'};
   wrap.innerHTML=clientWaivers.map(w=>{
@@ -2032,7 +2037,7 @@ function mdyJS(d){ if(!d) return null; const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(d
 // session; adults each get their own; parental-consent (guardian off-site) is a
 // separate link per minor. Skips anyone already signed/sent this season.
 async function sendClientWaivers(){
-  const clientId=editingClientId; if(!clientId){ toast('Save the client first'); return; }
+  const clientId=activeClientId; if(!clientId){ toast('Save the client first'); return; }
   await saveClientRoster(clientId);
   await loadClientExtras(clientId);
   const c=clients.find(x=>x.id===clientId)||{};
@@ -2074,30 +2079,30 @@ async function sendClientWaivers(){
   const {data,error}=await db.functions.invoke('send-waiver-invite',{body});
   if(error){ toast('Send failed'); return; }
   const okN=(data&&data.results?data.results.filter(r=>r.ok).length:0);
-  toast(`Sent ${okN} ✓`+((skips.length||needDob.length)?' (some skipped)':''));
+  toast(`Sent ${okN} ✓`+(skips.length?' (some skipped)':''));
   await loadClientExtras(clientId);
 }
 
 // "Send intake form" — emails the client a tokened link to add participants.
 async function sendIntakeForm(){
-  const clientId=editingClientId; if(!clientId){ toast('Save the client first'); return; }
+  const clientId=activeClientId; if(!clientId){ toast('Save the client first'); return; }
   const {data,error}=await db.functions.invoke('send-intake-invite',{body:{client_id:clientId, base_url:SIGN_BASE}});
   if(error||(data&&data.error)){ toast((data&&data.error)||'Could not send intake form'); return; }
   toast('Intake form sent ✓');
-  await loadClients(); renderClients();   // refresh grid badge
+  await loadClients(); renderActiveClientsView();   // refresh grid badge
   renderIntakeStatus(clientId);           // refresh modal status line
 }
 
 // "Send a guide / message" — emails a chosen template (+ optional attachments)
 // to this client's participants.
 function populateMsgTemplates(){
-  const sel=document.getElementById('cl-msg-template'); if(!sel) return;
+  const sel=ael('msg-template'); if(!sel) return;
   sel.innerHTML='<option value="">Choose a template…</option>'+(templates||[]).map(t=>`<option value="${esc(t.name)}">${esc(t.name)}</option>`).join('');
 }
 function fileToB64(file){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(String(r.result).split(',')[1]); r.onerror=rej; r.readAsDataURL(file); }); }
 async function sendClientMessage(){
-  const clientId=editingClientId; if(!clientId){ toast('Save the client first'); return; }
-  const tplName=document.getElementById('cl-msg-template').value;
+  const clientId=activeClientId; if(!clientId){ toast('Save the client first'); return; }
+  const tplName=ael('msg-template').value;
   if(!tplName){ toast('Pick a template first'); return; }
   const c=clients.find(x=>x.id===clientId)||{};
   // recipients: each roster participant (their email, or guardian email) + the client
@@ -2106,15 +2111,15 @@ async function sendClientMessage(){
   if(c.email) map.set(c.email.toLowerCase(),{email:c.email,name:c.name||''});
   const to=[...map.values()];
   if(!to.length){ toast('No participant emails on file'); return; }
-  const files=[...(document.getElementById('cl-msg-file').files||[])];
+  const files=[...(ael('msg-file').files||[])];
   let total=0; const attachments=[];
   for(const f of files){ total+=f.size; attachments.push({filename:f.name, content:await fileToB64(f)}); }
   if(total>8*1024*1024){ toast('Attachments too large (max ~8MB total)'); return; }
-  const st=document.getElementById('cl-msg-status'); st.textContent='Sending…'; st.style.color='var(--muted)';
+  const st=ael('msg-status'); st.textContent='Sending…'; st.style.color='var(--muted)';
   const {data,error}=await db.functions.invoke('send-client-message',{body:{client_id:clientId, template_name:tplName, to, attachments}});
   if(error||(data&&data.error)){ st.textContent=(data&&data.error)||'Send failed'; st.style.color='var(--red)'; return; }
   st.textContent=`✓ Sent to ${data.sent} recipient(s)`; st.style.color='var(--cyan)';
-  document.getElementById('cl-msg-file').value='';
+  ael('msg-file').value='';
   toast(`Guide sent to ${data.sent} ✓`);
 }
 
@@ -2125,10 +2130,10 @@ async function signNow(id){
   const p=clientRoster.find(x=>x.id===id);
   if(!p){ toast('Save the client first, then Sign'); return; }
   const type=p.is_minor===true?'minor':'adult';
-  const c=clients.find(x=>x.id===editingClientId)||{};
+  const c=clients.find(x=>x.id===activeClientId)||{};
   const season=new Date().getFullYear();
   const token=(crypto.randomUUID()+crypto.randomUUID()).replace(/-/g,'');
-  const rec={ participant_id:p.id, client_id:editingClientId, waiver_type:type, season,
+  const rec={ participant_id:p.id, client_id:activeClientId, waiver_type:type, season,
     template_version:`${type}-v1-${season}`, status:'sent',
     signer_name: type==='minor'?(c.name||p.name):p.name,
     signer_email: type==='minor'?(p.guardian_email||c.email||null):(p.email||c.email||null),
