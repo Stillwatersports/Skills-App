@@ -343,6 +343,10 @@
         <input class="swd-input" id="swd-date" type="date"/>
       </div>
       <div class="swd-field">
+        <label class="swd-label">Promo Code</label>
+        <input class="swd-input" id="swd-promo" type="text" placeholder="Optional" style="text-transform:uppercase" autocapitalize="characters"/>
+      </div>
+      <div class="swd-field">
         <label class="swd-label">Special Requests</label>
         <textarea class="swd-input" id="swd-notes" rows="3" placeholder="Dietary needs, special occasion, etc."></textarea>
       </div>
@@ -413,6 +417,7 @@
     const phone = document.getElementById('swd-phone').value.trim();
     const group = document.querySelector('input[name="swd-group"]:checked').value;
     const date  = document.getElementById('swd-date').value;
+    const promo = document.getElementById('swd-promo').value.trim().toUpperCase();
     const notes = document.getElementById('swd-notes').value.trim();
     const btn   = document.getElementById('swd-submit');
 
@@ -429,6 +434,7 @@
       'Restaurant: ' + selectedRestaurant + '\n' +
       'Group: ' + groupLabel + '\n' +
       'Preferred date: ' + dateStr + '\n' +
+      (promo ? 'Promo code: ' + promo + '\n' : '') +
       (notes ? 'Special requests: ' + notes : '');
 
     let saved = false;
@@ -443,7 +449,7 @@
           slot: 'evening',
           package: 'Sunset Wake Date',
           sport: 'Waterski / Wakeboard / Wakesurf',
-          promo_code: null,
+          promo_code: promo || null,
           notes: notesSummary,
           raw_request: {
             type: 'sunset_wake_date',
@@ -451,6 +457,7 @@
             group_size: group,
             group_label: groupLabel,
             preferred_date: date || null,
+            promo_code: promo || null,
             special_requests: notes || null,
             name: name,
             email: email || null,

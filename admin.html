@@ -261,8 +261,8 @@ tr:hover td{background:rgba(0,200,212,.03)}
   <div class="tab" id="navtab-dashboard" onclick="showTab('dashboard')">Sports Dash</div>
   <div class="tab" id="navtab-calendar" onclick="showTab('calendar')">Calendar</div>
   <div class="tab" id="navtab-bookings" onclick="showTab('bookings')">Bookings <span class="tab-badge" id="new-badge">0</span></div>
-  <div class="tab" id="navtab-leads" onclick="showTab('leads')">Leads <span class="tab-badge" id="leads-badge">0</span></div>
-  <div class="tab" id="navtab-clients" onclick="showTab('clients')">Clients</div>
+  <div class="tab" id="navtab-leadsgroup" onclick="showTab('leads')">Leads <span class="tab-badge" id="leads-badge">0</span></div>
+  <div class="tab" id="navtab-clientsgroup" onclick="showTab('clients')">Clients</div>
   <div class="tab" id="navtab-emails" onclick="showTab('emails')">Emails</div>
   <div class="tab" id="navtab-promogroup" onclick="showTab('promo')">Promotions</div>
   <div class="tab" id="navtab-cardgroup" onclick="showTab('digitalcard')">Digital Card <span class="tab-badge" id="contacts-badge"></span></div>
@@ -275,6 +275,19 @@ tr:hover td{background:rgba(0,200,212,.03)}
   <span class="subtab" id="subtab-item-digitalcard" onclick="showTab('digitalcard')">Card Design</span>
   <span class="subtab" id="subtab-item-cardcontacts" onclick="showTab('cardcontacts')">Card Contacts</span>
   <span class="subtab" id="subtab-item-qrcodes" onclick="showTab('qrcodes')">QR Codes</span>
+</div>
+<div class="subtab-row" id="subtab-leadsgroup" style="display:none">
+  <span class="subtab" id="subtab-item-leads" onclick="showTab('leads')">All Leads</span>
+  <span class="subtab" id="subtab-item-leads-local" onclick="showTab('leads-local')">Local</span>
+  <span class="subtab" id="subtab-item-leads-resorts" onclick="showTab('leads-resorts')">Resorts</span>
+  <span class="subtab" id="subtab-item-leads-outoftowner" onclick="showTab('leads-outoftowner')">Out-of-Towner</span>
+</div>
+<div class="subtab-row" id="subtab-clientsgroup" style="display:none">
+  <span class="subtab" id="subtab-item-clients" onclick="showTab('clients')">All Clients</span>
+  <span class="subtab" id="subtab-item-clients-local" onclick="showTab('clients-local')">Local</span>
+  <span class="subtab" id="subtab-item-clients-outoftown" onclick="showTab('clients-outoftown')">Out of Town</span>
+  <span class="subtab" id="subtab-item-clients-experience" onclick="showTab('clients-experience')">By Experience</span>
+  <span class="subtab" id="subtab-item-clients-discipline" onclick="showTab('clients-discipline')">By Discipline</span>
 </div>
   <div class="content">
 <!-- TASKS DASHBOARD (default) -->
@@ -412,6 +425,22 @@ tr:hover td{background:rgba(0,200,212,.03)}
       </div>
       <div class="client-grid" id="clients-grid"></div>
     </div>
+    <!-- CLIENTS: LOCAL -->
+    <div class="panel" id="panel-clients-local">
+      <div class="client-grid" id="clients-local-grid"></div>
+    </div>
+    <!-- CLIENTS: OUT OF TOWN -->
+    <div class="panel" id="panel-clients-outoftown">
+      <div class="client-grid" id="clients-outoftown-grid"></div>
+    </div>
+    <!-- CLIENTS: BY EXPERIENCE -->
+    <div class="panel" id="panel-clients-experience">
+      <div id="clients-experience-body"></div>
+    </div>
+    <!-- CLIENTS: BY DISCIPLINE -->
+    <div class="panel" id="panel-clients-discipline">
+      <div id="clients-discipline-body"></div>
+    </div>
     <!-- LEADS -->
     <div class="panel" id="panel-leads">
       <div class="bookings-toolbar">
@@ -424,12 +453,13 @@ tr:hover td{background:rgba(0,200,212,.03)}
       <div class="card" style="padding:0">
         <table>
         <colgroup>
-          <col style="width:12%">
-          <col style="width:14%">
+          <col style="width:11%">
+          <col style="width:13%">
+          <col style="width:7%">
+          <col style="width:20%">
           <col style="width:8%">
-          <col style="width:26%">
-          <col style="width:9%">
           <col style="width:8%">
+          <col style="width:10%">
           <col style="width:11%">
           <col style="width:12%">
         </colgroup>
@@ -437,11 +467,48 @@ tr:hover td{background:rgba(0,200,212,.03)}
           <th onclick="setLeadSort('name')" style="cursor:pointer;user-select:none">Name <span id="lsort-name" style="opacity:.4">↕</span></th>
           <th>Contact</th><th>Sport</th><th>Inquiry</th>
           <th onclick="setLeadSort('status')" style="cursor:pointer;user-select:none">Status <span id="lsort-status" style="color:var(--cyan)">↑</span></th>
+          <th>Region</th>
           <th>Source</th>
           <th onclick="setLeadSort('activity')" style="cursor:pointer;user-select:none">Last Activity <span id="lsort-activity" style="opacity:.4">↕</span></th>
           <th>Actions</th>
         </tr></thead>
         <tbody id="leads-table"></tbody></table>
+      </div>
+    </div>
+    <!-- LEADS: LOCAL -->
+    <div class="panel" id="panel-leads-local">
+      <div class="card" style="padding:0">
+        <table>
+        <colgroup>
+          <col style="width:11%"><col style="width:13%"><col style="width:7%"><col style="width:20%">
+          <col style="width:8%"><col style="width:8%"><col style="width:10%"><col style="width:11%"><col style="width:12%">
+        </colgroup>
+        <thead><tr><th>Name</th><th>Contact</th><th>Sport</th><th>Inquiry</th><th>Status</th><th>Region</th><th>Source</th><th>Last Activity</th><th>Actions</th></tr></thead>
+        <tbody id="leads-local-table"></tbody></table>
+      </div>
+    </div>
+    <!-- LEADS: RESORTS -->
+    <div class="panel" id="panel-leads-resorts">
+      <div class="card" style="padding:0">
+        <table>
+        <colgroup>
+          <col style="width:11%"><col style="width:13%"><col style="width:7%"><col style="width:20%">
+          <col style="width:8%"><col style="width:8%"><col style="width:10%"><col style="width:11%"><col style="width:12%">
+        </colgroup>
+        <thead><tr><th>Name</th><th>Contact</th><th>Sport</th><th>Inquiry</th><th>Status</th><th>Region</th><th>Source</th><th>Last Activity</th><th>Actions</th></tr></thead>
+        <tbody id="leads-resorts-table"></tbody></table>
+      </div>
+    </div>
+    <!-- LEADS: OUT-OF-TOWNER -->
+    <div class="panel" id="panel-leads-outoftowner">
+      <div class="card" style="padding:0">
+        <table>
+        <colgroup>
+          <col style="width:11%"><col style="width:13%"><col style="width:7%"><col style="width:20%">
+          <col style="width:8%"><col style="width:8%"><col style="width:10%"><col style="width:11%"><col style="width:12%">
+        </colgroup>
+        <thead><tr><th>Name</th><th>Contact</th><th>Sport</th><th>Inquiry</th><th>Status</th><th>Region</th><th>Source</th><th>Last Activity</th><th>Actions</th></tr></thead>
+        <tbody id="leads-outoftowner-table"></tbody></table>
       </div>
     </div>
     <!-- EMAILS -->
@@ -828,6 +895,33 @@ tr:hover td{background:rgba(0,200,212,.03)}
       <div class="form-group"><label>Phone</label><input type="tel" id="cl-phone"/></div>
       <div class="form-group"><label>Lake / Location</label><input type="text" id="cl-location"/></div>
     </div>
+    <div class="form-row">
+      <div class="form-group"><label>Region</label>
+        <select id="cl-region-tag">
+          <option value="">—</option>
+          <option value="local">Local</option>
+          <option value="out_of_town">Out of Town</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Experience Level</label>
+        <select id="cl-experience-level">
+          <option value="">—</option>
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="advanced">Advanced</option>
+          <option value="expert">Expert</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label>Discipline</label>
+      <select id="cl-discipline-tag">
+        <option value="">—</option>
+        <option value="waterski">Waterski</option>
+        <option value="wakeboard">Wakeboard</option>
+        <option value="wakesurf">Wakesurf</option>
+        <option value="multi_sport">Multi-Sport</option>
+      </select>
+    </div>
     <div class="form-group"><label>Notes</label><textarea id="cl-notes"></textarea></div>
     <div class="section-label">Session History</div>
     <div id="cl-history" style="font-size:14px;color:var(--muted)">No sessions yet.</div>
@@ -897,6 +991,14 @@ tr:hover td{background:rgba(0,200,212,.03)}
           <option value="other">Other</option>
         </select>
       </div>
+    </div>
+    <div class="form-group"><label>Region</label>
+      <select id="ld-region-tag">
+        <option value="">—</option>
+        <option value="local">Local</option>
+        <option value="resort">Resort</option>
+        <option value="out_of_towner">Out-of-Towner</option>
+      </select>
     </div>
     <div class="form-group"><label>Inquiry / Message</label><textarea id="ld-message" placeholder="What they reached out about..."></textarea></div>
     <div class="form-group"><label>Notes</label><textarea id="ld-notes"></textarea></div>
@@ -1201,8 +1303,15 @@ async function loadAll(){
   renderCalendar();
   renderBookingsTable();
   renderClients();
+  renderClientsLocal();
+  renderClientsOutOfTown();
+  renderClientsByExperience();
+  renderClientsByDiscipline();
   renderTemplates();
   renderLeads();
+  renderLeadsLocal();
+  renderLeadsResorts();
+  renderLeadsOutOfTowner();
   renderPromoCodes();
   renderCardContacts();
   renderQRCodes();
@@ -1235,13 +1344,26 @@ async function loadTemplates(){
 // ── TABS ──────────────────────────────────────────────────
 // Tabs that got consolidated under one nav item share a "group" so the umbrella
 // nav button + the right sub-tab pill both light up correctly.
-const TAB_GROUP = { promo:'promogroup', promocodes:'promogroup', digitalcard:'cardgroup', cardcontacts:'cardgroup', qrcodes:'cardgroup' };
+const TAB_GROUP = {
+  promo:'promogroup', promocodes:'promogroup',
+  digitalcard:'cardgroup', cardcontacts:'cardgroup', qrcodes:'cardgroup',
+  leads:'leadsgroup', 'leads-local':'leadsgroup', 'leads-resorts':'leadsgroup', 'leads-outoftowner':'leadsgroup',
+  clients:'clientsgroup', 'clients-local':'clientsgroup', 'clients-outoftown':'clientsgroup', 'clients-experience':'clientsgroup', 'clients-discipline':'clientsgroup'
+};
 function showTab(tab){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+tab).classList.add('active');
   activeTab = tab;
   if(tab==='digitalcard' && !cardConfigLoaded) loadCardConfig();
-  if(tab==='leads' || tab==='bookings'){ markVisited(tab); updateNewActivityBadges(); }
+  if(tab==='bookings'){ markVisited('bookings'); updateNewActivityBadges(); }
+  if(tab==='leads' || tab.indexOf('leads-')===0){ markVisited('leads'); updateNewActivityBadges(); }
+  if(tab==='leads-local') renderLeadsLocal();
+  if(tab==='leads-resorts') renderLeadsResorts();
+  if(tab==='leads-outoftowner') renderLeadsOutOfTowner();
+  if(tab==='clients-local') renderClientsLocal();
+  if(tab==='clients-outoftown') renderClientsOutOfTown();
+  if(tab==='clients-experience') renderClientsByExperience();
+  if(tab==='clients-discipline') renderClientsByDiscipline();
 
   // Top-level nav highlighting (id-based, not event.target — works whether
   // showTab() was triggered by a click or called directly from JS)
@@ -1386,7 +1508,13 @@ function renderBookingsTable(filter='', status='', slot=''){
   if(filter) list = list.filter(b=>(b.clients?.name||'').toLowerCase().includes(filter.toLowerCase()));
   if(status) list = list.filter(b=>b.status===status);
   if(slot) list = list.filter(b=>b.slot===slot);
-  list.sort((a,b)=>new Date(a.date)-new Date(b.date));
+  // Upcoming/active bookings first (soonest date at top), completed & cancelled always sink to the bottom.
+  const bookingRank = b => (b.status==='complete' || b.status==='cancelled') ? 1 : 0;
+  list.sort((a,b)=>{
+    const ra = bookingRank(a), rb = bookingRank(b);
+    if(ra !== rb) return ra - rb;
+    return new Date(a.date) - new Date(b.date);
+  });
   document.getElementById('bookings-table').innerHTML = list.length
     ? list.map(b=>bookingRow(b,false)).join('')
     : '<tr><td colspan="9" style="color:var(--muted);text-align:center;padding:24px">No bookings found</td></tr>';
@@ -1453,7 +1581,7 @@ async function updateLeadStatus(id, status){
   const l = leads.find(x => x.id === id);
   if(l) l.status = status;
   updateNewActivityBadges();
-  renderLeads(document.getElementById('search-leads').value);
+  renderActiveLeadsView();
   toast('Lead updated ✓');
 }
 async function updateBookingStatus(id, status){
@@ -1628,27 +1756,75 @@ async function deleteBooking(id){
   toast('Booking deleted');
 }
 // ── CLIENTS ───────────────────────────────────────────────
+const REGION_TAGS = [['','—'],['local','Local'],['out_of_town','Out of Town']];
+const EXPERIENCE_TAGS = [['','—'],['beginner','Beginner'],['intermediate','Intermediate'],['advanced','Advanced'],['expert','Expert']];
+const DISCIPLINE_TAGS = [['','—'],['waterski','Waterski'],['wakeboard','Wakeboard'],['wakesurf','Wakesurf'],['multi_sport','Multi-Sport']];
+function tagSelectHtml(id, field, value, options){
+  return `<select class="booking-status-select" style="font-size:11px;padding:3px 6px" onclick="event.stopPropagation()" onchange="event.stopPropagation();updateClientTag('${id}','${field}',this.value)">${options.map(([v,l])=>`<option value="${v}"${(value||'')===v?' selected':''}>${esc(l)}</option>`).join('')}</select>`;
+}
+function clientCardHtml(c){
+  const sessions = bookings.filter(b=>b.client_id===c.id).length;
+  const st = intakeState(c);
+  const badge = st ? `<span style="display:inline-block;margin-top:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#fff;background:${st.color};border-radius:10px;padding:2px 9px">${st.label}</span>` : '';
+  return `<div class="client-card" onclick="openEditClient('${c.id}')">
+    <div class="client-name">${c.name}</div>
+    <div class="client-meta">${c.email||''} ${c.phone?'· '+c.phone:''}</div>
+    <div class="client-meta">${c.location||'No location set'}</div>
+    <div class="client-sessions">${sessions} session${sessions!==1?'s':''}</div>
+    ${badge}
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px">
+      ${tagSelectHtml(c.id,'region_tag',c.region_tag,REGION_TAGS)}
+      ${tagSelectHtml(c.id,'experience_level',c.experience_level,EXPERIENCE_TAGS)}
+      ${tagSelectHtml(c.id,'discipline_tag',c.discipline_tag,DISCIPLINE_TAGS)}
+    </div>
+  </div>`;
+}
 function renderClients(filter=''){
   let list = filter ? clients.filter(c=>c.name.toLowerCase().includes(filter.toLowerCase())) : clients;
   document.getElementById('clients-grid').innerHTML = list.length
-    ? list.map(c=>{
-        const sessions = bookings.filter(b=>b.client_id===c.id).length;
-        const st = intakeState(c);
-        const badge = st ? `<span style="display:inline-block;margin-top:6px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#fff;background:${st.color};border-radius:10px;padding:2px 9px">${st.label}</span>` : '';
-        return `<div class="client-card" onclick="openEditClient('${c.id}')">
-          <div class="client-name">${c.name}</div>
-          <div class="client-meta">${c.email||''} ${c.phone?'· '+c.phone:''}</div>
-          <div class="client-meta">${c.location||'No location set'}</div>
-          <div class="client-sessions">${sessions} session${sessions!==1?'s':''}</div>
-          ${badge}
-        </div>`;
-      }).join('')
+    ? list.map(clientCardHtml).join('')
     : '<div style="color:var(--muted);padding:24px">No clients yet.</div>';
 }
 function filterClients(){ renderClients(document.getElementById('search-clients').value); }
+function renderClientsInto(gridId, predicate){
+  const el = document.getElementById(gridId); if(!el) return;
+  const list = clients.filter(predicate);
+  el.innerHTML = list.length ? list.map(clientCardHtml).join('') : '<div style="color:var(--muted);padding:24px">No clients in this category yet.</div>';
+}
+function renderClientsLocal(){ renderClientsInto('clients-local-grid', c=>c.region_tag==='local'); }
+function renderClientsOutOfTown(){ renderClientsInto('clients-outoftown-grid', c=>c.region_tag==='out_of_town'); }
+function renderClientsGroupedInto(containerId, field, groups){
+  const el = document.getElementById(containerId); if(!el) return;
+  const html = groups.map(([val,label])=>{
+    const list = clients.filter(c=>(c[field]||'')===val);
+    if(!list.length) return '';
+    return `<div class="sec-title" style="margin-top:20px">${esc(label)} <span style="color:var(--muted);font-weight:400">(${list.length})</span></div><div class="client-grid">${list.map(clientCardHtml).join('')}</div>`;
+  }).join('');
+  el.innerHTML = html || '<div style="color:var(--muted);padding:24px">No clients yet.</div>';
+}
+function renderClientsByExperience(){
+  renderClientsGroupedInto('clients-experience-body','experience_level',[['beginner','Beginner'],['intermediate','Intermediate'],['advanced','Advanced'],['expert','Expert'],['','Not Tagged']]);
+}
+function renderClientsByDiscipline(){
+  renderClientsGroupedInto('clients-discipline-body','discipline_tag',[['waterski','Waterski'],['wakeboard','Wakeboard'],['wakesurf','Wakesurf'],['multi_sport','Multi-Sport'],['','Not Tagged']]);
+}
+async function updateClientTag(id, field, value){
+  const { error } = await db.from('clients').update({ [field]: value || null }).eq('id', id);
+  if(error){ toast('Error updating tag'); return; }
+  const c = clients.find(x=>x.id===id); if(c) c[field] = value || null;
+  renderActiveClientsView();
+  toast('Tag updated ✓');
+}
+function renderActiveClientsView(){
+  if(activeTab==='clients') renderClients(document.getElementById('search-clients')?.value||'');
+  else if(activeTab==='clients-local') renderClientsLocal();
+  else if(activeTab==='clients-outoftown') renderClientsOutOfTown();
+  else if(activeTab==='clients-experience') renderClientsByExperience();
+  else if(activeTab==='clients-discipline') renderClientsByDiscipline();
+}
 function openAddClient(){
   editingClientId=null;
-  ['cl-name','cl-email','cl-phone','cl-location','cl-notes'].forEach(id=>document.getElementById(id).value='');
+  ['cl-name','cl-email','cl-phone','cl-location','cl-notes','cl-region-tag','cl-experience-level','cl-discipline-tag'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('cl-history').innerHTML='No sessions yet.';
   document.getElementById('client-modal-title').textContent='New Client';
   document.getElementById('client-delete-btn').style.display='none';
@@ -1672,6 +1848,9 @@ function openEditClient(id){
   document.getElementById('cl-email').value=c.email||'';
   document.getElementById('cl-phone').value=c.phone||'';
   document.getElementById('cl-location').value=c.location||'';
+  document.getElementById('cl-region-tag').value=c.region_tag||'';
+  document.getElementById('cl-experience-level').value=c.experience_level||'';
+  document.getElementById('cl-discipline-tag').value=c.discipline_tag||'';
   document.getElementById('cl-notes').value=c.notes||'';
   const sessions = bookings.filter(b=>b.client_id===id);
   document.getElementById('cl-history').innerHTML = sessions.length
@@ -1687,7 +1866,16 @@ function openEditClient(id){
   openModal('client-modal');
 }
 async function saveClient(){
-  const data={name:document.getElementById('cl-name').value.trim(),email:document.getElementById('cl-email').value,phone:document.getElementById('cl-phone').value,location:document.getElementById('cl-location').value,notes:document.getElementById('cl-notes').value};
+  const data={
+    name:document.getElementById('cl-name').value.trim(),
+    email:document.getElementById('cl-email').value,
+    phone:document.getElementById('cl-phone').value,
+    location:document.getElementById('cl-location').value,
+    region_tag:document.getElementById('cl-region-tag').value||null,
+    experience_level:document.getElementById('cl-experience-level').value||null,
+    discipline_tag:document.getElementById('cl-discipline-tag').value||null,
+    notes:document.getElementById('cl-notes').value
+  };
   if(!data.name){ toast('Name is required'); return; }
   let cid=editingClientId;
   if(cid){ await db.from('clients').update(data).eq('id',cid); }
@@ -1695,7 +1883,7 @@ async function saveClient(){
   if(cid) await saveClientRoster(cid);
   closeModal('client-modal');
   await loadClients();
-  renderClients();
+  renderActiveClientsView();
   toast('Client saved ✓');
 }
 async function deleteClient(id){
@@ -1970,6 +2158,28 @@ async function loadLeads(){
   const badge = document.getElementById('leads-badge');
   if(badge) badge.textContent = active;
 }
+const LEAD_SRC_OPTS = ['','website','resort','facebook','instagram','referral','phone/text','messenger','sunset_wake_date','gmail','square','imessage','walk-up','repeat','other'];
+const LEAD_REGION_TAGS = [['','—'],['local','Local'],['resort','Resort'],['out_of_towner','Out-of-Towner']];
+function leadRowHtml(l){
+  const activityMs = new Date(l.last_activity_at||l.created_at).getTime();
+  const staleDays = (Date.now()-activityMs)/86400000;
+  const staleColor = staleDays>7?'var(--red)':(staleDays>3?'var(--orange)':'var(--muted)');
+  return `<tr>
+    <td><strong>${esc(l.name||'—')}</strong></td>
+    <td style="font-size:13px">${esc(l.email||'')}${l.phone?'<br>'+esc(l.phone):''}</td>
+    <td style="font-size:13px">${esc(l.sport||'—')}</td>
+    <td style="font-size:13px;max-width:260px;cursor:pointer" onclick="inlineEditInquiry(this,'${l.id}')" title="Click to edit">${esc((l.message||'').slice(0,140))||'<span style=color:var(--hint)>click to add…</span>'}</td>
+    <td><select class="booking-status-select" onchange="updateLeadStatus('${l.id}', this.value)">${['new','hot','warm','cold','archived'].map(s=>`<option value="${s}"${l.status===s?' selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}</select></td>
+    <td><select class="booking-status-select" onchange="updateLeadRegion('${l.id}', this.value)">${LEAD_REGION_TAGS.map(([v,lbl])=>`<option value="${v}"${(l.region_tag||'')===v?' selected':''}>${esc(lbl)}</option>`).join('')}</select></td>
+    <td><select class="booking-status-select" onchange="updateLeadSource('${l.id}', this.value)">${LEAD_SRC_OPTS.map(s=>`<option value="${s}"${(l.source||'')===s?' selected':''}>${s?s.charAt(0).toUpperCase()+s.slice(1):'—'}</option>`).join('')}${l.source&&!LEAD_SRC_OPTS.includes(l.source)?`<option value="${esc(l.source)}" selected>${esc(l.source)}</option>`:''}</select></td>
+    <td style="font-size:12px;color:${staleColor}" title="${new Date(activityMs).toLocaleString()}">${timeAgo(activityMs)}</td>
+    <td style="display:flex;gap:6px;flex-wrap:wrap">
+      <button class="btn btn-primary btn-sm" onclick="openEditLead('${l.id}')">Edit</button>
+      <button class="btn btn-pink btn-sm" onclick="convertLead('${l.id}')">→ Client</button>
+      <button class="btn btn-danger btn-sm" onclick="deleteLead('${l.id}')">Delete</button>
+    </td>
+  </tr>`;
+}
 function renderLeads(filter=''){
   const tb = document.getElementById('leads-table');
   if(!tb) return;
@@ -1989,26 +2199,28 @@ function renderLeads(filter=''){
     // secondary sort: newest first within same rank
     return new Date(b.created_at) - new Date(a.created_at);
   });
-  const srcOpts = ['','website','resort','facebook','instagram','referral','phone/text','messenger','sunset_wake_date','gmail','square','imessage','walk-up','repeat','other'];
-  tb.innerHTML = list.length ? list.map(l=>{
-    const activityMs = new Date(l.last_activity_at||l.created_at).getTime();
-    const staleDays = (Date.now()-activityMs)/86400000;
-    const staleColor = staleDays>7?'var(--red)':(staleDays>3?'var(--orange)':'var(--muted)');
-    return `<tr>
-    <td><strong>${esc(l.name||'—')}</strong></td>
-    <td style="font-size:13px">${esc(l.email||'')}${l.phone?'<br>'+esc(l.phone):''}</td>
-    <td style="font-size:13px">${esc(l.sport||'—')}</td>
-    <td style="font-size:13px;max-width:260px;cursor:pointer" onclick="inlineEditInquiry(this,'${l.id}')" title="Click to edit">${esc((l.message||'').slice(0,140))||'<span style=color:var(--hint)>click to add…</span>'}</td>
-    <td><select class="booking-status-select" onchange="updateLeadStatus('${l.id}', this.value)">${['new','hot','warm','cold','archived'].map(s=>`<option value="${s}"${l.status===s?' selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}</select></td>
-    <td><select class="booking-status-select" onchange="updateLeadSource('${l.id}', this.value)">${srcOpts.map(s=>`<option value="${s}"${(l.source||'')===s?' selected':''}>${s?s.charAt(0).toUpperCase()+s.slice(1):'—'}</option>`).join('')}${l.source&&!srcOpts.includes(l.source)?`<option value="${esc(l.source)}" selected>${esc(l.source)}</option>`:''}</select></td>
-    <td style="font-size:12px;color:${staleColor}" title="${new Date(activityMs).toLocaleString()}">${timeAgo(activityMs)}</td>
-    <td style="display:flex;gap:6px;flex-wrap:wrap">
-      <button class="btn btn-primary btn-sm" onclick="openEditLead('${l.id}')">Edit</button>
-      <button class="btn btn-pink btn-sm" onclick="convertLead('${l.id}')">→ Client</button>
-      <button class="btn btn-danger btn-sm" onclick="deleteLead('${l.id}')">Delete</button>
-    </td>
-  </tr>`;
-  }).join('') : '<tr><td colspan="8" style="color:var(--muted);text-align:center;padding:24px">No active leads. New booking inquiries land here automatically each morning.</td></tr>';
+  tb.innerHTML = list.length ? list.map(leadRowHtml).join('') : '<tr><td colspan="9" style="color:var(--muted);text-align:center;padding:24px">No active leads. New booking inquiries land here automatically each morning.</td></tr>';
+}
+function renderLeadsInto(tbodyId, predicate){
+  const tb = document.getElementById(tbodyId); if(!tb) return;
+  const list = leads.filter(l=>l.status!=='converted').filter(predicate).sort((a,b)=>(a.name||'').toLowerCase().localeCompare((b.name||'').toLowerCase()));
+  tb.innerHTML = list.length ? list.map(leadRowHtml).join('') : '<tr><td colspan="9" style="color:var(--muted);text-align:center;padding:24px">No leads in this category yet.</td></tr>';
+}
+function renderLeadsLocal(){ renderLeadsInto('leads-local-table', l=>l.region_tag==='local'); }
+function renderLeadsResorts(){ renderLeadsInto('leads-resorts-table', l=>l.region_tag==='resort'); }
+function renderLeadsOutOfTowner(){ renderLeadsInto('leads-outoftowner-table', l=>l.region_tag==='out_of_towner'); }
+async function updateLeadRegion(id, region){
+  const { error } = await db.from('leads').update({ region_tag: region || null }).eq('id', id);
+  if(error){ toast('Error updating region'); return; }
+  const l = leads.find(x=>x.id===id); if(l) l.region_tag = region || null;
+  renderActiveLeadsView();
+  toast('Region updated ✓');
+}
+function renderActiveLeadsView(){
+  if(activeTab==='leads') renderLeads(document.getElementById('search-leads')?.value||'');
+  else if(activeTab==='leads-local') renderLeadsLocal();
+  else if(activeTab==='leads-resorts') renderLeadsResorts();
+  else if(activeTab==='leads-outoftowner') renderLeadsOutOfTowner();
 }
 function timeAgo(ts){
   const diffMs = Date.now()-new Date(ts).getTime();
@@ -2045,6 +2257,7 @@ async function updateLeadSource(id, source){
   if(error){ toast('Error updating source'); return; }
   const l = leads.find(x=>x.id===id);
   if(l) l.source = source;
+  renderActiveLeadsView();
   toast('Source updated ✓');
 }
 function openAddLead(){
@@ -2052,6 +2265,7 @@ function openAddLead(){
   ['ld-name','ld-email','ld-phone','ld-sport','ld-message','ld-notes'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('ld-status').value='new';
   document.getElementById('ld-source').value='';
+  document.getElementById('ld-region-tag').value='';
   document.getElementById('lead-modal-title').textContent='New Lead';
   document.getElementById('lead-delete-btn').style.display='none';
   document.getElementById('lead-convert-btn').style.display='none';
@@ -2068,6 +2282,7 @@ function openEditLead(id){
   document.getElementById('ld-notes').value=l.notes||'';
   document.getElementById('ld-status').value=l.status||'new';
   document.getElementById('ld-source').value=l.source||'';
+  document.getElementById('ld-region-tag').value=l.region_tag||'';
   document.getElementById('lead-modal-title').textContent='Edit Lead';
   document.getElementById('lead-delete-btn').style.display='inline-block';
   document.getElementById('lead-convert-btn').style.display='inline-block';
@@ -2082,13 +2297,14 @@ async function saveLead(){
     message: document.getElementById('ld-message').value.trim(),
     notes: document.getElementById('ld-notes').value.trim(),
     status: document.getElementById('ld-status').value,
-    source: document.getElementById('ld-source').value || 'manual'
+    source: document.getElementById('ld-source').value || 'manual',
+    region_tag: document.getElementById('ld-region-tag').value || null
   };
   if(!data.name){ toast('Lead name is required'); return; }
   if(editingLeadId){ await db.from('leads').update(data).eq('id', editingLeadId); }
   else { await db.from('leads').insert(data); }
   closeModal('lead-modal');
-  await loadLeads(); renderLeads();
+  await loadLeads(); renderActiveLeadsView();
   toast('Lead saved ✓');
 }
 async function deleteLead(id){
@@ -2096,12 +2312,12 @@ async function deleteLead(id){
   if(!confirm('Delete this lead? This cannot be undone.')) return;
   await db.from('leads').delete().eq('id', id);
   closeModal('lead-modal');
-  await loadLeads(); renderLeads();
+  await loadLeads(); renderActiveLeadsView();
   toast('Lead deleted');
 }
 function exportLeadsCSV(){
-  const headers=['Name','Email','Phone','Sport','Source','Status','Inquiry','Notes','Created'];
-  const rows=leads.filter(l=>l.status!=='converted').map(l=>[l.name,l.email,l.phone,l.sport,l.source,l.status,l.message,l.notes,l.created_at?.slice(0,10)]);
+  const headers=['Name','Email','Phone','Sport','Source','Status','Region','Inquiry','Notes','Created'];
+  const rows=leads.filter(l=>l.status!=='converted').map(l=>[l.name,l.email,l.phone,l.sport,l.source,l.status,l.region_tag,l.message,l.notes,l.created_at?.slice(0,10)]);
   const csv=[headers,...rows].map(r=>r.map(f=>'"'+(f==null?'':f).toString().replace(/"/g,'""')+'"').join(',')).join('\n');
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
@@ -2121,6 +2337,7 @@ async function importLeadsCSV(input){
   const sportIdx=hdr.findIndex(h=>h==='sport');
   const sourceIdx=hdr.findIndex(h=>h==='source');
   const statusIdx=hdr.findIndex(h=>h==='status');
+  const regionIdx=hdr.findIndex(h=>h==='region');
   const msgIdx=hdr.findIndex(h=>h==='inquiry'||h==='message');
   const notesIdx=hdr.findIndex(h=>h==='notes');
   if(nameIdx<0){toast('CSV must have a "Name" column');input.value='';return;}
@@ -2136,6 +2353,7 @@ async function importLeadsCSV(input){
       sport:sportIdx>=0?cols[sportIdx]||null:null,
       source:sourceIdx>=0?cols[sourceIdx]||'manual':'manual',
       status:statusIdx>=0&&['new','hot','warm','cold','archived'].includes(cols[statusIdx])?cols[statusIdx]:'new',
+      region_tag:regionIdx>=0&&['local','resort','out_of_towner'].includes(cols[regionIdx])?cols[regionIdx]:null,
       message:msgIdx>=0?cols[msgIdx]||null:null,
       notes:notesIdx>=0?cols[notesIdx]||null:null
     });
@@ -2144,7 +2362,7 @@ async function importLeadsCSV(input){
   if(!confirm(`Import ${rows.length} lead(s)? Duplicates won't be merged.`)){input.value='';return;}
   const {error}=await db.from('leads').insert(rows);
   if(error){toast('Import error: '+error.message);input.value='';return;}
-  await loadLeads(); renderLeads();
+  await loadLeads(); renderActiveLeadsView();
   input.value='';
   toast(`${rows.length} lead(s) imported ✓`);
 }
@@ -2157,14 +2375,15 @@ async function convertLead(id){
     if(ex) client = ex;
   }
   if(!client){
-    const { data, error } = await db.from('clients').insert({ name:l.name, email:l.email||null, phone:l.phone||null, notes:l.message||null }).select().single();
+    const inferredRegion = l.region_tag==='local' ? 'local' : (l.region_tag==='resort'||l.region_tag==='out_of_towner') ? 'out_of_town' : null;
+    const { data, error } = await db.from('clients').insert({ name:l.name, email:l.email||null, phone:l.phone||null, notes:l.message||null, region_tag:inferredRegion }).select().single();
     if(error){ toast('Error creating client'); return; }
     client = data;
   }
   await db.from('leads').update({ status:'converted', converted_client_id: client.id }).eq('id', id);
   closeModal('lead-modal');
   await Promise.all([loadLeads(), loadClients()]);
-  renderLeads(); renderClients();
+  renderActiveLeadsView(); renderActiveClientsView();
   toast(`${l.name} is now a client ✓`);
 
   if(confirm(`Create a booking for ${l.name} now? (You can also do this later from the Bookings tab.)`)){
@@ -2771,8 +2990,26 @@ function renderTaskCol(stage){
   if(!el) return;
   const rows = opsTasks.filter(t => t.stage === stage && t.status !== 'done');
   el.innerHTML = rows.length
-    ? rows.map(t=>`<div class="task-row"><input type="checkbox" onchange="toggleTask('${t.id}',this.checked)"/><span class="task-title">${esc(t.title)}</span>${pill(t.impact)}</div>`).join('')
+    ? rows.map(t=>`<div class="task-row"><input type="checkbox" onchange="toggleTask('${t.id}',this.checked)"/><span class="task-title" title="Click to edit" onclick="editTaskTitle('${t.id}', this)">${esc(t.title)}</span>${pill(t.impact)}</div>`).join('')
     : '<div style="font-size:13px;color:var(--hint)">All clear — nothing open here.</div>';
+}
+function editTaskTitle(id, el){
+  if(el.querySelector('input')) return; // already editing
+  const current = el.textContent;
+  el.innerHTML = `<input type="text" class="task-title-input" value="${esc(current)}" style="width:100%;font:inherit;color:inherit;border:1px solid var(--cyan);border-radius:4px;padding:2px 6px;box-sizing:border-box" onkeydown="if(event.key==='Enter'){this.blur();} if(event.key==='Escape'){this.dataset.cancel='1';this.blur();}" onblur="saveTaskTitle('${id}', this)"/>`;
+  const inp = el.querySelector('input');
+  inp.focus(); inp.select();
+}
+async function saveTaskTitle(id, inputEl){
+  const t = opsTasks.find(x => x.id === id);
+  if(inputEl.dataset.cancel){ renderTasks(); return; }
+  const title = inputEl.value.trim();
+  if(!title || (t && title === t.title)){ renderTasks(); return; }
+  const { error } = await db.from('ops_tasks').update({ title }).eq('id', id);
+  if(error){ toast('Error saving task'); renderTasks(); return; }
+  if(t) t.title = title;
+  renderTasks();
+  toast('Task updated ✓');
 }
 function pill(impact){
   const c = impact==='high' ? 'pill-high' : impact==='low' ? 'pill-low' : 'pill-med';
