@@ -873,6 +873,7 @@ select.status-select-cancelled{background:rgba(229,57,53,.14);border-color:var(-
           <option value="morning">Morning (~8am–12pm)</option>
           <option value="afternoon">Afternoon (~12pm–4pm)</option>
           <option value="evening">Evening (~4pm–8pm)</option>
+          <option value="inquiry">Inquiry (not yet booked)</option>
         </select>
       </div>
     </div>
@@ -921,7 +922,10 @@ select.status-select-cancelled{background:rgba(229,57,53,.14);border-color:var(-
     <button class="btn btn-ghost btn-sm" id="bk-send-msg" onclick="sendClientMessage()" style="margin-top:10px;display:none">Send to participants</button>
     <div id="bk-msg-status" style="font-size:12px;margin-top:6px;color:var(--muted)"></div>
     <div style="display:flex;gap:12px;justify-content:space-between;margin-top:24px">
-      <button class="btn btn-danger" id="booking-delete-btn" style="display:none" onclick="deleteBooking(editingBookingId)">Delete Booking</button>
+      <div style="display:flex;gap:12px">
+        <button class="btn btn-danger" id="booking-delete-btn" style="display:none" onclick="deleteBooking(editingBookingId)">Delete Booking</button>
+        <button class="btn btn-ghost" id="booking-to-lead-btn" style="display:none" onclick="convertBookingToLead(editingBookingId)">Convert to Lead</button>
+      </div>
       <div style="display:flex;gap:12px;margin-left:auto">
         <button class="btn btn-ghost" onclick="closeModal('booking-modal')">Cancel</button>
         <button class="btn btn-primary" onclick="saveBooking()">Save Booking</button>
@@ -1685,7 +1689,22 @@ function openAddBooking(){
   populateClientSelect();
   loadRosterPanelForClient(null);
   document.getElementById('booking-delete-btn').style.display = 'none';
+  document.getElementById('booking-to-lead-btn').style.display = 'none';
   openModal('booking-modal');
+}
+// Guards against a <select> silently going blank (and then saving an empty
+// string) when a record's real value doesn't match any hardcoded <option> —
+// e.g. website-inquiry bookings with slot='inquiry' or a free-text package.
+// Adds a matching option on the fly if needed, instead of losing the value.
+function ensureSelectHasValue(selectEl, value, label){
+  if(!selectEl || value==null || value==='') return;
+  const exists = [...selectEl.options].some(o=>o.value===value);
+  if(!exists){
+    const opt = document.createElement('option');
+    opt.value = value; opt.textContent = label || value;
+    selectEl.appendChild(opt);
+  }
+  selectEl.value = value;
 }
 function openEditBooking(id){
   editingBookingId = id;
@@ -1694,11 +1713,21 @@ function openEditBooking(id){
   if(!b) return;
   document.getElementById('booking-modal-title').textContent = 'Edit Booking';
   document.getElementById('booking-delete-btn').style.display = 'inline-block';
+  const toLeadBtn = document.getElementById('booking-to-lead-btn');
+  if(b.lead_id){
+    toLeadBtn.style.display = 'inline-block';
+    toLeadBtn.textContent = 'Already linked to a lead';
+    toLeadBtn.disabled = true;
+  } else {
+    toLeadBtn.style.display = 'inline-block';
+    toLeadBtn.textContent = 'Convert to Lead';
+    toLeadBtn.disabled = false;
+  }
   populateClientSelect(b.client_id);
   document.getElementById('new-client-fields').style.display='none';
   document.getElementById('bk-date').value = b.date;
-  document.getElementById('bk-slot').value = b.slot;
-  document.getElementById('bk-package').value = b.package||'';
+  ensureSelectHasValue(document.getElementById('bk-slot'), b.slot, cap(b.slot||''));
+  ensureSelectHasValue(document.getElementById('bk-package'), b.package, b.package);
   document.getElementById('bk-sport').value = b.sport||'';
   document.getElementById('bk-location').value = b.location||'';
   document.getElementById('bk-deposit').value = b.deposit_link||'';
@@ -1776,7 +1805,8 @@ async function saveBooking(){
   };
   let bookingId;
   if(editingBookingId){
-    await db.from('bookings').update(bkData).eq('id',editingBookingId);
+    const { error } = await db.from('bookings').update(bkData).eq('id',editingBookingId);
+    if(error){ toast('Error saving booking — nothing was changed: '+error.message); return; }
     bookingId = editingBookingId;
   } else {
     if(pendingLeadIdForBooking){ bkData.lead_id = pendingLeadIdForBooking; }
@@ -2313,7 +2343,7 @@ async function loadLeads(){
   const badge = document.getElementById('leads-badge');
   if(badge) badge.textContent = active;
 }
-const LEAD_SRC_OPTS = ['','website','resort','facebook','instagram','referral','phone/text','messenger','sunset_wake_date','gmail','square','imessage','walk-up','repeat','other'];
+const LEAD_SRC_OPTS = ['','website','resort','facebook','instagram','referral','phone/text','messenger','sunset_wake_date','gmail','square','imessage','walk-up','repeat','booking','other'];
 const LEAD_REGION_TAGS = [['','—'],['local','Local'],['resort','Resort'],['out_of_towner','Out-of-Towner']];
 function leadRowHtml(l){
   const activityMs = new Date(l.last_activity_at||l.created_at).getTime();
@@ -2575,6 +2605,33 @@ async function convertLead(id){
     populateClientSelect(client.id);
     document.getElementById('bk-notes').value = l.message || '';
   }
+}
+// Reverse of convertLead(): spins up a new Leads-pipeline entry from an
+// existing booking, for follow-up tracking. Does NOT touch or remove the
+// booking itself — it only links bookings.lead_id back to the new lead so
+// the two stay connected. Guarded against converting the same booking twice.
+async function convertBookingToLead(id){
+  const b = bookings.find(x=>x.id===id); if(!b) return;
+  if(b.lead_id){ toast('This booking is already linked to a lead'); return; }
+  const client = clients.find(c=>c.id===b.client_id);
+  const name = client ? client.name : 'Unknown client';
+  if(!confirm(`Create a new lead from this booking for ${name}? The booking stays as-is — this just adds them to your Leads pipeline for follow-up.`)) return;
+  const { data, error } = await db.from('leads').insert({
+    name,
+    email: client ? client.email||null : null,
+    phone: client ? client.phone||null : null,
+    sport: b.sport||null,
+    source: 'booking',
+    message: b.notes||null,
+    region_tag: client ? client.region_tag||null : null
+  }).select().single();
+  if(error){ toast('Error creating lead: '+error.message); return; }
+  const { error: linkErr } = await db.from('bookings').update({ lead_id: data.id }).eq('id', id);
+  if(linkErr){ toast('Lead created, but failed to link back to the booking: '+linkErr.message); }
+  await Promise.all([loadLeads(), loadAll()]);
+  closeModal('booking-modal');
+  renderActiveLeadsView();
+  toast(`Lead created for ${name} ✓`);
 }
 // ── EMAILS ────────────────────────────────────────────────
 function renderTemplates(){
