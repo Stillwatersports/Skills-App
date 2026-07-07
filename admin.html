@@ -3281,7 +3281,6 @@ function pill(impact){
   const c = impact==='high' ? 'pill-high' : impact==='low' ? 'pill-low' : 'pill-med';
   return `<span class="task-pill ${c}">${impact||'med'}</span>`;
 }
-function esc(s){ return (s||'').replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
 async function toggleTask(id, done){
   await db.from('ops_tasks').update({ status: done?'done':'open', done_at: done?new Date().toISOString():null }).eq('id', id);
   const t = opsTasks.find(x => x.id === id);
