@@ -125,6 +125,13 @@ tr.row-deposit_paid:hover td{background:rgba(245,216,122,.22)}
 /* Booking inline status select */
 .booking-status-select{padding:4px 8px;border:1.5px solid var(--border);border-radius:6px;font-size:12px;font-family:var(--sans);outline:none;cursor:pointer;background:#fff;color:var(--dark)}
 .booking-status-select:focus{border-color:var(--pink)}
+/* Booking status dropdown — tinted to match the legend/badge colors so the
+   select itself (not just the badge) shows status at a glance. */
+select.status-select-new{background:rgba(230,81,0,.14);border-color:var(--orange);color:var(--orange);font-weight:700}
+select.status-select-confirmed{background:rgba(0,200,212,.16);border-color:#0b8a93;color:#0b8a93;font-weight:700}
+select.status-select-deposit_paid{background:rgba(245,216,122,.55);border-color:#9a6200;color:#7a4e00;font-weight:700}
+select.status-select-complete{background:rgba(46,125,50,.18);border-color:var(--green);color:var(--green);font-weight:700}
+select.status-select-cancelled{background:rgba(229,57,53,.14);border-color:var(--red);color:var(--red);font-weight:700}
 
 /* BUTTONS */
 .btn{padding:8px 16px;border-radius:8px;border:none;font-weight:600;font-size:13px;cursor:pointer;font-family:var(--sans);transition:all .15s}
@@ -873,6 +880,7 @@ tr.row-deposit_paid:hover td{background:rgba(245,216,122,.22)}
       <div class="form-group">
         <label>Package</label>
         <select id="bk-package" onchange="lookupPromo(document.getElementById('bk-promo').value)">
+          <option>Sunset Wake Date</option>
           <option>Half Day — $600 (weekday)</option>
           <option>Half Day — $750 (weekend/holiday)</option>
           <option>Full Day — $1,000</option>
@@ -962,6 +970,13 @@ tr.row-deposit_paid:hover td{background:rgba(245,216,122,.22)}
       </select>
     </div>
     <div class="form-group"><label>Notes</label><textarea id="cl-notes"></textarea></div>
+    <div class="section-label">Payments</div>
+    <div class="form-row">
+      <div class="form-group"><label>Agreed Price ($)</label><input type="number" id="cl-pay-price" min="0" step="1" placeholder="e.g. 600"/></div>
+      <div class="form-group"><label>Deposit ($)</label><input type="number" id="cl-pay-deposit" min="0" step="1" placeholder="e.g. 200"/></div>
+    </div>
+    <div class="form-group"><label>Balance Owing ($)</label><input type="number" id="cl-pay-balance" min="0" step="1" placeholder="e.g. 400"/></div>
+    <div id="cl-pay-status" style="font-size:12px;color:var(--hint);margin:-6px 0 8px"></div>
     <div class="section-label">Session History</div>
     <div id="cl-history" style="font-size:14px;color:var(--muted)">No sessions yet.</div>
     <div class="section-label">Participants / Roster</div>
@@ -1605,7 +1620,7 @@ function bookingRow(b, compact){
     <td style="font-size:13px">${b.location||'—'}</td>
     <td style="font-size:13px">${p.length} rider${p.length!==1?'s':''}${minors?` · <span style="color:var(--red)">${minors}⚠</span>`:''}${waivers?` · <span style="color:var(--orange)">${waivers} pending</span>`:p.length?' · ✓':''}</td>
     <td style="font-size:13px">${b.promo_code?`<span class="status-badge" style="background:rgba(224,64,160,0.12);color:var(--pink)">${esc(b.promo_code)}</span>`:'—'}</td>
-    <td><select class="booking-status-select" onclick="event.stopPropagation()" onchange="event.stopPropagation();updateBookingStatus('${b.id}', this.value)">${statusOptions.map(s=>`<option value="${s}"${b.status===s?' selected':''}>${s.replace('_',' ')}</option>`).join('')}</select></td>
+    <td><select class="booking-status-select status-select-${b.status}" onclick="event.stopPropagation()" onchange="event.stopPropagation();updateBookingStatus('${b.id}', this.value)">${statusOptions.map(s=>`<option value="${s}"${b.status===s?' selected':''}>${s.replace('_',' ')}</option>`).join('')}</select></td>
     <td style="display:flex;gap:6px;flex-wrap:wrap" onclick="event.stopPropagation()">
       <button class="btn btn-primary btn-sm" onclick="openEditBooking('${b.id}')">Edit</button>
       ${b.status!=='deposit_paid'&&b.status!=='complete'?`<button class="btn btn-pink btn-sm" onclick="markDepositReceived('${b.id}')" title="Mark deposit received (e.g. via e-transfer) and log it in the booking notes">💰 Deposit</button>`:''}
@@ -1917,7 +1932,8 @@ function renderAllParticipants(filter=''){
 function openAddClient(){
   editingClientId=null;
   activePrefix='cl';
-  ['cl-name','cl-email','cl-phone','cl-location','cl-notes','cl-region-tag','cl-experience-level','cl-discipline-tag'].forEach(id=>document.getElementById(id).value='');
+  ['cl-name','cl-email','cl-phone','cl-location','cl-notes','cl-region-tag','cl-experience-level','cl-discipline-tag','cl-pay-price','cl-pay-deposit','cl-pay-balance'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('cl-pay-status').textContent='';
   document.getElementById('cl-history').innerHTML='No sessions yet.';
   document.getElementById('client-modal-title').textContent='New Client';
   document.getElementById('client-delete-btn').style.display='none';
@@ -1939,6 +1955,7 @@ function openEditClient(id){
   document.getElementById('cl-experience-level').value=c.experience_level||'';
   document.getElementById('cl-discipline-tag').value=c.discipline_tag||'';
   document.getElementById('cl-notes').value=c.notes||'';
+  renderPaymentFields(c.payments||{});
   const sessions = bookings.filter(b=>b.client_id===id);
   document.getElementById('cl-history').innerHTML = sessions.length
     ? sessions.map(b=>`<div style="padding:8px 0;border-bottom:1px solid var(--border);display:flex;gap:12px;font-size:13px"><span>${fmtDate(b.date)}</span><span style="color:var(--muted)">${cap(b.slot)}</span><span>${b.package||''}</span><span class="status-badge status-${b.status}">${b.status}</span></div>`).join('')
@@ -1946,7 +1963,34 @@ function openEditClient(id){
   loadRosterPanelForClient(id);
   openModal('client-modal');
 }
+// ── PAYMENTS (agreed price / deposit / balance, synced from Square notes or edited by hand) ──
+function renderPaymentFields(pay){
+  pay = pay || {};
+  document.getElementById('cl-pay-price').value = pay.agreed_price ?? '';
+  document.getElementById('cl-pay-deposit').value = pay.deposit ?? '';
+  document.getElementById('cl-pay-balance').value = pay.balance ?? '';
+  const st = document.getElementById('cl-pay-status');
+  if(pay.last_synced_at){
+    const when = new Date(pay.last_synced_at).toLocaleDateString('en-CA',{month:'short',day:'numeric',year:'numeric'});
+    const who = pay.source==='square' ? 'Synced from Square' : 'Manually updated';
+    st.textContent = `${who} · ${when}` + (pay.square_note ? ` — "${pay.square_note}"` : '');
+  } else {
+    st.textContent = 'No payment info yet.';
+  }
+}
+function paymentsFromForm(existing){
+  const num = v => { if(v===''||v==null) return null; const n=parseFloat(v); return isNaN(n)?null:n; };
+  return {
+    agreed_price: num(document.getElementById('cl-pay-price').value),
+    deposit: num(document.getElementById('cl-pay-deposit').value),
+    balance: num(document.getElementById('cl-pay-balance').value),
+    square_note: (existing && existing.square_note) || null,
+    last_synced_at: new Date().toISOString(),
+    source: 'manual'
+  };
+}
 async function saveClient(){
+  const existingClient = editingClientId ? clients.find(x=>x.id===editingClientId) : null;
   const data={
     name:document.getElementById('cl-name').value.trim(),
     email:document.getElementById('cl-email').value,
@@ -1955,7 +1999,8 @@ async function saveClient(){
     region_tag:document.getElementById('cl-region-tag').value||null,
     experience_level:document.getElementById('cl-experience-level').value||null,
     discipline_tag:document.getElementById('cl-discipline-tag').value||null,
-    notes:document.getElementById('cl-notes').value
+    notes:document.getElementById('cl-notes').value,
+    payments: paymentsFromForm(existingClient && existingClient.payments)
   };
   if(!data.name){ toast('Name is required'); return; }
   let cid=editingClientId;
