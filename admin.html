@@ -1714,14 +1714,16 @@ function openEditBooking(id){
   document.getElementById('booking-modal-title').textContent = 'Edit Booking';
   document.getElementById('booking-delete-btn').style.display = 'inline-block';
   const toLeadBtn = document.getElementById('booking-to-lead-btn');
-  if(b.lead_id){
-    toLeadBtn.style.display = 'inline-block';
-    toLeadBtn.textContent = 'Already linked to a lead';
-    toLeadBtn.disabled = true;
-  } else {
-    toLeadBtn.style.display = 'inline-block';
-    toLeadBtn.textContent = 'Convert to Lead';
-    toLeadBtn.disabled = false;
+  if(toLeadBtn){
+    if(b.lead_id){
+      toLeadBtn.style.display = 'inline-block';
+      toLeadBtn.textContent = 'Already linked to a lead';
+      toLeadBtn.disabled = true;
+    } else {
+      toLeadBtn.style.display = 'inline-block';
+      toLeadBtn.textContent = 'Convert to Lead';
+      toLeadBtn.disabled = false;
+    }
   }
   populateClientSelect(b.client_id);
   document.getElementById('new-client-fields').style.display='none';
