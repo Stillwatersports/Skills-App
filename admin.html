@@ -429,6 +429,7 @@ select.status-select-cancelled{background:rgba(229,57,53,.14);border-color:var(-
           <option value="morning">Morning</option>
           <option value="afternoon">Afternoon</option>
           <option value="evening">Evening</option>
+          <option value="drop_in">Drop-in</option>
         </select>
         <button class="btn btn-primary" onclick="openAddBooking()">+ New Booking</button>
       </div>
@@ -440,7 +441,7 @@ select.status-select-cancelled{background:rgba(229,57,53,.14);border-color:var(-
         <span class="status-legend-item"><span class="status-legend-dot" style="background:var(--red)"></span>Cancelled</span>
       </div>
       <div class="card" style="padding:0">
-        <table><thead><tr><th>Date</th><th>Slot</th><th>Client</th><th>Package</th><th>Location</th><th>Participants</th><th>Promo</th><th>Status</th><th>Actions</th></tr></thead>
+        <table><thead><tr><th>Date</th><th>Slot</th><th>Time</th><th>Client</th><th>Package</th><th>Location</th><th>Participants</th><th>Promo</th><th>Status</th><th>Actions</th></tr></thead>
         <tbody id="bookings-table"></tbody></table>
       </div>
     </div>
@@ -1643,6 +1644,7 @@ function bookingRow(b, compact){
   return `<tr class="${rowClass}" style="cursor:pointer" onclick="openEditBooking('${b.id}')">
     <td>${fmtDate(b.date)}</td>
     <td><span class="status-badge" style="background:rgba(0,200,212,0.1);color:var(--cyan)">${cap(b.slot)}</span></td>
+    <td style="font-size:13px">${b.time||'—'}</td>
     <td>${b.clients?.name||'—'}${warn}${leadTag}</td>
     <td style="font-size:13px">${(b.package||'—').split('—')[0]}</td>
     <td style="font-size:13px">${b.location||'—'}</td>
