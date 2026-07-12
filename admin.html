@@ -871,12 +871,20 @@ select.status-select-cancelled{background:rgba(229,57,53,.14);border-color:var(-
       <div class="form-group"><label>Date *</label><input type="date" id="bk-date"/></div>
       <div class="form-group">
         <label>Time Slot *</label>
-        <select id="bk-slot">
+        <select id="bk-slot" onchange="toggleDropInTime()">
           <option value="morning">Morning (~8am–12pm)</option>
           <option value="afternoon">Afternoon (~12pm–4pm)</option>
           <option value="evening">Evening (~4pm–8pm)</option>
+          <option value="drop_in">Drop-in (Rideau River)</option>
           <option value="inquiry">Inquiry (not yet booked)</option>
         </select>
+      </div>
+    </div>
+    <div class="form-row" id="drop-in-time-row" style="display:none">
+      <div class="form-group">
+        <label>Time *</label>
+        <input type="text" id="bk-time" placeholder="e.g. 10:30 am" style="font-family:var(--sans)"/>
+        <p style="font-size:11px;color:var(--hint);margin-top:4px">12-hour format with am/pm (e.g. 10:30 am, 2:15 pm)</p>
       </div>
     </div>
     <div class="form-row">
@@ -1466,6 +1474,19 @@ function showTab(tab){
     if(subEl) subEl.classList.add('active');
   }
 }
+// ── DROP-IN TIME FIELD TOGGLE ────
+function toggleDropInTime(){
+  const slot = document.getElementById('bk-slot').value;
+  const timeRow = document.getElementById('drop-in-time-row');
+  const timeField = document.getElementById('bk-time');
+  if(slot === 'drop_in'){
+    timeRow.style.display = 'block';
+    timeField.focus();
+  } else {
+    timeRow.style.display = 'none';
+    timeField.value = '';
+  }
+}
 // ── NEW-ACTIVITY BADGES (since you last opened the tab) ────
 function getLastVisit(tab){
   return localStorage.getItem('sw_lastvisit_'+tab) || '1970-01-01T00:00:00.000Z';
@@ -1732,6 +1753,8 @@ function openEditBooking(id){
   document.getElementById('new-client-fields').style.display='none';
   document.getElementById('bk-date').value = b.date;
   ensureSelectHasValue(document.getElementById('bk-slot'), b.slot, cap(b.slot||''));
+  document.getElementById('bk-time').value = b.time||'';
+  toggleDropInTime();
   ensureSelectHasValue(document.getElementById('bk-package'), b.package, b.package);
   document.getElementById('bk-sport').value = b.sport||'';
   document.getElementById('bk-location').value = b.location||'';
@@ -1744,10 +1767,11 @@ function openEditBooking(id){
   openModal('booking-modal');
 }
 function clearBookingForm(){
-  ['bk-date','bk-sport','bk-location','bk-deposit','bk-notes','bk-promo'].forEach(id=>document.getElementById(id).value='');
+  ['bk-date','bk-sport','bk-location','bk-deposit','bk-notes','bk-promo','bk-time'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('bk-promo-info').innerHTML='';
   document.getElementById('bk-slot').value='morning';
   document.getElementById('bk-status').value='new';
+  toggleDropInTime();
 }
 function populateClientSelect(selectedId=''){
   const sel = document.getElementById('bk-client');
@@ -1800,6 +1824,7 @@ async function saveBooking(){
     client_id:clientId,
     date:document.getElementById('bk-date').value,
     slot:document.getElementById('bk-slot').value,
+    time:document.getElementById('bk-slot').value === 'drop_in' ? document.getElementById('bk-time').value : null,
     package:document.getElementById('bk-package').value,
     sport:document.getElementById('bk-sport').value,
     location:document.getElementById('bk-location').value,
