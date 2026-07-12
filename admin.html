@@ -275,14 +275,16 @@ select.status-select-cancelled{background:rgba(229,57,53,.14);border-color:var(-
   </div>
 <div class="tabs">
   <div class="tab active" id="navtab-tasks" onclick="showTab('tasks')">Dashboard</div>
-  <div class="tab" id="navtab-dashboard" onclick="showTab('dashboard')">Sports Dash</div>
-  <div class="tab" id="navtab-calendar" onclick="showTab('calendar')">Calendar</div>
-  <div class="tab" id="navtab-bookings" onclick="showTab('bookings')">Bookings <span class="tab-badge" id="new-badge">0</span></div>
+  <div class="tab" id="navtab-dashboard" onclick="showTab('dashboard')">Sports Dashboard</div>
   <div class="tab" id="navtab-leadsgroup" onclick="showTab('leads')">Leads <span class="tab-badge" id="leads-badge">0</span></div>
   <div class="tab" id="navtab-clientsgroup" onclick="showTab('clients')">Clients</div>
+  <div class="tab" id="navtab-bookings" onclick="showTab('bookings')">Bookings <span class="tab-badge" id="new-badge">0</span></div>
   <div class="tab" id="navtab-emails" onclick="showTab('emails')">Emails</div>
-  <div class="tab" id="navtab-promogroup" onclick="showTab('promo')">Promotions</div>
+  <div class="tab" id="navtab-promogroup" onclick="showTab('promo')">Promos</div>
   <div class="tab" id="navtab-cardgroup" onclick="showTab('digitalcard')">Digital Card <span class="tab-badge" id="contacts-badge"></span></div>
+  <!-- Calendar tab hidden for future Google Calendar migration:
+  <div class="tab" id="navtab-calendar" onclick="showTab('calendar')" style="display:none">Calendar</div>
+  -->
 </div>
 <div class="subtab-row" id="subtab-promogroup" style="display:none">
   <span class="subtab" id="subtab-item-promo" onclick="showTab('promo')">Banner</span>
