@@ -432,6 +432,7 @@ select.status-select-cancelled{background:rgba(229,57,53,.14);border-color:var(-
           <option value="drop_in">Drop-in</option>
         </select>
         <button class="btn btn-primary" onclick="openAddBooking()">+ New Booking</button>
+        <button class="btn btn-ghost" onclick="exportBookingsCSV()">Export CSV</button>
       </div>
       <div class="status-legend">
         <span class="status-legend-item"><span class="status-legend-dot" style="background:var(--orange)"></span>New</span>
@@ -450,6 +451,9 @@ select.status-select-cancelled{background:rgba(229,57,53,.14);border-color:var(-
       <div class="bookings-toolbar">
         <input type="text" id="search-clients" placeholder="Search clients..." oninput="filterClients()"/>
         <button class="btn btn-primary" onclick="openAddClient()">+ New Client</button>
+        <button class="btn btn-ghost" onclick="exportClientsCSV()">Export CSV</button>
+        <button class="btn btn-ghost" onclick="openMergeModal()">Merge Duplicates</button>
+        <label style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted);white-space:nowrap;cursor:pointer"><input type="checkbox" id="show-archived-clients" onchange="showArchivedClients=this.checked;renderActiveClientsView()"/>Show archived</label>
       </div>
       <div class="client-grid" id="clients-grid"></div>
     </div>
@@ -881,11 +885,11 @@ select.status-select-cancelled{background:rgba(229,57,53,.14);border-color:var(-
         </select>
       </div>
     </div>
-    <div class="form-row" id="drop-in-time-row" style="display:none">
+    <div class="form-row" id="drop-in-time-row">
       <div class="form-group">
-        <label>Time *</label>
-        <input type="text" id="bk-time" placeholder="e.g. 10:30 am" style="font-family:var(--sans)"/>
-        <p style="font-size:11px;color:var(--hint);margin-top:4px">12-hour format with am/pm (e.g. 10:30 am, 2:15 pm)</p>
+        <label id="bk-time-label">Start Time</label>
+        <select id="bk-time"><option value="">— not set —</option></select>
+        <p style="font-size:11px;color:var(--hint);margin-top:4px">Saved for every booking — the Bookings tab sorts by date, then start time.</p>
       </div>
     </div>
     <div class="form-row">
@@ -1011,11 +1015,32 @@ select.status-select-cancelled{background:rgba(229,57,53,.14);border-color:var(-
     <button class="btn btn-ghost btn-sm" id="cl-send-msg" onclick="sendClientMessage()" style="margin-top:10px;display:none">Send to participants</button>
     <div id="cl-msg-status" style="font-size:12px;margin-top:6px;color:var(--muted)"></div>
     <div style="display:flex;gap:12px;justify-content:space-between;margin-top:24px">
-      <button class="btn btn-danger" id="client-delete-btn" style="display:none" onclick="deleteClient(editingClientId)">Delete Client</button>
+      <button class="btn btn-danger" id="client-delete-btn" style="display:none" onclick="deleteClient(editingClientId)">Archive Client</button>
+      <button class="btn btn-ghost" id="client-restore-btn" style="display:none" onclick="restoreClient(editingClientId)">Restore</button>
       <div style="display:flex;gap:12px;margin-left:auto">
         <button class="btn btn-ghost" onclick="closeModal('client-modal')">Cancel</button>
         <button class="btn btn-primary" onclick="saveClient()">Save Client</button>
       </div>
+    </div>
+  </div>
+</div>
+<!-- MERGE CLIENTS MODAL -->
+<div class="modal-overlay" id="merge-modal">
+  <div class="modal" style="max-width:560px">
+    <button class="modal-close" onclick="closeModal('merge-modal')">✕</button>
+    <div class="modal-title">Merge Duplicate Clients</div>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.6">Everything from the duplicate — bookings, participants, waivers, email history, notes, payments — moves onto the profile you keep. The duplicate is then <strong>archived, not deleted</strong>, so nothing is ever lost.</p>
+    <div id="merge-suggestions" style="margin-bottom:14px"></div>
+    <div class="form-group"><label>Keep this client</label>
+      <select id="merge-keep" onchange="renderMergePreview()"><option value="">Select...</option></select>
+    </div>
+    <div class="form-group"><label>Merge this duplicate into it</label>
+      <select id="merge-dupe" onchange="renderMergePreview()"><option value="">Select...</option></select>
+    </div>
+    <div id="merge-preview" style="font-size:13px;color:var(--muted);margin:12px 0;min-height:20px"></div>
+    <div style="display:flex;gap:12px;justify-content:flex-end;margin-top:16px">
+      <button class="btn btn-ghost" onclick="closeModal('merge-modal')">Cancel</button>
+      <button class="btn btn-primary" id="merge-go-btn" onclick="mergeClients()" disabled>Merge</button>
     </div>
   </div>
 </div>
@@ -1212,6 +1237,10 @@ const PasswordValidator = {
 };
 // ── STATE ─────────────────────────────────────────────────
 let bookings = [], clients = [], availability = [], templates = [], participantsByClient = {}, leads = [];
+// Archived clients stay in the database (nothing is ever lost) but are hidden from
+// lists unless "Show archived" is ticked on the Clients tab.
+let showArchivedClients = false;
+function visibleClients(){ return showArchivedClients ? clients : clients.filter(c=>!c.archived); }
 let calYear = new Date().getFullYear(), calMonth = new Date().getMonth();
 let editingBookingId = null, editingClientId = null, editingTemplateId = null, editingLeadId = null, pendingLeadIdForBooking = null;
 // ── SHARED CLIENT ROSTER/WAIVER PANEL ──────────────────────
@@ -1358,9 +1387,10 @@ function showApp(){
   loadLeadNotes();
 }
 async function doLogout(){
-  await db.auth.signOut();
+  // Hide the app BEFORE signing out so the SIGNED_OUT listener knows this was intentional
   document.getElementById('app').style.display='none';
   document.getElementById('login-screen').style.display='flex';
+  await db.auth.signOut();
   document.getElementById('pw-input').value='';
   document.getElementById('email-input').value='';
 }
@@ -1386,6 +1416,18 @@ async function doLogout(){
     console.error('Auth check failed:', e);
   }
 })();
+// If the session ever drops (token refresh failed, signed out elsewhere), show the
+// login screen immediately instead of letting saves fail silently in the background.
+db.auth.onAuthStateChange((event)=>{
+  if(event==='SIGNED_OUT'){
+    const app = document.getElementById('app');
+    if(app && app.style.display !== 'none'){
+      app.style.display='none';
+      document.getElementById('login-screen').style.display='flex';
+      alert('Your session has expired — please sign in again before saving anything.');
+    }
+  }
+});
 // ── DATA LOAD ─────────────────────────────────────────────
 async function loadAll(){
   await Promise.all([loadBookings(), loadClients(), loadAvailability(), loadTemplates(), loadHolidays(), loadPromo(), loadLeads(), loadPromoCodes(), loadCardContacts(), loadQRCodes()]);
@@ -1410,7 +1452,7 @@ async function loadAll(){
   renderCrmHealth();
 }
 async function loadBookings(){
-  const {data} = await db.from('bookings').select('*, clients(name,email,phone)').order('date');
+  const {data} = await db.from('bookings').select('*, clients(name,email,phone)').order('date').order('time');
   bookings = data || [];
 }
 async function loadClients(){
@@ -1478,16 +1520,28 @@ function showTab(tab){
 // ── DROP-IN TIME FIELD TOGGLE ────
 function toggleDropInTime(){
   const slot = document.getElementById('bk-slot').value;
-  const timeRow = document.getElementById('drop-in-time-row');
-  const timeField = document.getElementById('bk-time');
-  if(slot === 'drop_in'){
-    timeRow.style.display = 'block';
-    timeField.focus();
-  } else {
-    timeRow.style.display = 'none';
-    timeField.value = '';
-  }
+  const label = document.getElementById('bk-time-label');
+  if(label) label.textContent = slot === 'drop_in' ? 'Time *' : 'Start Time';
 }
+// ── TIME HELPERS ────
+// Times are stored as 24-hour "HH:MM" (sorts correctly as text) and shown as 12-hour.
+function fmtTime(t){
+  if(!t) return '—';
+  if(/am|pm/i.test(t)) return String(t).trim(); // legacy free-text 12h value — show as-is
+  const m = /^(\d{1,2}):(\d{2})/.exec(String(t).trim()); if(!m) return t;
+  let h = parseInt(m[1],10); const ap = h>=12 ? 'pm' : 'am';
+  h = h%12 || 12;
+  return `${h}:${m[2]} ${ap}`;
+}
+(function populateTimeOptions(){
+  const sel = document.getElementById('bk-time'); if(!sel) return;
+  for(let mins=6*60; mins<=21*60; mins+=30){
+    const hh = String(Math.floor(mins/60)).padStart(2,'0'), mm = String(mins%60).padStart(2,'0');
+    const opt = document.createElement('option');
+    opt.value = `${hh}:${mm}`; opt.textContent = fmtTime(`${hh}:${mm}`);
+    sel.appendChild(opt);
+  }
+})();
 // ── NEW-ACTIVITY BADGES (since you last opened the tab) ────
 function getLastVisit(tab){
   return localStorage.getItem('sw_lastvisit_'+tab) || '1970-01-01T00:00:00.000Z';
@@ -1528,11 +1582,11 @@ function renderDashboard(){
   document.getElementById('stat-new').textContent = bookings.filter(b=>b.status==='new').length;
   document.getElementById('stat-confirmed').textContent = bookings.filter(b=>b.status==='confirmed'||b.status==='deposit_paid').length;
   document.getElementById('stat-upcoming').textContent = bookings.filter(b=>{const d=new Date(b.date);return d>=now&&d<=monthEnd}).length;
-  document.getElementById('stat-clients').textContent = clients.length;
+  document.getElementById('stat-clients').textContent = clients.filter(c=>!c.archived).length;
   const recent = [...bookings].filter(b=>b.status==='new').slice(0,5);
   document.getElementById('recent-bookings').innerHTML = recent.length ? recent.map(b=>bookingRow(b,true)).join('') : '<tr><td colspan="6" style="color:var(--muted);text-align:center;padding:24px">No new requests</td></tr>';
   const in14 = new Date(); in14.setDate(in14.getDate()+14);
-  const upcoming = bookings.filter(b=>{const d=new Date(b.date);return d>=now&&d<=in14&&b.status!=='cancelled'}).sort((a,b)=>new Date(a.date)-new Date(b.date));
+  const upcoming = bookings.filter(b=>{const d=new Date(b.date);return d>=now&&d<=in14&&b.status!=='cancelled'}).sort((a,b)=>(new Date(a.date)-new Date(b.date)) || (a.time||'99:99').localeCompare(b.time||'99:99'));
   document.getElementById('upcoming-sessions').innerHTML = upcoming.length ? upcoming.map(b=>{
     const p = (b.client_id && participantsByClient[b.client_id]) || [];
     const minors = p.filter(x=>x.is_minor);
@@ -1619,7 +1673,10 @@ function renderBookingsTable(filter='', status='', slot=''){
   list.sort((a,b)=>{
     const ra = bookingRank(a), rb = bookingRank(b);
     if(ra !== rb) return ra - rb;
-    return new Date(a.date) - new Date(b.date);
+    const d = new Date(a.date) - new Date(b.date);
+    if(d) return d;
+    // Same day: earliest start time first; bookings with no time sink to the end of the day.
+    return (a.time||'99:99').localeCompare(b.time||'99:99');
   });
   document.getElementById('bookings-table').innerHTML = list.length
     ? list.map(b=>bookingRow(b,false)).join('')
@@ -1644,7 +1701,7 @@ function bookingRow(b, compact){
   return `<tr class="${rowClass}" style="cursor:pointer" onclick="openEditBooking('${b.id}')">
     <td>${fmtDate(b.date)}</td>
     <td><span class="status-badge" style="background:rgba(0,200,212,0.1);color:var(--cyan)">${cap(b.slot)}</span></td>
-    <td style="font-size:13px">${b.time||'—'}</td>
+    <td style="font-size:13px">${fmtTime(b.time)}</td>
     <td>${b.clients?.name||'—'}${warn}${leadTag}</td>
     <td style="font-size:13px">${(b.package||'—').split('—')[0]}</td>
     <td style="font-size:13px">${b.location||'—'}</td>
@@ -1755,7 +1812,9 @@ function openEditBooking(id){
   document.getElementById('new-client-fields').style.display='none';
   document.getElementById('bk-date').value = b.date;
   ensureSelectHasValue(document.getElementById('bk-slot'), b.slot, cap(b.slot||''));
-  document.getElementById('bk-time').value = b.time||'';
+  const timeSel = document.getElementById('bk-time');
+  timeSel.value = '';
+  ensureSelectHasValue(timeSel, b.time||'', fmtTime(b.time)); // legacy free-text times still selectable
   toggleDropInTime();
   ensureSelectHasValue(document.getElementById('bk-package'), b.package, b.package);
   document.getElementById('bk-sport').value = b.sport||'';
@@ -1778,7 +1837,7 @@ function clearBookingForm(){
 function populateClientSelect(selectedId=''){
   const sel = document.getElementById('bk-client');
   sel.innerHTML = '<option value="">Select existing client...</option><option value="new">+ New Client</option>';
-  clients.forEach(c=>{ const o=document.createElement('option'); o.value=c.id; o.textContent=`${c.name} — ${c.email||c.phone||''}`;if(c.id===selectedId)o.selected=true; sel.appendChild(o); });
+  clients.filter(c=>!c.archived || c.id===selectedId).forEach(c=>{ const o=document.createElement('option'); o.value=c.id; o.textContent=`${c.name} — ${c.email||c.phone||''}`;if(c.id===selectedId)o.selected=true; sel.appendChild(o); });
 }
 function lookupPromo(code){
   const infoEl=document.getElementById('bk-promo-info');
@@ -1822,11 +1881,13 @@ async function saveBooking(){
     if(error){ toast('Error creating client'); return; }
     clients.push(data); clientId=data.id;
   }
+  if(!document.getElementById('bk-date').value){ toast('Please pick a date'); return; }
+  if(document.getElementById('bk-slot').value==='drop_in' && !document.getElementById('bk-time').value){ toast('Drop-in bookings need a start time'); return; }
   const bkData = {
     client_id:clientId,
     date:document.getElementById('bk-date').value,
     slot:document.getElementById('bk-slot').value,
-    time:document.getElementById('bk-slot').value === 'drop_in' ? document.getElementById('bk-time').value : null,
+    time:document.getElementById('bk-time').value || null,
     package:document.getElementById('bk-package').value,
     sport:document.getElementById('bk-sport').value,
     location:document.getElementById('bk-location').value,
@@ -1857,7 +1918,7 @@ async function saveBooking(){
 }
 async function deleteBooking(id){
   if(!id) return;
-  if(!confirm('Delete this booking? This does not affect the client\'s participant roster.')) return;
+  if(!confirm('Permanently delete this booking record? If the session just didn\'t happen, set its status to Cancelled instead — that keeps the history. Deleting does not affect the client\'s participant roster.')) return;
   const { error } = await db.from('bookings').delete().eq('id', id);
   if(error){ toast('Error deleting booking'); return; }
   closeModal('booking-modal');
@@ -1883,13 +1944,15 @@ function clientCardHtml(c){
   const rosterHtml = roster.length
     ? roster.map(p=>{
         const disc = disciplineLabel(p.discipline_tag);
-        return `<div style="font-size:12px;color:var(--dark);margin-bottom:6px;line-height:1.3">${esc(p.name||'—')}${p.is_minor?' <span style="color:var(--red);font-size:10px;font-weight:700">MINOR</span>':''}${disc?`<br><span style="color:var(--cyan);font-size:11px">${esc(disc)}</span>`:''}</div>`;
+        const age = ageFromDob(p.date_of_birth);
+        const phys = [age!=null?age+'y':null, p.height, p.weight].filter(Boolean).join(' · ');
+        return `<div style="font-size:12px;color:var(--dark);margin-bottom:6px;line-height:1.3">${esc(p.name||'—')}${p.is_minor?' <span style="color:var(--red);font-size:10px;font-weight:700">MINOR</span>':''}${disc?`<br><span style="color:var(--cyan);font-size:11px">${esc(disc)}</span>`:''}${phys?`<br><span style="color:var(--muted);font-size:11px">${esc(phys)}</span>`:''}</div>`;
       }).join('')
     : '<div style="font-size:12px;color:var(--hint)">No participants yet</div>';
-  return `<div class="client-card" onclick="openEditClient('${c.id}')">
+  return `<div class="client-card" onclick="openEditClient('${c.id}')"${c.archived?' style="opacity:.6"':''}>
     <div style="display:flex;gap:14px">
       <div style="flex:1;min-width:0">
-        <div class="client-name">${c.name}</div>
+        <div class="client-name">${c.name}${c.archived?' <span style="font-size:9px;font-weight:700;letter-spacing:.05em;color:#fff;background:var(--muted);border-radius:8px;padding:2px 7px;vertical-align:middle">ARCHIVED</span>':''}</div>
         <div class="client-meta">${c.email||''} ${c.phone?'· '+c.phone:''}</div>
         <div class="client-meta">${c.location||'No location set'}</div>
         <div class="client-sessions">${sessions} session${sessions!==1?'s':''}</div>
@@ -1908,7 +1971,8 @@ function clientCardHtml(c){
   </div>`;
 }
 function renderClients(filter=''){
-  let list = filter ? clients.filter(c=>c.name.toLowerCase().includes(filter.toLowerCase())) : clients;
+  const base = visibleClients();
+  let list = filter ? base.filter(c=>c.name.toLowerCase().includes(filter.toLowerCase())) : base;
   document.getElementById('clients-grid').innerHTML = list.length
     ? list.map(clientCardHtml).join('')
     : '<div style="color:var(--muted);padding:24px">No clients yet.</div>';
@@ -1916,7 +1980,7 @@ function renderClients(filter=''){
 function filterClients(){ renderClients(document.getElementById('search-clients').value); }
 function renderClientsInto(gridId, predicate){
   const el = document.getElementById(gridId); if(!el) return;
-  const list = clients.filter(predicate);
+  const list = visibleClients().filter(predicate);
   el.innerHTML = list.length ? list.map(clientCardHtml).join('') : '<div style="color:var(--muted);padding:24px">No clients in this category yet.</div>';
 }
 function renderClientsLocal(){ renderClientsInto('clients-local-grid', c=>c.region_tag==='local'); }
@@ -1924,7 +1988,7 @@ function renderClientsOutOfTown(){ renderClientsInto('clients-outoftown-grid', c
 function renderClientsGroupedInto(containerId, field, groups){
   const el = document.getElementById(containerId); if(!el) return;
   const html = groups.map(([val,label])=>{
-    const list = clients.filter(c=>(c[field]||'')===val);
+    const list = visibleClients().filter(c=>(c[field]||'')===val);
     if(!list.length) return '';
     return `<div class="sec-title" style="margin-top:20px">${esc(label)} <span style="color:var(--muted);font-weight:400">(${list.length})</span></div><div class="client-grid">${list.map(clientCardHtml).join('')}</div>`;
   }).join('');
@@ -1957,15 +2021,16 @@ function renderActiveClientsView(){
 function renderAllParticipants(filter=''){
   const tb = document.getElementById('all-participants-table'); if(!tb) return;
   const rows = [];
-  clients.forEach(c=>{
+  visibleClients().forEach(c=>{
     rows.push({
       name: c.name, role:'Client', clientId: c.id, clientName: c.name,
-      email: c.email, phone: c.phone, is_minor:false, discipline_tag: c.discipline_tag
+      email: c.email, phone: c.phone, is_minor:false, discipline_tag: c.discipline_tag, dob:null, height:null, weight:null
     });
     (participantsByClient[c.id]||[]).forEach(p=>{
       rows.push({
         name: p.name, role:'Participant', clientId: c.id, clientName: c.name,
-        email: p.email||c.email, phone: c.phone, is_minor: p.is_minor===true, discipline_tag: p.discipline_tag
+        email: p.email||c.email, phone: c.phone, is_minor: p.is_minor===true, discipline_tag: p.discipline_tag,
+        dob: p.date_of_birth||null, height: p.height||null, weight: p.weight||null
       });
     });
   });
@@ -1986,7 +2051,7 @@ function renderAllParticipants(filter=''){
       <td style="font-size:13px">${r.role==='Client'?'—':esc(r.clientName)}</td>
       <td style="font-size:13px">${esc(r.email||'')}${r.phone?'<br>'+esc(r.phone):''}</td>
       <td style="font-size:13px">${disc?esc(disc):'<span style="color:var(--hint)">—</span>'}</td>
-      <td style="font-size:13px">${r.is_minor?'<span style="color:var(--red);font-weight:700">Minor</span>':'—'}</td>
+      <td style="font-size:13px">${(()=>{const a=ageFromDob(r.dob);return r.is_minor?`<span style="color:var(--red);font-weight:700">Minor${a!=null?' ('+a+')':''}</span>`:(a!=null?a+'y':'—')})()}</td>
       <td><button class="btn btn-primary btn-sm" onclick="openEditClient('${r.clientId}')">Open Client</button></td>
     </tr>`;
   }).join('') : '<tr><td colspan="7" style="color:var(--muted);text-align:center;padding:24px">No clients or participants yet.</td></tr>';
@@ -1999,6 +2064,7 @@ function openAddClient(){
   document.getElementById('cl-history').innerHTML='No sessions yet.';
   document.getElementById('client-modal-title').textContent='New Client';
   document.getElementById('client-delete-btn').style.display='none';
+  document.getElementById('client-restore-btn').style.display='none';
   clientRoster=[]; clientWaivers=[];
   loadRosterPanelForClient(null);
   openModal('client-modal');
@@ -2007,8 +2073,11 @@ function openEditClient(id){
   editingClientId=id;
   activePrefix='cl';
   const c=clients.find(x=>x.id===id); if(!c) return;
-  document.getElementById('client-modal-title').textContent=c.name;
-  document.getElementById('client-delete-btn').style.display='inline-block';
+  document.getElementById('client-modal-title').textContent=c.name + (c.archived?' (archived)':'');
+  const delBtn=document.getElementById('client-delete-btn');
+  delBtn.style.display='inline-block';
+  delBtn.textContent = c.archived ? 'Delete Permanently' : 'Archive Client';
+  document.getElementById('client-restore-btn').style.display = c.archived ? 'inline-block' : 'none';
   document.getElementById('cl-name').value=c.name||'';
   document.getElementById('cl-email').value=c.email||'';
   document.getElementById('cl-phone').value=c.phone||'';
@@ -2066,8 +2135,14 @@ async function saveClient(){
   };
   if(!data.name){ toast('Name is required'); return; }
   let cid=editingClientId;
-  if(cid){ await db.from('clients').update(data).eq('id',cid); }
-  else { const {data:d}=await db.from('clients').insert(data).select().single(); if(d){ clients.push(d); cid=d.id; editingClientId=d.id; } }
+  if(cid){
+    const {error}=await db.from('clients').update(data).eq('id',cid);
+    if(error){ toast('Error saving client — nothing was changed: '+error.message); return; }
+  } else {
+    const {data:d,error}=await db.from('clients').insert(data).select().single();
+    if(error||!d){ toast('Error creating client'+(error?': '+error.message:'')); return; }
+    clients.push(d); cid=d.id; editingClientId=d.id;
+  }
   if(cid) await saveClientRoster(cid);
   closeModal('client-modal');
   await loadClients();
@@ -2076,17 +2151,129 @@ async function saveClient(){
 }
 async function deleteClient(id){
   if(!id) return;
+  const c = clients.find(x=>x.id===id) || {};
+  if(!c.archived){
+    // First step is always ARCHIVE — nothing is deleted, fully reversible.
+    if(!confirm(`Archive ${c.name||'this client'}? They'll be hidden from your lists, but every booking, participant, and waiver stays in the database. Restore them any time via "Show archived" on the Clients tab.`)) return;
+    const { error } = await db.from('clients').update({ archived:true }).eq('id', id);
+    if(error){ toast('Error archiving client: '+error.message); return; }
+    closeModal('client-modal');
+    await loadAll();
+    toast('Client archived — tick "Show archived" to see them');
+    return;
+  }
+  // Already archived → permanent delete is allowed, with guards.
+  const roster = (participantsByClient[id]||[]).filter(p=>p.id).length;
+  if(roster){ toast(`Can't permanently delete: ${roster} participant(s) still on file for this client. Remove them from the roster first — the database blocks this on purpose to protect roster data.`); return; }
   const linked = bookings.filter(b=>b.client_id===id).length;
-  const msg = linked
-    ? `This client has ${linked} booking(s). Deleting will unlink those bookings (they remain, with no client attached). Continue?`
-    : 'Delete this client? This cannot be undone.';
-  if(!confirm(msg)) return;
-  if(linked){ await db.from('bookings').update({client_id:null}).eq('client_id', id); }
+  if(!confirm(`PERMANENTLY delete ${c.name||'this client'}?${linked?` Their ${linked} booking(s) will be kept but unlinked.`:''} This cannot be undone.`)) return;
+  if(linked){
+    const { error: unlinkErr } = await db.from('bookings').update({client_id:null}).eq('client_id', id);
+    if(unlinkErr){ toast('Error unlinking bookings: '+unlinkErr.message); return; }
+  }
   const { error } = await db.from('clients').delete().eq('id', id);
-  if(error){ toast('Error deleting client'); return; }
+  if(error){ toast('Error deleting client: '+error.message); return; }
   closeModal('client-modal');
   await loadAll();
-  toast('Client deleted');
+  toast('Client permanently deleted');
+}
+async function restoreClient(id){
+  if(!id) return;
+  const { error } = await db.from('clients').update({ archived:false }).eq('id', id);
+  if(error){ toast('Error restoring client: '+error.message); return; }
+  closeModal('client-modal');
+  await loadAll();
+  toast('Client restored ✓');
+}
+// ── MERGE DUPLICATE CLIENTS ───────────────────────────────
+// Moves everything (bookings, participants, waivers, email history, leads link,
+// notes, payments, empty contact fields) from the duplicate onto the keeper,
+// then ARCHIVES the duplicate — nothing is deleted.
+function normPhone(p){ return (p||'').replace(/\D/g,'').slice(-10); }
+function findDuplicateCandidates(){
+  const pairs=[]; const seen=new Set();
+  for(let i=0;i<clients.length;i++){
+    for(let j=i+1;j<clients.length;j++){
+      const a=clients[i], b=clients[j];
+      let why=null;
+      if(a.email && b.email && a.email.trim().toLowerCase()===b.email.trim().toLowerCase() && a.email.includes('@')) why='same email';
+      else if(normPhone(a.phone) && normPhone(a.phone).length>=7 && normPhone(a.phone)===normPhone(b.phone)) why='same phone';
+      else if((a.name||'').trim().toLowerCase()===(b.name||'').trim().toLowerCase()) why='same name';
+      if(why){
+        const key=[a.id,b.id].sort().join();
+        if(!seen.has(key)){ seen.add(key); pairs.push({a,b,why}); }
+      }
+    }
+  }
+  return pairs;
+}
+function openMergeModal(){
+  const fill=(sel)=>{
+    sel.innerHTML='<option value="">Select...</option>';
+    [...clients].sort((x,y)=>(x.name||'').localeCompare(y.name||'')).forEach(c=>{
+      const o=document.createElement('option');
+      o.value=c.id;
+      o.textContent=`${c.name}${c.archived?' (archived)':''} — ${c.email||c.phone||'no contact'}`;
+      sel.appendChild(o);
+    });
+  };
+  fill(document.getElementById('merge-keep'));
+  fill(document.getElementById('merge-dupe'));
+  const pairs=findDuplicateCandidates();
+  const sug=document.getElementById('merge-suggestions');
+  sug.innerHTML = pairs.length
+    ? '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin-bottom:6px">Possible duplicates found</div>'+pairs.map(p=>
+        `<button class="btn btn-ghost btn-sm" style="display:block;width:100%;text-align:left;margin-bottom:4px" onclick="document.getElementById('merge-keep').value='${p.a.id}';document.getElementById('merge-dupe').value='${p.b.id}';renderMergePreview()">${esc(p.a.name)} ↔ ${esc(p.b.name)} <span style="color:var(--muted)">(${p.why})</span></button>`).join('')
+    : '<div style="font-size:12px;color:var(--hint)">No obvious duplicates detected — you can still pick any two clients below.</div>';
+  document.getElementById('merge-preview').innerHTML='';
+  document.getElementById('merge-go-btn').disabled=true;
+  openModal('merge-modal');
+}
+function renderMergePreview(){
+  const keepId=document.getElementById('merge-keep').value;
+  const dupeId=document.getElementById('merge-dupe').value;
+  const pv=document.getElementById('merge-preview');
+  const btn=document.getElementById('merge-go-btn');
+  if(!keepId||!dupeId){ pv.innerHTML=''; btn.disabled=true; return; }
+  if(keepId===dupeId){ pv.innerHTML='<span style="color:var(--red)">Pick two different clients.</span>'; btn.disabled=true; return; }
+  const dupe=clients.find(c=>c.id===dupeId)||{};
+  const bk=bookings.filter(b=>b.client_id===dupeId).length;
+  const pt=(participantsByClient[dupeId]||[]).length;
+  pv.innerHTML=`Moving from <strong>${esc(dupe.name||'')}</strong>: ${bk} booking${bk!==1?'s':''}, ${pt} participant${pt!==1?'s':''}, plus waivers, email history, notes and payments. The duplicate profile will be archived.`;
+  btn.disabled=false;
+}
+async function mergeClients(){
+  const keepId=document.getElementById('merge-keep').value;
+  const dupeId=document.getElementById('merge-dupe').value;
+  if(!keepId||!dupeId||keepId===dupeId) return;
+  const keep=clients.find(c=>c.id===keepId), dupe=clients.find(c=>c.id===dupeId);
+  if(!keep||!dupe) return;
+  if(!confirm(`Merge "${dupe.name}" into "${keep.name}"? Everything moves to ${keep.name}; ${dupe.name} is archived (recoverable).`)) return;
+  const errs=[];
+  const move=async(table,col)=>{
+    const {error}=await db.from(table).update({[col]:keepId}).eq(col,dupeId);
+    if(error) errs.push(`${table}: ${error.message}`);
+  };
+  await move('bookings','client_id');
+  await move('participants','client_id');
+  await move('waivers','client_id');
+  await move('email_events','client_id');
+  await move('leads','converted_client_id');
+  if(errs.length){ toast('⚠ Merge stopped — '+errs.join(' · ')+' — nothing else was changed. Fix and retry.'); return; }
+  // Fill the keeper's empty fields from the duplicate; append notes; keep payments if keeper has none.
+  const upd={};
+  ['email','phone','location','region_tag','experience_level','discipline_tag'].forEach(f=>{ if(!keep[f] && dupe[f]) upd[f]=dupe[f]; });
+  const today=new Date().toLocaleDateString('en-CA');
+  const mergedNote=`[${today}] Merged in duplicate profile "${dupe.name}"${dupe.notes?':\n'+dupe.notes:''}`;
+  upd.notes = keep.notes ? keep.notes+'\n'+mergedNote : mergedNote;
+  if(!(keep.payments&&keep.payments.agreed_price!=null) && dupe.payments) upd.payments=dupe.payments;
+  const {error:updErr}=await db.from('clients').update(upd).eq('id',keepId);
+  if(updErr) toast('⚠ Records moved, but couldn\'t update keeper details: '+updErr.message);
+  const {error:archErr}=await db.from('clients').update({archived:true, notes:(dupe.notes?dupe.notes+'\n':'')+`[${today}] Merged into "${keep.name}" — records now live there.`}).eq('id',dupeId);
+  if(archErr) toast('⚠ Merge done, but couldn\'t archive the duplicate: '+archErr.message);
+  closeModal('merge-modal');
+  await loadAll();
+  toast(`Merged ✓ — everything now lives under ${keep.name}`);
 }
 // ── CLIENT ROSTER + WAIVERS (Step E) ──────────────────────
 let clientRoster = [];   // participants for the open client (client_id-scoped)
@@ -2169,17 +2356,27 @@ async function loadClientExtras(clientId){
 
 function rosterRowHtml(p={}){
   const minor = p.is_minor===true;
+  const age = ageFromDob(p.date_of_birth);
+  // Waiver / intake signal per participant (waiver_signed comes from the participants table)
+  const waiverChip = p.id ? (p.waiver_signed
+    ? `<span title="Waiver signed" style="font-size:10px;font-weight:700;color:var(--green);border:1px solid var(--green);border-radius:8px;padding:2px 7px;white-space:nowrap">✓ waiver</span>`
+    : `<span title="No signed waiver on file" style="font-size:10px;font-weight:700;color:var(--orange);border:1px solid var(--orange);border-radius:8px;padding:2px 7px;white-space:nowrap">waiver pending</span>`) : '';
   return `<div class="roster-row" data-id="${p.id||''}" style="border:1px solid var(--border);border-radius:8px;padding:8px 10px;margin-bottom:8px">
     <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
       <input type="text" class="r-name" placeholder="Name" value="${esc(p.name||'')}" style="flex:2;min-width:120px"/>
       <input type="email" class="r-email" placeholder="Email" value="${esc(p.email||'')}" style="flex:2;min-width:140px"/>
       <select class="r-discipline" title="Discipline" style="flex:1;min-width:110px;font-size:12px;padding:6px 8px;border:1.5px solid var(--border);border-radius:6px;font-family:'Outfit',sans-serif">${DISCIPLINE_TAGS.map(([v,l])=>`<option value="${v}"${(p.discipline_tag||'')===v?' selected':''}>${esc(l)}</option>`).join('')}</select>
       <label style="font-size:12px;display:flex;gap:4px;align-items:center;white-space:nowrap"><input type="checkbox" class="r-minor" ${minor?'checked':''} onchange="toggleRosterMinor(this)"/>Minor</label>
+      ${waiverChip}
       <button onclick="signNow('${p.id||''}')" title="Sign on this device now" style="background:none;border:1px solid var(--cyan);border-radius:6px;cursor:pointer;color:var(--cyan);font-size:11px;font-weight:700;padding:6px 10px">Sign</button>
       <button onclick="this.closest('.roster-row').remove()" title="Remove" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:15px">✕</button>
     </div>
+    <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;margin-top:8px">
+      <label style="font-size:10px;color:var(--muted)">DOB${age!=null?` (${age}y)`:''} <input type="date" class="r-dob" value="${p.date_of_birth||''}" style="display:block"/></label>
+      <label style="font-size:10px;color:var(--muted)">Height <input type="text" class="r-height" placeholder="5&#39;10&quot; / 178cm" value="${esc(p.height||'')}" style="display:block;width:100px"/></label>
+      <label style="font-size:10px;color:var(--muted)">Weight <input type="text" class="r-weight" placeholder="160lbs / 73kg" value="${esc(p.weight||'')}" style="display:block;width:100px"/></label>
+    </div>
     <div class="r-minorbox" style="display:${minor?'flex':'none'};gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px">
-      <label style="font-size:10px;color:var(--muted)">DOB <input type="date" class="r-dob" value="${p.date_of_birth||''}" style="display:block"/></label>
       <input type="email" class="r-gemail" placeholder="Guardian email" value="${esc(p.guardian_email||'')}" style="flex:1;min-width:160px"/>
       <label style="font-size:11px;display:flex;gap:4px;align-items:center;color:var(--muted);white-space:nowrap"><input type="checkbox" class="r-guard" ${p.guardian_on_site===false?'':'checked'}/>guardian on-site</label>
     </div>
@@ -2195,23 +2392,35 @@ function addRosterRow(){ const wrap=ael('roster'); if(wrap) wrap.insertAdjacentH
 async function saveClientRoster(clientId){
   const wrap=ael('roster'); if(!wrap) return;
   const rows=[...wrap.querySelectorAll('.roster-row')];
-  const keep=[];
+  const keep=[]; const errs=[];
   for(const r of rows){
     const name=r.querySelector('.r-name').value.trim(); if(!name) continue;
     const minor=r.querySelector('.r-minor').checked;
-    const dob=minor?(r.querySelector('.r-dob').value||null):null;
     const rec={ client_id:clientId, name,
       email:r.querySelector('.r-email').value.trim()||null,
       guardian_email:minor?(r.querySelector('.r-gemail').value.trim()||null):null,
-      date_of_birth:dob,
+      date_of_birth:r.querySelector('.r-dob')?.value||null, // kept for adults too — birthdays matter
       is_minor: minor,
       guardian_on_site: minor?r.querySelector('.r-guard').checked:true,
-      discipline_tag: r.querySelector('.r-discipline')?.value || null };
+      discipline_tag: r.querySelector('.r-discipline')?.value || null,
+      height: r.querySelector('.r-height')?.value.trim()||null,
+      weight: r.querySelector('.r-weight')?.value.trim()||null };
     const id=r.getAttribute('data-id');
-    if(id){ await db.from('participants').update(rec).eq('id',id); keep.push(id); }
-    else { const {data:d}=await db.from('participants').insert(rec).select('id').single(); if(d) keep.push(d.id); }
+    if(id){
+      const {error}=await db.from('participants').update(rec).eq('id',id);
+      if(error) errs.push(`${name}: ${error.message}`); else keep.push(id);
+    } else {
+      const {data:d,error}=await db.from('participants').insert(rec).select('id').single();
+      if(error||!d) errs.push(`${name}: ${error?error.message:'insert failed'}`); else keep.push(d.id);
+    }
   }
-  for(const p of clientRoster){ if(!keep.includes(p.id)) await db.from('participants').delete().eq('id',p.id); }
+  for(const p of clientRoster){
+    if(p.id && !keep.includes(p.id)){
+      const {error}=await db.from('participants').delete().eq('id',p.id);
+      if(error) errs.push(`remove ${p.name||''}: ${error.message}`);
+    }
+  }
+  if(errs.length) toast('⚠ Roster not fully saved — '+errs.join(' · '));
 }
 
 function renderClientWaivers(){
@@ -2555,20 +2764,45 @@ async function saveLead(){
 async function deleteLead(id){
   if(!id) return;
   if(!confirm('Delete this lead? This cannot be undone.')) return;
-  await db.from('leads').delete().eq('id', id);
+  const {error}=await db.from('leads').delete().eq('id', id);
+  if(error){ toast('Error deleting lead: '+error.message); return; }
   closeModal('lead-modal');
   await loadLeads(); renderActiveLeadsView();
   toast('Lead deleted');
 }
-function exportLeadsCSV(){
-  const headers=['Name','Email','Phone','Sport','Source','Status','Region','Inquiry','Notes','Created'];
-  const rows=leads.filter(l=>l.status!=='converted').map(l=>[l.name,l.email,l.phone,l.sport,l.source,l.status,l.region_tag,l.message,l.notes,l.created_at?.slice(0,10)]);
+function csvDownload(filename, headers, rows){
   const csv=[headers,...rows].map(r=>r.map(f=>'"'+(f==null?'':f).toString().replace(/"/g,'""')+'"').join(',')).join('\n');
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
-  a.download='leads-'+new Date().toISOString().slice(0,10)+'.csv';
+  a.download=filename;
   a.click();
+}
+function exportLeadsCSV(){
+  const headers=['Name','Email','Phone','Sport','Source','Status','Region','Inquiry','Notes','Created'];
+  const rows=leads.filter(l=>l.status!=='converted').map(l=>[l.name,l.email,l.phone,l.sport,l.source,l.status,l.region_tag,l.message,l.notes,l.created_at?.slice(0,10)]);
+  csvDownload('leads-'+new Date().toISOString().slice(0,10)+'.csv', headers, rows);
   toast('Leads exported ✓');
+}
+// Full client + participant export — one row per client, then one per roster participant.
+function exportClientsCSV(){
+  const rows=[];
+  clients.forEach(c=>{
+    const pay=c.payments||{};
+    rows.push(['Client',c.name,c.email,c.phone,c.location,c.region_tag,c.experience_level,c.discipline_tag,'','','',c.archived?'archived':'',pay.agreed_price,pay.deposit,pay.balance,c.notes,c.created_at?.slice(0,10)]);
+    (participantsByClient[c.id]||[]).forEach(p=>{
+      rows.push(['Participant of '+c.name,p.name,p.email,'','','','',p.discipline_tag,p.date_of_birth,p.height,p.weight,[p.is_minor?'minor':null,p.waiver_signed?'waiver signed':'waiver pending'].filter(Boolean).join('; '),'','','',p.notes,'']);
+    });
+  });
+  csvDownload('clients-'+new Date().toISOString().slice(0,10)+'.csv',
+    ['Type','Name','Email','Phone','Location','Region','Experience','Discipline','DOB','Height','Weight','Flags','Agreed $','Deposit $','Balance $','Notes','Created'], rows);
+  toast('Clients + participants exported ✓');
+}
+function exportBookingsCSV(){
+  const rows=[...bookings].sort((a,b)=>(a.date||'').localeCompare(b.date||'')||(a.time||'99:99').localeCompare(b.time||'99:99'))
+    .map(b=>[b.date,b.slot,fmtTime(b.time),b.clients?.name,b.package,b.location,b.sport,b.status,b.promo_code,b.notes,b.created_at?.slice(0,10)]);
+  csvDownload('bookings-'+new Date().toISOString().slice(0,10)+'.csv',
+    ['Date','Slot','Time','Client','Package','Location','Sport','Status','Promo','Notes','Created'], rows);
+  toast('Bookings exported ✓');
 }
 async function importLeadsCSV(input){
   const file=input.files[0]; if(!file) return;
@@ -2615,14 +2849,27 @@ async function convertLead(id){
   const l = leads.find(x=>x.id===id); if(!l) return;
   if(!confirm(`Convert "${l.name}" into a client? They'll move from Leads to the Clients tab.`)) return;
   let client = null;
-  if(l.email){
+  // Only search for existing client by email if it's a real email (contains @) — NOT placeholders like "FB chat"
+  if(l.email && l.email.includes('@')){
     const { data:ex } = await db.from('clients').select('*').eq('email', l.email).maybeSingle();
     if(ex) client = ex;
   }
+  // No email match? Try phone (last 10 digits) so phone-only leads don't create duplicate clients.
+  if(!client && l.phone){
+    const digits = l.phone.replace(/\D/g,'').slice(-10);
+    if(digits.length>=7) client = clients.find(c=>(c.phone||'').replace(/\D/g,'').endsWith(digits)) || null;
+  }
   if(!client){
     const inferredRegion = mapLeadRegionToClientRegion(l.region_tag);
-    const { data, error } = await db.from('clients').insert({ name:l.name, email:l.email||null, phone:l.phone||null, notes:l.message||null, region_tag:inferredRegion }).select().single();
-    if(error){ toast('Error creating client'); return; }
+    // Carry everything the lead knows: sport → discipline tag, source + inquiry → notes.
+    const s=(l.sport||'').toLowerCase();
+    const disc = s.includes('surf')?'wakesurf':s.includes('board')?'wakeboard':s.includes('ski')?'waterski':null;
+    const noteBits=[];
+    if(l.sport) noteBits.push('Sport interest: '+l.sport);
+    if(l.source) noteBits.push('Source: '+l.source);
+    if(l.message) noteBits.push(l.message);
+    const { data, error } = await db.from('clients').insert({ name:l.name, email:l.email||null, phone:l.phone||null, notes:noteBits.join('\n')||null, region_tag:inferredRegion, discipline_tag:disc }).select().single();
+    if(error){ toast('Error creating client: '+error.message); return; }
     client = data;
   }
   await db.from('leads').update({ status:'converted', converted_client_id: client.id }).eq('id', id);
