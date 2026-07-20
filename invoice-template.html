@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>{{invoice_number}} — Stillwater Sports</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cyan:#00C8D4;--pink:#E040A0;--yellow:#FFFEB4;
+    --dark:#1a2a2a;--muted:#3a6a6a;--hint:#7aacac;
+    --border:#e8e6c8;--lightband:#f4f6f6;--tablehead:#eef7f7;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'DM Sans',-apple-system,sans-serif;color:var(--dark);background:#fff;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .page{max-width:820px;margin:0 auto}
+
+  /* HEADER BAND */
+  .band{background:var(--cyan);border-bottom:4px solid var(--pink);
+    display:flex;justify-content:space-between;align-items:center;padding:28px 48px}
+  .band-left{display:flex;align-items:center;gap:16px}
+  .logo-tile{background:var(--yellow);border-radius:10px;width:64px;height:64px;
+    display:flex;align-items:center;justify-content:center;overflow:hidden}
+  .logo-tile img{width:56px;height:56px;object-fit:contain}
+  .biz-name{color:#fff;font-size:24px;font-weight:800;letter-spacing:.01em}
+  .biz-tag{color:rgba(255,255,255,.85);font-size:12.5px;font-weight:500;margin-top:3px}
+  .inv-word{color:#fff;font-size:34px;font-weight:800;letter-spacing:.02em;text-align:right}
+  .inv-num{color:rgba(255,255,255,.92);font-size:14px;font-weight:700;text-align:right;margin-top:2px}
+
+  /* META ROW */
+  .meta{display:flex;justify-content:space-between;align-items:flex-start;padding:36px 48px 8px}
+  .lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--pink);margin-bottom:8px}
+  .client-name{font-size:18px;font-weight:800;margin-bottom:4px}
+  .client-contact{font-size:13.5px;color:var(--muted);line-height:1.7}
+  .dates{font-size:14px;line-height:1.9;text-align:left}
+  .paid-stamp{display:inline-block;padding:5px 16px;border:2.5px solid #2e7d32;color:#2e7d32;
+    font-weight:800;font-size:15px;border-radius:8px;transform:rotate(-4deg)}
+
+  /* LINE ITEMS */
+  .items{padding:24px 48px 0}
+  table{width:100%;border-collapse:collapse}
+  thead th{background:var(--tablehead);color:var(--muted);font-size:11px;font-weight:700;
+    text-transform:uppercase;letter-spacing:.1em;text-align:left;padding:12px 14px}
+  tbody td{padding:16px 14px;font-size:14.5px;border-bottom:1px solid #edf2f2}
+  th:nth-child(2),td:nth-child(2){text-align:right;width:14%}
+  th:nth-child(3),td:nth-child(3){text-align:right;width:20%}
+  th:nth-child(4),td:nth-child(4){text-align:right;width:18%}
+
+  /* TOTAL */
+  .total-wrap{display:flex;justify-content:flex-end;padding:20px 48px 0}
+  .total-box{width:46%;border-top:3px solid var(--cyan);padding-top:16px;
+    display:flex;justify-content:space-between;align-items:baseline}
+  .total-lbl{font-size:13px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+  .total-amt{font-size:26px;font-weight:800}
+  .total-amt small{font-size:13px;font-weight:700;color:var(--muted);margin-left:4px}
+
+  /* NOTES */
+  .notes-wrap{padding:36px 48px 0;font-size:13.5px;color:var(--muted);line-height:1.7}
+  .notes{background:#FFFFF0;border:1.5px solid var(--border);border-radius:12px;padding:16px 20px;white-space:pre-wrap}
+
+  /* FOOTER */
+  .foot{margin-top:56px;background:var(--lightband);padding:20px 48px;
+    display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--hint)}
+  .foot-left span{margin:0 10px;color:#d5dcdc}
+  .foot-left a{color:var(--cyan);font-weight:700;text-decoration:none}
+
+  @media print{
+    body{padding:0}
+    .band{padding:24px 36px}
+    .meta,.items,.notes-wrap{padding-left:36px;padding-right:36px}
+    .total-wrap{padding-right:36px}
+    .foot{padding:16px 36px;margin-top:40px}
+    @page{margin:0.4in}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="band">
+    <div class="band-left">
+      <div class="logo-tile"><img src="assets/images/png/Logo4.png" alt="Stillwater Sports"></div>
+      <div>
+        <div class="biz-name">Stillwater Sports</div>
+        <div class="biz-tag">Private Waterski · Wakeboard · Wakesurf Coaching</div>
+      </div>
+    </div>
+    <div>
+      <div class="inv-word">INVOICE</div>
+      <div class="inv-num">{{invoice_number}}</div>
+    </div>
+  </div>
+
+  <div class="meta">
+    <div>
+      <div class="lbl">Bill To</div>
+      <div class="client-name">{{client_name}}</div>
+      <div class="client-contact">{{client_contact_block}}</div>
+    </div>
+    <div>
+      <div class="lbl">Issue Date</div>
+      <div class="dates">{{issue_date}}<div>{{due_date_block}}</div></div>
+    </div>
+    <div style="padding-top:22px">{{paid_stamp}}</div>
+  </div>
+
+  <div class="items">
+    <table>
+      <thead><tr><th>Description</th><th>Qty</th><th>Unit Price</th><th>Amount</th></tr></thead>
+      <tbody>
+<!--LINE_ITEM_START-->
+        <tr><td>{{item_description}}</td><td>{{item_qty}}</td><td>{{item_unit_price}}</td><td>{{item_amount}}</td></tr>
+<!--LINE_ITEM_END-->
+      </tbody>
+    </table>
+  </div>
+
+  <div class="total-wrap">
+    <div class="total-box">
+      <span class="total-lbl">Total</span>
+      <span class="total-amt">{{total}}<small>CAD</small></span>
+    </div>
+  </div>
+
+  <div class="notes-wrap">{{notes_block}}</div>
+
+  <div class="foot">
+    <div class="foot-left">
+      <a href="https://learnwatersports.ca">learnwatersports.ca</a><span>|</span>christian@learnwatersports.ca<span>|</span>613-299-5998
+    </div>
+    <div>© 2026 Stillwater Sports</div>
+  </div>
+
+</div>
+<script>window.onload = function(){ window.print(); };</script>
+</body>
+</html>
